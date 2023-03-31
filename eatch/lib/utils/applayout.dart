@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'bar_haut.dart';
+import 'navigation.dart';
+
 class AppLayout extends StatelessWidget {
   final Widget content;
   static BuildContext? context2;
@@ -44,6 +47,7 @@ class AppLayout extends StatelessWidget {
         child: Row(
           children: [
             //NAVIGATION
+            const Navigation(),
             Expanded(
               flex: 5,
               child: Padding(
@@ -52,6 +56,7 @@ class AppLayout extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     //BAR DE HAUT
+                    const BarHaute(),
                     //const SizedBox(height: 100, child: HomePageBar()),
                     Expanded(child: content),
                   ],
@@ -70,10 +75,11 @@ class AppLayout extends StatelessWidget {
         child: Column(
           children: [
             //BAR DE HAUT
+            const BarHaute(),
             //const SizedBox(height: 100, child: HomePageBar()),
             //
             //NAVIGATION
-            //
+            const Navigation(),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
