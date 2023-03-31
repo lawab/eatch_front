@@ -3,15 +3,16 @@ import 'package:flutter/material.dart';
 import 'pages/dashboard/dashboard_manager.dart';
 
 void main() {
-  runApp(const Eatch());
+  runApp(const MyApp());
 }
 
-class Eatch extends StatelessWidget {
-  const Eatch({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
