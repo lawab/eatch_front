@@ -3,45 +3,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 
-import '../../data/fake_categories_repository.dart';
-import 'categorie_card.dart';
-
-class CategoriesGrid extends StatelessWidget {
-  const CategoriesGrid({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final products = FakeCategoriesRepository.instance.getCategoriesList();
-    return products.isEmpty
-        ? Center(
-            child: Text(
-              'No products found',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          )
-        : CategoriesLayoutGrid(
-            itemCount: products.length,
-            itemBuilder: (_, index) {
-              final product = products[index];
-              return CategorieCard(categorie: product, onPressed: () {}
-                  // => context.goNamed(
-                  //   AppRoute.product.name,
-                  //   params: {'id': product.id},
-                  // ),
-                  );
-            },
-          );
-  }
-}
-
-/// Grid widget with content-sized items.
-/// See: https://codewithandrea.com/articles/flutter-layout-grid-content-sized-items/
 class CategoriesLayoutGrid extends StatelessWidget {
   const CategoriesLayoutGrid({
-    Key? key,
+    super.key,
     required this.itemCount,
     required this.itemBuilder,
-  }) : super(key: key);
+  });
 
   /// Total number of items to display.
   final int itemCount;
@@ -51,12 +18,11 @@ class CategoriesLayoutGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // use a LayoutBuilder to determine the crossAxisCount
     return LayoutBuilder(builder: (context, constraints) {
       final width = constraints.maxWidth;
       // 1 column for width < 500px
       // then add one more column for each 250px
-      final crossAxisCount = max(1, width ~/ 150);
+      final crossAxisCount = max(1, width ~/ 250);
       // once the crossAxisCount is known, calculate the column and row sizes
       // set some flexible track sizes based on the crossAxisCount with 1.fr
       final columnSizes = List.generate(crossAxisCount, (_) => 1.fr);
@@ -67,8 +33,8 @@ class CategoriesLayoutGrid extends StatelessWidget {
       return LayoutGrid(
         columnSizes: columnSizes,
         rowSizes: rowSizes,
-        rowGap: 24, // equivalent to mainAxisSpacing
-        columnGap: 24, // equivalent to crossAxisSpacing
+        rowGap: 15.0, // equivalent to mainAxisSpacing
+        columnGap: 00.0, // equivalent to crossAxisSpacing
         children: [
           // render all the items with automatic child placement
           for (var i = 0; i < itemCount; i++) itemBuilder(context, i),

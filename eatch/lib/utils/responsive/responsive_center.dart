@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../break_points/breakpoints.dart';
+import '../size/breakpoints.dart';
 
 class ResponsiveCenter extends StatelessWidget {
   const ResponsiveCenter({
