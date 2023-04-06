@@ -56,7 +56,7 @@ class AppLayout extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     //BAR DE HAUT
-                    const BarHaut(),
+                    const SizedBox(width: double.infinity, child: BarHaut()),
                     //const SizedBox(height: 100, child: HomePageBar()),
                     Expanded(child: content),
                   ],

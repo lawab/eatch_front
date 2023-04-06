@@ -7,10 +7,12 @@ class CustomImage extends StatelessWidget {
     required this.imageUrl,
     this.imageWidth,
     this.imageHeight,
+    this.fit,
   }) : super(key: key);
   final String imageUrl;
   final double? imageWidth;
   final double? imageHeight;
+  final BoxFit? fit;
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +20,7 @@ class CustomImage extends StatelessWidget {
       imageUrl,
       width: imageWidth,
       height: imageHeight,
+      fit: fit,
     );
   }
 }
