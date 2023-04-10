@@ -16,7 +16,7 @@ class Navigation extends StatelessWidget {
         height: MediaQuery.of(context).size.height,
         child: Container(
           decoration: const BoxDecoration(
-            color: Colors.red,
+            color: Colors.white,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(15.0),
               bottomLeft: Radius.circular(15.0),

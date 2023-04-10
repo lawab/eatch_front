@@ -45,7 +45,7 @@ const productsData = [
   ),
   Product(
     id: '4',
-    imageUrl: 'assets/products/piggy-blue.jpg',
+    imageUrl: 'assets/products/bruschetta-plate.jpg',
     title: 'Piggy Bank Blue',
     description: 'Lorem ipsum',
     price: 12,
@@ -57,7 +57,7 @@ const productsData = [
   ),
   Product(
     id: '5',
-    imageUrl: 'assets/products/piggy-green.jpg',
+    imageUrl: 'assets/products/bruschetta-plate.jpg',
     title: 'Piggy Bank Green',
     description: 'Lorem ipsum',
     price: 12,
@@ -69,7 +69,7 @@ const productsData = [
   ),
   Product(
     id: '6',
-    imageUrl: 'assets/products/piggy-pink.jpg',
+    imageUrl: 'assets/products/bruschetta-plate.jpg',
     title: 'Piggy Bank Pink',
     description: 'Lorem ipsum',
     price: 12,
