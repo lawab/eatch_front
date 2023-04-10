@@ -15,6 +15,7 @@ final goRouter = GoRouter(
     GoRoute(
       path: "/",
       name: AppRoute.authentification.name,
+      // name: AppRoute.home.name,
       builder: (context, state) => const Authentification(),
     ),
   ],

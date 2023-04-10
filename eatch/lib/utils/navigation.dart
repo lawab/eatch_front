@@ -43,8 +43,8 @@ class NavigationState extends State<Navigation> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            height: 100,
-            width: 100,
+            height: 88,
+            width: 88,
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage("assets/WAB.png"),
@@ -150,7 +150,6 @@ class NavigationState extends State<Navigation> {
   }
 
   Widget verticalView(context) {
-    print("object1");
     return Scaffold(
       body: Row(
         children: [

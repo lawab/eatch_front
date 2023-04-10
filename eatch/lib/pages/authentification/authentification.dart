@@ -39,6 +39,9 @@ class AuthentificationState extends State<Authentification> {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
 
+  // Show the password or hide it
+  bool notVisible = true;
+
   // Sign user method
   //void signUserIn() {}
 
@@ -225,9 +228,15 @@ class AuthentificationState extends State<Authentification> {
                           ),
                           suffixIcon: IconButton(
                             onPressed: () {
-                              setState(() {});
+                              setState(() {
+                                notVisible = !notVisible;
+                              });
                             },
-                            icon: Image.asset("assets/images/eye.png"),
+                            icon: Icon(
+                                notVisible == true
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: Colors.black12),
                           ),
                           hintText: "Entrer votre mot de passe",
                           hintStyle: GoogleFonts.raleway().copyWith(
@@ -436,14 +445,20 @@ class AuthentificationState extends State<Authentification> {
                           ),
                           border: InputBorder.none,
                           prefixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {});
-                            },
+                            onPressed: () {},
                             icon: Image.asset("assets/images/cle.png"),
                           ),
                           suffixIcon: IconButton(
-                            onPressed: () {},
-                            icon: Image.asset("assets/images/eye.png"),
+                            onPressed: () {
+                              setState(() {
+                                notVisible = !notVisible;
+                              });
+                            },
+                            icon: Icon(
+                                notVisible == true
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: Colors.black12),
                           ),
                           hintText: "Entrer votre mot de passe",
                           hintStyle: GoogleFonts.raleway().copyWith(
