@@ -17,6 +17,9 @@ dependencies:
   flutter_svg: ^2.0.4
   cupertino_icons: ^1.0.2
   flutter_layout_grid: ^2.0.1
+
+  google_fonts: ^4.0.3
+  http: ^0.13.5
  
 
 dev_dependencies:
@@ -33,6 +36,8 @@ flutter:
     - assets/
     - assets/products/
     - assets/categories/
+    - assets/images/
+
   
   # fonts:
   #   - family: Schyler
