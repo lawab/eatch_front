@@ -51,8 +51,7 @@ class AppLayout extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    //BAR DE HAUT
-                    //const SizedBox(height: 100, child: HomePageBar()),
+                    //const SizedBox(height: 100, child: BAR DE HAUT()),
                     Expanded(child: content),
                   ],
                 ),
@@ -69,8 +68,7 @@ class AppLayout extends StatelessWidget {
       body: Container(
         child: Column(
           children: [
-            //BAR DE HAUT
-            //const SizedBox(height: 100, child: HomePageBar()),
+            //const SizedBox(height: 100, child: BAR DE HAUT()),
             //
             //NAVIGATION
             //

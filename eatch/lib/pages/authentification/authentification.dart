@@ -1,3 +1,4 @@
+import 'package:eatch/utils/applayout.dart';
 import 'package:flutter/material.dart';
 
 class Authentification extends StatefulWidget {
@@ -42,7 +43,11 @@ class AuthentificationState extends State<Authentification> {
 
 //////////////////////////
   Widget horizontalView(double height, double width, context) {
-    return Scaffold(body: Container());
+    return Scaffold(
+      body: AppLayout(
+        content: Column(),
+      ),
+    );
   }
 
   Widget verticalView(double height, double width, context) {
