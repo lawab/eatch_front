@@ -2,7 +2,9 @@
 
 import 'package:eatch/pages/categories/presentation/categories.dart';
 import 'package:eatch/pages/dashboard/dashboard_manager.dart';
+import 'package:eatch/pages/restaurant/afficheRestaurant.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../pages/users/presentation/users.dart';
 import 'palettes/palette.dart';
@@ -21,6 +23,27 @@ class Navigation extends StatefulWidget {
 }
 
 class _NavigationState extends State<Navigation> {
+  @override
+  void initState() {
+    ind();
+    // TODO: implement initState
+    super.initState();
+  }
+
+  Future ind() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //if(prefs.getInt('index').toInt().is)
+    setState(() {
+      if (prefs.getInt('index') != null) {
+        int aa = prefs.getInt('index')!.toInt();
+        index = aa;
+      } else {
+        print('nullllllllllllll');
+        index = 0;
+      }
+    });
+  }
+
   int index = 0;
   @override
   Widget build(BuildContext context) {
@@ -31,9 +54,12 @@ class _NavigationState extends State<Navigation> {
           index: index,
           text: "ACCUEIL",
           selectedIndex: 0,
-          onPress: () {
+          onPress: () async {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+
             setState(() {
               index = 0;
+              prefs.setInt('index', index);
             });
             Navigator.push(
               context,
@@ -47,9 +73,11 @@ class _NavigationState extends State<Navigation> {
           index: index,
           text: "UTILISATEURS",
           selectedIndex: 1,
-          onPress: () {
+          onPress: () async {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
             setState(() {
               index = 1;
+              prefs.setInt('index', index);
             });
             Navigator.push(
               context,
@@ -62,10 +90,12 @@ class _NavigationState extends State<Navigation> {
         NavigationButton(
           index: index,
           text: "CATÉGORIES",
-          selectedIndex: 1,
-          onPress: () {
+          selectedIndex: 2,
+          onPress: () async {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
             setState(() {
-              index = 1;
+              index = 2;
+              prefs.setInt('index', index);
             });
             Navigator.push(
               context,
@@ -77,82 +107,20 @@ class _NavigationState extends State<Navigation> {
         ),
         NavigationButton(
           index: index,
-          text: "ACCUEIL 3",
+          text: "GESTION DE RESTAURANT",
           selectedIndex: 3,
-          onPress: () {
+          onPress: () async {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
             setState(() {
               index = 3;
+              prefs.setInt('index', index);
             });
-          },
-        ),
-        NavigationButton(
-          index: index,
-          text: "ACCUEIL 4",
-          selectedIndex: 4,
-          onPress: () {
-            setState(() {
-              index = 4;
-            });
-          },
-        ),
-        NavigationButton(
-          index: index,
-          text: "ACCUEIL 5",
-          selectedIndex: 5,
-          onPress: () {
-            setState(() {
-              index = 5;
-            });
-          },
-        ),
-        NavigationButton(
-          index: index,
-          text: "ACCUEIL 6",
-          selectedIndex: 6,
-          onPress: () {
-            setState(() {
-              index = 6;
-            });
-          },
-        ),
-        NavigationButton(
-          index: index,
-          text: "ACCUEIL 7",
-          selectedIndex: 7,
-          onPress: () {
-            setState(() {
-              index = 7;
-            });
-          },
-        ),
-        NavigationButton(
-          index: index,
-          text: "ACCUEIL 8",
-          selectedIndex: 8,
-          onPress: () {
-            setState(() {
-              index = 8;
-            });
-          },
-        ),
-        NavigationButton(
-          index: index,
-          text: "ACCUEIL 9",
-          selectedIndex: 9,
-          onPress: () {
-            setState(() {
-              index = 9;
-            });
-          },
-        ),
-        NavigationButton(
-          index: index,
-          text: "ACCUEIL 10",
-          selectedIndex: 10,
-          onPress: () {
-            setState(() {
-              index = 10;
-            });
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => const RestaurantAffiche(),
+              ),
+            );
           },
         ),
       ],

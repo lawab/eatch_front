@@ -1,6 +1,8 @@
 import 'dart:html';
 
 import 'package:eatch/pages/users/domain/user.dart';
+import 'package:eatch/pages/users/presentation/allUser.dart';
+import 'package:eatch/pages/users/presentation/userManger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -229,185 +231,25 @@ class _UsersState extends State<Users> {
                           icon: Icon(Icons.people_rounded),
                         ),
                         Tab(
-                          text: "La ressource humaine",
+                          text: "Managers",
                           icon: Icon(Icons.handshake),
                         ),
                         Tab(
-                          text: "Le management",
+                          text: "Employés",
                           icon: Icon(Icons.manage_accounts),
                         ),
                         Tab(
-                          text: "La comptabilité",
+                          text: "Comptables",
                           icon: Icon(Icons.monetization_on_sharp),
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: getProportionateScreenHeight(780),
+                    Container(
+                      height: getProportionateScreenHeight(850),
                       child: TabBarView(
                         children: [
-                          SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 20,
-                                  ),
-                                  child: SizedBox(
-                                      width: 300, child: SearchUsers()),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.all(10.0),
-                                  decoration: const BoxDecoration(
-                                    color: Palette.primaryBackgroundColor,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                  ),
-                                  child: SizedBox(
-                                    width: double.infinity,
-                                    child: DataTable(
-                                      columnSpacing: 10,
-                                      horizontalMargin: 00.0,
-                                      columns: const [
-                                        DataColumn(
-                                          label: Text(
-                                            "Nom",
-                                            style: TextStyle(
-                                                color: Palette.textPrimaryColor,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        DataColumn(
-                                          label: Text(
-                                            "Prénom",
-                                            style: TextStyle(
-                                                color: Palette.textPrimaryColor,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        DataColumn(
-                                          label: Text(
-                                            "Utilisateur",
-                                            style: TextStyle(
-                                                color: Palette.textPrimaryColor,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        DataColumn(
-                                          label: Text(
-                                            "Email",
-                                            style: TextStyle(
-                                                color: Palette.textPrimaryColor,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        DataColumn(
-                                          label: Text(
-                                            "Rôle",
-                                            style: TextStyle(
-                                                color: Palette.textPrimaryColor,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ],
-                                      rows: List.generate(
-                                        eatchUsersData.length,
-                                        (index) =>
-                                            usersLists(eatchUsersData[index]),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 20,
-                                  ),
-                                  child: SizedBox(
-                                      width: 300, child: SearchUsers()),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.all(10.0),
-                                  decoration: const BoxDecoration(
-                                    color: Palette.primaryBackgroundColor,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                  ),
-                                  child: SizedBox(
-                                    width: double.infinity,
-                                    child: DataTable(
-                                      columnSpacing: 10,
-                                      horizontalMargin: 00.0,
-                                      columns: const [
-                                        DataColumn(
-                                          label: Text(
-                                            "Nom",
-                                            style: TextStyle(
-                                                color: Palette.textPrimaryColor,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        DataColumn(
-                                          label: Text(
-                                            "Prénom",
-                                            style: TextStyle(
-                                                color: Palette.textPrimaryColor,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        DataColumn(
-                                          label: Text(
-                                            "Utilisateur",
-                                            style: TextStyle(
-                                                color: Palette.textPrimaryColor,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        DataColumn(
-                                          label: Text(
-                                            "Email",
-                                            style: TextStyle(
-                                                color: Palette.textPrimaryColor,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        DataColumn(
-                                          label: Text(
-                                            "Rôle",
-                                            style: TextStyle(
-                                                color: Palette.textPrimaryColor,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ],
-                                      rows: List.generate(
-                                        filterRHList.length,
-                                        (index) =>
-                                            usersLists(filterRHList[index]),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          const AllUsers(),
+                          ManagerUsers(),
                           SingleChildScrollView(
                             child: Column(
                               children: [

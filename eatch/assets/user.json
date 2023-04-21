@@ -1,0 +1,37 @@
+[
+    {
+    "userEmail": "email1@mal.com",
+    "userNom": "archad",
+    "userPrenom": "user1prenom",
+    "userRole": "RÔLE_Manager",
+    "userUserNom": "user1nomutilisateur"
+    },
+    {
+    "userEmail": "email1@mal.com",
+    "userNom": "user1nom",
+    "userPrenom": "user1prenom",
+    "userRole": "RÔLE_COMPTABLE",
+    "userUserNom": "user1nomutilisateur"
+    },
+    {
+    "userEmail": "email2@mal.com",
+    "userNom": "user1nom",
+    "userPrenom": "user1prenom",
+    "userRole": "RÔLE_EMPLOYE",
+    "userUserNom": "user1nomutilisateur"
+    },
+    {
+    "userEmail": "email3@mal.com",
+    "userNom": "user1nom",
+    "userPrenom": "user1prenom",
+    "userRole": "RÔLE_COMPTABLE",
+    "userUserNom": "user1nomutilisateur"
+    },
+    {
+        "userEmail": "email4@mal.com",
+    "userNom": "user1nom",
+    "userPrenom": "user1prenom",
+    "userRole": "RÔLE_COMPTABLE",
+    "userUserNom": "user1nomutilisateur"
+    }
+]
