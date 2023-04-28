@@ -1,6 +1,3 @@
-import 'package:eatch/pages/users/application/search_users_text_field.dart';
-import 'package:eatch/pages/users/domain/user.dart';
-import 'package:eatch/pages/users/infrastructure/users_data.dart';
 import 'package:eatch/servicesAPI/getUser.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
@@ -8,22 +5,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'modification_user.dart';
 
-class ManagerUsers extends ConsumerStatefulWidget {
-  const ManagerUsers({
+class EmployerUsers extends ConsumerStatefulWidget {
+  const EmployerUsers({
     super.key,
   });
-
   @override
-  ManagerUsersState createState() => ManagerUsersState();
+  EmployerUsersState createState() => EmployerUsersState();
 }
 
-class ManagerUsersState extends ConsumerState<ManagerUsers> {
+class EmployerUsersState extends ConsumerState<EmployerUsers> {
   bool search = false;
   List<User> UserSearch = [];
   void filterSearchResults(String query) {
     final viewModel = ref.watch(getDataUserFuture);
     List<User> dummySearchList = [];
-    dummySearchList.addAll(viewModel.listManager);
+    dummySearchList.addAll(viewModel.listEmploye);
     if (query.isNotEmpty) {
       List<User> dummyListData = [];
       dummySearchList.forEach((item) {
@@ -81,7 +77,7 @@ class ManagerUsersState extends ConsumerState<ManagerUsers> {
                     fontSize: 14,
                     color: Colors.grey.shade500,
                   ),
-                  hintText: "Rechercher d'utilisateurs ...",
+                  hintText: "Rechercher d'employés ...",
                 ),
               ),
             ),
@@ -141,7 +137,7 @@ class ManagerUsersState extends ConsumerState<ManagerUsers> {
               ? Container(
                   height: MediaQuery.of(context).size.height - 403,
                   child: ListView.builder(
-                      itemCount: viewModel.listManager.length,
+                      itemCount: viewModel.listEmploye.length,
                       itemBuilder: ((context, index) {
                         return Card(
                           child: Container(
@@ -150,27 +146,27 @@ class ManagerUsersState extends ConsumerState<ManagerUsers> {
                               Expanded(
                                   child: Center(
                                 child:
-                                    Text(viewModel.listManager[index].userNom!),
+                                    Text(viewModel.listEmploye[index].userNom!),
                               )),
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                    viewModel.listManager[index].userPrenom!),
+                                    viewModel.listEmploye[index].userPrenom!),
                               )),
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                    viewModel.listManager[index].userUserNom!),
+                                    viewModel.listEmploye[index].userUserNom!),
                               )),
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                    viewModel.listManager[index].userEmail!),
+                                    viewModel.listEmploye[index].userEmail!),
                               )),
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                    viewModel.listManager[index].userRole!),
+                                    viewModel.listEmploye[index].userRole!),
                               )),
                               Container(
                                 width: 100,
@@ -187,19 +183,19 @@ class ManagerUsersState extends ConsumerState<ManagerUsers> {
                                                 builder: (context) {
                                               return ModificationUser(
                                                 userEmail: viewModel
-                                                    .listManager[index]
+                                                    .listEmploye[index]
                                                     .userEmail!,
                                                 userNom: viewModel
-                                                    .listManager[index]
+                                                    .listEmploye[index]
                                                     .userNom!,
                                                 userPrenom: viewModel
-                                                    .listManager[index]
+                                                    .listEmploye[index]
                                                     .userEmail!,
                                                 userRole: viewModel
-                                                    .listManager[index]
+                                                    .listEmploye[index]
                                                     .userRole!,
                                                 userUserNom: viewModel
-                                                    .listManager[index]
+                                                    .listEmploye[index]
                                                     .userUserNom!,
                                               );
                                             }),
@@ -208,13 +204,13 @@ class ManagerUsersState extends ConsumerState<ManagerUsers> {
                                       )),
                                       Expanded(
                                           child: IconButton(
-                                        icon: const Icon(
+                                        icon: Icon(
                                           Icons.delete,
                                           color: Colors.red,
                                         ),
                                         onPressed: () {
                                           dialogDelete(viewModel
-                                              .listManager[index].userNom!);
+                                              .listEmploye[index].userNom!);
                                         },
                                       ))
                                     ],
@@ -262,7 +258,7 @@ class ManagerUsersState extends ConsumerState<ManagerUsers> {
                                     children: [
                                       Expanded(
                                           child: IconButton(
-                                        icon: const Icon(Icons.edit),
+                                        icon: Icon(Icons.edit),
                                         onPressed: () {
                                           Navigator.push(
                                             context,
@@ -286,7 +282,7 @@ class ManagerUsersState extends ConsumerState<ManagerUsers> {
                                       )),
                                       Expanded(
                                           child: IconButton(
-                                        icon: const Icon(
+                                        icon: Icon(
                                           Icons.delete,
                                           color: Colors.red,
                                         ),

@@ -11,6 +11,8 @@ final getDataUserFuture =
 class GetDataUserFuture extends ChangeNotifier {
   List<User> listDataModel = [];
   List<User> listManager = [];
+  List<User> listEmploye = [];
+  List<User> listComptable = [];
 
   GetDataUserFuture() {
     getData();
@@ -34,6 +36,10 @@ class GetDataUserFuture extends ChangeNotifier {
         listDataModel.add(User.fromJson(data[i]));
         if (data[i]['userRole'] == 'RÔLE_Manager') {
           listManager.add(User.fromJson(data[i]));
+        } else if (data[i]['userRole'] == 'RÔLE_EMPLOYE') {
+          listEmploye.add(User.fromJson(data[i]));
+        } else if (data[i]['userRole'] == 'RÔLE_COMPTABLE') {
+          listComptable.add(User.fromJson(data[i]));
         }
       }
       /*if (response.statusCode == 200) {

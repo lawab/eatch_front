@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../domain/produit.dart';
+import '../../../servicesAPI/get_categories.dart';
 import 'product_card.dart';
 
-class ProductsGrid extends StatefulWidget {
+class ProductsGrid extends ConsumerStatefulWidget {
   const ProductsGrid({
     Key? key,
     required this.filterproductsList,
@@ -13,17 +14,17 @@ class ProductsGrid extends StatefulWidget {
     this.childAspectRatio = 1 / 1.19,
   }) : super(key: key);
 
-  final List<Product> filterproductsList;
+  final List<Produits> filterproductsList;
   final int crossAxisCount;
   final double mainAxisSpacing;
   final double crossAxisSpacing;
   final double childAspectRatio;
 
   @override
-  State<ProductsGrid> createState() => _ProductsGridState();
+  ProductsGridState createState() => ProductsGridState();
 }
 
-class _ProductsGridState extends State<ProductsGrid> {
+class ProductsGridState extends ConsumerState<ProductsGrid> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -42,10 +43,10 @@ class _ProductsGridState extends State<ProductsGrid> {
             childAspectRatio: widget.childAspectRatio,
           ),
           itemBuilder: (context, index) => ProductCard(
-            imageUrl: widget.filterproductsList[index].imageUrl,
-            price: widget.filterproductsList[index].price,
-            title: widget.filterproductsList[index].title,
-            filterproductsList: widget.filterproductsList,
+            imageUrl: widget.filterproductsList[index].imageUrl!,
+            price: widget.filterproductsList[index].price!,
+            title: widget.filterproductsList[index].title!,
+            // filterproductsList: widget.filterproductsList,
           ),
         ),
       ),

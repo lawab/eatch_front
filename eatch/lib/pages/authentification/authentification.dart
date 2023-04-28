@@ -1,10 +1,12 @@
 import 'dart:convert';
 
 import 'package:eatch/pages/dashboard/dashboard_manager.dart';
-import 'package:eatch/utils/applayout.dart';
 import 'package:flutter/material.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+
+import '../../servicesAPI/get_categories.dart';
 
 class Authentification extends StatefulWidget {
   const Authentification({Key? key}) : super(key: key);

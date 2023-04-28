@@ -1,3 +1,5 @@
+// ignore_for_file: sized_box_for_whitespace
+
 import 'dart:ui';
 
 import 'package:eatch/pages/restaurant/creationRestaurant.dart';
@@ -386,7 +388,7 @@ class RestaurantAfficheState extends State<RestaurantAffiche> {
                                 left: 30,
                                 width: width / 5,
                                 height: 30,
-                                child: Text(
+                                child: const Text(
                                   "Nombre d'emplyé: 50",
                                   style: TextStyle(
                                     fontFamily: 'Righteous',
@@ -399,7 +401,7 @@ class RestaurantAfficheState extends State<RestaurantAffiche> {
                                 left: 30,
                                 width: width / 5,
                                 height: 30,
-                                child: Text(
+                                child: const Text(
                                   "Date de création: 10/10/2023",
                                   style: TextStyle(
                                     fontFamily: 'Righteous',

@@ -1,80 +1,72 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+// ignore_for_file: avoid_function_literals_in_foreach_calls, unused_field, prefer_final_fields
 
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import '../../../servicesAPI/get_categories.dart';
 import '../../../utils/applayout.dart';
 import '../../../utils/default_button/default_button.dart';
 import '../../../utils/palettes/palette.dart';
 import '../../../utils/size/size.dart';
-import '../../produits/infrastructure/produits_repository.dart';
 import '../../produits/presentation/product_grid.dart';
-import '../application/search_categories_text_field.dart';
-import '../infrastructure/categories_repository.dart';
 import 'categorie_card.dart';
+import 'modification_categorie.dart';
 
-class CategoriesPage extends StatefulWidget {
+class CategoriesPage extends ConsumerStatefulWidget {
   const CategoriesPage({
     super.key,
   });
 
   @override
-  State<CategoriesPage> createState() => _CategoriesPageState();
+  CategoriesPageState createState() => CategoriesPageState();
 }
 
-class _CategoriesPageState extends State<CategoriesPage> {
-  bool _showContent = false;
-  bool _obscureText = true;
-  bool _cnfirmObscureText = true;
+class CategoriesPageState extends ConsumerState<CategoriesPage> {
+  //**********************/
+  bool search = false;
+  List<Categorie> categorieSearch = [];
+  void filterCategorieResults(String query) {
+    final viewModel = ref.watch(getDataCategoriesFuture);
+    List<Categorie> dummySearchList = [];
+    dummySearchList.addAll(viewModel.listCategories);
+    if (query.isNotEmpty) {
+      List<Categorie> dummyListData = [];
+      dummySearchList.forEach((item) {
+        if (item.title!.contains(query)) {
+          dummyListData.add(item);
+          //print(dummyListData);
+        }
+      });
+      setState(() {
+        search = true;
+        categorieSearch.clear();
+        categorieSearch.addAll(dummyListData);
+      });
+      return;
+    } else {
+      setState(() {
+        search = false;
+      });
+      print("###################");
+    }
+  }
 
-  //**********************************/
+  bool _showContent = false;
   final _formKey = GlobalKey<FormState>();
 
-  String _nom = "";
-  String _prenom = "";
-  String _nomUtilisateur = "";
-  String _email = "";
-  String _password = "";
-  String _confirmPassword = "";
-  String _currentSelectedValue = "";
-  String? _role;
-  List<String> listOfRole = [
-    "RÔLE_COMPTABLE",
-    "RÔLE_RH",
-    "RÔLE_MANAGER",
-  ];
-
-  final FocusNode _prenomFocusNode = FocusNode();
-  final FocusNode _emailFocusNode = FocusNode();
-  final FocusNode _passwordFocusNode = FocusNode();
-  final FocusNode _nomUtilisateurFocusNode = FocusNode();
-  final FocusNode _confirmPasswordFocusNode = FocusNode();
+  String _nomCategorie = "";
 
   @override
   void dispose() {
-    _emailFocusNode.dispose();
-    _passwordFocusNode.dispose();
-    _prenomFocusNode.dispose();
-    _nomUtilisateurFocusNode.dispose();
-    _confirmPasswordFocusNode.dispose();
     super.dispose();
   }
 
-  //**********************************/
   int selectedIndexCategorie = 0;
   final PageController _pageController = PageController();
 
-  //************************* */
-  // final nameController = TextEditingController();
-  // bool onError = false;
-  //************************ */
-
   @override
   Widget build(BuildContext context) {
-    final filterproductsList = productsList.where((prod) {
-      return prod.categories
-          .contains(categoriesList[selectedIndexCategorie].id);
-    }).toList();
-    SizeConfig().init(context);
-
+    final viewModel = ref.watch(getDataCategoriesFuture);
     return AppLayout(
       content: SingleChildScrollView(
         child: Container(
@@ -150,19 +142,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                       key: _formKey,
                       child: Column(
                         children: [
-                          nomForm(),
-                          const SizedBox(height: 20),
-                          prenomForm(),
-                          const SizedBox(height: 20),
-                          nomUtilisateurForm(),
-                          const SizedBox(height: 20),
-                          emailForm(),
-                          const SizedBox(height: 20),
-                          passwordForm(),
-                          const SizedBox(height: 20),
-                          confirmPasswordForm(),
-                          const SizedBox(height: 20),
-                          roleForm(),
+                          nomCategorie(),
                           const SizedBox(height: 20),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
@@ -177,13 +157,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
                                       _formKey.currentState!.save();
-                                      print("nom is $_nom");
-                                      print("prenom is $_prenom");
-                                      print("nomuser is $_nomUtilisateur");
-                                      print("Email is $_email");
-                                      print("pass is $_password");
-                                      print("conf is $_confirmPassword");
-                                      print("conf is $_role");
+                                      print("nom is $_nomCategorie");
                                     } else {
                                       print("Bad");
                                     }
@@ -213,11 +187,39 @@ class _CategoriesPageState extends State<CategoriesPage> {
                     ),
                   )
                 : Container(),
-            const Padding(
-              padding: EdgeInsets.symmetric(
+            Padding(
+              padding: const EdgeInsets.symmetric(
                 vertical: 20,
               ),
-              child: SizedBox(width: 300, child: SearchCategories()),
+              child: SizedBox(
+                width: 300,
+                child: TextField(
+                  // onChanged: (value) => onSearch(value.toLowerCase()),
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                  ),
+                  onChanged: (value) {
+                    filterCategorieResults(value);
+                  },
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Palette.fourthColor,
+                    contentPadding: const EdgeInsets.all(0),
+                    prefixIcon:
+                        const Icon(Icons.search, color: Palette.primaryColor),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50),
+                      borderSide: BorderSide.none,
+                    ),
+                    hintStyle: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey.shade500,
+                    ),
+                    hintText: "Rechercher une catégorie ...",
+                  ),
+                ),
+              ),
             ),
             /**
                 !DEUXIEME LIGNE 
@@ -225,7 +227,17 @@ class _CategoriesPageState extends State<CategoriesPage> {
             Row(
               children: [
                 Expanded(
-                  flex: 2,
+                  flex: MediaQuery.of(context).size.width < 485
+                      ? 1
+                      : MediaQuery.of(context).size.width < 485
+                          ? 3
+                          : MediaQuery.of(context).size.width < 530
+                              ? 2
+                              : MediaQuery.of(context).size.width < 635
+                                  ? 4
+                                  : MediaQuery.of(context).size.width < 1000
+                                      ? 3
+                                      : 2,
                   child: Card(
                     elevation: 5,
                     shape: RoundedRectangleBorder(
@@ -261,32 +273,103 @@ class _CategoriesPageState extends State<CategoriesPage> {
                               ),
                             ),
                             Expanded(
-                              child: SingleChildScrollView(
-                                child: GridView.builder(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemCount: categoriesList.length,
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 01,
-                                    mainAxisSpacing: 10,
-                                    childAspectRatio: 4.1,
-                                  ),
-                                  itemBuilder: (context, index) =>
-                                      CategorieCard(
-                                    categorie: categoriesList[index],
-                                    index: index,
-                                    onPress: () {
-                                      setState(() {
-                                        selectedIndexCategorie = index;
-                                        _pageController.jumpToPage(index);
-                                      });
-                                    },
-                                    selectedIndex: selectedIndexCategorie,
-                                  ),
-                                ),
-                              ),
-                            ),
+                                child: search == false
+                                    ? GridView.builder(
+                                        itemCount:
+                                            viewModel.listCategories.length,
+                                        gridDelegate:
+                                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 01,
+                                          mainAxisSpacing: 10,
+                                          childAspectRatio: 4.1,
+                                        ),
+                                        itemBuilder: (context, index) {
+                                          return CategorieCard(
+                                            categorie:
+                                                viewModel.listCategories[index],
+                                            index: index,
+                                            onPress: () {
+                                              setState(() {
+                                                selectedIndexCategorie = index;
+                                                _pageController
+                                                    .jumpToPage(index);
+                                              });
+                                            },
+                                            selectedIndex:
+                                                selectedIndexCategorie,
+                                            onTapDelete: () {
+                                              dialogDelete(viewModel
+                                                  .listCategories[index]
+                                                  .title!);
+                                            },
+                                            onTapEdit: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                                  return ModificationCategorie(
+                                                    nomCategorie: viewModel
+                                                        .listCategories[index]
+                                                        .title!,
+                                                  );
+                                                }),
+                                              );
+                                            },
+                                          );
+                                        })
+                                    : categorieSearch.isEmpty
+                                        ? const Center(
+                                            child: Text(
+                                              'Aucune Catégorie trouvée',
+                                            ),
+                                          )
+                                        : GridView.builder(
+                                            itemCount: categorieSearch.length,
+                                            gridDelegate:
+                                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 01,
+                                              mainAxisSpacing: 10,
+                                              childAspectRatio: 4.1,
+                                            ),
+                                            itemBuilder: (context, index) {
+                                              print(
+                                                  "##################################################################################################################################################################");
+
+                                              return CategorieCard(
+                                                categorie:
+                                                    categorieSearch[index],
+                                                index: index,
+                                                onPress: () {
+                                                  setState(() {
+                                                    selectedIndexCategorie =
+                                                        index;
+                                                    _pageController
+                                                        .jumpToPage(index);
+                                                  });
+                                                },
+                                                selectedIndex:
+                                                    selectedIndexCategorie,
+                                                onTapDelete: () {
+                                                  dialogDelete(
+                                                      categorieSearch[index]
+                                                          .title!);
+                                                },
+                                                onTapEdit: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                      return ModificationCategorie(
+                                                        nomCategorie:
+                                                            categorieSearch[
+                                                                    index]
+                                                                .title!,
+                                                      );
+                                                    }),
+                                                  );
+                                                },
+                                              );
+                                            })),
                           ],
                         ),
                       ),
@@ -295,7 +378,17 @@ class _CategoriesPageState extends State<CategoriesPage> {
                 ),
                 const SizedBox(width: 10),
                 Expanded(
-                  flex: 7,
+                  flex: MediaQuery.of(context).size.width < 485
+                      ? 1
+                      : MediaQuery.of(context).size.width < 485
+                          ? 4
+                          : MediaQuery.of(context).size.width < 530
+                              ? 3
+                              : MediaQuery.of(context).size.width < 575
+                                  ? 7
+                                  : MediaQuery.of(context).size.width < 635
+                                      ? 8
+                                      : 7,
                   child: Card(
                     elevation: 5,
                     shape: RoundedRectangleBorder(
@@ -321,7 +414,16 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                   right: 10.0,
                                 ),
                                 child: Text(
-                                  categoriesList[selectedIndexCategorie].title,
+                                  search == false
+                                      ? viewModel
+                                          .listCategories[
+                                              selectedIndexCategorie]
+                                          .title!
+                                      : categorieSearch.isNotEmpty
+                                          ? categorieSearch[
+                                                  selectedIndexCategorie]
+                                              .title!
+                                          : "",
                                   style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
@@ -330,187 +432,106 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                 ),
                               ),
                             ),
-                            //LES PRODUITS
-                            // Expanded(
-                            //   child: PageView(
-                            //     scrollDirection: Axis.vertical,
-                            //     physics: const NeverScrollableScrollPhysics(),
-                            //     controller: _pageController,
-                            //     children: [
-                            //       for (var i = 0;
-                            //           i < categoriesList.length;
-                            //           i++)
-                            //         filterproductsList.isEmpty
-                            //             ? const Center(
-                            //                 child: Text(
-                            //                   'Aucune infrmation trouvée',
-                            //                 ),
-                            //               )
-                            //             : Row(
-                            //                 children: [
-                            //                   Expanded(
-                            //                     child: Column(
-                            //                       children: [
-                            //                         const Align(
-                            //                           alignment:
-                            //                               Alignment.centerLeft,
-                            //                           child: Padding(
-                            //                             padding:
-                            //                                 EdgeInsets.only(
-                            //                                     left: 32.0),
-                            //                             child: Text(
-                            //                               'Name',
-                            //                               style: TextStyle(
-                            //                                   fontFamily:
-                            //                                       'Poppins',
-                            //                                   fontStyle:
-                            //                                       FontStyle
-                            //                                           .normal,
-                            //                                   fontSize: 16,
-                            //                                   color: Palette
-                            //                                       .textPrimaryColor),
-                            //                             ),
-                            //                           ),
-                            //                         ),
-                            //                         Container(
-                            //                             color: Colors.green,
-                            //                             padding:
-                            //                                 const EdgeInsets
-                            //                                     .symmetric(
-                            //                               horizontal: 30,
-                            //                               vertical: 5,
-                            //                             ),
-                            //                             child: TextFormField(
-                            //                               style: const TextStyle(
-                            //                                   color: Palette
-                            //                                       .textPrimaryColor,
-                            //                                   fontSize: 14),
-                            //                               controller:
-                            //                                   nameController,
-                            //                               decoration:
-                            //                                   InputDecoration(
-                            //                                 hoverColor: Palette
-                            //                                     .primaryBackgroundColor,
-                            //                                 contentPadding:
-                            //                                     const EdgeInsets
-                            //                                             .fromLTRB(
-                            //                                         8,
-                            //                                         5,
-                            //                                         10,
-                            //                                         5),
-                            //                                 filled: true,
-                            //                                 fillColor: Palette
-                            //                                     .primaryBackgroundColor,
-                            //                                 enabledBorder:
-                            //                                     OutlineInputBorder(
-                            //                                   borderRadius:
-                            //                                       BorderRadius
-                            //                                           .circular(
-                            //                                               10),
-                            //                                   borderSide: const BorderSide(
-                            //                                       color: Palette
-                            //                                           .secondaryBackgroundColor),
-                            //                                   gapPadding: 10,
-                            //                                 ),
-                            //                                 border:
-                            //                                     OutlineInputBorder(
-                            //                                   borderRadius:
-                            //                                       BorderRadius
-                            //                                           .circular(
-                            //                                               10),
-                            //                                   borderSide: const BorderSide(
-                            //                                       color: Palette
-                            //                                           .secondaryBackgroundColor),
-                            //                                   gapPadding: 10,
-                            //                                 ),
-                            //                                 focusedBorder:
-                            //                                     OutlineInputBorder(
-                            //                                   borderRadius:
-                            //                                       BorderRadius
-                            //                                           .circular(
-                            //                                               10),
-                            //                                   borderSide: const BorderSide(
-                            //                                       color: Palette
-                            //                                           .secondaryBackgroundColor),
-                            //                                   gapPadding: 10,
-                            //                                 ),
-                            //                                 labelText:
-                            //                                     "Catégorie",
-                            //                                 labelStyle:
-                            //                                     const TextStyle(
-                            //                                   color: Palette
-                            //                                       .textPrimaryColor,
-                            //                                   fontSize: 16,
-                            //                                   fontFamily:
-                            //                                       'Poppins',
-                            //                                   fontStyle:
-                            //                                       FontStyle
-                            //                                           .normal,
-                            //                                 ),
-                            //                               ),
-                            //                               validator:
-                            //                                   (String? val) {
-                            //                                 if (val!.isEmpty) {
-                            //                                   return "Your name is required";
-                            //                                 }
-
-                            //                                 return null;
-                            //                               },
-                            //                             )),
-                            //                         onError
-                            //                             ? Positioned(
-                            //                                 bottom: 0,
-                            //                                 child: Padding(
-                            //                                   padding:
-                            //                                       const EdgeInsets
-                            //                                               .only(
-                            //                                           left: 30),
-                            //                                   child: Text('',
-                            //                                       style: TextStyle(
-                            //                                           color: Colors
-                            //                                               .red)),
-                            //                                 ))
-                            //                             : Container(),
-                            //                         SizedBox(
-                            //                           height: 10,
-                            //                         ),
-                            //                       ],
-                            //                     ),
-                            //                   ),
-                            //                   const SizedBox(width: 20),
-                            //                   Expanded(
-                            //                     child: Container(
-                            //                       color: Colors.yellow,
-                            //                     ),
-                            //                   ),
-                            //                 ],
-                            //               ),
-                            //     ],
-                            //   ),
-                            // ),
-
-                            Expanded(
-                              child: PageView(
-                                scrollDirection: Axis.vertical,
-                                physics: const NeverScrollableScrollPhysics(),
-                                controller: _pageController,
-                                children: [
-                                  for (var i = 0;
-                                      i < categoriesList.length;
-                                      i++)
-                                    filterproductsList.isEmpty
-                                        ? const Center(
-                                            child: Text(
-                                              'Aucun Produit trouvé',
-                                            ),
-                                          )
-                                        : ProductsGrid(
-                                            filterproductsList:
-                                                filterproductsList,
-                                          ),
-                                ],
-                              ),
-                            ),
+                            search == false
+                                ? Expanded(
+                                    child: PageView(
+                                      scrollDirection: Axis.vertical,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      controller: _pageController,
+                                      children: [
+                                        viewModel
+                                                .listCategories[
+                                                    selectedIndexCategorie]
+                                                .produits!
+                                                .isEmpty
+                                            ? const Center(
+                                                child: Text(
+                                                  'Aucun Produit trouvé',
+                                                ),
+                                              )
+                                            : ProductsGrid(
+                                                filterproductsList: viewModel
+                                                    .listCategories[
+                                                        selectedIndexCategorie]
+                                                    .produits!,
+                                                crossAxisCount: MediaQuery.of(
+                                                                context)
+                                                            .size
+                                                            .width <
+                                                        485
+                                                    ? 1
+                                                    : MediaQuery.of(context)
+                                                                .size
+                                                                .width <
+                                                            605
+                                                        ? 02
+                                                        : MediaQuery.of(context)
+                                                                    .size
+                                                                    .width <
+                                                                750
+                                                            ? 03
+                                                            : 04,
+                                                mainAxisSpacing: 10,
+                                                crossAxisSpacing: 10,
+                                                childAspectRatio: 1 / 1.19,
+                                              ),
+                                      ],
+                                    ),
+                                  )
+                                : Expanded(
+                                    child: PageView(
+                                      scrollDirection: Axis.vertical,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      controller: _pageController,
+                                      children: [
+                                        categorieSearch.isEmpty
+                                            ? const Center(
+                                                child: Text(
+                                                  'Aucun Produit trouvé',
+                                                ),
+                                              )
+                                            : categorieSearch[
+                                                        selectedIndexCategorie]
+                                                    .produits!
+                                                    .isEmpty
+                                                ? const Center(
+                                                    child: Text(
+                                                      'Aucun Produit trouvé',
+                                                    ),
+                                                  )
+                                                : ProductsGrid(
+                                                    filterproductsList:
+                                                        categorieSearch.isEmpty
+                                                            ? []
+                                                            : categorieSearch[
+                                                                    selectedIndexCategorie]
+                                                                .produits!,
+                                                    crossAxisCount: MediaQuery
+                                                                    .of(context)
+                                                                .size
+                                                                .width <
+                                                            485
+                                                        ? 1
+                                                        : MediaQuery.of(context)
+                                                                    .size
+                                                                    .width <
+                                                                605
+                                                            ? 02
+                                                            : MediaQuery.of(context)
+                                                                        .size
+                                                                        .width <
+                                                                    750
+                                                                ? 03
+                                                                : 04,
+                                                    mainAxisSpacing: 10,
+                                                    crossAxisSpacing: 10,
+                                                    childAspectRatio: 1 / 1.19,
+                                                  ),
+                                      ],
+                                    ),
+                                  ),
                           ],
                         ),
                       ),
@@ -525,188 +546,66 @@ class _CategoriesPageState extends State<CategoriesPage> {
     );
   }
 
-  DropdownButtonFormField<String> roleForm() {
-    return DropdownButtonFormField(
-      decoration: InputDecoration(
-        hoverColor: Palette.primaryBackgroundColor,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
-        filled: true,
-        fillColor: Palette.primaryBackgroundColor,
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
-          gapPadding: 10,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
-          gapPadding: 10,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
-          gapPadding: 10,
-        ),
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-      ),
-      value: _role,
-      hint: const Text(
-        'Rôle*',
-      ),
-      isExpanded: true,
-      onChanged: (value) {
-        setState(() {
-          _role = value;
+  Future dialogDelete(String nomcategorie) {
+    return showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+              backgroundColor: Colors.white,
+              title: const Center(
+                child: Text(
+                  "Confirmez la suppression",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              actions: [
+                ElevatedButton.icon(
+                    icon: const Icon(
+                      Icons.close,
+                      size: 14,
+                    ),
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.grey),
+                    onPressed: () {
+                      Navigator.of(context, rootNavigator: true).pop();
+                    },
+                    label: const Text("Quitter   ")),
+                const SizedBox(
+                  width: 20,
+                ),
+                ElevatedButton.icon(
+                  icon: const Icon(
+                    Icons.delete,
+                    size: 14,
+                  ),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  onPressed: () {},
+                  label: const Text("Supprimer."),
+                )
+              ],
+              content: Container(
+                  alignment: Alignment.center,
+                  color: Colors.white,
+                  height: 150,
+                  child: Text(
+                    "Voulez vous supprimer la catégorie $nomcategorie?",
+                    style: const TextStyle(
+                      color: Colors.black,
+                    ),
+                  )));
         });
-      },
-      onSaved: (value) {
-        setState(() {
-          _role = value;
-        });
-      },
-      validator: (String? value) {
-        if (value == null) {
-          return "Le rôle de l’utilisateur est obligatoire.";
-        } else {
-          return null;
-        }
-      },
-      items: listOfRole.map((String val) {
-        return DropdownMenuItem(
-          value: val,
-          child: Text(
-            val,
-          ),
-        );
-      }).toList(),
-    );
   }
 
-  TextFormField passwordForm() {
-    return TextFormField(
-      textInputAction: TextInputAction.next,
-      focusNode: _passwordFocusNode,
-      keyboardType: TextInputType.visiblePassword,
-      onEditingComplete: (() =>
-          FocusScope.of(context).requestFocus(_confirmPasswordFocusNode)),
-      obscureText: !_obscureText,
-      onChanged: (value) {
-        _password = value;
-      },
-      validator: (value) {
-        if (value!.isEmpty) {
-          return "Le mot de passe est obligatoire.";
-        } else if (value.length < 8) {
-          return "Ce champ doit contenir au moins 8 lettres.";
-        }
-        return null;
-      },
-      decoration: InputDecoration(
-        hoverColor: Palette.primaryBackgroundColor,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
-        filled: true,
-        fillColor: Palette.primaryBackgroundColor,
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
-          gapPadding: 10,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
-          gapPadding: 10,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
-          gapPadding: 10,
-        ),
-        hintText: "Password*",
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixIcon: GestureDetector(
-          onTap: () {
-            setState(() {
-              _obscureText = !_obscureText;
-            });
-          },
-          child: (_obscureText
-              ? const CustomSurffixIcon(svgIcon: "assets/icons/eye.svg")
-              : const CustomSurffixIcon(svgIcon: "assets/icons/eye_slash.svg")),
-        ),
-      ),
-      onSaved: (value) {
-        _password = value!;
-      },
-    );
-  }
-
-  TextFormField confirmPasswordForm() {
-    return TextFormField(
-      textInputAction: TextInputAction.done,
-      focusNode: _confirmPasswordFocusNode,
-      keyboardType: TextInputType.visiblePassword,
-      obscureText: !_cnfirmObscureText,
-      onChanged: (value) {
-        _confirmPassword = value;
-      },
-      validator: (value) {
-        if (value!.isEmpty) {
-          return "Le mot de passe est obligatoire.";
-        } else if (value != _password) {
-          return "Les mots de passes ne sont pas conformes.";
-        }
-        return null;
-      },
-      decoration: InputDecoration(
-        hoverColor: Palette.primaryBackgroundColor,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
-        filled: true,
-        fillColor: Palette.primaryBackgroundColor,
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
-          gapPadding: 10,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
-          gapPadding: 10,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
-          gapPadding: 10,
-        ),
-        hintText: "Confirm Password*",
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixIcon: GestureDetector(
-          onTap: () {
-            setState(() {
-              _cnfirmObscureText = !_cnfirmObscureText;
-            });
-          },
-          child: (_cnfirmObscureText
-              ? const CustomSurffixIcon(svgIcon: "assets/icons/eye.svg")
-              : const CustomSurffixIcon(svgIcon: "assets/icons/eye_slash.svg")),
-        ),
-      ),
-      onSaved: (value) {
-        _confirmPassword = value!;
-      },
-    );
-  }
-
-  TextFormField nomForm() {
+  TextFormField nomCategorie() {
     return TextFormField(
       textInputAction: TextInputAction.next,
       autocorrect: true,
       textCapitalization: TextCapitalization.characters,
       enableSuggestions: false,
-      onEditingComplete: (() =>
-          FocusScope.of(context).requestFocus(_prenomFocusNode)),
+      onEditingComplete: (() => FocusScope.of(context).requestFocus()),
       keyboardType: TextInputType.name,
       validator: (value) {
         if (value!.isEmpty) {
@@ -738,163 +637,12 @@ class _CategoriesPageState extends State<CategoriesPage> {
           gapPadding: 10,
         ),
         prefix: const Padding(padding: EdgeInsets.only(left: 0.0)),
-        hintText: "Nom*",
+        hintText: "Titre Catégorie*",
         floatingLabelBehavior: FloatingLabelBehavior.always,
         suffixIcon: const CustomSurffixIcon(svgIcon: "assets/icons/user.svg"),
       ),
       onSaved: (value) {
-        _nom = value!;
-      },
-    );
-  }
-
-  TextFormField prenomForm() {
-    return TextFormField(
-      focusNode: _prenomFocusNode,
-      textInputAction: TextInputAction.next,
-      autocorrect: true,
-      textCapitalization: TextCapitalization.words,
-      enableSuggestions: false,
-      onEditingComplete: (() =>
-          FocusScope.of(context).requestFocus(_nomUtilisateurFocusNode)),
-      keyboardType: TextInputType.name,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return "S'il vous plaît entrez le prénom de l'utilisateur .";
-        } else if (value.length < 2) {
-          return "Ce champ doit contenir au moins 2 lettres.";
-        }
-        return null;
-      },
-      decoration: InputDecoration(
-        hoverColor: Palette.primaryBackgroundColor,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
-        filled: true,
-        fillColor: Palette.primaryBackgroundColor,
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
-          gapPadding: 10,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
-          gapPadding: 10,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
-          gapPadding: 10,
-        ),
-        prefix: const Padding(padding: EdgeInsets.only(left: 0.0)),
-        hintText: "Prénom*",
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixIcon: const CustomSurffixIcon(svgIcon: "assets/icons/user.svg"),
-      ),
-      onSaved: (value) {
-        _prenom = value!;
-      },
-    );
-  }
-
-  TextFormField nomUtilisateurForm() {
-    return TextFormField(
-      focusNode: _nomUtilisateurFocusNode,
-      textInputAction: TextInputAction.next,
-      autocorrect: true,
-      textCapitalization: TextCapitalization.words,
-      enableSuggestions: false,
-      onEditingComplete: (() =>
-          FocusScope.of(context).requestFocus(_emailFocusNode)),
-      keyboardType: TextInputType.name,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return "S'il vous plaît entrez le nom d'utilisateur .";
-        } else if (value.length < 2) {
-          return "Ce champ doit contenir au moins 2 lettres.";
-        }
-        return null;
-      },
-      decoration: InputDecoration(
-        hoverColor: Palette.primaryBackgroundColor,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
-        filled: true,
-        fillColor: Palette.primaryBackgroundColor,
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
-          gapPadding: 10,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
-          gapPadding: 10,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
-          gapPadding: 10,
-        ),
-        prefix: const Padding(padding: EdgeInsets.only(left: 0.0)),
-        hintText: "Nom d'utilisateur*",
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixIcon: const CustomSurffixIcon(svgIcon: "assets/icons/user.svg"),
-      ),
-      onSaved: (value) {
-        _nomUtilisateur = value!;
-      },
-    );
-  }
-
-  TextFormField emailForm() {
-    return TextFormField(
-      focusNode: _emailFocusNode,
-      textInputAction: TextInputAction.next,
-      autocorrect: false,
-      textCapitalization: TextCapitalization.none,
-      enableSuggestions: false,
-      onEditingComplete: (() => FocusScope.of(context).requestFocus()),
-      keyboardType: TextInputType.emailAddress,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return "L' adresse e-mail est obligatoire.";
-        } else if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-            .hasMatch(value)) {
-          return "L' adresse e-mail invalide.";
-        }
-        return null;
-      },
-      decoration: InputDecoration(
-        hoverColor: Palette.primaryBackgroundColor,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
-        filled: true,
-        fillColor: Palette.primaryBackgroundColor,
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
-          gapPadding: 10,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
-          gapPadding: 10,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
-          gapPadding: 10,
-        ),
-        prefix: const Padding(padding: EdgeInsets.only(left: 0.0)),
-        hintText: "Adresse Email*",
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-        suffixIcon: const CustomSurffixIcon(
-            svgIcon: "assets/icons/envelope_open_text.svg"),
-      ),
-      onSaved: (value) {
-        _email = value!;
+        _nomCategorie = value!;
       },
     );
   }
