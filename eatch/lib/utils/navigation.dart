@@ -1,7 +1,11 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:eatch/pages/authentification/authentification.dart';
 import 'package:eatch/pages/categories/presentation/categories.dart';
 import 'package:eatch/pages/dashboard/dashboard_manager.dart';
+import 'package:eatch/pages/matiere_premiere/afficheMatie%C3%A8re.dart';
+import 'package:eatch/pages/menus/presentation/menu.dart';
+import 'package:eatch/pages/menus/presentation/menu_grid.dart';
 import 'package:eatch/pages/restaurant/afficheRestaurant.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -123,6 +127,78 @@ class _NavigationState extends State<Navigation> {
             );
           },
         ),
+        NavigationButton(
+          index: index,
+          text: "MATIERE PREMIERE",
+          selectedIndex: 4,
+          onPress: () async {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            setState(() {
+              index = 4;
+              prefs.setInt('index', index);
+            });
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => const MatiereAffiche(),
+              ),
+            );
+          },
+        ),
+        NavigationButton(
+          index: index,
+          text: "PRODUIT",
+          selectedIndex: 5,
+          onPress: () async {
+            /*SharedPreferences prefs = await SharedPreferences.getInstance();
+            setState(() {
+              index = 5;
+              prefs.setInt('index', index);
+            });
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => const RestaurantAffiche(),
+              ),
+            );*/
+          },
+        ),
+        NavigationButton(
+          index: index,
+          text: "Menu",
+          selectedIndex: 6,
+          onPress: () async {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            setState(() {
+              index = 6;
+              prefs.setInt('index', index);
+            });
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => const Menu(),
+              ),
+            );
+          },
+        ),
+        NavigationButton(
+          index: index,
+          text: "QUITTER L'APPLICATION",
+          selectedIndex: 7,
+          onPress: () async {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            setState(() {
+              index = 7;
+              prefs.setInt('index', 0);
+            });
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => const Authentification(),
+              ),
+            );
+          },
+        ),
       ],
     );
   }
@@ -168,7 +244,7 @@ class NavigationButton extends StatelessWidget {
         child: Text(
           text,
           style: TextStyle(
-            fontSize: 14,
+            fontSize: 12,
             color: (selectedIndex == index)
                 ? Palette.primaryBackgroundColor
                 : Palette.textsecondaryColor,

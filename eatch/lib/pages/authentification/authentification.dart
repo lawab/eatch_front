@@ -5,6 +5,7 @@ import 'package:eatch/utils/applayout.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Authentification extends StatefulWidget {
   const Authentification({Key? key}) : super(key: key);
@@ -17,12 +18,31 @@ class AuthentificationState extends State<Authentification> {
   // Text editing controller
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
-
+  final _formKey = GlobalKey<FormState>();
+  var isChecked = false;
   // Show the password or hide it
   bool notVisible = true;
+  @override
+  void initState() {
+    _loadSettings();
+    // TODO: implement initState
+    super.initState();
+  }
 
-  // Sign user method
-  //void signUserIn() {}
+  void _loadSettings() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      if (prefs.getBool('login') == true) {
+        isChecked = true;
+        usernameController.text = prefs.getString('emailLogin').toString();
+        passwordController.text = prefs.getString('passLogin').toString();
+      } else {
+        isChecked = false;
+        usernameController.text = '';
+        passwordController.text = '';
+      }
+    });
+  }
 
   MediaQueryData mediaQueryData(BuildContext context) {
     return MediaQuery.of(context);
@@ -58,24 +78,26 @@ class AuthentificationState extends State<Authentification> {
 
   Widget horizontalView(double height, double width, context) {
     return Scaffold(
-      body: SizedBox(
-        height: height,
-        width: width,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Container(
-                height: height,
-                width: width,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/images/eatch5.jpg"),
-                    fit: BoxFit.cover,
+      body: Form(
+        key: _formKey,
+        child: SizedBox(
+          height: height,
+          width: width,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Container(
+                  height: height,
+                  width: width,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/images/eatch5.jpg"),
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-                /*child: Center(
+                  /*child: Center(
                   child: Text(
                     'Gestion de restaurant',
                     style: GoogleFonts.raleway().copyWith(
@@ -84,194 +106,257 @@ class AuthentificationState extends State<Authentification> {
                         fontWeight: FontWeight.w800),
                   ),
                 ),*/
-              ),
-            ),
-            Expanded(
-              child: Container(
-                height: height,
-                width: width,
-                padding: EdgeInsets.symmetric(
-                  horizontal: height * 0.12,
                 ),
-                color: Colors.green,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    //////////
-                    Container(
-                      height: 200,
-                      width: 200,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage("assets/images/Logo_Eatch.png"),
-                          fit: BoxFit.cover,
+              ),
+              Expanded(
+                child: Container(
+                  height: height,
+                  width: width,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: height * 0.12,
+                  ),
+                  color: Colors.green,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      //////////
+                      Container(
+                        height: 200,
+                        width: 200,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage("assets/images/Logo_Eatch.png"),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                    ),
-                    ////////////
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: "Connexion",
-                            style: GoogleFonts.raleway().copyWith(
-                                fontSize: 25,
-                                color: Colors.black,
-                                fontWeight: FontWeight.normal),
-                          ),
-                          TextSpan(
-                            text: " Eatch",
-                            style: GoogleFonts.raleway().copyWith(
-                                fontSize: 25,
-                                color: Colors.black,
-                                fontWeight: FontWeight.normal),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: height * 0.02),
-                    Text(
-                      'Bienvenue sur notre application Eatch, J\'espère que vous serez satisfait de nos services.',
-                      style: GoogleFonts.raleway().copyWith(
-                          fontSize: 12,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400),
-                    ),
-                    SizedBox(height: height * 0.032),
-                    const SizedBox(height: 6),
-                    Container(
-                      height: 50,
-                      width: width,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(18),
-                        color: Colors.white,
-                      ),
-                      child: TextFormField(
-                        controller: usernameController,
-                        style: GoogleFonts.raleway().copyWith(
-                          fontSize: 12,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        decoration: InputDecoration(
-                          label: const Text(
-                            "Nom d'utlisateur",
-                            style: TextStyle(
-                              color: Colors.black,
+                      ////////////
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "Connexion",
+                              style: GoogleFonts.raleway().copyWith(
+                                  fontSize: 25,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.normal),
                             ),
-                          ),
-                          border: InputBorder.none,
-                          prefixIcon: IconButton(
-                            onPressed: () {},
-                            icon: Image.asset("assets/images/user.png"),
-                          ),
-                          contentPadding: const EdgeInsets.only(top: 16),
-                          hintText: "Entrer votre nom d'utilisateur",
-                          hintStyle: GoogleFonts.raleway().copyWith(
-                            fontSize: 12,
-                            color: Colors.black.withOpacity(0.5),
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: height * 0.014),
-                    const SizedBox(height: 6),
-                    Container(
-                      height: 50,
-                      width: width,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(18),
-                        color: Colors.white,
-                      ),
-                      child: TextFormField(
-                        controller: passwordController,
-                        style: GoogleFonts.raleway().copyWith(
-                          fontSize: 12,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          label: const Text(
-                            "Mot de passe",
-                            style: TextStyle(
-                              color: Colors.black,
+                            TextSpan(
+                              text: " Eatch",
+                              style: GoogleFonts.raleway().copyWith(
+                                  fontSize: 25,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.normal),
                             ),
-                          ),
-                          border: InputBorder.none,
-                          prefixIcon: IconButton(
-                            onPressed: () {},
-                            icon: Image.asset("assets/images/cle.png"),
-                          ),
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                notVisible = !notVisible;
-                              });
-                            },
-                            icon: Icon(
-                                notVisible == true
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                                color: Colors.black12),
-                          ),
-                          hintText: "Entrer votre mot de passe",
-                          hintStyle: GoogleFonts.raleway().copyWith(
-                            fontSize: 12,
-                            color: Colors.black.withOpacity(0.5),
-                            fontWeight: FontWeight.w400,
-                          ),
+                          ],
                         ),
                       ),
-                    ),
-                    SizedBox(height: height * 0.03),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          'Mot de passe oublié',
+                      SizedBox(height: height * 0.02),
+                      Text(
+                        'Bienvenue sur notre application Eatch, J\'espère que vous serez satisfait de nos services.',
+                        style: GoogleFonts.raleway().copyWith(
+                            fontSize: 12,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      SizedBox(height: height * 0.032),
+                      const SizedBox(height: 6),
+                      Container(
+                        height: 60,
+                        width: width,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                          color: Colors.white,
+                        ),
+                        child: TextFormField(
+                          controller: usernameController,
                           style: GoogleFonts.raleway().copyWith(
                             fontSize: 12,
                             color: Colors.black,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w400,
                           ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: height * 0.05),
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          login(
-                              usernameController.text, passwordController.text);
-                        },
-                        borderRadius: BorderRadius.circular(16),
-                        child: Ink(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 70, vertical: 18),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            color: Colors.yellow,
-                          ),
-                          child: Text(
-                            'Se connecter',
-                            style: GoogleFonts.raleway().copyWith(
-                                fontSize: 16,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return '    Ne laissez pas vide';
+                            } else if (RegExp(
+                                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                .hasMatch(value)) {
+                              return null;
+                            } else {
+                              return '    Entrer un email valide';
+                            }
+                          },
+                          decoration: InputDecoration(
+                            label: const Text(
+                              "Nom d'utlisateur",
+                              style: TextStyle(
                                 color: Colors.black,
-                                fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                            border: InputBorder.none,
+                            prefixIcon: IconButton(
+                              onPressed: () {},
+                              icon: Image.asset("assets/images/user.png"),
+                            ),
+                            contentPadding: const EdgeInsets.only(top: 16),
+                            hintText: "Entrer votre nom d'utilisateur",
+                            hintStyle: GoogleFonts.raleway().copyWith(
+                              fontSize: 12,
+                              color: Colors.black.withOpacity(0.5),
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                      SizedBox(height: height * 0.014),
+                      const SizedBox(height: 6),
+                      Container(
+                        height: 60,
+                        width: width,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                          color: Colors.white,
+                        ),
+                        child: TextFormField(
+                          controller: passwordController,
+                          style: GoogleFonts.raleway().copyWith(
+                            fontSize: 12,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          obscureText: notVisible,
+                          validator: (valuep) {
+                            if (valuep!.isEmpty) {
+                              return '    Ne laissez pas vide';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            label: const Text(
+                              "Mot de passe",
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                            ),
+                            border: InputBorder.none,
+                            prefixIcon: IconButton(
+                              onPressed: () {},
+                              icon: Image.asset("assets/images/cle.png"),
+                            ),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  notVisible = !notVisible;
+                                });
+                              },
+                              icon: Icon(
+                                  notVisible == true
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                  color: Colors.black12),
+                            ),
+                            hintText: "Entrer votre mot de passe",
+                            hintStyle: GoogleFonts.raleway().copyWith(
+                              fontSize: 12,
+                              color: Colors.black.withOpacity(0.5),
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: height * 0.03),
+                      Container(
+                        width: width,
+                        child: Row(
+                          children: [
+                            Container(
+                              //height: 20,
+                              width:
+                                  150, //MediaQuery.of(context).size.width / 6,
+                              child: CheckboxListTile(
+                                title: Text(
+                                  "Se souvenir",
+                                  style: GoogleFonts.raleway().copyWith(
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                value: isChecked,
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    isChecked = newValue!;
+                                  });
+                                },
+                              ),
+                            ),
+                            Expanded(child: Container()),
+                            Container(
+                              width: 150,
+                              child: TextButton(
+                                onPressed: () {},
+                                child: Text(
+                                  'Mot de passe oublié ?',
+                                  style: GoogleFonts.raleway().copyWith(
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+
+                      SizedBox(height: height * 0.05),
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () async {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            if (_formKey.currentState!.validate()) {
+                              if (isChecked == true) {
+                                prefs.setBool('login', isChecked);
+                                prefs.setString(
+                                    'emailLogin', usernameController.text);
+                                prefs.setString(
+                                    'passLogin', passwordController.text);
+                              } else {
+                                prefs.setBool('login', isChecked);
+                                prefs.setString('emailLogin', 'non');
+                                prefs.setString('passLogin', 'non');
+                              }
+                              login(usernameController.text,
+                                  passwordController.text);
+                            }
+                          },
+                          borderRadius: BorderRadius.circular(16),
+                          child: Ink(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 70, vertical: 18),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              color: Colors.yellow,
+                            ),
+                            child: Text(
+                              'Se connecter',
+                              style: GoogleFonts.raleway().copyWith(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -279,25 +364,28 @@ class AuthentificationState extends State<Authentification> {
 
   Widget verticalView(double height, double width, context) {
     return Scaffold(
-      body: SizedBox(
-        height: height,
-        width: width,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Container(
-                height: height,
-                width: width,
-                //color: Colors.blue,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/images/eatch5.jpg"),
-                    fit: BoxFit.cover,
+      body: Form(
+        key: _formKey,
+        child: SizedBox(
+          height: height,
+          width: width,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 3,
+                child: Container(
+                  height: height,
+                  width: width,
+                  //color: Colors.blue,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/images/eatch5.jpg"),
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-                /*child: Center(
+                  /*child: Center(
                   child: Text(
                     'Gestion de restaurant',
                     style: GoogleFonts.raleway().copyWith(
@@ -306,200 +394,251 @@ class AuthentificationState extends State<Authentification> {
                         fontWeight: FontWeight.w800),
                   ),
                 ),*/
-              ),
-            ),
-            Expanded(
-              child: Container(
-                height: height,
-                width: width,
-                padding: EdgeInsets.symmetric(
-                  horizontal: height * 0.12,
                 ),
-                color: Colors.green,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    //////////
-                    Container(
-                      height: 200,
-                      width: 200,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage("assets/images/Logo_Eatch.png"),
-                          fit: BoxFit.cover,
+              ),
+              Expanded(
+                flex: 6,
+                child: Container(
+                  height: height,
+                  width: width,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: height * 0.12,
+                  ),
+                  color: Colors.green,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      //////////
+                      Container(
+                        height: 200,
+                        width: 200,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage("assets/images/Logo_Eatch.png"),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                    ),
-                    ////////////
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: "Connexion",
-                            style: GoogleFonts.raleway().copyWith(
-                                fontSize: 25,
-                                color: Colors.black,
-                                fontWeight: FontWeight.normal),
-                          ),
-                          TextSpan(
-                            text: " Eatch",
-                            style: GoogleFonts.raleway().copyWith(
-                                fontSize: 25,
-                                color: Colors.black,
-                                fontWeight: FontWeight.normal),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: height * 0.02),
-                    Text(
-                      'Bienvenue sur notre application Eatch, J\'espère que vous serez satisfait de nos services.',
-                      style: GoogleFonts.raleway().copyWith(
-                          fontSize: 12,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400),
-                    ),
-                    SizedBox(height: height * 0.032),
-                    const SizedBox(height: 6),
-                    Container(
-                      height: 50,
-                      width: width,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(18),
-                        color: Colors.white,
-                      ),
-                      child: TextFormField(
-                        controller: usernameController,
-                        style: GoogleFonts.raleway().copyWith(
-                          fontSize: 12,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        decoration: InputDecoration(
-                          label: const Text(
-                            "Nom d'utlisateur",
-                            style: TextStyle(
-                              color: Colors.black,
+                      ////////////
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "Connexion",
+                              style: GoogleFonts.raleway().copyWith(
+                                  fontSize: 25,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.normal),
                             ),
-                          ),
-                          border: InputBorder.none,
-                          prefixIcon: IconButton(
-                            onPressed: () {},
-                            icon: Image.asset("assets/images/user.png"),
-                          ),
-                          contentPadding: const EdgeInsets.only(top: 16),
-                          hintText: "Entrer votre nom d'utilisateur",
-                          hintStyle: GoogleFonts.raleway().copyWith(
-                            fontSize: 12,
-                            color: Colors.black.withOpacity(0.5),
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: height * 0.014),
-                    const SizedBox(height: 6),
-                    Container(
-                      height: 50,
-                      width: width,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(18),
-                        color: Colors.white,
-                      ),
-                      child: TextFormField(
-                        controller: passwordController,
-                        style: GoogleFonts.raleway().copyWith(
-                          fontSize: 12,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          label: const Text(
-                            "Mot de passe",
-                            style: TextStyle(
-                              color: Colors.black,
+                            TextSpan(
+                              text: " Eatch",
+                              style: GoogleFonts.raleway().copyWith(
+                                  fontSize: 25,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.normal),
                             ),
-                          ),
-                          border: InputBorder.none,
-                          prefixIcon: IconButton(
-                            onPressed: () {},
-                            icon: Image.asset("assets/images/cle.png"),
-                          ),
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                notVisible = !notVisible;
-                              });
-                            },
-                            icon: Icon(
-                                notVisible == true
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                                color: Colors.black12),
-                          ),
-                          hintText: "Entrer votre mot de passe",
-                          hintStyle: GoogleFonts.raleway().copyWith(
-                            fontSize: 12,
-                            color: Colors.black.withOpacity(0.5),
-                            fontWeight: FontWeight.w400,
-                          ),
+                          ],
                         ),
                       ),
-                    ),
-                    SizedBox(height: height * 0.03),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          'Mot de passe oublié',
+                      SizedBox(height: height * 0.02),
+                      Text(
+                        'Bienvenue sur notre application Eatch, J\'espère que vous serez satisfait de nos services.',
+                        style: GoogleFonts.raleway().copyWith(
+                            fontSize: 12,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      SizedBox(height: height * 0.032),
+                      const SizedBox(height: 6),
+                      Container(
+                        height: 60,
+                        width: width,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                          color: Colors.white,
+                        ),
+                        child: TextFormField(
+                          controller: usernameController,
                           style: GoogleFonts.raleway().copyWith(
                             fontSize: 12,
                             color: Colors.black,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w400,
                           ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: height * 0.05),
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          login(
-                              usernameController.text, passwordController.text);
-                        },
-                        borderRadius: BorderRadius.circular(16),
-                        child: Ink(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 70, vertical: 18),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            color: Colors.yellow,
-                          ),
-                          child: Text(
-                            'Se connecter',
-                            style: GoogleFonts.raleway().copyWith(
-                                fontSize: 16,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return '    Ne laissez pas vide';
+                            } else if (RegExp(
+                                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                .hasMatch(value)) {
+                              return null;
+                            } else {
+                              return '    Entrer un email valide';
+                            }
+                          },
+                          decoration: InputDecoration(
+                            label: const Text(
+                              "Nom d'utlisateur",
+                              style: TextStyle(
                                 color: Colors.black,
-                                fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                            border: InputBorder.none,
+                            prefixIcon: IconButton(
+                              onPressed: () {},
+                              icon: Image.asset("assets/images/user.png"),
+                            ),
+                            contentPadding: const EdgeInsets.only(top: 16),
+                            hintText: "Entrer votre nom d'utilisateur",
+                            hintStyle: GoogleFonts.raleway().copyWith(
+                              fontSize: 12,
+                              color: Colors.black.withOpacity(0.5),
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                      SizedBox(height: height * 0.014),
+                      const SizedBox(height: 6),
+                      Container(
+                        height: 60,
+                        width: width,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                          color: Colors.white,
+                        ),
+                        child: TextFormField(
+                          controller: passwordController,
+                          style: GoogleFonts.raleway().copyWith(
+                            fontSize: 12,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          obscureText: notVisible,
+                          validator: (valuep) {
+                            if (valuep!.isEmpty) {
+                              return '    Ne laissez pas vide';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            label: const Text(
+                              "Mot de passe",
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                            ),
+                            border: InputBorder.none,
+                            prefixIcon: IconButton(
+                              onPressed: () {},
+                              icon: Image.asset("assets/images/cle.png"),
+                            ),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  notVisible = !notVisible;
+                                });
+                              },
+                              icon: Icon(
+                                  notVisible == true
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                  color: Colors.black12),
+                            ),
+                            hintText: "Entrer votre mot de passe",
+                            hintStyle: GoogleFonts.raleway().copyWith(
+                              fontSize: 12,
+                              color: Colors.black.withOpacity(0.5),
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: height * 0.03),
+                      Container(
+                        width: width,
+                        child: Row(
+                          children: [
+                            Container(
+                              //height: 20,
+                              width:
+                                  130, //MediaQuery.of(context).size.width / 6,
+                              child: CheckboxListTile(
+                                title: Text(
+                                  "Se souvenir",
+                                  style: GoogleFonts.raleway().copyWith(
+                                    fontSize: 10,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                value: isChecked,
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    isChecked = newValue!;
+                                  });
+                                },
+                              ),
+                            ),
+                            Expanded(child: Container()),
+                            Container(
+                              width: 130,
+                              child: TextButton(
+                                onPressed: () {},
+                                child: Text(
+                                  'Mot de passe oublié ?',
+                                  style: GoogleFonts.raleway().copyWith(
+                                    fontSize: 10,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: height * 0.05),
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () {
+                            if (_formKey.currentState!.validate()) {
+                              login(usernameController.text,
+                                  passwordController.text);
+                            }
+                          },
+                          borderRadius: BorderRadius.circular(16),
+                          child: Ink(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 18),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              color: Colors.yellow,
+                            ),
+                            child: Text(
+                              'Se connecter',
+                              style: GoogleFonts.raleway().copyWith(
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
   Future<void> login(email, pass) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     String url = "http://13.39.81.126:4001/api/users/login";
     print(url);
 
@@ -513,9 +652,15 @@ class AuthentificationState extends State<Authentification> {
 
       if (response.statusCode == 200) {
         var data = json.decode(response.body);
+        print(data);
+
+        prefs.setString('IdUser', data['user']['_id']);
+        prefs.setString('token', data['accessToken']);
+        print(prefs.setString('token', data['accessToken']));
         print("Vous êtes connecté");
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => DashboardManager()));
+
         /* Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => DashboardManager()),
             (Route<dynamic> route) => false);*/

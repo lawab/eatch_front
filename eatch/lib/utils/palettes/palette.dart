@@ -18,4 +18,5 @@ class Palette {
   static const secondaryBackgroundColor = Color(0xFFF9F6F6);
 
   static const colorShadow = Color(0xFFABABAB);
+  static const greenColors = Color(0xFF1E9647);
 }

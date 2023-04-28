@@ -249,7 +249,7 @@ class _UsersState extends State<Users> {
                       child: TabBarView(
                         children: [
                           const AllUsers(),
-                          ManagerUsers(),
+                          const ManagerUsers(),
                           SingleChildScrollView(
                             child: Column(
                               children: [

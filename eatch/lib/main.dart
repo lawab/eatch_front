@@ -1,4 +1,5 @@
 import 'package:eatch/pages/authentification/authentification.dart';
+import 'package:eatch/pages/matiere_premiere/afficheMatie%C3%A8re.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Authentification(),
+      home: Authentification(), //const Authentification(),
     );
   }
 }
