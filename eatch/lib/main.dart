@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'pages/categories/presentation/categories.dart';
 import 'pages/dashboard/dashboard_manager.dart';
-import 'utils/palettes/palette.dart';
+import 'pages/users/presentation/modification_user.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));

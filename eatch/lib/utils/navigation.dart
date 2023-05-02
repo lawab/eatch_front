@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, use_build_context_synchronously
 
 import 'package:eatch/pages/authentification/authentification.dart';
 import 'package:eatch/pages/categories/presentation/categories.dart';
@@ -27,6 +27,7 @@ class Navigation extends StatefulWidget {
 }
 
 class _NavigationState extends State<Navigation> {
+  int index = 0;
   @override
   void initState() {
     ind();
@@ -42,13 +43,11 @@ class _NavigationState extends State<Navigation> {
         int aa = prefs.getInt('index')!.toInt();
         index = aa;
       } else {
-        print('nullllllllllllll');
         index = 0;
       }
     });
   }
 
-  int index = 0;
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -150,6 +149,11 @@ class _NavigationState extends State<Navigation> {
           text: "PRODUIT",
           selectedIndex: 5,
           onPress: () async {
+            Future.delayed(Duration.zero, () async {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text("Pas encore implémenté"),
+              ));
+            });
             /*SharedPreferences prefs = await SharedPreferences.getInstance();
             setState(() {
               index = 5;
@@ -225,8 +229,8 @@ class NavigationButton extends StatelessWidget {
         horizontal: 10,
         vertical: 05.0,
       ),
-      height: getProportionateScreenHeight(100.0),
-      width: getProportionateScreenWidth(130.0),
+      height: 50.0,
+      // width: 130.0,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15.0),
       ),

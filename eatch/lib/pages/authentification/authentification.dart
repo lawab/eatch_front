@@ -1,11 +1,13 @@
 import 'dart:convert';
 
 import 'package:eatch/pages/dashboard/dashboard_manager.dart';
-import 'package:eatch/utils/applayout.dart';
 import 'package:flutter/material.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../servicesAPI/get_categories.dart';
 
 class Authentification extends StatefulWidget {
   const Authentification({Key? key}) : super(key: key);
@@ -652,11 +654,10 @@ class AuthentificationState extends State<Authentification> {
 
       if (response.statusCode == 200) {
         var data = json.decode(response.body);
-        print(data);
 
         prefs.setString('IdUser', data['user']['_id']);
         prefs.setString('token', data['accessToken']);
-        print(prefs.setString('token', data['accessToken']));
+
         print("Vous êtes connecté");
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => DashboardManager()));
@@ -665,6 +666,11 @@ class AuthentificationState extends State<Authentification> {
             MaterialPageRoute(builder: (context) => DashboardManager()),
             (Route<dynamic> route) => false);*/
       } else {
+        Future.delayed(Duration.zero, () async {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Email or Mot de passe incorrect."),
+          ));
+        });
         print("Vous n'êtes pas connecté");
       }
     } else {

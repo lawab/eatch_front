@@ -1,0 +1,310 @@
+[
+    {
+        "id": "c1",
+        "imageUrl": "assets/categories/categorie.svg",
+        "title": "Categorie 1",
+        "nombreproduits": 30,
+        "produits": [
+            {
+                "id": "1",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 1",
+                "price": 13
+            },
+            {
+                "id": "2",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 2",
+                "price": 13
+            }
+        ]
+    },
+    {
+        "id": "c2",
+        "imageUrl": "assets/categories/categorie.svg",
+        "title": "Categorie 2",
+        "nombreproduits": 25,
+        "produits": [
+            {
+                "id": "4",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 4",
+                "price": 13
+            },
+            {
+                "id": "5",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 5",
+                "price": 13
+            },
+            {
+                "id": "6",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 6",
+                "price": 13
+            },
+            {
+                "id": "7",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 7",
+                "price": 13
+            }
+        ]
+    },
+    {
+        "id": "c3",
+        "imageUrl": "assets/categories/categorie.svg",
+        "title": "Categorie 3",
+        "nombreproduits": 33,
+        "produits": [
+            {
+                "id": "8",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 8",
+                "price": 13
+            },
+            {
+                "id": "9",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 9",
+                "price": 13
+            },
+            {
+                "id": "10",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 10",
+                "price": 13
+            },
+            {
+                "id": "11",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 11",
+                "price": 13
+            }
+        ]
+    },
+    {
+        "id": "c4",
+        "imageUrl": "assets/categories/categorie.svg",
+        "title": "Categorie 4",
+        "nombreproduits": 35,
+        "produits": [
+            {
+                "id": "12",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 12",
+                "price": 13
+            },
+            {
+                "id": "13",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 13",
+                "price": 13
+            },
+            {
+                "id": "14",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 14",
+                "price": 13
+            },
+            {
+                "id": "15",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 15",
+                "price": 13
+            }
+        ]
+    },
+    {
+        "id": "c5",
+        "imageUrl": "assets/categories/categorie.svg",
+        "title": "Categorie 5",
+        "nombreproduits": 67,
+        "produits": [
+            {
+                "id": "16",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 16",
+                "price": 13
+            },
+            {
+                "id": "17",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 17",
+                "price": 13
+            },
+            {
+                "id": "18",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 18",
+                "price": 13
+            },
+            {
+                "id": "19",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 19",
+                "price": 13
+            }
+        ]
+    },
+    {
+        "id": "c6",
+        "imageUrl": "assets/categories/categorie.svg",
+        "title": "Categorie 6",
+        "nombreproduits": 76,
+        "produits": [
+            {
+                "id": "20",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 20",
+                "price": 13
+            },
+            {
+                "id": "21",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 21",
+                "price": 13
+            },
+            {
+                "id": "22",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 22",
+                "price": 13
+            },
+            {
+                "id": "23",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 23",
+                "price": 13
+            }
+        ]
+    },
+    {
+        "id": "c7",
+        "imageUrl": "assets/categories/categorie.svg",
+        "title": "Categorie 7",
+        "nombreproduits": 42,
+        "produits": [
+            {
+                "id": "24",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 24",
+                "price": 13
+            },
+            {
+                "id": "25",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 25",
+                "price": 13
+            },
+            {
+                "id": "26",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 26",
+                "price": 13
+            },
+            {
+                "id": "27",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 27",
+                "price": 13
+            }
+        ]
+    },
+    {
+        "id": "c8",
+        "imageUrl": "assets/categories/categorie.svg",
+        "title": "Categorie 8",
+        "nombreproduits": 20,
+        "produits": [
+            {
+                "id": "28",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 28",
+                "price": 13
+            },
+            {
+                "id": "29",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 29",
+                "price": 13
+            },
+            {
+                "id": "30",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 30",
+                "price": 13
+            },
+            {
+                "id": "31",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 31",
+                "price": 13
+            }
+        ]
+    },
+    {
+        "id": "c9",
+        "imageUrl": "assets/categories/categorie.svg",
+        "title": "Categorie 9",
+        "nombreproduits": 67,
+        "produits": [
+            {
+                "id": "32",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 32",
+                "price": 13
+            },
+            {
+                "id": "33",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 33",
+                "price": 13
+            },
+            {
+                "id": "34",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 34",
+                "price": 13
+            },
+            {
+                "id": "35",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 35",
+                "price": 13
+            }
+        ]
+    },
+    {
+        "id": "c10",
+        "imageUrl": "assets/categories/categorie.svg",
+        "title": "Categorie 10",
+        "nombreproduits": 54,
+        "produits": [
+            {
+                "id": "36",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 36",
+                "price": 13
+            },
+            {
+                "id": "37",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 37",
+                "price": 13
+            },
+            {
+                "id": "38",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 38",
+                "price": 13
+            },
+            {
+                "id": "39",
+                "imageUrl": "assets/products/product.jpg",
+                "title": "Product 39",
+                "price": 200
+            }
+        ]
+    }
+]

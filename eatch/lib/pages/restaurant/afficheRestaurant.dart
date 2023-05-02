@@ -421,7 +421,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                 left: 30,
                                 width: width / 5,
                                 height: 30,
-                                child: Text(
+                                child: const Text(
                                   "Nombre d'emplyé: 50",
                                   style: TextStyle(
                                     fontFamily: 'Righteous',

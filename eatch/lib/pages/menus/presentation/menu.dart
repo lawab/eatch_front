@@ -366,7 +366,7 @@ class _MenuState extends State<Menu> {
                 child: GridView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: categoriesList.length,
+                    itemCount: 5,
                     gridDelegate:
                         const SliverGridDelegateWithMaxCrossAxisExtent(
                             maxCrossAxisExtent: 500,
@@ -403,7 +403,7 @@ class _MenuState extends State<Menu> {
           child: GridView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: categoriesList.length,
+            itemCount: 5,
             gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 500,
                 childAspectRatio: 3 / 2,

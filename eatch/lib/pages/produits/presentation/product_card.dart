@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../utils/palettes/palette.dart';
-import '../domain/produit.dart';
+// import '../domain/produit.dart';
 
 class ProductCard extends StatefulWidget {
   const ProductCard({
@@ -10,14 +10,14 @@ class ProductCard extends StatefulWidget {
     required this.imageUrl,
     required this.title,
     required this.price,
-    required this.filterproductsList,
+    // required this.filterproductsList,
   }) : super(key: key);
 
   final String imageUrl;
   final String title;
   final double price;
 
-  final List<Product> filterproductsList;
+  // final List<Product> filterproductsList;
 
   @override
   State<ProductCard> createState() => _ProductCardState();

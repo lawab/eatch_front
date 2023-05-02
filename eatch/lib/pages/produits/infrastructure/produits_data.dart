@@ -12,9 +12,9 @@ const productsData = [
     ],
   ),
   Product(
-    id: '2',
+    id: '1',
     imageUrl: 'assets/products/product.jpg',
-    title: 'Product 2',
+    title: 'Product 1',
     price: 13,
     categories: [
       'c1',

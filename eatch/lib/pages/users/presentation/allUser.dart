@@ -1,15 +1,17 @@
-import 'package:eatch/pages/users/application/search_users_text_field.dart';
-import 'package:eatch/pages/users/domain/user.dart';
-import 'package:eatch/pages/users/infrastructure/users_data.dart';
+// ignore_for_file: sized_box_for_whitespace, avoid_unnecessary_containers, non_constant_identifier_names, avoid_function_literals_in_foreach_calls
+
 import 'package:eatch/servicesAPI/getUser.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'modification_user.dart';
+
 class AllUsers extends ConsumerStatefulWidget {
   const AllUsers({
     super.key,
   });
+
   @override
   AllUsersState createState() => AllUsersState();
 }
@@ -51,7 +53,7 @@ class AllUsersState extends ConsumerState<AllUsers> {
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
               vertical: 20,
             ),
             child: SizedBox(
@@ -68,8 +70,9 @@ class AllUsersState extends ConsumerState<AllUsers> {
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Palette.fourthColor,
-                  contentPadding: EdgeInsets.all(0),
-                  prefixIcon: Icon(Icons.search, color: Palette.primaryColor),
+                  contentPadding: const EdgeInsets.all(0),
+                  prefixIcon:
+                      const Icon(Icons.search, color: Palette.primaryColor),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(50),
                     borderSide: BorderSide.none,
@@ -176,16 +179,43 @@ class AllUsersState extends ConsumerState<AllUsers> {
                                     children: [
                                       Expanded(
                                           child: IconButton(
-                                        icon: Icon(Icons.edit),
-                                        onPressed: () {},
+                                        icon: const Icon(Icons.edit),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                              return ModificationUser(
+                                                userEmail: viewModel
+                                                    .listDataModel[index]
+                                                    .userEmail!,
+                                                userNom: viewModel
+                                                    .listDataModel[index]
+                                                    .userNom!,
+                                                userPrenom: viewModel
+                                                    .listDataModel[index]
+                                                    .userEmail!,
+                                                userRole: viewModel
+                                                    .listDataModel[index]
+                                                    .userRole!,
+                                                userUserNom: viewModel
+                                                    .listDataModel[index]
+                                                    .userUserNom!,
+                                              );
+                                            }),
+                                          );
+                                        },
                                       )),
                                       Expanded(
                                           child: IconButton(
-                                        icon: Icon(
+                                        icon: const Icon(
                                           Icons.delete,
                                           color: Colors.red,
                                         ),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          dialogDelete(viewModel
+                                              .listDataModel[index].userNom!);
+                                        },
                                       ))
                                     ],
                                   ),
@@ -232,16 +262,38 @@ class AllUsersState extends ConsumerState<AllUsers> {
                                     children: [
                                       Expanded(
                                           child: IconButton(
-                                        icon: Icon(Icons.edit),
-                                        onPressed: () {},
+                                        icon: const Icon(Icons.edit),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                              return ModificationUser(
+                                                userEmail: UserSearch[index]
+                                                    .userEmail!,
+                                                userNom:
+                                                    UserSearch[index].userNom!,
+                                                userPrenom: UserSearch[index]
+                                                    .userEmail!,
+                                                userRole:
+                                                    UserSearch[index].userRole!,
+                                                userUserNom: UserSearch[index]
+                                                    .userUserNom!,
+                                              );
+                                            }),
+                                          );
+                                        },
                                       )),
                                       Expanded(
                                           child: IconButton(
-                                        icon: Icon(
+                                        icon: const Icon(
                                           Icons.delete,
                                           color: Colors.red,
                                         ),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          dialogDelete(
+                                              UserSearch[index].userNom!);
+                                        },
                                       ))
                                     ],
                                   ),
@@ -255,5 +307,58 @@ class AllUsersState extends ConsumerState<AllUsers> {
         ],
       ),
     );
+  }
+
+  Future dialogDelete(String userName) {
+    return showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+              backgroundColor: Colors.white,
+              title: const Center(
+                child: Text(
+                  "Confirmez la suppression",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              actions: [
+                ElevatedButton.icon(
+                    icon: const Icon(
+                      Icons.close,
+                      size: 14,
+                    ),
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.grey),
+                    onPressed: () {
+                      Navigator.of(context, rootNavigator: true).pop();
+                    },
+                    label: const Text("Quitter   ")),
+                const SizedBox(
+                  width: 20,
+                ),
+                ElevatedButton.icon(
+                  icon: const Icon(
+                    Icons.delete,
+                    size: 14,
+                  ),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  onPressed: () {},
+                  label: const Text("Supprimer."),
+                )
+              ],
+              content: Container(
+                  alignment: Alignment.center,
+                  color: Colors.white,
+                  height: 150,
+                  child: Text(
+                    "Voulez vous supprimer l'utilisateur $userName?",
+                    style: const TextStyle(
+                      color: Colors.black,
+                    ),
+                  )));
+        });
   }
 }
