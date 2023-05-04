@@ -1,12 +1,8 @@
-import 'package:eatch/pages/authentification/authentification.dart';
-import 'package:eatch/pages/matiere_premiere/afficheMatie%C3%A8re.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'pages/categories/presentation/categories.dart';
-import 'pages/dashboard/dashboard_manager.dart';
-import 'pages/users/presentation/modification_user.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -30,7 +26,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Authentification(), //const Authentification(),
+      home: const CategoriesPage(),
     );
   }
 }
@@ -106,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
         ),
