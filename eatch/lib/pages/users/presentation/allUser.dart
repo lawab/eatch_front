@@ -4,8 +4,11 @@ import 'package:eatch/servicesAPI/getUser.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'modification_user.dart';
+
+import 'package:http/http.dart' as http;
 
 class AllUsers extends ConsumerStatefulWidget {
   const AllUsers({
@@ -150,27 +153,47 @@ class AllUsersState extends ConsumerState<AllUsers> {
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                    viewModel.listDataModel[index].userNom!),
+                                  viewModel.listDataModel[index].userNom!,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
                               )),
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                    viewModel.listDataModel[index].userPrenom!),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text(viewModel
-                                    .listDataModel[index].userUserNom!),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text(
-                                    viewModel.listDataModel[index].userEmail!),
+                                  viewModel.listDataModel[index].userPrenom!,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
                               )),
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                    viewModel.listDataModel[index].userRole!),
+                                  viewModel.listDataModel[index].userUserNom!,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
+                              )),
+                              Expanded(
+                                  child: Center(
+                                child: Text(
+                                  viewModel.listDataModel[index].userEmail!,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
+                              )),
+                              Expanded(
+                                  child: Center(
+                                child: Text(
+                                  viewModel.listDataModel[index].userRole!,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
                               )),
                               Container(
                                 width: 100,
@@ -237,23 +260,48 @@ class AllUsersState extends ConsumerState<AllUsers> {
                             child: Row(children: [
                               Expanded(
                                   child: Center(
-                                child: Text(UserSearch[index].userNom!),
+                                child: Text(
+                                  UserSearch[index].userNom!,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
                               )),
                               Expanded(
                                   child: Center(
-                                child: Text(UserSearch[index].userPrenom!),
+                                child: Text(
+                                  UserSearch[index].userPrenom!,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
                               )),
                               Expanded(
                                   child: Center(
-                                child: Text(UserSearch[index].userUserNom!),
+                                child: Text(
+                                  UserSearch[index].userUserNom!,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
                               )),
                               Expanded(
                                   child: Center(
-                                child: Text(UserSearch[index].userEmail!),
+                                child: Text(
+                                  UserSearch[index].userEmail!,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
                               )),
                               Expanded(
                                   child: Center(
-                                child: Text(UserSearch[index].userRole!),
+                                child: Text(
+                                  UserSearch[index].userRole!,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
                               )),
                               Container(
                                 width: 100,
@@ -312,7 +360,7 @@ class AllUsersState extends ConsumerState<AllUsers> {
   Future dialogDelete(String userName) {
     return showDialog(
         context: context,
-        builder: (_) {
+        builder: (con) {
           return AlertDialog(
               backgroundColor: Colors.white,
               title: const Center(
@@ -345,7 +393,10 @@ class AllUsersState extends ConsumerState<AllUsers> {
                     size: 14,
                   ),
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                  onPressed: () {},
+                  onPressed: () {
+                    deleteRestaurant(context, userName);
+                    Navigator.pop(con);
+                  },
                   label: const Text("Supprimer."),
                 )
               ],
@@ -360,5 +411,34 @@ class AllUsersState extends ConsumerState<AllUsers> {
                     ),
                   )));
         });
+  }
+
+  Future<http.Response> deleteRestaurant(
+      BuildContext context, String userName) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token');
+      String urlDelete =
+          "http://localhost:4001/api/users/delete/643802600bacc7b4b76d9cb5/$userName";
+
+      final http.Response response = await http.delete(
+        Uri.parse(urlDelete),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'Accept': 'application/json',
+          'authorization': 'Bearer $token'
+        },
+      );
+
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        ref.refresh(getDataUserFuture);
+        return response;
+      } else {
+        return Future.error("Server Error");
+      }
+    } catch (e) {
+      return Future.error(e);
+    }
   }
 }

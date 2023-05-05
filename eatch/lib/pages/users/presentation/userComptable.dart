@@ -22,14 +22,14 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
     dummySearchList.addAll(viewModel.listComptable);
     if (query.isNotEmpty) {
       List<User> dummyListData = [];
-      dummySearchList.forEach((item) {
+      for (var item in dummySearchList) {
         if (item.userNom!.contains(query) ||
             item.userPrenom!.contains(query) ||
             item.userUserNom!.contains(query)) {
           dummyListData.add(item);
           //print(dummyListData);
         }
-      });
+      }
       setState(() {
         search = true;
         UserSearch.clear();
@@ -50,7 +50,7 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
               vertical: 20,
             ),
             child: SizedBox(
@@ -67,8 +67,9 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Palette.fourthColor,
-                  contentPadding: EdgeInsets.all(0),
-                  prefixIcon: Icon(Icons.search, color: Palette.primaryColor),
+                  contentPadding: const EdgeInsets.all(0),
+                  prefixIcon:
+                      const Icon(Icons.search, color: Palette.primaryColor),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(50),
                     borderSide: BorderSide.none,
@@ -83,7 +84,7 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
             ),
           ),
           Card(
-            child: Container(
+            child: SizedBox(
               height: 50,
               child: Row(children: [
                 const Expanded(
@@ -121,7 +122,7 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 )),
-                Container(
+                SizedBox(
                   width: 100,
                   child: const Center(
                     child: Text(
@@ -134,48 +135,68 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
             ),
           ),
           search == false
-              ? Container(
+              ? SizedBox(
                   height: MediaQuery.of(context).size.height - 403,
                   child: ListView.builder(
                       itemCount: viewModel.listComptable.length,
                       itemBuilder: ((context, index) {
                         return Card(
-                          child: Container(
+                          child: SizedBox(
                             height: 50,
                             child: Row(children: [
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                    viewModel.listComptable[index].userNom!),
+                                  viewModel.listComptable[index].userNom!,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
                               )),
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                    viewModel.listComptable[index].userPrenom!),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text(viewModel
-                                    .listComptable[index].userUserNom!),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text(
-                                    viewModel.listComptable[index].userEmail!),
+                                  viewModel.listComptable[index].userPrenom!,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
                               )),
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                    viewModel.listComptable[index].userRole!),
+                                  viewModel.listComptable[index].userUserNom!,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
                               )),
-                              Container(
+                              Expanded(
+                                  child: Center(
+                                child: Text(
+                                  viewModel.listComptable[index].userEmail!,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
+                              )),
+                              Expanded(
+                                  child: Center(
+                                child: Text(
+                                  viewModel.listComptable[index].userRole!,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
+                              )),
+                              SizedBox(
                                 width: 100,
                                 child: Center(
                                   child: Row(
                                     children: [
                                       Expanded(
                                           child: IconButton(
-                                        icon: Icon(Icons.edit),
+                                        icon: const Icon(Icons.edit),
                                         onPressed: () {
                                           Navigator.push(
                                             context,
@@ -204,7 +225,7 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                                       )),
                                       Expanded(
                                           child: IconButton(
-                                        icon: Icon(
+                                        icon: const Icon(
                                           Icons.delete,
                                           color: Colors.red,
                                         ),
@@ -222,43 +243,63 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                         );
                       })),
                 )
-              : Container(
+              : SizedBox(
                   height: MediaQuery.of(context).size.height - 403,
                   child: ListView.builder(
                       itemCount: UserSearch.length,
                       itemBuilder: ((context, index) {
                         return Card(
-                          child: Container(
+                          child: SizedBox(
                             height: 50,
                             child: Row(children: [
                               Expanded(
                                   child: Center(
-                                child: Text(UserSearch[index].userNom!),
+                                child: Text(
+                                  UserSearch[index].userNom!,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
                               )),
                               Expanded(
                                   child: Center(
-                                child: Text(UserSearch[index].userPrenom!),
+                                child: Text(
+                                  UserSearch[index].userPrenom!,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
                               )),
                               Expanded(
                                   child: Center(
-                                child: Text(UserSearch[index].userUserNom!),
+                                child: Text(
+                                  UserSearch[index].userUserNom!,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
                               )),
                               Expanded(
                                   child: Center(
-                                child: Text(UserSearch[index].userEmail!),
+                                child: Text(
+                                  UserSearch[index].userEmail!,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
                               )),
                               Expanded(
                                   child: Center(
                                 child: Text(UserSearch[index].userRole!),
                               )),
-                              Container(
+                              SizedBox(
                                 width: 100,
                                 child: Center(
                                   child: Row(
                                     children: [
                                       Expanded(
                                           child: IconButton(
-                                        icon: Icon(Icons.edit),
+                                        icon: const Icon(Icons.edit),
                                         onPressed: () {
                                           Navigator.push(
                                             context,
@@ -282,7 +323,7 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                                       )),
                                       Expanded(
                                           child: IconButton(
-                                        icon: Icon(
+                                        icon: const Icon(
                                           Icons.delete,
                                           color: Colors.red,
                                         ),
