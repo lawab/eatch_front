@@ -2,8 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'pages/categories/presentation/categories.dart';
-
 void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -26,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const CategoriesPage(),
+      home: const Authentification(), //const Authentification(),
     );
   }
 }

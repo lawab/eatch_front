@@ -6,6 +6,7 @@ import 'package:eatch/pages/dashboard/dashboard_manager.dart';
 import 'package:eatch/pages/matiere_premiere/afficheMatie%C3%A8re.dart';
 import 'package:eatch/pages/menus/presentation/menu.dart';
 import 'package:eatch/pages/menus/presentation/menu_grid.dart';
+import 'package:eatch/pages/promotion/affichePromotion.dart';
 import 'package:eatch/pages/restaurant/afficheRestaurant.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -54,6 +55,7 @@ class _NavigationState extends State<Navigation> {
       scrollDirection: widget.orientation,
       children: [
         NavigationButton(
+          axis: widget.orientation,
           index: index,
           text: "ACCUEIL",
           selectedIndex: 0,
@@ -73,6 +75,7 @@ class _NavigationState extends State<Navigation> {
           },
         ),
         NavigationButton(
+          axis: widget.orientation,
           index: index,
           text: "UTILISATEURS",
           selectedIndex: 1,
@@ -91,6 +94,7 @@ class _NavigationState extends State<Navigation> {
           },
         ),
         NavigationButton(
+          axis: widget.orientation,
           index: index,
           text: "CATÉGORIES",
           selectedIndex: 2,
@@ -109,6 +113,7 @@ class _NavigationState extends State<Navigation> {
           },
         ),
         NavigationButton(
+          axis: widget.orientation,
           index: index,
           text: "GESTION DE RESTAURANT",
           selectedIndex: 3,
@@ -127,6 +132,7 @@ class _NavigationState extends State<Navigation> {
           },
         ),
         NavigationButton(
+          axis: widget.orientation,
           index: index,
           text: "MATIERE PREMIERE",
           selectedIndex: 4,
@@ -145,36 +151,14 @@ class _NavigationState extends State<Navigation> {
           },
         ),
         NavigationButton(
-          index: index,
-          text: "PRODUIT",
-          selectedIndex: 5,
-          onPress: () async {
-            Future.delayed(Duration.zero, () async {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text("Pas encore implémenté"),
-              ));
-            });
-            /*SharedPreferences prefs = await SharedPreferences.getInstance();
-            setState(() {
-              index = 5;
-              prefs.setInt('index', index);
-            });
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => const RestaurantAffiche(),
-              ),
-            );*/
-          },
-        ),
-        NavigationButton(
+          axis: widget.orientation,
           index: index,
           text: "Menu",
-          selectedIndex: 6,
+          selectedIndex: 5,
           onPress: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             setState(() {
-              index = 6;
+              index = 5;
               prefs.setInt('index', index);
             });
             Navigator.push(
@@ -186,6 +170,26 @@ class _NavigationState extends State<Navigation> {
           },
         ),
         NavigationButton(
+          axis: widget.orientation,
+          index: index,
+          text: "Promotion",
+          selectedIndex: 6,
+          onPress: () async {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            setState(() {
+              index = 6;
+              prefs.setInt('index', index);
+            });
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => const PromotionAffiche(),
+              ),
+            );
+          },
+        ),
+        NavigationButton(
+          axis: widget.orientation,
           index: index,
           text: "QUITTER L'APPLICATION",
           selectedIndex: 7,
@@ -209,18 +213,19 @@ class _NavigationState extends State<Navigation> {
 }
 
 class NavigationButton extends StatelessWidget {
-  const NavigationButton({
-    super.key,
-    required this.text,
-    required this.index,
-    required this.onPress,
-    required this.selectedIndex,
-  });
+  const NavigationButton(
+      {super.key,
+      required this.text,
+      required this.index,
+      required this.onPress,
+      required this.selectedIndex,
+      required this.axis});
 
   final int index;
   final String text;
   final int selectedIndex;
   final VoidCallback onPress;
+  final Axis axis;
 
   @override
   Widget build(BuildContext context) {
@@ -230,7 +235,6 @@ class NavigationButton extends StatelessWidget {
         vertical: 05.0,
       ),
       height: 50.0,
-      // width: 130.0,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15.0),
       ),
@@ -248,7 +252,7 @@ class NavigationButton extends StatelessWidget {
         child: Text(
           text,
           style: TextStyle(
-            fontSize: 12,
+            fontSize: axis == Axis.vertical ? 12 : 10,
             color: (selectedIndex == index)
                 ? Palette.primaryBackgroundColor
                 : Palette.textsecondaryColor,

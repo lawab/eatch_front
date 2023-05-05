@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
+import 'package:eatch/pages/restaurant/detailRestaurant.dart';
+import 'package:eatch/servicesAPI/multipart.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 
@@ -45,6 +47,30 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
 
   double height(BuildContext buildContext) {
     return size(buildContext).height;
+  }
+
+  bool checkImagee = false;
+  bool checkImage = false;
+  bool _working = false;
+  String message = "";
+  void startWorking() async {
+    setState(() {
+      _working = true;
+      checkImagee = false;
+    });
+  }
+
+  void stopMessage() async {
+    setState(() {
+      checkImagee = true;
+      checkImage = false;
+    });
+  }
+
+  void finishWorking() async {
+    setState(() {
+      _working = false;
+    });
   }
 
   @override
@@ -123,38 +149,38 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                     mainAxisExtent: 355),
                 itemCount: listRsetaurant.length,
                 itemBuilder: (BuildContext ctx, index) {
-                  return Container(
-                    height: height,
-                    decoration: BoxDecoration(
-                      color: Color(0xFF1E9647),
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          width: width / 3,
-                          height: height / 3 - 20,
-                          child: Stack(
-                            fit: StackFit.expand,
-                            children: [
-                              //Logo_Eatch_png.png
-                              Container(
-                                width: width / 5,
-                                height: height / 3 - 20,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                  color: Colors.black,
-                                  image: DecorationImage(
-                                      opacity: 100,
-
-                                      /*image: NetworkImage(
-                                          'http://13.39.81.126:4002${listRsetaurant[index].info!.logo.toString()}'),*/
-                                      image: AssetImage('eatch.jpg'),
-                                      fit: BoxFit.cover),
+                  return GestureDetector(
+                    child: Container(
+                      height: height,
+                      decoration: BoxDecoration(
+                        color: Color(0xFF1E9647),
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            width: width / 3,
+                            height: height / 3 - 20,
+                            child: Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                //Logo_Eatch_png.png
+                                Container(
+                                  width: width / 5,
+                                  height: height / 3 - 20,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    color: Colors.black,
+                                    image: DecorationImage(
+                                        opacity: 150,
+                                        image: NetworkImage(
+                                            'http://13.39.81.126:4002${listRsetaurant[index].info!.logo.toString()}'),
+                                        //image: AssetImage('eatch.jpg'),
+                                        fit: BoxFit.cover),
+                                  ),
                                 ),
-                              ),
-                              //Image.asset('eatch.jpg', fit: BoxFit.cover),
-                              /*ClipRRect(
+                                //Image.asset('eatch.jpg', fit: BoxFit.cover),
+                                /*ClipRRect(
                                 // Clip it cleanly.
                                 child: BackdropFilter(
                                   filter:
@@ -166,112 +192,128 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                       ),
                                 ),
                               ),*/
-                              Positioned(
-                                top: 5,
-                                left: 30,
-                                width: width / 5,
-                                height: 50,
-                                child: Text(
-                                  'Nom du restaurant: ${listRsetaurant[index].restaurantName!}',
-                                  style: TextStyle(
+                                Positioned(
+                                  top: 5,
+                                  left: 30,
+                                  width: width / 5,
+                                  height: 50,
+                                  child: Text(
+                                    'Nom du restaurant: ${listRsetaurant[index].restaurantName!}',
+                                    style: TextStyle(
+                                        fontFamily: 'Righteous',
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontStyle: FontStyle.italic),
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 60,
+                                  left: 30,
+                                  width: width / 5,
+                                  height: 30,
+                                  child: Text(
+                                    "Ville: ${listRsetaurant[index].info!.town!}",
+                                    style: TextStyle(
                                       fontFamily: 'Righteous',
-                                      fontSize: 18,
                                       color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontStyle: FontStyle.italic),
-                                ),
-                              ),
-                              Positioned(
-                                top: 60,
-                                left: 30,
-                                width: width / 5,
-                                height: 30,
-                                child: Text(
-                                  "Ville: ${listRsetaurant[index].info!.town!}",
-                                  style: TextStyle(
-                                    fontFamily: 'Righteous',
-                                    color: Colors.white,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Positioned(
-                                top: 90,
-                                left: 30,
-                                width: width / 5,
-                                height: 30,
-                                child: Text(
-                                  "Adresse: ${listRsetaurant[index].info!.address!}",
-                                  style: TextStyle(
-                                    fontFamily: 'Righteous',
-                                    color: Colors.white,
+                                Positioned(
+                                  top: 90,
+                                  left: 30,
+                                  width: width / 5,
+                                  height: 30,
+                                  child: Text(
+                                    "Adresse: ${listRsetaurant[index].info!.address!}",
+                                    style: TextStyle(
+                                      fontFamily: 'Righteous',
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Positioned(
-                                top: 120,
-                                left: 30,
-                                width: width / 5,
-                                height: 30,
-                                child: Text(
-                                  "Nombre d'emplyé: 50",
-                                  style: TextStyle(
-                                    fontFamily: 'Righteous',
-                                    color: Colors.white,
+                                Positioned(
+                                  top: 120,
+                                  left: 30,
+                                  width: width / 5,
+                                  height: 30,
+                                  child: Text(
+                                    "Nombre d'emplyé: 50",
+                                    style: TextStyle(
+                                      fontFamily: 'Righteous',
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Positioned(
-                                top: 150,
-                                left: 30,
-                                width: width / 5,
-                                height: 30,
-                                child: Text(
-                                  "Date de création: ${listRsetaurant[index].createdAt}",
-                                  style: TextStyle(
-                                    fontFamily: 'Righteous',
-                                    color: Colors.white,
+                                Positioned(
+                                  top: 150,
+                                  left: 30,
+                                  width: width / 5,
+                                  height: 30,
+                                  child: Text(
+                                    "Date de création: ${listRsetaurant[index].createdAt}",
+                                    style: TextStyle(
+                                      fontFamily: 'Righteous',
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        Container(
-                          width: width / 5,
-                          height: 50,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: IconButton(
-                                  onPressed: (() {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                RestaurantModification()));
-                                  }),
-                                  icon: Icon(
-                                    Icons.edit,
-                                    color: Color(0xFFF09F1B),
+                          Container(
+                            width: width / 5,
+                            height: 50,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: IconButton(
+                                    onPressed: (() {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  RestaurantModification(
+                                                    restaurant:
+                                                        listRsetaurant[index],
+                                                  )));
+                                    }),
+                                    icon: Icon(
+                                      Icons.edit,
+                                      color: Color(0xFFF09F1B),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Expanded(
-                                child: IconButton(
-                                  onPressed: (() {
-                                    dialogDelete();
-                                  }),
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Color(0xFFF09F1B),
+                                Expanded(
+                                  child: IconButton(
+                                    onPressed: (() {
+                                      dialogDelete(
+                                          listRsetaurant[index].sId.toString(),
+                                          listRsetaurant[index]
+                                              .restaurantName
+                                              .toString());
+                                    }),
+                                    icon: Icon(
+                                      Icons.delete,
+                                      color: Color(0xFFF09F1B),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RestaurantDetail(
+                                    restaurant: listRsetaurant[index],
+                                  )));
+                    },
                   );
                 }),
           ),
@@ -325,7 +367,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
           height: 5,
         ),
         Container(
-            height: ajout == false ? height - 245 : height - 465,
+            height: ajout == false ? height - 250 : height - 470,
             width: width - 20,
             child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
@@ -336,38 +378,39 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                     mainAxisExtent: 300),
                 itemCount: listRsetaurant.length,
                 itemBuilder: (BuildContext ctx, index) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: Colors.green, //Color(0xFF1E9647),
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          width: width / 3,
-                          height: height / 3 - 20,
-                          child: Stack(
-                            fit: StackFit.expand,
-                            children: [
-                              //Logo_Eatch_png.png
-                              Container(
-                                width: width / 5,
-                                height: height / 3 - 20,
-                                decoration: BoxDecoration(
-                                  color: Colors.black,
-                                  borderRadius: BorderRadius.circular(15.0),
-                                  //color: Colors.white,
+                  return GestureDetector(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.green, //Color(0xFF1E9647),
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            width: width / 3,
+                            height: height / 3 - 20,
+                            child: Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                //Logo_Eatch_png.png
+                                Container(
+                                  width: width / 5,
+                                  height: height / 3 - 20,
+                                  decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    //color: Colors.white,
 
-                                  image: DecorationImage(
-                                      opacity: 100,
-                                      /*image: NetworkImage(
-                                          'http://13.39.81.126:4002${listRsetaurant[index].info!.logo.toString()}'),*/
-                                      image: AssetImage('Logo_Eatch_png.png'),
-                                      fit: BoxFit.cover),
+                                    image: DecorationImage(
+                                        opacity: 150,
+                                        image: NetworkImage(
+                                            'http://13.39.81.126:4002${listRsetaurant[index].info!.logo.toString()}'),
+                                        //image: AssetImage('Logo_Eatch_png.png'),
+                                        fit: BoxFit.cover),
+                                  ),
                                 ),
-                              ),
-                              //Image.asset('eatch.jpg', fit: BoxFit.cover),
-                              /*ClipRRect(
+                                //Image.asset('eatch.jpg', fit: BoxFit.cover),
+                                /*ClipRRect(
                                 // Clip it cleanly.
                                 child: BackdropFilter(
                                   filter:
@@ -375,111 +418,129 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   child: Container(),
                                 ),
                               ),*/
-                              Positioned(
-                                top: 5,
-                                left: 30,
-                                width: width / 5,
-                                height: 50,
-                                child: Text(
-                                  'Nom du restaurant: ${listRsetaurant[index].restaurantName!}',
-                                  style: TextStyle(
+                                Positioned(
+                                  top: 5,
+                                  left: 30,
+                                  width: width / 5,
+                                  height: 50,
+                                  child: Text(
+                                    'Nom du restaurant: ${listRsetaurant[index].restaurantName!}',
+                                    style: TextStyle(
+                                        fontFamily: 'Righteous',
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontStyle: FontStyle.italic),
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 60,
+                                  left: 30,
+                                  width: width / 5,
+                                  height: 30,
+                                  child: Text(
+                                    "Ville: ${listRsetaurant[index].info!.town!}",
+                                    style: TextStyle(
                                       fontFamily: 'Righteous',
-                                      fontSize: 18,
                                       color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontStyle: FontStyle.italic),
-                                ),
-                              ),
-                              Positioned(
-                                top: 60,
-                                left: 30,
-                                width: width / 5,
-                                height: 30,
-                                child: Text(
-                                  "Ville: ${listRsetaurant[index].info!.town!}",
-                                  style: TextStyle(
-                                    fontFamily: 'Righteous',
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 90,
-                                left: 30,
-                                width: width / 5,
-                                height: 30,
-                                child: Text(
-                                  "Adresse: ${listRsetaurant[index].info!.address!}",
-                                  style: TextStyle(
-                                    fontFamily: 'Righteous',
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 120,
-                                left: 30,
-                                width: width / 5,
-                                height: 30,
-                                child: const Text(
-                                  "Nombre d'emplyé: 50",
-                                  style: TextStyle(
-                                    fontFamily: 'Righteous',
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 150,
-                                left: 30,
-                                width: width / 5,
-                                height: 30,
-                                child: Text(
-                                  "Date de création: ${listRsetaurant[index].createdAt}",
-                                  style: TextStyle(
-                                    fontFamily: 'Righteous',
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                            width: width / 5,
-                            height: 50,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: IconButton(
-                                    onPressed: (() {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  RestaurantModification()));
-                                    }),
-                                    icon: Icon(
-                                      Icons.edit,
-                                      color: Color(0xFFF09F1B),
                                     ),
                                   ),
                                 ),
-                                Expanded(
-                                  child: IconButton(
-                                    onPressed: (() {
-                                      dialogDelete();
-                                    }),
-                                    icon: Icon(
-                                      Icons.delete,
-                                      color: Color(0xFFF09F1B),
+                                Positioned(
+                                  top: 90,
+                                  left: 30,
+                                  width: width / 5,
+                                  height: 30,
+                                  child: Text(
+                                    "Adresse: ${listRsetaurant[index].info!.address!}",
+                                    style: TextStyle(
+                                      fontFamily: 'Righteous',
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 120,
+                                  left: 30,
+                                  width: width / 5,
+                                  height: 30,
+                                  child: const Text(
+                                    "Nombre d'emplyé: 50",
+                                    style: TextStyle(
+                                      fontFamily: 'Righteous',
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 150,
+                                  left: 30,
+                                  width: width / 5,
+                                  height: 30,
+                                  child: Text(
+                                    "Date de création: ${listRsetaurant[index].createdAt}",
+                                    style: TextStyle(
+                                      fontFamily: 'Righteous',
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ),
                               ],
-                            )),
-                      ],
+                            ),
+                          ),
+                          Container(
+                              width: width / 5,
+                              height: 50,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: IconButton(
+                                      onPressed: (() {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    RestaurantModification(
+                                                      restaurant:
+                                                          listRsetaurant[index],
+                                                    )));
+                                      }),
+                                      icon: Icon(
+                                        Icons.edit,
+                                        color: Color(0xFFF09F1B),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: IconButton(
+                                      onPressed: (() {
+                                        dialogDelete(
+                                            listRsetaurant[index]
+                                                .sId
+                                                .toString(),
+                                            listRsetaurant[index]
+                                                .restaurantName
+                                                .toString());
+                                      }),
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: Color(0xFFF09F1B),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        ],
+                      ),
                     ),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RestaurantDetail(
+                                    restaurant: listRsetaurant[index],
+                                  )));
+                    },
                   );
                 })),
       ],
@@ -694,8 +755,8 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                   ),
                   ElevatedButton(
                     onPressed: (() {
-                      /* creationRestaurant(nomController.text,
-                          villeController.text, adresseController.text);*/
+                      creationRestaurant(context, nomController.text,
+                          villeController.text, adresseController.text);
                       setState(() {
                         ajout = false;
                       });
@@ -742,10 +803,10 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
     );
   }
 
-  Future dialogDelete() {
+  Future dialogDelete(id, nom) {
     return showDialog(
         context: context,
-        builder: (_) {
+        builder: (con) {
           return AlertDialog(
             backgroundColor: Colors.white,
             title: const Center(
@@ -778,16 +839,19 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                     size: 14,
                   ),
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                  onPressed: () {},
+                  onPressed: () {
+                    deleteRestaurant(context, id);
+                    Navigator.pop(con);
+                  },
                   label: Text("Supprimer."))
             ],
             content: Container(
               alignment: Alignment.center,
               color: Colors.white,
               height: 150,
-              child: const Text(
-                "Voulez vous supprimer le restaurant EATCH ?",
-                style: TextStyle(
+              child: Text(
+                "Voulez vous supprimer le restaurant $nom ?",
+                style: const TextStyle(
                   color: Colors.black,
                   fontFamily: 'HelveticaNeue',
                 ),
@@ -797,6 +861,130 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
         });
   }
 
+  Future<void> creationRestaurant(
+    BuildContext context,
+    String nomRestaurant,
+    String villeRestaurant,
+    String adresseRestaurant,
+  ) async {
+    ////////////
+    final result = await FilePicker.platform
+        .pickFiles(type: FileType.custom, allowedExtensions: [
+      "png",
+      "jpg",
+      "jpeg",
+    ]);
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var id = prefs.getString('IdUser').toString();
+    var token = prefs.getString('token');
+    var nom_file = '';
+
+    if (result != null) {
+      PlatformFile file = result.files.single;
+
+      Uint8List? fileBytes;
+      if ((result.files.single.bytes ?? []).isEmpty) {
+        // Speciale Android
+
+        print('Speciale Android');
+
+        final file = File.fromUri(Uri.parse(result.files.single.path!));
+        fileBytes = file.readAsBytesSync();
+      } else {
+        // Speciale web
+
+        print('Speciale web');
+        fileBytes = result.files.single.bytes as Uint8List;
+      }
+
+      List<int> selectedFile = fileBytes as List<int>;
+
+      var url = Uri.parse("http://13.39.81.126:4002/api/restaurants/create");
+      final request = MultipartRequest(
+        'POST',
+        url,
+        onProgress: (int bytes, int total) {
+          final progress = bytes / total;
+          print('progress: $progress ($bytes/$total)');
+        },
+      );
+      var json = {
+        'restaurant_name': nomRestaurant,
+        'address': adresseRestaurant,
+        'town': villeRestaurant,
+        '_creator': id,
+      };
+      var body = jsonEncode(json);
+
+      request.headers.addAll({
+        "body": body,
+      });
+
+      request.fields['form_key'] = 'form_value';
+      request.headers['authorization'] = 'Bearer $token';
+      request.files.add(await http.MultipartFile.fromBytes('file', selectedFile,
+          contentType: MediaType('application', 'octet-stream'),
+          filename: result.files.first.name));
+
+      print("RESPENSE SEND STEAM FILE REQ");
+      //var responseString = await streamedResponse.stream.bytesToString();
+      var response = await request.send();
+      print("Upload Response" + response.toString());
+      print(response.statusCode);
+      print(request.headers);
+
+      try {
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          await response.stream.bytesToString().then((value) {
+            print(value);
+          });
+          //stopMessage();
+          //finishWorking();
+
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Image Téléchager"),
+          ));
+          ref.refresh(getDataRsetaurantFuture);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Erreur de serveur"),
+          ));
+          print("Error Create Programme  !!!");
+        }
+      } catch (e) {
+        throw e;
+      }
+    }
+  }
+
+  Future<http.Response> deleteRestaurant(
+      BuildContext context, String id) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token');
+      String urlDelete = "http://13.39.81.126:4002/api/restaurants/delete/$id";
+
+      final http.Response response = await http.delete(
+        Uri.parse(urlDelete),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'Accept': 'application/json',
+          'authorization': 'Bearer $token'
+        },
+      );
+
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        ref.refresh(getDataRsetaurantFuture);
+        return response;
+      } else {
+        return Future.error("Server Error");
+      }
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
   /*Future<void> creationRestaurant(
     String nomRestaurant,
     String villeRestaurant,

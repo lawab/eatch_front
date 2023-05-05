@@ -1,19 +1,37 @@
+import 'package:eatch/servicesAPI/getRestaurant.dart';
 import 'package:eatch/utils/applayout.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
 
 class RestaurantModification extends StatefulWidget {
-  const RestaurantModification({Key? key}) : super(key: key);
+  Restaurant restaurant;
+  RestaurantModification({Key? key, required this.restaurant})
+      : super(key: key);
 
   @override
   RestaurantModificationState createState() => RestaurantModificationState();
 }
 
 class RestaurantModificationState extends State<RestaurantModification> {
-  var nomController = TextEditingController(text: 'Eatch');
-  var villeController = TextEditingController(text: 'Casablanca');
-  var adresseController = TextEditingController(text: 'boulevard Massira');
-  var employeController = TextEditingController(text: '50');
+  @override
+  void initState() {
+    donne();
+    // TODO: implement initState
+    super.initState();
+  }
+
+  void donne() {
+    setState(() {
+      nomController.text = widget.restaurant.restaurantName!;
+      villeController.text = widget.restaurant.info!.town!;
+      adresseController.text = widget.restaurant.info!.address!;
+    });
+  }
+
+  var nomController = TextEditingController();
+  var villeController = TextEditingController();
+  var adresseController = TextEditingController();
+  var employeController = TextEditingController();
 
   MediaQueryData mediaQueryData(BuildContext context) {
     return MediaQuery.of(context);
@@ -252,7 +270,10 @@ class RestaurantModificationState extends State<RestaurantModification> {
                       borderRadius: BorderRadius.circular(15.0),
                       //color: Colors.white,
                       image: DecorationImage(
-                          image: AssetImage('eatch.jpg'), fit: BoxFit.cover),
+                          image: NetworkImage(
+                              'http://13.39.81.126:4002${widget.restaurant.info!.logo.toString()}'),
+                          fit: BoxFit.cover),
+                      //image: AssetImage('eatch.jpg'), fit: BoxFit.cover),
                     ),
                   ),
                   const SizedBox(

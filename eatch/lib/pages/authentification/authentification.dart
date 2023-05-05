@@ -331,7 +331,7 @@ class AuthentificationState extends State<Authentification> {
                                 prefs.setString('emailLogin', 'non');
                                 prefs.setString('passLogin', 'non');
                               }
-                              login(usernameController.text,
+                              login(context, usernameController.text,
                                   passwordController.text);
                             }
                           },
@@ -606,7 +606,7 @@ class AuthentificationState extends State<Authentification> {
                         child: InkWell(
                           onTap: () {
                             if (_formKey.currentState!.validate()) {
-                              login(usernameController.text,
+                              login(context, usernameController.text,
                                   passwordController.text);
                             }
                           },
@@ -639,9 +639,10 @@ class AuthentificationState extends State<Authentification> {
     );
   }
 
-  Future<void> login(email, pass) async {
+  Future<void> login(BuildContext context, email, pass) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String url = "http://13.39.81.126:4001/api/users/login";
+    //13.39.81.126
     print(url);
 
     if (pass.isNotEmpty && email.isNotEmpty) {
@@ -666,11 +667,10 @@ class AuthentificationState extends State<Authentification> {
             MaterialPageRoute(builder: (context) => DashboardManager()),
             (Route<dynamic> route) => false);*/
       } else {
-        Future.delayed(Duration.zero, () async {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text("Email or Mot de passe incorrect."),
-          ));
-        });
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Email ou Mot de passe incorrect."),
+        ));
+
         print("Vous n'êtes pas connecté");
       }
     } else {

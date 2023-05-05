@@ -4,17 +4,19 @@ import 'package:intl/intl.dart';
 import '../../../utils/palettes/palette.dart';
 
 class MenuCard extends StatefulWidget {
-  const MenuCard({
-    Key? key,
-    required this.imageUrl,
-    required this.title,
-    required this.description,
-    required this.price,
-  }) : super(key: key);
+  const MenuCard(
+      {Key? key,
+      required this.imageUrl,
+      required this.title,
+      required this.description,
+      required this.price,
+      required this.index})
+      : super(key: key);
   final String imageUrl;
   final String title;
   final String description;
   final double price;
+  final int index;
 
   @override
   State<MenuCard> createState() => _MenuCardState();
@@ -27,7 +29,9 @@ class _MenuCardState extends State<MenuCard> {
       padding: const EdgeInsets.only(right: 10),
       color: Palette.primaryBackgroundColor,
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          print('object ${widget.index}');
+        },
         child: Container(
           decoration: const BoxDecoration(
             color: Palette.primaryBackgroundColor,
@@ -72,12 +76,14 @@ class _MenuCardState extends State<MenuCard> {
                 ),
               ),
               const SizedBox(width: 05.0),
-              ClipRRect(
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(10.0),
-                ),
-                child: Image.asset(
-                  widget.imageUrl,
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(10.0),
+                  ),
+                  child: Image.asset(
+                    widget.imageUrl,
+                  ),
                 ),
               ),
             ],
