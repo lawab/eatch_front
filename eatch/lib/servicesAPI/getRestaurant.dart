@@ -22,19 +22,22 @@ class GetDataRsetaurantFuture extends ChangeNotifier {
     var token = prefs.getString('token');
     try {
       http.Response response = await http.get(
-        Uri.parse('http://13.39.81.126:4002/api/restaurant/fetch/all'),
+        Uri.parse('http://13.39.81.126:4002/api/restaurants/fetch/all'),
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',
         },
       );
+      print('get restaurant');
       print(response.statusCode);
-      print(response.body);
+
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-
+        print(data);
         for (int i = 0; i < data.length; i++) {
-          listRsetaurant.add(Restaurant.fromJson(data[i]));
+          if (data[i]['deletedAt'] == null) {
+            listRsetaurant.add(Restaurant.fromJson(data[i]));
+          }
         }
       } else {
         return Future.error(" server erreur");
@@ -53,7 +56,7 @@ class Restaurant {
   String? sId;
   String? restaurantName;
   String? sCreator;
-  Null? deletedAt;
+  String? deletedAt;
   String? createdAt;
   String? updatedAt;
   int? iV;

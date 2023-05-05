@@ -82,6 +82,7 @@ class MenuGrid extends StatelessWidget {
             imageUrl: menusList[index].imageUrl,
             price: menusList[index].price,
             title: menusList[index].title,
+            index: index,
           ),
         ),
       ),
