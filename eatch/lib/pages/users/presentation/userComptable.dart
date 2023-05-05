@@ -86,36 +86,36 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
           Card(
             child: SizedBox(
               height: 50,
-              child: Row(children: [
-                const Expanded(
+              child: Row(children: const [
+                Expanded(
                     child: Center(
                   child: Text(
                     'Nom',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 )),
-                const Expanded(
+                Expanded(
                     child: Center(
                   child: Text(
                     'Prénom',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 )),
-                const Expanded(
+                Expanded(
                     child: Center(
                   child: Text(
                     "Nom d'utilisateur",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 )),
-                const Expanded(
+                Expanded(
                     child: Center(
                   child: Text(
                     'Email',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 )),
-                const Expanded(
+                Expanded(
                     child: Center(
                   child: Text(
                     'Role',
@@ -124,7 +124,7 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                 )),
                 SizedBox(
                   width: 100,
-                  child: const Center(
+                  child: Center(
                     child: Text(
                       'Actions',
                       style: TextStyle(fontWeight: FontWeight.bold),
@@ -225,10 +225,8 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                                       )),
                                       Expanded(
                                           child: IconButton(
-                                        icon: const Icon(
-                                          Icons.delete,
-                                          color: Colors.red,
-                                        ),
+                                        icon: const Icon(Icons.delete,
+                                            color: Palette.deleteColors),
                                         onPressed: () {
                                           dialogDelete(viewModel
                                               .listComptable[index].userNom!);
@@ -325,7 +323,7 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                                           child: IconButton(
                                         icon: const Icon(
                                           Icons.delete,
-                                          color: Colors.red,
+                                          color: Palette.deleteColors,
                                         ),
                                         onPressed: () {
                                           dialogDelete(
@@ -381,7 +379,8 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                     Icons.delete,
                     size: 14,
                   ),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Palette.deleteColors),
                   onPressed: () {},
                   label: const Text("Supprimer."),
                 )

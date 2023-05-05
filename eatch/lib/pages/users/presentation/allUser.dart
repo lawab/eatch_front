@@ -233,7 +233,7 @@ class AllUsersState extends ConsumerState<AllUsers> {
                                           child: IconButton(
                                         icon: const Icon(
                                           Icons.delete,
-                                          color: Colors.red,
+                                          color: Palette.deleteColors,
                                         ),
                                         onPressed: () {
                                           dialogDelete(viewModel
@@ -336,7 +336,7 @@ class AllUsersState extends ConsumerState<AllUsers> {
                                           child: IconButton(
                                         icon: const Icon(
                                           Icons.delete,
-                                          color: Colors.red,
+                                          color: Palette.deleteColors,
                                         ),
                                         onPressed: () {
                                           dialogDelete(
@@ -392,11 +392,9 @@ class AllUsersState extends ConsumerState<AllUsers> {
                     Icons.delete,
                     size: 14,
                   ),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                  onPressed: () {
-                    deleteRestaurant(context, userName);
-                    Navigator.pop(con);
-                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Palette.deleteColors),
+                  onPressed: () {},
                   label: const Text("Supprimer."),
                 )
               ],
