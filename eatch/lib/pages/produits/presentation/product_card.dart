@@ -10,14 +10,13 @@ class ProductCard extends StatefulWidget {
     required this.imageUrl,
     required this.title,
     required this.price,
-    // required this.filterproductsList,
+    required this.onTapProduitCard,
   }) : super(key: key);
 
   final String imageUrl;
   final String title;
   final double price;
-
-  // final List<Product> filterproductsList;
+  final VoidCallback onTapProduitCard;
 
   @override
   State<ProductCard> createState() => _ProductCardState();
@@ -37,7 +36,7 @@ class _ProductCardState extends State<ProductCard> {
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: InkWell(
-          onTap: () {},
+          onTap: widget.onTapProduitCard,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [

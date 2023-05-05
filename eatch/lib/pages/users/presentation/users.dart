@@ -1,9 +1,17 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:http_parser/http_parser.dart' show MediaType;
+import 'dart:typed_data';
 import 'package:eatch/pages/users/domain/user.dart';
 import 'package:eatch/pages/users/presentation/allUser.dart';
 import 'package:eatch/pages/users/presentation/userManger.dart';
+import 'package:eatch/servicesAPI/multipart.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../utils/applayout.dart';
 import '../../../utils/default_button/default_button.dart';
 import '../../../utils/palettes/palette.dart';
@@ -72,7 +80,10 @@ class _UsersState extends State<Users> {
   final filterComptableList = eatchUsersList.where((rh) {
     return rh.userRole == "RÔLE_COMPTABLE";
   }).toList();
-
+  List<int> _selectedFile = [];
+  FilePickerResult? result;
+  PlatformFile? file;
+  bool filee = false;
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -167,6 +178,37 @@ class _UsersState extends State<Users> {
                             confirmPasswordForm(),
                             const SizedBox(height: 20),
                             roleForm(),
+                            const SizedBox(height: 20),
+                            SizedBox(
+                              width: 200,
+                              child: DefaultButton(
+                                color: Palette.primaryColor,
+                                foreground: Colors.red,
+                                text: 'ENREGISTRER',
+                                textcolor: Palette.primaryBackgroundColor,
+                                onPressed: () async {
+                                  result = await FilePicker.platform.pickFiles(
+                                      type: FileType.custom,
+                                      allowedExtensions: [
+                                        "png",
+                                        "jpg",
+                                        "jpeg",
+                                      ]);
+                                  if (result != null) {
+                                    file = result!.files.single;
+
+                                    Uint8List fileBytes =
+                                        result!.files.single.bytes as Uint8List;
+                                    //print(base64Encode(fileBytes));
+                                    //List<int>
+                                    _selectedFile = fileBytes;
+                                    setState(() {
+                                      filee = true;
+                                    });
+                                  }
+                                },
+                              ),
+                            ),
                             const SizedBox(height: 20),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -653,6 +695,78 @@ class _UsersState extends State<Users> {
         _email = value!;
       },
     );
+  }
+
+  Future<void> creationRestaurant(
+    BuildContext context,
+    String nomRestaurant,
+    String villeRestaurant,
+    String adresseRestaurant,
+    selectedFile,
+    result,
+  ) async {
+    ////////////
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var id = prefs.getString('IdUser').toString();
+    var token = prefs.getString('token');
+    var nom_file = '';
+
+    var url = Uri.parse("http://13.39.81.126:4002/api/restaurants/create");
+    final request = MultipartRequest(
+      'POST',
+      url,
+      onProgress: (int bytes, int total) {
+        final progress = bytes / total;
+        print('progress: $progress ($bytes/$total)');
+      },
+    );
+    var json = {
+      'restaurant_name': nomRestaurant,
+      'address': adresseRestaurant,
+      'town': villeRestaurant,
+      '_creator': id,
+    };
+    var body = jsonEncode(json);
+
+    request.headers.addAll({
+      "body": body,
+    });
+
+    request.fields['form_key'] = 'form_value';
+    request.headers['authorization'] = 'Bearer $token';
+    request.files.add(await http.MultipartFile.fromBytes('file', selectedFile,
+        contentType: MediaType('application', 'octet-stream'),
+        filename: result.files.first.name));
+
+    print("RESPENSE SEND STEAM FILE REQ");
+    //var responseString = await streamedResponse.stream.bytesToString();
+    var response = await request.send();
+    print("Upload Response" + response.toString());
+    print(response.statusCode);
+    print(request.headers);
+
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        await response.stream.bytesToString().then((value) {
+          print(value);
+        });
+        //stopMessage();
+        //finishWorking();
+
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Restaurant crée"),
+        ));
+        //ref.refresh(getDataRsetaurantFuture);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Erreur de serveur"),
+        ));
+        print("Error Create Programme  !!!");
+      }
+    } catch (e) {
+      throw e;
+    }
   }
 }
 

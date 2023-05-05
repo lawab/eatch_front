@@ -146,10 +146,8 @@ class CategorieCardState extends ConsumerState<CategorieCard> {
                       child: InkWell(
                         onTap: widget.onTapDelete,
                         hoverColor: Colors.transparent,
-                        child: const Icon(
-                          Icons.delete,
-                          color: Colors.red,
-                        ),
+                        child: const Icon(Icons.delete,
+                            color: Palette.deleteColors),
                       ),
                     ),
                   ),

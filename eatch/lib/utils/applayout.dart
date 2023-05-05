@@ -73,7 +73,7 @@ class _AppLayoutState extends State<AppLayout> {
                   children: [
                     DrawerHeader(
                       child: Image.asset(
-                        'assets/Logo_Eatch_png.png',
+                        'assets/logo_vert.png',
                       ),
                     ),
                     Expanded(

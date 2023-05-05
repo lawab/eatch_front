@@ -1,3 +1,4 @@
+import 'package:eatch/pages/produits/presentation/produit_info_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -46,7 +47,18 @@ class ProductsGridState extends ConsumerState<ProductsGrid> {
             imageUrl: widget.filterproductsList[index].imageUrl!,
             price: widget.filterproductsList[index].price!,
             title: widget.filterproductsList[index].title!,
-            // filterproductsList: widget.filterproductsList,
+            onTapProduitCard: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => Produitpage(
+                    imageUrl: widget.filterproductsList[index].imageUrl!,
+                    price: widget.filterproductsList[index].price!,
+                    title: widget.filterproductsList[index].title!,
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ),

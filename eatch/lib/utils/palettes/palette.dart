@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Palette {
-  static const primaryColor = Color(0xFFFB6D3B);
+  static const primaryColor = Colors.green;
+  static const deleteColors = Color.fromARGB(255, 235, 24, 9);
+  //static const primaryColor = Color(0xFFFB6D3B);
 
   static const secondaryColor = Color(0xFFFC8B63);
 

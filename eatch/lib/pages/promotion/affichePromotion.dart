@@ -680,8 +680,8 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                       Icons.delete,
                       size: 14,
                     ),
-                    style:
-                        ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Palette.deleteColors),
                     onPressed: () {},
                     label: Text("Supprimer."))
               ],
@@ -737,7 +737,8 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                     Icons.delete,
                     size: 14,
                   ),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Palette.deleteColors),
                   onPressed: () {},
                   label: Text("Valider."))
             ],
