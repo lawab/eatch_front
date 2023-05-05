@@ -204,10 +204,8 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                                       )),
                                       Expanded(
                                           child: IconButton(
-                                        icon: Icon(
-                                          Icons.delete,
-                                          color: Colors.red,
-                                        ),
+                                        icon: Icon(Icons.delete,
+                                            color: Palette.deleteColors),
                                         onPressed: () {
                                           dialogDelete(viewModel
                                               .listComptable[index].userNom!);
@@ -284,7 +282,7 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                                           child: IconButton(
                                         icon: Icon(
                                           Icons.delete,
-                                          color: Colors.red,
+                                          color: Palette.deleteColors,
                                         ),
                                         onPressed: () {
                                           dialogDelete(
@@ -340,7 +338,8 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                     Icons.delete,
                     size: 14,
                   ),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Palette.deleteColors),
                   onPressed: () {},
                   label: const Text("Supprimer."),
                 )

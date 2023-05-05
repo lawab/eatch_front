@@ -296,7 +296,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                     }),
                                     icon: Icon(
                                       Icons.delete,
-                                      color: Color(0xFFF09F1B),
+                                      color: Palette.deleteColors,
                                     ),
                                   ),
                                 ),
@@ -524,7 +524,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                       }),
                                       icon: Icon(
                                         Icons.delete,
-                                        color: Color(0xFFF09F1B),
+                                        color: Palette.deleteColors,
                                       ),
                                     ),
                                   ),
@@ -838,7 +838,8 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                     Icons.delete,
                     size: 14,
                   ),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Palette.deleteColors),
                   onPressed: () {
                     deleteRestaurant(context, id);
                     Navigator.pop(con);
@@ -943,7 +944,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
           //finishWorking();
 
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text("Image Téléchager"),
+            content: Text("Restaurant crée"),
           ));
           ref.refresh(getDataRsetaurantFuture);
         } else {

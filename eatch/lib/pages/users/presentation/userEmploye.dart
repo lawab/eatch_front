@@ -206,7 +206,7 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
                                           child: IconButton(
                                         icon: Icon(
                                           Icons.delete,
-                                          color: Colors.red,
+                                          color: Palette.deleteColors,
                                         ),
                                         onPressed: () {
                                           dialogDelete(viewModel
@@ -284,7 +284,7 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
                                           child: IconButton(
                                         icon: Icon(
                                           Icons.delete,
-                                          color: Colors.red,
+                                          color: Palette.deleteColors,
                                         ),
                                         onPressed: () {
                                           dialogDelete(
@@ -340,7 +340,8 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
                     Icons.delete,
                     size: 14,
                   ),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Palette.deleteColors),
                   onPressed: () {},
                   label: const Text("Supprimer."),
                 )

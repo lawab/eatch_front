@@ -53,19 +53,19 @@ class Categorie {
     if (json['produits'] != null) {
       produits = <Produits>[];
       json['produits'].forEach((v) {
-        produits!.add(new Produits.fromJson(v));
+        produits!.add(Produits.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['imageUrl'] = this.imageUrl;
-    data['title'] = this.title;
-    data['nombreproduits'] = this.nombreproduits;
-    if (this.produits != null) {
-      data['produits'] = this.produits!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['imageUrl'] = imageUrl;
+    data['title'] = title;
+    data['nombreproduits'] = nombreproduits;
+    if (produits != null) {
+      data['produits'] = produits!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -87,11 +87,11 @@ class Produits {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['imageUrl'] = this.imageUrl;
-    data['title'] = this.title;
-    data['price'] = this.price;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['imageUrl'] = imageUrl;
+    data['title'] = title;
+    data['price'] = price;
     return data;
   }
 }

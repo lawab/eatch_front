@@ -340,7 +340,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                               icon: Icon(Icons.delete),
                               label: Text('Supprimer'),
                               style: ElevatedButton.styleFrom(
-                                  backgroundColor: Palette.secondaryColor,
+                                  backgroundColor: Palette.deleteColors,
                                   minimumSize: Size(width, 50)),
                             )
                           ],
@@ -641,7 +641,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                               icon: Icon(Icons.delete),
                               label: Text('Supprimer'),
                               style: ElevatedButton.styleFrom(
-                                  backgroundColor: Palette.secondaryColor,
+                                  backgroundColor: Palette.deleteColors,
                                   minimumSize: Size(width, 50)),
                             )
                           ],
@@ -692,8 +692,8 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                       Icons.delete,
                       size: 14,
                     ),
-                    style:
-                        ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Palette.deleteColors),
                     onPressed: () {},
                     label: Text("Supprimer."))
               ],
@@ -749,7 +749,8 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                     Icons.delete,
                     size: 14,
                   ),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Palette.deleteColors),
                   onPressed: () {},
                   label: Text("Valider."))
             ],

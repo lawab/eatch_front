@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:eatch/pages/dashboard/dashboard_manager.dart';
+import 'package:eatch/pages/restaurantAccueil.dart';
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
@@ -655,13 +656,13 @@ class AuthentificationState extends State<Authentification> {
 
       if (response.statusCode == 200) {
         var data = json.decode(response.body);
-
+        print(data);
         prefs.setString('IdUser', data['user']['_id']);
         prefs.setString('token', data['accessToken']);
 
         print("Vous êtes connecté");
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => DashboardManager()));
+            MaterialPageRoute(builder: (context) => RestaurantAccueil()));
 
         /* Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => DashboardManager()),

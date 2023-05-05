@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_function_literals_in_foreach_calls, unused_field, prefer_final_fields
 
+import 'package:eatch/pages/produits/presentation/creation_produit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -22,6 +23,13 @@ class CategoriesPage extends ConsumerStatefulWidget {
 }
 
 class CategoriesPageState extends ConsumerState<CategoriesPage> {
+  final _controller = TextEditingController();
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   //**********************/
   bool search = false;
   List<Categorie> categorieSearch = [];
@@ -41,11 +49,48 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
         search = true;
         categorieSearch.clear();
         categorieSearch.addAll(dummyListData);
+        _controller.clear();
+        searchProduit = false;
       });
+
       return;
     } else {
       setState(() {
         search = false;
+        _controller.clear();
+        searchProduit = false;
+      });
+      print("###################");
+    }
+  }
+
+  bool searchProduit = false;
+  List<Produits> produitSearch = [];
+  void filterProduitResults(String query) {
+    final viewModel = ref.watch(getDataCategoriesFuture);
+    List<Produits> dummySearchList = [];
+    dummySearchList.addAll(
+      search == false
+          ? viewModel.listCategories[selectedIndexCategorie].produits!
+          : categorieSearch[selectedIndexCategorie].produits!,
+    );
+    if (query.isNotEmpty) {
+      List<Produits> dummyListData = [];
+      dummySearchList.forEach((item) {
+        if (item.title!.contains(query)) {
+          dummyListData.add(item);
+          //print(dummyListData);
+        }
+      });
+      setState(() {
+        searchProduit = true;
+        produitSearch.clear();
+        produitSearch.addAll(dummyListData);
+      });
+      return;
+    } else {
+      setState(() {
+        searchProduit = false;
       });
       print("###################");
     }
@@ -56,17 +101,13 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
 
   String _nomCategorie = "";
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   int selectedIndexCategorie = 0;
   final PageController _pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(getDataCategoriesFuture);
+    SizeConfig().init(context);
     return AppLayout(
       content: SingleChildScrollView(
         child: Container(
@@ -85,51 +126,47 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
               children: [
                 const Text("TOUTES LES CATÉGORIES"),
                 if (!_showContent)
-                  Stack(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            _showContent = !_showContent;
-                          });
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          width: 200,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 10,
-                          ),
-                          decoration: const BoxDecoration(
-                            color: Palette.primaryColor,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                          ),
-                          child: Row(
-                            children: const [
-                              Icon(
-                                Icons.add,
-                                color: Palette.primaryBackgroundColor,
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                    left: 05.0,
-                                  ),
-                                  child: Text(
-                                    "Ajouter une catégorie",
-                                    style: TextStyle(
-                                      color: Palette.primaryBackgroundColor,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        _showContent = !_showContent;
+                      });
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 200,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 10,
+                      ),
+                      decoration: const BoxDecoration(
+                        color: Palette.primaryColor,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
                         ),
                       ),
-                    ],
+                      child: Row(
+                        children: const [
+                          Icon(
+                            Icons.add,
+                            color: Palette.primaryBackgroundColor,
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                left: 05.0,
+                              ),
+                              child: Text(
+                                "Ajouter une catégorie",
+                                style: TextStyle(
+                                  color: Palette.primaryBackgroundColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
               ],
             ),
@@ -188,8 +225,8 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                   )
                 : Container(),
             Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 20,
+              padding: const EdgeInsets.only(
+                bottom: 20,
               ),
               child: SizedBox(
                 width: 300,
@@ -406,32 +443,158 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              color: Colors.white,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                  bottom: 10.0,
-                                  right: 10.0,
-                                ),
-                                child: Text(
-                                  search == false
-                                      ? viewModel
-                                          .listCategories[
-                                              selectedIndexCategorie]
-                                          .title!
-                                      : categorieSearch.isNotEmpty
-                                          ? categorieSearch[
-                                                  selectedIndexCategorie]
-                                              .title!
-                                          : "",
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: Palette.textPrimaryColor,
+                            MediaQuery.of(context).size.width > 682
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        color: Colors.white,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                            bottom: 10.0,
+                                            right: 10.0,
+                                          ),
+                                          child: Text(
+                                            search == false
+                                                ? viewModel
+                                                    .listCategories[
+                                                        selectedIndexCategorie]
+                                                    .title!
+                                                : categorieSearch.isNotEmpty
+                                                    ? categorieSearch[
+                                                            selectedIndexCategorie]
+                                                        .title!
+                                                    : "",
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: Palette.textPrimaryColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        alignment: Alignment.center,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                            right: 10,
+                                            bottom: 10,
+                                          ),
+                                          child: SizedBox(
+                                            width: 300,
+                                            child: TextField(
+                                              controller: _controller,
+                                              // onChanged: (value) => onSearch(value.toLowerCase()),
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 14,
+                                              ),
+                                              onChanged: (value) {
+                                                filterProduitResults(value);
+                                              },
+                                              decoration: InputDecoration(
+                                                filled: true,
+                                                fillColor: Palette.fourthColor,
+                                                contentPadding:
+                                                    const EdgeInsets.all(0),
+                                                prefixIcon: const Icon(
+                                                    Icons.search,
+                                                    color:
+                                                        Palette.primaryColor),
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(50),
+                                                  borderSide: BorderSide.none,
+                                                ),
+                                                hintStyle: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.grey.shade500,
+                                                ),
+                                                hintText:
+                                                    "Rechercher un produit ...",
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        color: Colors.white,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                            bottom: 10.0,
+                                            right: 10.0,
+                                          ),
+                                          child: Text(
+                                            search == false
+                                                ? viewModel
+                                                    .listCategories[
+                                                        selectedIndexCategorie]
+                                                    .title!
+                                                : categorieSearch.isNotEmpty
+                                                    ? categorieSearch[
+                                                            selectedIndexCategorie]
+                                                        .title!
+                                                    : "",
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: Palette.textPrimaryColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        alignment: Alignment.center,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                            right: 10,
+                                            bottom: 10,
+                                          ),
+                                          child: SizedBox(
+                                            width: 200,
+                                            child: TextField(
+                                              controller: _controller,
+                                              // onChanged: (value) => onSearch(value.toLowerCase()),
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 14,
+                                              ),
+                                              onChanged: (value) {
+                                                filterProduitResults(value);
+                                              },
+                                              decoration: InputDecoration(
+                                                filled: true,
+                                                fillColor: Palette.fourthColor,
+                                                contentPadding:
+                                                    const EdgeInsets.all(0),
+                                                prefixIcon: const Icon(
+                                                    Icons.search,
+                                                    color:
+                                                        Palette.primaryColor),
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(50),
+                                                  borderSide: BorderSide.none,
+                                                ),
+                                                hintStyle: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.grey.shade500,
+                                                ),
+                                                hintText:
+                                                    "Rechercher un produit ...",
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ),
-                            ),
                             search == false
                                 ? Expanded(
                                     child: PageView(
@@ -450,32 +613,72 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                                                   'Aucun Produit trouvé',
                                                 ),
                                               )
-                                            : ProductsGrid(
-                                                filterproductsList: viewModel
-                                                    .listCategories[
-                                                        selectedIndexCategorie]
-                                                    .produits!,
-                                                crossAxisCount: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .width <
-                                                        485
-                                                    ? 1
-                                                    : MediaQuery.of(context)
+                                            : searchProduit == false
+                                                ? ProductsGrid(
+                                                    filterproductsList: viewModel
+                                                        .listCategories[
+                                                            selectedIndexCategorie]
+                                                        .produits!,
+                                                    crossAxisCount: MediaQuery
+                                                                    .of(context)
                                                                 .size
                                                                 .width <
-                                                            605
-                                                        ? 02
+                                                            485
+                                                        ? 1
                                                         : MediaQuery.of(context)
                                                                     .size
                                                                     .width <
-                                                                750
-                                                            ? 03
-                                                            : 04,
-                                                mainAxisSpacing: 10,
-                                                crossAxisSpacing: 10,
-                                                childAspectRatio: 1 / 1.19,
-                                              ),
+                                                                605
+                                                            ? 02
+                                                            : MediaQuery.of(context)
+                                                                        .size
+                                                                        .width <
+                                                                    750
+                                                                ? 03
+                                                                : 04,
+                                                    mainAxisSpacing: 10,
+                                                    crossAxisSpacing: 10,
+                                                    childAspectRatio: 1 / 1.19,
+                                                  )
+                                                : produitSearch.isEmpty
+                                                    ? const Center(
+                                                        child: Text(
+                                                          'Aucun Produit trouvé',
+                                                        ),
+                                                      )
+                                                    : produitSearch.isEmpty
+                                                        ? const Center(
+                                                            child: Text(
+                                                              'Aucun Produit trouvé',
+                                                            ),
+                                                          )
+                                                        : ProductsGrid(
+                                                            filterproductsList:
+                                                                produitSearch
+                                                                        .isEmpty
+                                                                    ? []
+                                                                    : produitSearch,
+                                                            crossAxisCount: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width <
+                                                                    485
+                                                                ? 1
+                                                                : MediaQuery.of(context)
+                                                                            .size
+                                                                            .width <
+                                                                        605
+                                                                    ? 02
+                                                                    : MediaQuery.of(context).size.width <
+                                                                            750
+                                                                        ? 03
+                                                                        : 04,
+                                                            mainAxisSpacing: 10,
+                                                            crossAxisSpacing:
+                                                                10,
+                                                            childAspectRatio:
+                                                                1 / 1.19,
+                                                          ),
                                       ],
                                     ),
                                   )
@@ -501,37 +704,103 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                                                       'Aucun Produit trouvé',
                                                     ),
                                                   )
-                                                : ProductsGrid(
-                                                    filterproductsList:
-                                                        categorieSearch.isEmpty
-                                                            ? []
-                                                            : categorieSearch[
-                                                                    selectedIndexCategorie]
-                                                                .produits!,
-                                                    crossAxisCount: MediaQuery
-                                                                    .of(context)
-                                                                .size
-                                                                .width <
-                                                            485
-                                                        ? 1
-                                                        : MediaQuery.of(context)
+                                                : searchProduit == false
+                                                    ? ProductsGrid(
+                                                        filterproductsList:
+                                                            categorieSearch
+                                                                    .isEmpty
+                                                                ? []
+                                                                : categorieSearch[
+                                                                        selectedIndexCategorie]
+                                                                    .produits!,
+                                                        crossAxisCount: MediaQuery.of(
+                                                                        context)
                                                                     .size
                                                                     .width <
-                                                                605
-                                                            ? 02
+                                                                485
+                                                            ? 1
                                                             : MediaQuery.of(context)
                                                                         .size
                                                                         .width <
-                                                                    750
-                                                                ? 03
-                                                                : 04,
-                                                    mainAxisSpacing: 10,
-                                                    crossAxisSpacing: 10,
-                                                    childAspectRatio: 1 / 1.19,
-                                                  ),
+                                                                    605
+                                                                ? 02
+                                                                : MediaQuery.of(context)
+                                                                            .size
+                                                                            .width <
+                                                                        750
+                                                                    ? 03
+                                                                    : 04,
+                                                        mainAxisSpacing: 10,
+                                                        crossAxisSpacing: 10,
+                                                        childAspectRatio:
+                                                            1 / 1.19,
+                                                      )
+                                                    : ProductsGrid(
+                                                        filterproductsList:
+                                                            produitSearch
+                                                                    .isEmpty
+                                                                ? []
+                                                                : produitSearch,
+                                                        crossAxisCount: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width <
+                                                                485
+                                                            ? 1
+                                                            : MediaQuery.of(context)
+                                                                        .size
+                                                                        .width <
+                                                                    605
+                                                                ? 02
+                                                                : MediaQuery.of(context)
+                                                                            .size
+                                                                            .width <
+                                                                        750
+                                                                    ? 03
+                                                                    : 04,
+                                                        mainAxisSpacing: 10,
+                                                        crossAxisSpacing: 10,
+                                                        childAspectRatio:
+                                                            1 / 1.19,
+                                                      ),
                                       ],
                                     ),
                                   ),
+                            Container(
+                              alignment: Alignment.bottomRight,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    print(
+                                        "ppoooooooopppppppppppppppppppooooooooooo");
+                                  });
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) {
+                                      return CreationProduit(
+                                        categorieTitle: viewModel
+                                            .listCategories[
+                                                selectedIndexCategorie]
+                                            .title!,
+                                        categorieId: viewModel
+                                            .listCategories[
+                                                selectedIndexCategorie]
+                                            .id!,
+                                      );
+                                    }),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    shape: const CircleBorder(),
+                                    padding: const EdgeInsets.all(20),
+                                    backgroundColor: Palette.primaryColor),
+                                child: const Icon(
+                                  Icons.add,
+                                  color: Palette.primaryBackgroundColor,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
