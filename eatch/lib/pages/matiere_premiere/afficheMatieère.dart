@@ -34,6 +34,10 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
     return size(buildContext).height;
   }
 
+  DateTime date = DateTime.now();
+  String dateJour = '';
+  bool dd = false;
+
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(getDataMatiereFuture);
@@ -202,8 +206,57 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                         ),
                       ),
                       const SizedBox(
+                        height: 20,
+                      ),
+                      // --------------------------------------------
+                      Container(
+                        width: MediaQuery.of(context).size.width - 50,
+                        child: Row(
+                          children: [
+                            const SizedBox(width: 10),
+                            const Text("Date de péremption"),
+                            const SizedBox(width: 6),
+                            ElevatedButton(
+                              onPressed: () async {
+                                DateTime? newDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: date,
+                                  firstDate: DateTime(1900),
+                                  lastDate: DateTime(2100),
+                                );
+
+                                if (newDate == null) return;
+
+                                setState(() {
+                                  date = newDate;
+                                  dd = true;
+                                  dateJour =
+                                      "${date.year}/${date.month}/${date.day}";
+                                });
+                                print(date);
+                              },
+                              child: const Text("Choisir la date:"),
+                            ),
+                            const SizedBox(width: 10),
+                            dd == false
+                                ? Text(
+                                    "${date.year}/${date.month}/${date.day}",
+                                    style: const TextStyle(fontSize: 18),
+                                  )
+                                : Text(
+                                    dateJour,
+                                    style: const TextStyle(fontSize: 18),
+                                  )
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(
                         height: 50,
                       ),
+
+                      // --------------------------------------------
+
                       Container(
                         alignment: Alignment.centerRight,
                         child: Container(

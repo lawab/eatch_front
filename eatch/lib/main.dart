@@ -30,7 +30,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Authentification(), //const Authentification(),
+      home:
+          DashboardManager(), //const Authentification(), //const Authentification(),
     );
   }
 }
