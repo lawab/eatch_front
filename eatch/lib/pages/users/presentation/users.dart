@@ -1,24 +1,23 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:http/http.dart' as http;
+
+import 'package:http_parser/http_parser.dart' show MediaType;
+import 'dart:typed_data';
 import 'package:eatch/pages/users/presentation/allUser.dart';
 import 'package:eatch/pages/users/presentation/userComptable.dart';
 import 'package:eatch/pages/users/presentation/userEmploye.dart';
 import 'package:eatch/pages/users/presentation/userManger.dart';
-import 'package:eatch/servicesAPI/getRestaurant.dart';
 import 'package:eatch/servicesAPI/multipart.dart';
-import 'package:eatch/utils/applayout.dart';
-import 'package:eatch/utils/default_button/default_button.dart';
-import 'package:eatch/utils/palettes/palette.dart';
-import 'package:eatch/utils/size/size.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:http_parser/http_parser.dart' show MediaType;
+import '../../../utils/applayout.dart';
+import '../../../utils/default_button/default_button.dart';
+import '../../../utils/palettes/palette.dart';
+import '../../../utils/size/size.dart';
+import '../infrastructure/users_repository.dart';
 
 class Users extends ConsumerStatefulWidget {
   const Users({
@@ -80,10 +79,24 @@ class _UsersState extends ConsumerState<Users> {
     super.dispose();
   }
 
+  //**********************************/
+
+  final filterRHList = eatchUsersList.where((rh) {
+    return rh.userRole == "RÔLE_RH";
+  }).toList();
+  final filterManagementList = eatchUsersList.where((rh) {
+    return rh.userRole == "RÔLE_MANAGER";
+  }).toList();
+  final filterComptableList = eatchUsersList.where((rh) {
+    return rh.userRole == "RÔLE_COMPTABLE";
+  }).toList();
+  List<int> _selectedFile = [];
+  FilePickerResult? result;
+  PlatformFile? file;
+  bool filee = false;
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    final viewModel = ref.watch(getDataRsetaurantFuture);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -94,14 +107,12 @@ class _UsersState extends ConsumerState<Users> {
               height(context),
               width(context),
               context,
-              viewModel.listRsetaurant,
             );
           } else {
             return verticalView(
               height(context),
               width(context),
               context,
-              viewModel.listRsetaurant,
             );
           }
         },
@@ -110,8 +121,10 @@ class _UsersState extends ConsumerState<Users> {
   }
 
   Widget horizontalView(
-      double height, double width, context, List<Restaurant> restaurantss) {
-    print("xxxxxxxxx ${restaurantss.length}");
+    double height,
+    double width,
+    context,
+  ) {
     return AppLayout(
       content: SingleChildScrollView(
         child: Container(
@@ -195,9 +208,38 @@ class _UsersState extends ConsumerState<Users> {
                             const SizedBox(height: 20),
                             confirmPasswordForm(),
                             const SizedBox(height: 20),
-                            restaurantForm(),
-                            const SizedBox(height: 20),
                             roleForm(),
+                            const SizedBox(height: 20),
+                            SizedBox(
+                              width: 200,
+                              child: DefaultButton(
+                                color: Palette.primaryColor,
+                                foreground: Colors.red,
+                                text: 'USER IMAGE',
+                                textcolor: Palette.primaryBackgroundColor,
+                                onPressed: () async {
+                                  result = await FilePicker.platform.pickFiles(
+                                      type: FileType.custom,
+                                      allowedExtensions: [
+                                        "png",
+                                        "jpg",
+                                        "jpeg",
+                                      ]);
+                                  if (result != null) {
+                                    file = result!.files.single;
+
+                                    Uint8List fileBytes =
+                                        result!.files.single.bytes as Uint8List;
+                                    //print(base64Encode(fileBytes));
+                                    //List<int>
+                                    _selectedFile = fileBytes;
+                                    setState(() {
+                                      filee = true;
+                                    });
+                                  }
+                                },
+                              ),
+                            ),
                             const SizedBox(height: 20),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -220,6 +262,8 @@ class _UsersState extends ConsumerState<Users> {
                                         print("conf is $_role");
                                         creationUser(
                                           context,
+                                          _selectedFile,
+                                          result,
                                           email: _email.trim(),
                                           firstName: _prenom.trim(),
                                           lastName: _nom.trim(),
@@ -313,7 +357,10 @@ class _UsersState extends ConsumerState<Users> {
   }
 
   Widget verticalView(
-      double height, double width, context, List<Restaurant> restaurantss) {
+    double height,
+    double width,
+    context,
+  ) {
     return AppLayout(
       content: SizedBox(
         height: height,
@@ -325,64 +372,64 @@ class _UsersState extends ConsumerState<Users> {
     );
   }
 
-  DropdownButtonFormField<String> restaurantForm() {
-    final viewModel = ref.watch(getDataRsetaurantFuture);
-    return DropdownButtonFormField(
-      decoration: InputDecoration(
-        hoverColor: Palette.primaryBackgroundColor,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
-        filled: true,
-        fillColor: Palette.primaryBackgroundColor,
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
-          gapPadding: 10,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
-          gapPadding: 10,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
-          gapPadding: 10,
-        ),
-        floatingLabelBehavior: FloatingLabelBehavior.always,
-      ),
-      value: _restaurant,
-      hint: const Text(
-        'Restaurant*',
-      ),
-      isExpanded: true,
-      onChanged: (value) {
-        setState(() {
-          _restaurant = value;
-        });
-      },
-      onSaved: (value) {
-        setState(() {
-          _restaurant = value;
-        });
-      },
-      validator: (String? value) {
-        if (value == null) {
-          return "Le restaurant est obligatoire.";
-        } else {
-          return null;
-        }
-      },
-      items: viewModel.listRsetaurant.map((val) {
-        return DropdownMenuItem(
-          value: val.restaurantName,
-          child: Text(
-            val.restaurantName!,
-          ),
-        );
-      }).toList(),
-    );
-  }
+  // DropdownButtonFormField<String> restaurantForm() {
+
+  //   return DropdownButtonFormField(
+  //     decoration: InputDecoration(
+  //       hoverColor: Palette.primaryBackgroundColor,
+  //       contentPadding:
+  //           const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
+  //       filled: true,
+  //       fillColor: Palette.primaryBackgroundColor,
+  //       enabledBorder: OutlineInputBorder(
+  //         borderRadius: BorderRadius.circular(15),
+  //         borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
+  //         gapPadding: 10,
+  //       ),
+  //       border: OutlineInputBorder(
+  //         borderRadius: BorderRadius.circular(15),
+  //         borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
+  //         gapPadding: 10,
+  //       ),
+  //       focusedBorder: OutlineInputBorder(
+  //         borderRadius: BorderRadius.circular(15),
+  //         borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
+  //         gapPadding: 10,
+  //       ),
+  //       floatingLabelBehavior: FloatingLabelBehavior.always,
+  //     ),
+  //     value: _restaurant,
+  //     hint: const Text(
+  //       'Restaurant*',
+  //     ),
+  //     isExpanded: true,
+  //     onChanged: (value) {
+  //       setState(() {
+  //         _restaurant = value;
+  //       });
+  //     },
+  //     onSaved: (value) {
+  //       setState(() {
+  //         _restaurant = value;
+  //       });
+  //     },
+  //     validator: (String? value) {
+  //       if (value == null) {
+  //         return "Le restaurant est obligatoire.";
+  //       } else {
+  //         return null;
+  //       }
+  //     },
+  //     items: viewModel.listRsetaurant.map((val) {
+  //       return DropdownMenuItem(
+  //         value: val.restaurantName,
+  //         child: Text(
+  //           val.restaurantName!,
+  //         ),
+  //       );
+  //     }).toList(),
+  //   );
+  // }
 
   DropdownButtonFormField<String> roleForm() {
     return DropdownButtonFormField(
@@ -709,104 +756,80 @@ class _UsersState extends ConsumerState<Users> {
   }
 
   Future<void> creationUser(
-    BuildContext context, {
+    BuildContext context,
+    selectedFile,
+    result, {
     required String firstName,
     required String lastName,
     required String email,
-    required String password,
     required String role,
     required String restaurant,
+    required String password,
   }) async {
-    final result = await FilePicker.platform
-        .pickFiles(type: FileType.custom, allowedExtensions: [
-      "png",
-      "jpg",
-      "jpeg",
-    ]);
+    ////////////
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var id = prefs.getString('IdUser').toString();
     var token = prefs.getString('token');
     var nomFile = '';
 
-    if (result != null) {
-      PlatformFile file = result.files.single;
+    var url = Uri.parse("http://13.39.81.126:4002/api/restaurants/create");
+    final request = MultipartRequest(
+      'POST',
+      url,
+      onProgress: (int bytes, int total) {
+        final progress = bytes / total;
+        print('progress: $progress ($bytes/$total)');
+      },
+    );
+    var json = {
+      "firstName": firstName,
+      "lastName": lastName,
+      "email": email,
+      "restaurant": restaurant,
+      "role": role,
+      "password": password,
+      "_creator": id,
+    };
+    var body = jsonEncode(json);
 
-      Uint8List? fileBytes;
-      if ((result.files.single.bytes ?? []).isEmpty) {
-        // Speciale Android
+    request.headers.addAll({
+      "body": body,
+    });
 
-        print('Speciale Android');
+    request.fields['form_key'] = 'form_value';
+    request.headers['authorization'] = 'Bearer $token';
+    request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
+        contentType: MediaType('application', 'octet-stream'),
+        filename: result.files.first.name));
 
-        final file = File.fromUri(Uri.parse(result.files.single.path!));
-        fileBytes = file.readAsBytesSync();
+    print("RESPENSE SEND STEAM FILE REQ");
+    //var responseString = await streamedResponse.stream.bytesToString();
+    var response = await request.send();
+    print("Upload Response$response");
+    print(response.statusCode);
+    print(request.headers);
+
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        await response.stream.bytesToString().then((value) {
+          print(value);
+        });
+        //stopMessage();
+        //finishWorking();
+
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Restaurant crée"),
+        ));
+        //ref.refresh(getDataRsetaurantFuture);
       } else {
-        // Speciale web
-
-        print('Speciale web');
-        fileBytes = result.files.single.bytes as Uint8List;
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Erreur de serveur"),
+        ));
+        print("Error Create Programme  !!!");
       }
-
-      List<int> selectedFile = fileBytes;
-
-      var url = Uri.parse("http://localhost:4001/api/users/create");
-      final request = MultipartRequest(
-        'POST',
-        url,
-        onProgress: (int bytes, int total) {
-          final progress = bytes / total;
-          print('progress: $progress ($bytes/$total)');
-        },
-      );
-      var json = {
-        "firstName": firstName,
-        "lastName": lastName,
-        "email": email,
-        "restaurant": restaurant,
-        "role": role,
-        "password": password,
-        "_creator": id,
-      };
-      var body = jsonEncode(json);
-
-      request.headers.addAll({
-        "body": body,
-      });
-
-      request.fields['form_key'] = 'form_value';
-      request.headers['authorization'] = 'Bearer $token';
-      request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
-          contentType: MediaType('application', 'octet-stream'),
-          filename: result.files.first.name));
-
-      print("RESPENSE SEND STEAM FILE REQ");
-      //var responseString = await streamedResponse.stream.bytesToString();
-      var response = await request.send();
-      print("Upload Response$response");
-      print(response.statusCode);
-      print(request.headers);
-
-      try {
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          await response.stream.bytesToString().then((value) {
-            print(value);
-          });
-          //stopMessage();
-          //finishWorking();
-
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text("Image Téléchager"),
-          ));
-          ref.refresh(getDataRsetaurantFuture);
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text("Erreur de serveur"),
-          ));
-          print("Error Create Programme  !!!");
-        }
-      } catch (e) {
-        rethrow;
-      }
+    } catch (e) {
+      rethrow;
     }
   }
 }
