@@ -13,7 +13,7 @@ import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:html' as h;
+
 import 'package:dio/dio.dart' as dio;
 import 'package:http_parser/http_parser.dart' show MediaType;
 import 'dart:convert';
