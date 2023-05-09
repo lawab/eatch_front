@@ -23,9 +23,9 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
     if (query.isNotEmpty) {
       List<User> dummyListData = [];
       for (var item in dummySearchList) {
-        if (item.userNom!.contains(query) ||
-            item.userPrenom!.contains(query) ||
-            item.userUserNom!.contains(query)) {
+        if (item.lastName!.contains(query) ||
+            item.firstName!.contains(query) ||
+            item.username!.contains(query)) {
           dummyListData.add(item);
           //print(dummyListData);
         }
@@ -147,8 +147,8 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                  viewModel.listComptable[index].userNom!,
-                                  overflow: TextOverflow.ellipsis,
+                                  viewModel.listComptable[index].lastName!,
+                                  overflow: TextOverflow.fade,
                                   maxLines: 1,
                                   softWrap: false,
                                 ),
@@ -156,8 +156,8 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                  viewModel.listComptable[index].userPrenom!,
-                                  overflow: TextOverflow.ellipsis,
+                                  viewModel.listComptable[index].firstName!,
+                                  overflow: TextOverflow.fade,
                                   maxLines: 1,
                                   softWrap: false,
                                 ),
@@ -165,8 +165,8 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                  viewModel.listComptable[index].userUserNom!,
-                                  overflow: TextOverflow.ellipsis,
+                                  viewModel.listComptable[index].username!,
+                                  overflow: TextOverflow.fade,
                                   maxLines: 1,
                                   softWrap: false,
                                 ),
@@ -174,8 +174,8 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                  viewModel.listComptable[index].userEmail!,
-                                  overflow: TextOverflow.ellipsis,
+                                  viewModel.listComptable[index].email!,
+                                  overflow: TextOverflow.fade,
                                   maxLines: 1,
                                   softWrap: false,
                                 ),
@@ -183,8 +183,8 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                  viewModel.listComptable[index].userRole!,
-                                  overflow: TextOverflow.ellipsis,
+                                  viewModel.listComptable[index].role!,
+                                  overflow: TextOverflow.fade,
                                   maxLines: 1,
                                   softWrap: false,
                                 ),
@@ -205,19 +205,18 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                                               return ModificationUser(
                                                 userEmail: viewModel
                                                     .listComptable[index]
-                                                    .userEmail!,
+                                                    .email!,
                                                 userNom: viewModel
                                                     .listComptable[index]
-                                                    .userNom!,
+                                                    .lastName!,
                                                 userPrenom: viewModel
                                                     .listComptable[index]
-                                                    .userEmail!,
+                                                    .email!,
                                                 userRole: viewModel
-                                                    .listComptable[index]
-                                                    .userRole!,
+                                                    .listComptable[index].role!,
                                                 userUserNom: viewModel
                                                     .listComptable[index]
-                                                    .userUserNom!,
+                                                    .username!,
                                               );
                                             }),
                                           );
@@ -229,7 +228,7 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                                             color: Palette.deleteColors),
                                         onPressed: () {
                                           dialogDelete(viewModel
-                                              .listComptable[index].userNom!);
+                                              .listComptable[index].lastName!);
                                         },
                                       ))
                                     ],
@@ -253,8 +252,8 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                  UserSearch[index].userNom!,
-                                  overflow: TextOverflow.ellipsis,
+                                  UserSearch[index].lastName!,
+                                  overflow: TextOverflow.fade,
                                   maxLines: 1,
                                   softWrap: false,
                                 ),
@@ -262,8 +261,8 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                  UserSearch[index].userPrenom!,
-                                  overflow: TextOverflow.ellipsis,
+                                  UserSearch[index].firstName!,
+                                  overflow: TextOverflow.fade,
                                   maxLines: 1,
                                   softWrap: false,
                                 ),
@@ -271,8 +270,8 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                  UserSearch[index].userUserNom!,
-                                  overflow: TextOverflow.ellipsis,
+                                  UserSearch[index].username!,
+                                  overflow: TextOverflow.fade,
                                   maxLines: 1,
                                   softWrap: false,
                                 ),
@@ -280,15 +279,15 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                  UserSearch[index].userEmail!,
-                                  overflow: TextOverflow.ellipsis,
+                                  UserSearch[index].email!,
+                                  overflow: TextOverflow.fade,
                                   maxLines: 1,
                                   softWrap: false,
                                 ),
                               )),
                               Expanded(
                                   child: Center(
-                                child: Text(UserSearch[index].userRole!),
+                                child: Text(UserSearch[index].role!),
                               )),
                               SizedBox(
                                 width: 100,
@@ -304,16 +303,16 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                                             MaterialPageRoute(
                                                 builder: (context) {
                                               return ModificationUser(
-                                                userEmail: UserSearch[index]
-                                                    .userEmail!,
+                                                userEmail:
+                                                    UserSearch[index].email!,
                                                 userNom:
-                                                    UserSearch[index].userNom!,
-                                                userPrenom: UserSearch[index]
-                                                    .userEmail!,
+                                                    UserSearch[index].lastName!,
+                                                userPrenom:
+                                                    UserSearch[index].email!,
                                                 userRole:
-                                                    UserSearch[index].userRole!,
-                                                userUserNom: UserSearch[index]
-                                                    .userUserNom!,
+                                                    UserSearch[index].role!,
+                                                userUserNom:
+                                                    UserSearch[index].username!,
                                               );
                                             }),
                                           );
@@ -327,7 +326,7 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                                         ),
                                         onPressed: () {
                                           dialogDelete(
-                                              UserSearch[index].userNom!);
+                                              UserSearch[index].lastName!);
                                         },
                                       ))
                                     ],

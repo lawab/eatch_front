@@ -1,5 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
+import 'package:eatch/servicesAPI/getUser.dart';
 import 'package:http_parser/http_parser.dart' show MediaType;
 import 'dart:typed_data';
 import 'package:eatch/pages/users/presentation/allUser.dart';
@@ -17,7 +20,6 @@ import '../../../utils/applayout.dart';
 import '../../../utils/default_button/default_button.dart';
 import '../../../utils/palettes/palette.dart';
 import '../../../utils/size/size.dart';
-import '../infrastructure/users_repository.dart';
 
 class Users extends ConsumerStatefulWidget {
   const Users({
@@ -81,15 +83,6 @@ class _UsersState extends ConsumerState<Users> {
 
   //**********************************/
 
-  final filterRHList = eatchUsersList.where((rh) {
-    return rh.userRole == "RÔLE_RH";
-  }).toList();
-  final filterManagementList = eatchUsersList.where((rh) {
-    return rh.userRole == "RÔLE_MANAGER";
-  }).toList();
-  final filterComptableList = eatchUsersList.where((rh) {
-    return rh.userRole == "RÔLE_COMPTABLE";
-  }).toList();
   List<int> _selectedFile = [];
   FilePickerResult? result;
   PlatformFile? file;
@@ -254,22 +247,15 @@ class _UsersState extends ConsumerState<Users> {
                                     onPressed: () {
                                       if (_formKey.currentState!.validate()) {
                                         _formKey.currentState!.save();
-                                        print("nom is $_nom");
-                                        print("prenom is $_prenom");
-                                        print("Email is $_email");
-                                        print("pass is $_password");
-                                        print("conf is $_confirmPassword");
-                                        print("conf is $_role");
                                         creationUser(
                                           context,
                                           _selectedFile,
                                           result,
-                                          email: _email.trim(),
-                                          firstName: _prenom.trim(),
-                                          lastName: _nom.trim(),
-                                          role: _role!.trim(),
-                                          restaurant: _restaurant!.trim(),
-                                          password: _password.trim(),
+                                          _prenom,
+                                          _nom,
+                                          _email,
+                                          _role,
+                                          _password,
                                         );
 
                                         setState(() {
@@ -371,65 +357,6 @@ class _UsersState extends ConsumerState<Users> {
       ),
     );
   }
-
-  // DropdownButtonFormField<String> restaurantForm() {
-
-  //   return DropdownButtonFormField(
-  //     decoration: InputDecoration(
-  //       hoverColor: Palette.primaryBackgroundColor,
-  //       contentPadding:
-  //           const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
-  //       filled: true,
-  //       fillColor: Palette.primaryBackgroundColor,
-  //       enabledBorder: OutlineInputBorder(
-  //         borderRadius: BorderRadius.circular(15),
-  //         borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
-  //         gapPadding: 10,
-  //       ),
-  //       border: OutlineInputBorder(
-  //         borderRadius: BorderRadius.circular(15),
-  //         borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
-  //         gapPadding: 10,
-  //       ),
-  //       focusedBorder: OutlineInputBorder(
-  //         borderRadius: BorderRadius.circular(15),
-  //         borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
-  //         gapPadding: 10,
-  //       ),
-  //       floatingLabelBehavior: FloatingLabelBehavior.always,
-  //     ),
-  //     value: _restaurant,
-  //     hint: const Text(
-  //       'Restaurant*',
-  //     ),
-  //     isExpanded: true,
-  //     onChanged: (value) {
-  //       setState(() {
-  //         _restaurant = value;
-  //       });
-  //     },
-  //     onSaved: (value) {
-  //       setState(() {
-  //         _restaurant = value;
-  //       });
-  //     },
-  //     validator: (String? value) {
-  //       if (value == null) {
-  //         return "Le restaurant est obligatoire.";
-  //       } else {
-  //         return null;
-  //       }
-  //     },
-  //     items: viewModel.listRsetaurant.map((val) {
-  //       return DropdownMenuItem(
-  //         value: val.restaurantName,
-  //         child: Text(
-  //           val.restaurantName!,
-  //         ),
-  //       );
-  //     }).toList(),
-  //   );
-  // }
 
   DropdownButtonFormField<String> roleForm() {
     return DropdownButtonFormField(
@@ -758,22 +685,22 @@ class _UsersState extends ConsumerState<Users> {
   Future<void> creationUser(
     BuildContext context,
     selectedFile,
-    result, {
-    required String firstName,
-    required String lastName,
-    required String email,
-    required String role,
-    required String restaurant,
-    required String password,
-  }) async {
-    ////////////
-
+    result,
+    firstName,
+    lastName,
+    email,
+    role,
+    password,
+  ) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var id = prefs.getString('IdUser').toString();
     var token = prefs.getString('token');
-    var nomFile = '';
+    var restaurantid = prefs.getString('idRestaurant');
+    print(id);
+    print(token);
+    print("Restaurant id $restaurantid");
 
-    var url = Uri.parse("http://13.39.81.126:4002/api/restaurants/create");
+    var url = Uri.parse("http://13.39.81.126:4001/api/users/create");
     final request = MultipartRequest(
       'POST',
       url,
@@ -786,7 +713,7 @@ class _UsersState extends ConsumerState<Users> {
       "firstName": firstName,
       "lastName": lastName,
       "email": email,
-      "restaurant": restaurant,
+      "restaurant": restaurantid!.trim(),
       "role": role,
       "password": password,
       "_creator": id,
@@ -804,7 +731,6 @@ class _UsersState extends ConsumerState<Users> {
         filename: result.files.first.name));
 
     print("RESPENSE SEND STEAM FILE REQ");
-    //var responseString = await streamedResponse.stream.bytesToString();
     var response = await request.send();
     print("Upload Response$response");
     print(response.statusCode);
@@ -815,13 +741,13 @@ class _UsersState extends ConsumerState<Users> {
         await response.stream.bytesToString().then((value) {
           print(value);
         });
-        //stopMessage();
-        //finishWorking();
+        setState(() {
+          ref.refresh(getDataUserFuture);
+        });
 
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Restaurant crée"),
+          content: Text("Utilisateur crée"),
         ));
-        //ref.refresh(getDataRsetaurantFuture);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Erreur de serveur"),

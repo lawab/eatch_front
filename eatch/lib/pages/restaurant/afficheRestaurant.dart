@@ -102,27 +102,27 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
               ? Container(
                   alignment: Alignment.centerRight,
                   height: 80,
-                  color: Color(0xFFFCEBD1),
+                  color: const Color(0xFFFCEBD1),
                   child: Row(
                     children: [
                       const SizedBox(
                         width: 50,
                       ),
-                      Text('Gestion de restaurant'),
+                      const Text('Gestion de restaurant'),
                       Expanded(child: Container()),
                       ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Palette.primaryColor,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10)),
-                            minimumSize: Size(180, 50)),
+                            minimumSize: const Size(180, 50)),
                         onPressed: () {
                           setState(() {
                             ajout = true;
                           });
                         },
-                        icon: Icon(Icons.add),
-                        label: Text('Créer un restaurant'),
+                        icon: const Icon(Icons.add),
+                        label: const Text('Créer un restaurant'),
                       ),
                       const SizedBox(
                         width: 20,
@@ -130,14 +130,14 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                     ],
                   ),
                 )
-              : Container(
+              : SizedBox(
                   height: 400,
                   child: creation(),
                 ),
           const SizedBox(
             height: 5,
           ),
-          Container(
+          SizedBox(
             height: ajout == false ? height - 175 : height - 495,
             width: width - 20,
             child: GridView.builder(
@@ -153,7 +153,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                     child: Container(
                       height: height,
                       decoration: BoxDecoration(
-                        color: Color(0xFF1E9647),
+                        color: const Color(0xFF1E9647),
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       child: Column(
@@ -199,7 +199,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   height: 50,
                                   child: Text(
                                     'Nom du restaurant: ${listRsetaurant[index].restaurantName!}',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontFamily: 'Righteous',
                                         fontSize: 18,
                                         color: Colors.white,
@@ -214,7 +214,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   height: 30,
                                   child: Text(
                                     "Ville: ${listRsetaurant[index].info!.town!}",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontFamily: 'Righteous',
                                       color: Colors.white,
                                     ),
@@ -227,7 +227,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   height: 30,
                                   child: Text(
                                     "Adresse: ${listRsetaurant[index].info!.address!}",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontFamily: 'Righteous',
                                       color: Colors.white,
                                     ),
@@ -238,7 +238,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   left: 30,
                                   width: width / 5,
                                   height: 30,
-                                  child: Text(
+                                  child: const Text(
                                     "Nombre d'emplyé: 50",
                                     style: TextStyle(
                                       fontFamily: 'Righteous',
@@ -253,7 +253,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   height: 30,
                                   child: Text(
                                     "Date de création: ${listRsetaurant[index].createdAt}",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontFamily: 'Righteous',
                                       color: Colors.white,
                                     ),
@@ -262,7 +262,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                               ],
                             ),
                           ),
-                          Container(
+                          SizedBox(
                             width: width / 5,
                             height: 50,
                             child: Row(
@@ -279,7 +279,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                                         listRsetaurant[index],
                                                   )));
                                     }),
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.edit,
                                       color: Color(0xFFF09F1B),
                                     ),
@@ -294,7 +294,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                               .restaurantName
                                               .toString());
                                     }),
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.delete,
                                       color: Palette.deleteColors,
                                     ),
@@ -331,13 +331,13 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
             ? Container(
                 alignment: Alignment.centerRight,
                 height: 80,
-                color: Color(0xFFFCEBD1),
+                color: const Color(0xFFFCEBD1),
                 child: Row(
                   children: [
                     const SizedBox(
                       width: 50,
                     ),
-                    Text('Gestion de restaurant'),
+                    const Text('Gestion de restaurant'),
                     Expanded(child: Container()),
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
@@ -350,8 +350,8 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                           ajout = true;
                         });
                       },
-                      icon: Icon(Icons.add),
-                      label: Text('Créer un restaurant'),
+                      icon: const Icon(Icons.add),
+                      label: const Text('Créer un restaurant'),
                     ),
                     const SizedBox(
                       width: 20,
@@ -359,14 +359,14 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                   ],
                 ),
               )
-            : Container(
+            : SizedBox(
                 height: 300,
                 child: creation(),
               ),
         const SizedBox(
           height: 5,
         ),
-        Container(
+        SizedBox(
             height: ajout == false ? height - 250 : height - 470,
             width: width - 20,
             child: GridView.builder(
@@ -425,7 +425,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   height: 50,
                                   child: Text(
                                     'Nom du restaurant: ${listRsetaurant[index].restaurantName!}',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontFamily: 'Righteous',
                                         fontSize: 18,
                                         color: Colors.white,
@@ -440,7 +440,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   height: 30,
                                   child: Text(
                                     "Ville: ${listRsetaurant[index].info!.town!}",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontFamily: 'Righteous',
                                       color: Colors.white,
                                     ),
@@ -453,7 +453,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   height: 30,
                                   child: Text(
                                     "Adresse: ${listRsetaurant[index].info!.address!}",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontFamily: 'Righteous',
                                       color: Colors.white,
                                     ),
@@ -479,7 +479,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   height: 30,
                                   child: Text(
                                     "Date de création: ${listRsetaurant[index].createdAt}",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontFamily: 'Righteous',
                                       color: Colors.white,
                                     ),
@@ -488,7 +488,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                               ],
                             ),
                           ),
-                          Container(
+                          SizedBox(
                               width: width / 5,
                               height: 50,
                               child: Row(
@@ -505,7 +505,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                                           listRsetaurant[index],
                                                     )));
                                       }),
-                                      icon: Icon(
+                                      icon: const Icon(
                                         Icons.edit,
                                         color: Color(0xFFF09F1B),
                                       ),
@@ -522,7 +522,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                                 .restaurantName
                                                 .toString());
                                       }),
-                                      icon: Icon(
+                                      icon: const Icon(
                                         Icons.delete,
                                         color: Palette.deleteColors,
                                       ),
@@ -556,13 +556,13 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
             Container(
               alignment: Alignment.centerRight,
               height: 50,
-              color: Color(0xFFFCEBD1),
+              color: const Color(0xFFFCEBD1),
               child: Row(
                 children: [
                   const SizedBox(
                     width: 50,
                   ),
-                  Text('Création de restaurant'),
+                  const Text('Création de restaurant'),
                   Expanded(child: Container()),
                   const SizedBox(
                     width: 20,
@@ -573,7 +573,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
             const SizedBox(
               height: 10,
             ),
-            Container(
+            SizedBox(
               width: MediaQuery.of(context).size.width - 50,
               child: TextFormField(
                 controller: nomController,
@@ -608,13 +608,13 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                     // If  you are using latest version of flutter then lable text and hint text shown like this
                     // if you r using flutter less then 1.20.* then maybe this is not working properly
                     floatingLabelBehavior: FloatingLabelBehavior.always,
-                    suffixIcon: Icon(Icons.food_bank)),
+                    suffixIcon: const Icon(Icons.food_bank)),
               ),
             ),
             const SizedBox(
               height: 20,
             ),
-            Container(
+            SizedBox(
               width: MediaQuery.of(context).size.width - 50,
               child: TextFormField(
                 controller: villeController,
@@ -649,13 +649,13 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                     // If  you are using latest version of flutter then lable text and hint text shown like this
                     // if you r using flutter less then 1.20.* then maybe this is not working properly
                     floatingLabelBehavior: FloatingLabelBehavior.always,
-                    suffixIcon: Icon(Icons.location_city)),
+                    suffixIcon: const Icon(Icons.location_city)),
               ),
             ),
             const SizedBox(
               height: 20,
             ),
-            Container(
+            SizedBox(
               width: MediaQuery.of(context).size.width - 50,
               child: TextFormField(
                 controller: adresseController,
@@ -690,13 +690,13 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                     // If  you are using latest version of flutter then lable text and hint text shown like this
                     // if you r using flutter less then 1.20.* then maybe this is not working properly
                     floatingLabelBehavior: FloatingLabelBehavior.always,
-                    suffixIcon: Icon(Icons.local_activity)),
+                    suffixIcon: const Icon(Icons.local_activity)),
               ),
             ),
             const SizedBox(
               height: 20,
             ),
-            Container(
+            SizedBox(
               width: MediaQuery.of(context).size.width - 50,
               child: TextFormField(
                 controller: employeController,
@@ -731,7 +731,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                     // If  you are using latest version of flutter then lable text and hint text shown like this
                     // if you r using flutter less then 1.20.* then maybe this is not working properly
                     floatingLabelBehavior: FloatingLabelBehavior.always,
-                    suffixIcon: Icon(Icons.person)),
+                    suffixIcon: const Icon(Icons.person)),
               ),
             ),
             const SizedBox(
@@ -747,7 +747,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
             ),
             Container(
               alignment: Alignment.centerRight,
-              child: Container(
+              child: SizedBox(
                 width: 350,
                 child: Row(children: [
                   const SizedBox(
@@ -761,14 +761,14 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                         ajout = false;
                       });
                     }),
-                    child: Text('Enregistrer'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Palette.primaryColor,
-                      minimumSize: Size(150, 50),
-                      maximumSize: Size(200, 70),
+                      minimumSize: const Size(150, 50),
+                      maximumSize: const Size(200, 70),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                     ),
+                    child: const Text('Enregistrer'),
                   ),
                   const SizedBox(
                     width: 20,
@@ -779,16 +779,16 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                         ajout = false;
                       });
                     }),
-                    child: Text(
-                      'Annuler',
-                      style: TextStyle(color: Colors.grey),
-                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Palette.secondaryBackgroundColor,
-                      minimumSize: Size(150, 50),
-                      maximumSize: Size(200, 70),
+                      minimumSize: const Size(150, 50),
+                      maximumSize: const Size(200, 70),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
+                    ),
+                    child: const Text(
+                      'Annuler',
+                      style: TextStyle(color: Colors.grey),
                     ),
                   ),
                 ]),
@@ -829,7 +829,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                   onPressed: () {
                     Navigator.of(context, rootNavigator: true).pop();
                   },
-                  label: Text("Quitter   ")),
+                  label: const Text("Quitter   ")),
               const SizedBox(
                 width: 20,
               ),
@@ -844,7 +844,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                     deleteRestaurant(context, id);
                     Navigator.pop(con);
                   },
-                  label: Text("Supprimer."))
+                  label: const Text("Supprimer."))
             ],
             content: Container(
               alignment: Alignment.center,
@@ -879,7 +879,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var id = prefs.getString('IdUser').toString();
     var token = prefs.getString('token');
-    var nom_file = '';
+    var nomFile = '';
 
     if (result != null) {
       PlatformFile file = result.files.single;
@@ -899,7 +899,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
         fileBytes = result.files.single.bytes as Uint8List;
       }
 
-      List<int> selectedFile = fileBytes as List<int>;
+      List<int> selectedFile = fileBytes;
 
       var url = Uri.parse("http://13.39.81.126:4002/api/restaurants/create");
       final request = MultipartRequest(
@@ -924,14 +924,14 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
 
       request.fields['form_key'] = 'form_value';
       request.headers['authorization'] = 'Bearer $token';
-      request.files.add(await http.MultipartFile.fromBytes('file', selectedFile,
+      request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
           contentType: MediaType('application', 'octet-stream'),
           filename: result.files.first.name));
 
       print("RESPENSE SEND STEAM FILE REQ");
       //var responseString = await streamedResponse.stream.bytesToString();
       var response = await request.send();
-      print("Upload Response" + response.toString());
+      print("Upload Response$response");
       print(response.statusCode);
       print(request.headers);
 
@@ -954,7 +954,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
           print("Error Create Programme  !!!");
         }
       } catch (e) {
-        throw e;
+        rethrow;
       }
     }
   }

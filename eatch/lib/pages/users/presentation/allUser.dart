@@ -1,5 +1,7 @@
 // ignore_for_file: sized_box_for_whitespace, avoid_unnecessary_containers, non_constant_identifier_names, avoid_function_literals_in_foreach_calls
 
+import 'dart:convert';
+
 import 'package:eatch/servicesAPI/getUser.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
@@ -25,13 +27,13 @@ class AllUsersState extends ConsumerState<AllUsers> {
   void filterSearchResults(String query) {
     final viewModel = ref.watch(getDataUserFuture);
     List<User> dummySearchList = [];
-    dummySearchList.addAll(viewModel.listDataModel);
+    dummySearchList.addAll(viewModel.listAllUsers);
     if (query.isNotEmpty) {
       List<User> dummyListData = [];
       dummySearchList.forEach((item) {
-        if (item.userNom!.contains(query) ||
-            item.userPrenom!.contains(query) ||
-            item.userUserNom!.contains(query)) {
+        if (item.lastName!.contains(query) ||
+            item.firstName!.contains(query) ||
+            item.username!.contains(query)) {
           dummyListData.add(item);
           //print(dummyListData);
         }
@@ -144,55 +146,85 @@ class AllUsersState extends ConsumerState<AllUsers> {
               ? Container(
                   height: MediaQuery.of(context).size.height - 403,
                   child: ListView.builder(
-                      itemCount: viewModel.listDataModel.length,
+                      itemCount: viewModel.listAllUsers.length,
                       itemBuilder: ((context, index) {
                         return Card(
                           child: Container(
                             height: 50,
                             child: Row(children: [
                               Expanded(
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                  ),
                                   child: Center(
-                                child: Text(
-                                  viewModel.listDataModel[index].userNom!,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  softWrap: false,
+                                    child: Text(
+                                      viewModel.listAllUsers[index].lastName!,
+                                      overflow: TextOverflow.fade,
+                                      maxLines: 1,
+                                      softWrap: false,
+                                    ),
+                                  ),
                                 ),
                               )),
                               Expanded(
-                                  child: Center(
-                                child: Text(
-                                  viewModel.listDataModel[index].userPrenom!,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  softWrap: false,
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    viewModel.listAllUsers[index].firstName!,
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
                                 ),
                               )),
                               Expanded(
-                                  child: Center(
-                                child: Text(
-                                  viewModel.listDataModel[index].userUserNom!,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  softWrap: false,
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    viewModel.listAllUsers[index].username!,
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
                                 ),
                               )),
                               Expanded(
-                                  child: Center(
-                                child: Text(
-                                  viewModel.listDataModel[index].userEmail!,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  softWrap: false,
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    viewModel.listAllUsers[index].email!,
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
                                 ),
                               )),
                               Expanded(
-                                  child: Center(
-                                child: Text(
-                                  viewModel.listDataModel[index].userRole!,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  softWrap: false,
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    viewModel.listAllUsers[index].role!,
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
                                 ),
                               )),
                               Container(
@@ -210,20 +242,17 @@ class AllUsersState extends ConsumerState<AllUsers> {
                                                 builder: (context) {
                                               return ModificationUser(
                                                 userEmail: viewModel
-                                                    .listDataModel[index]
-                                                    .userEmail!,
+                                                    .listAllUsers[index].email!,
                                                 userNom: viewModel
-                                                    .listDataModel[index]
-                                                    .userNom!,
+                                                    .listAllUsers[index]
+                                                    .lastName!,
                                                 userPrenom: viewModel
-                                                    .listDataModel[index]
-                                                    .userEmail!,
+                                                    .listAllUsers[index].email!,
                                                 userRole: viewModel
-                                                    .listDataModel[index]
-                                                    .userRole!,
+                                                    .listAllUsers[index].role!,
                                                 userUserNom: viewModel
-                                                    .listDataModel[index]
-                                                    .userUserNom!,
+                                                    .listAllUsers[index]
+                                                    .username!,
                                               );
                                             }),
                                           );
@@ -236,8 +265,12 @@ class AllUsersState extends ConsumerState<AllUsers> {
                                           color: Palette.deleteColors,
                                         ),
                                         onPressed: () {
-                                          dialogDelete(viewModel
-                                              .listDataModel[index].userNom!);
+                                          dialogDelete(
+                                            viewModel
+                                                .listAllUsers[index].lastName
+                                                .toString(),
+                                            viewModel.listAllUsers[index].sId!,
+                                          );
                                         },
                                       ))
                                     ],
@@ -259,48 +292,73 @@ class AllUsersState extends ConsumerState<AllUsers> {
                             height: 50,
                             child: Row(children: [
                               Expanded(
-                                  child: Center(
-                                child: Text(
-                                  UserSearch[index].userNom!,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  softWrap: false,
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    UserSearch[index].lastName!,
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
                                 ),
                               )),
                               Expanded(
-                                  child: Center(
-                                child: Text(
-                                  UserSearch[index].userPrenom!,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  softWrap: false,
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    UserSearch[index].firstName!,
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
                                 ),
                               )),
                               Expanded(
-                                  child: Center(
-                                child: Text(
-                                  UserSearch[index].userUserNom!,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  softWrap: false,
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    UserSearch[index].username!,
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
                                 ),
                               )),
                               Expanded(
-                                  child: Center(
-                                child: Text(
-                                  UserSearch[index].userEmail!,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  softWrap: false,
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    UserSearch[index].email!,
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
                                 ),
                               )),
                               Expanded(
-                                  child: Center(
-                                child: Text(
-                                  UserSearch[index].userRole!,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  softWrap: false,
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    UserSearch[index].role!,
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
                                 ),
                               )),
                               Container(
@@ -317,16 +375,16 @@ class AllUsersState extends ConsumerState<AllUsers> {
                                             MaterialPageRoute(
                                                 builder: (context) {
                                               return ModificationUser(
-                                                userEmail: UserSearch[index]
-                                                    .userEmail!,
+                                                userEmail:
+                                                    UserSearch[index].email!,
                                                 userNom:
-                                                    UserSearch[index].userNom!,
-                                                userPrenom: UserSearch[index]
-                                                    .userEmail!,
+                                                    UserSearch[index].lastName!,
+                                                userPrenom:
+                                                    UserSearch[index].email!,
                                                 userRole:
-                                                    UserSearch[index].userRole!,
-                                                userUserNom: UserSearch[index]
-                                                    .userUserNom!,
+                                                    UserSearch[index].role!,
+                                                userUserNom:
+                                                    UserSearch[index].username!,
                                               );
                                             }),
                                           );
@@ -340,7 +398,9 @@ class AllUsersState extends ConsumerState<AllUsers> {
                                         ),
                                         onPressed: () {
                                           dialogDelete(
-                                              UserSearch[index].userNom!);
+                                            UserSearch[index].lastName!,
+                                            UserSearch[index].sId!,
+                                          );
                                         },
                                       ))
                                     ],
@@ -357,7 +417,7 @@ class AllUsersState extends ConsumerState<AllUsers> {
     );
   }
 
-  Future dialogDelete(String userName) {
+  Future dialogDelete(String userName, id) {
     return showDialog(
         context: context,
         builder: (con) {
@@ -394,7 +454,10 @@ class AllUsersState extends ConsumerState<AllUsers> {
                   ),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Palette.deleteColors),
-                  onPressed: () {},
+                  onPressed: () {
+                    deleteUser(context, id);
+                    Navigator.pop(con);
+                  },
                   label: const Text("Supprimer."),
                 )
               ],
@@ -403,7 +466,7 @@ class AllUsersState extends ConsumerState<AllUsers> {
                   color: Colors.white,
                   height: 150,
                   child: Text(
-                    "Voulez vous supprimer l'utilisateur $userName?",
+                    "Voulez vous supprimer l'utilisateur $userName? et $id",
                     style: const TextStyle(
                       color: Colors.black,
                     ),
@@ -411,26 +474,31 @@ class AllUsersState extends ConsumerState<AllUsers> {
         });
   }
 
-  Future<http.Response> deleteRestaurant(
-      BuildContext context, String userName) async {
+  Future<http.Response> deleteUser(BuildContext context, String id) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
+      var userdelete = prefs.getString('IdUser').toString();
       var token = prefs.getString('token');
-      String urlDelete =
-          "http://localhost:4001/api/users/delete/643802600bacc7b4b76d9cb5/$userName";
+      String urlDelete = "http://13.39.81.126:4001/api/users/delete/$id";
+      var json = {
+        '_creator': userdelete,
+      };
+      var body = jsonEncode(json);
 
       final http.Response response = await http.delete(
         Uri.parse(urlDelete),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
           'Accept': 'application/json',
-          'authorization': 'Bearer $token'
+          'authorization': 'Bearer $token',
+          'body': body,
         },
       );
 
       print(response.statusCode);
       if (response.statusCode == 200) {
         ref.refresh(getDataUserFuture);
+
         return response;
       } else {
         return Future.error("Server Error");

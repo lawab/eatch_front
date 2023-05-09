@@ -61,13 +61,13 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
               return InkWell(
                 child: Card(
                   color: Palette.primaryColor,
-                  child: Container(
+                  child: SizedBox(
                     height: MediaQuery.of(context).size.height / 3,
                     child: Row(children: [
                       Expanded(
                         child: Text(
                           viewModel.listRsetaurant[index].restaurantName!,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 40, fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -91,12 +91,13 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
                 onTap: () async {
                   SharedPreferences prefs =
                       await SharedPreferences.getInstance();
+
                   prefs.setString('idRestaurant',
                       viewModel.listRsetaurant[index].sId.toString());
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DashboardManager()));
+                          builder: (context) => const DashboardManager()));
                 },
               );
             }),

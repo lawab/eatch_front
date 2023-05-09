@@ -23,9 +23,9 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
     if (query.isNotEmpty) {
       List<User> dummyListData = [];
       for (var item in dummySearchList) {
-        if (item.userNom!.contains(query) ||
-            item.userPrenom!.contains(query) ||
-            item.userUserNom!.contains(query)) {
+        if (item.lastName!.contains(query) ||
+            item.firstName!.contains(query) ||
+            item.username!.contains(query)) {
           dummyListData.add(item);
           //print(dummyListData);
         }
@@ -86,36 +86,36 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
           Card(
             child: SizedBox(
               height: 50,
-              child: Row(children: [
-                const Expanded(
+              child: Row(children: const [
+                Expanded(
                     child: Center(
                   child: Text(
                     'Nom',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 )),
-                const Expanded(
+                Expanded(
                     child: Center(
                   child: Text(
                     'Prénom',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 )),
-                const Expanded(
+                Expanded(
                     child: Center(
                   child: Text(
                     "Nom d'utilisateur",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 )),
-                const Expanded(
+                Expanded(
                     child: Center(
                   child: Text(
                     'Email',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 )),
-                const Expanded(
+                Expanded(
                     child: Center(
                   child: Text(
                     'Role',
@@ -124,7 +124,7 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
                 )),
                 SizedBox(
                   width: 100,
-                  child: const Center(
+                  child: Center(
                     child: Text(
                       'Actions',
                       style: TextStyle(fontWeight: FontWeight.bold),
@@ -147,8 +147,8 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                  viewModel.listEmploye[index].userNom!,
-                                  overflow: TextOverflow.ellipsis,
+                                  viewModel.listEmploye[index].lastName!,
+                                  overflow: TextOverflow.fade,
                                   maxLines: 1,
                                   softWrap: false,
                                 ),
@@ -156,8 +156,8 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                  viewModel.listEmploye[index].userPrenom!,
-                                  overflow: TextOverflow.ellipsis,
+                                  viewModel.listEmploye[index].firstName!,
+                                  overflow: TextOverflow.fade,
                                   maxLines: 1,
                                   softWrap: false,
                                 ),
@@ -165,8 +165,8 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                  viewModel.listEmploye[index].userUserNom!,
-                                  overflow: TextOverflow.ellipsis,
+                                  viewModel.listEmploye[index].username!,
+                                  overflow: TextOverflow.fade,
                                   maxLines: 1,
                                   softWrap: false,
                                 ),
@@ -174,8 +174,8 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                  viewModel.listEmploye[index].userEmail!,
-                                  overflow: TextOverflow.ellipsis,
+                                  viewModel.listEmploye[index].email!,
+                                  overflow: TextOverflow.fade,
                                   maxLines: 1,
                                   softWrap: false,
                                 ),
@@ -183,7 +183,11 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                    viewModel.listEmploye[index].userRole!),
+                                  viewModel.listEmploye[index].role!,
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
                               )),
                               SizedBox(
                                 width: 100,
@@ -200,20 +204,17 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
                                                 builder: (context) {
                                               return ModificationUser(
                                                 userEmail: viewModel
-                                                    .listEmploye[index]
-                                                    .userEmail!,
+                                                    .listEmploye[index].email!,
                                                 userNom: viewModel
                                                     .listEmploye[index]
-                                                    .userNom!,
+                                                    .lastName!,
                                                 userPrenom: viewModel
-                                                    .listEmploye[index]
-                                                    .userEmail!,
+                                                    .listEmploye[index].email!,
                                                 userRole: viewModel
-                                                    .listEmploye[index]
-                                                    .userRole!,
+                                                    .listEmploye[index].role!,
                                                 userUserNom: viewModel
                                                     .listEmploye[index]
-                                                    .userUserNom!,
+                                                    .username!,
                                               );
                                             }),
                                           );
@@ -227,7 +228,7 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
                                         ),
                                         onPressed: () {
                                           dialogDelete(viewModel
-                                              .listEmploye[index].userNom!);
+                                              .listEmploye[index].lastName!);
                                         },
                                       ))
                                     ],
@@ -251,8 +252,8 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                  UserSearch[index].userNom!,
-                                  overflow: TextOverflow.ellipsis,
+                                  UserSearch[index].lastName!,
+                                  overflow: TextOverflow.fade,
                                   maxLines: 1,
                                   softWrap: false,
                                 ),
@@ -260,8 +261,8 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                  UserSearch[index].userPrenom!,
-                                  overflow: TextOverflow.ellipsis,
+                                  UserSearch[index].firstName!,
+                                  overflow: TextOverflow.fade,
                                   maxLines: 1,
                                   softWrap: false,
                                 ),
@@ -269,8 +270,8 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                  UserSearch[index].userUserNom!,
-                                  overflow: TextOverflow.ellipsis,
+                                  UserSearch[index].username!,
+                                  overflow: TextOverflow.fade,
                                   maxLines: 1,
                                   softWrap: false,
                                 ),
@@ -278,15 +279,15 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
                               Expanded(
                                   child: Center(
                                 child: Text(
-                                  UserSearch[index].userEmail!,
-                                  overflow: TextOverflow.ellipsis,
+                                  UserSearch[index].email!,
+                                  overflow: TextOverflow.fade,
                                   maxLines: 1,
                                   softWrap: false,
                                 ),
                               )),
                               Expanded(
                                   child: Center(
-                                child: Text(UserSearch[index].userRole!),
+                                child: Text(UserSearch[index].role!),
                               )),
                               SizedBox(
                                 width: 100,
@@ -302,16 +303,16 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
                                             MaterialPageRoute(
                                                 builder: (context) {
                                               return ModificationUser(
-                                                userEmail: UserSearch[index]
-                                                    .userEmail!,
+                                                userEmail:
+                                                    UserSearch[index].email!,
                                                 userNom:
-                                                    UserSearch[index].userNom!,
-                                                userPrenom: UserSearch[index]
-                                                    .userEmail!,
+                                                    UserSearch[index].lastName!,
+                                                userPrenom:
+                                                    UserSearch[index].email!,
                                                 userRole:
-                                                    UserSearch[index].userRole!,
-                                                userUserNom: UserSearch[index]
-                                                    .userUserNom!,
+                                                    UserSearch[index].role!,
+                                                userUserNom:
+                                                    UserSearch[index].username!,
                                               );
                                             }),
                                           );
@@ -325,7 +326,7 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
                                         ),
                                         onPressed: () {
                                           dialogDelete(
-                                              UserSearch[index].userNom!);
+                                              UserSearch[index].lastName!);
                                         },
                                       ))
                                     ],
