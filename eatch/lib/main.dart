@@ -1,4 +1,4 @@
-import 'package:eatch/pages/authentification/authentification.dart';
+import 'package:eatch/pages/recettes/recettes.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Authentification(), //const Authentification(),
+      home: const RecettesPage(),
     );
   }
 }
