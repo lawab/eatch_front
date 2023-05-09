@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 import 'package:eatch/servicesAPI/getMatiere.dart';
 import 'package:eatch/utils/applayout.dart';
@@ -5,6 +6,9 @@ import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../servicesAPI/multipart.dart';
 
 class MatiereAffiche extends ConsumerStatefulWidget {
   const MatiereAffiche({Key? key}) : super(key: key);
@@ -61,351 +65,352 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
   Widget horizontalView(
       double height, double width, context, List<Matiere> matiere) {
     return AppLayout(
-        content: Column(
-      children: [
-        ajout == false
-            ? Container(
-                alignment: Alignment.centerRight,
-                height: 80,
-                color: Color(0xFFFCEBD1),
-                child: Row(
-                  children: [
-                    const SizedBox(
-                      width: 50,
-                    ),
-                    Text('Matières premières'),
-                    Expanded(child: Container()),
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Palette.primaryColor,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          minimumSize: Size(180, 50)),
-                      onPressed: () {
-                        setState(() {
-                          ajout = true;
-                        });
-                        /*Navigator.push(
+      content: Column(
+        children: [
+          ajout == false
+              ? Container(
+                  alignment: Alignment.centerRight,
+                  height: 80,
+                  color: Color(0xFFFCEBD1),
+                  child: Row(
+                    children: [
+                      const SizedBox(
+                        width: 50,
+                      ),
+                      Text('Matières premières'),
+                      Expanded(child: Container()),
+                      ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Palette.primaryColor,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            minimumSize: Size(180, 50)),
+                        onPressed: () {
+                          setState(() {
+                            ajout = true;
+                          });
+                          /*Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => RestaurantCreation()));*/
-                      },
-                      icon: Icon(Icons.add),
-                      label: Text('Ajouter un type de matière'),
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                  ],
-                ),
-              )
-            : Container(
-                height: 300,
-                color: Palette.secondaryBackgroundColor,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Container(
-                        alignment: Alignment.centerRight,
-                        height: 50,
-                        color: Color(0xFFFCEBD1),
-                        child: Row(
-                          children: [
-                            const SizedBox(
-                              width: 50,
-                            ),
-                            Text('Création de Type de matière première'),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                          ],
-                        ),
+                        },
+                        icon: Icon(Icons.add),
+                        label: Text('Ajouter un type de matière'),
                       ),
                       const SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width - 50,
-                        child: TextFormField(
-                          controller: nomController,
-                          keyboardType: TextInputType.emailAddress,
-                          onChanged: (value) {},
-                          decoration: InputDecoration(
-                              hoverColor: Palette.primaryBackgroundColor,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 42, vertical: 20),
-                              filled: true,
-                              fillColor: Palette.primaryBackgroundColor,
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: const BorderSide(
-                                    color: Palette.secondaryBackgroundColor),
-                                gapPadding: 10,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: const BorderSide(
-                                    color: Palette.secondaryBackgroundColor),
-                                gapPadding: 10,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: const BorderSide(
-                                    color: Palette.secondaryBackgroundColor),
-                                gapPadding: 10,
-                              ),
-                              labelText: "Nom du type",
-                              hintText: "Entrer le nom du type",
-                              // If  you are using latest version of flutter then lable text and hint text shown like this
-                              // if you r using flutter less then 1.20.* then maybe this is not working properly
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.always,
-                              suffixIcon: Icon(Icons.food_bank)),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width - 50,
-                        child: TextFormField(
-                          controller: stockController,
-                          //keyboardType: TextInputType.emailAddress,
-                          onChanged: (value) {},
-                          decoration: InputDecoration(
-                              hoverColor: Palette.primaryBackgroundColor,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 42, vertical: 20),
-                              filled: true,
-                              fillColor: Palette.primaryBackgroundColor,
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: const BorderSide(
-                                    color: Palette.secondaryBackgroundColor),
-                                gapPadding: 10,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: const BorderSide(
-                                    color: Palette.secondaryBackgroundColor),
-                                gapPadding: 10,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: const BorderSide(
-                                    color: Palette.secondaryBackgroundColor),
-                                gapPadding: 10,
-                              ),
-                              labelText: "Stock",
-                              hintText: "Entrer le stock de base",
-                              // If  you are using latest version of flutter then lable text and hint text shown like this
-                              // if you r using flutter less then 1.20.* then maybe this is not working properly
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.always,
-                              suffixIcon: Icon(Icons.food_bank)),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      // --------------------------------------------
-                      Container(
-                        width: MediaQuery.of(context).size.width - 50,
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 10),
-                            const Text("Date de péremption"),
-                            const SizedBox(width: 6),
-                            ElevatedButton(
-                              onPressed: () async {
-                                DateTime? newDate = await showDatePicker(
-                                  context: context,
-                                  initialDate: date,
-                                  firstDate: DateTime(1900),
-                                  lastDate: DateTime(2100),
-                                );
-
-                                if (newDate == null) return;
-
-                                setState(() {
-                                  date = newDate;
-                                  dd = true;
-                                  dateJour =
-                                      "${date.year}/${date.month}/${date.day}";
-                                });
-                                print(date);
-                              },
-                              child: const Text("Choisir la date:"),
-                            ),
-                            const SizedBox(width: 10),
-                            dd == false
-                                ? Text(
-                                    "${date.year}/${date.month}/${date.day}",
-                                    style: const TextStyle(fontSize: 18),
-                                  )
-                                : Text(
-                                    dateJour,
-                                    style: const TextStyle(fontSize: 18),
-                                  )
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(
-                        height: 50,
-                      ),
-
-                      // --------------------------------------------
-
-                      Container(
-                        alignment: Alignment.centerRight,
-                        child: Container(
-                          width: 350,
-                          child: Row(children: [
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            ElevatedButton(
-                              onPressed: (() {
-                                setState(() {});
-                              }),
-                              child: Text('Enregistrer'),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Palette.primaryColor,
-                                minimumSize: Size(150, 50),
-                                maximumSize: Size(200, 70),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            ElevatedButton(
-                              onPressed: (() {
-                                setState(() {
-                                  ajout = false;
-                                });
-                              }),
-                              child: Text(
-                                'Annuler',
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    Palette.secondaryBackgroundColor,
-                                minimumSize: Size(150, 50),
-                                maximumSize: Size(200, 70),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                              ),
-                            ),
-                          ]),
-                        ),
+                        width: 20,
                       ),
                     ],
                   ),
-                ),
-              ),
-        const SizedBox(
-          height: 5,
-        ),
-        Container(
-          height: ajout == false ? height - 175 : height - 400,
-          width: width - 20,
-          child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 200,
-                  childAspectRatio: 3 / 2,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 50,
-                  mainAxisExtent: 300),
-              itemCount: matiere.length,
-              itemBuilder: (BuildContext ctx, index) {
-                return Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(15.0),
-                    image: DecorationImage(
-                        opacity: 50,
-                        image: AssetImage(matiere[index].image!),
-                        fit: BoxFit.cover),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        matiere[index].type!,
-                        style: GoogleFonts.raleway().copyWith(
-                            fontSize: 30,
-                            color: Colors.white,
-                            fontWeight: FontWeight.normal),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'Initiale: ${matiere[index].initial.toString()} ${matiere[index].mesure!}',
-                        style: GoogleFonts.raleway().copyWith(
-                            fontSize: 15,
-                            color: Colors.white,
-                            fontWeight: FontWeight.normal),
-                      ),
-                      Text(
-                        'Consommation: ${matiere[index].consommation.toString()} ${matiere[index].mesure!}',
-                        style: GoogleFonts.raleway().copyWith(
-                            fontSize: 15,
-                            color: Colors.white,
-                            fontWeight: FontWeight.normal),
-                      ),
-                      Text(
-                        'Reste: ${(matiere[index].initial! - matiere[index].consommation!).toString()} ${matiere[index].mesure!}',
-                        style: GoogleFonts.raleway().copyWith(
-                            fontSize: 15,
-                            color: Colors.white,
-                            fontWeight: FontWeight.normal),
-                      ),
-                      Expanded(child: Container()),
-                      Container(
-                        height: 100,
-                        child: Column(
-                          children: [
-                            ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: Size(width, 50),
-                                backgroundColor: Palette.secondaryColor,
+                )
+              : Container(
+                  height: 300,
+                  color: Palette.secondaryBackgroundColor,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Container(
+                          alignment: Alignment.centerRight,
+                          height: 50,
+                          color: Color(0xFFFCEBD1),
+                          child: Row(
+                            children: [
+                              const SizedBox(
+                                width: 50,
                               ),
-                              onPressed: (() {
-                                dialogModif(
-                                    context,
-                                    matiere[index].type!,
-                                    matiere[index].initial!,
-                                    matiere[index].mesure!);
-                              }),
-                              icon: Icon(Icons.edit),
-                              label: Text('Modifier'),
-                            ),
-                            ElevatedButton.icon(
-                              onPressed: (() {
-                                dialogDelete(matiere[index].type!);
-                              }),
-                              icon: Icon(Icons.delete),
-                              label: Text('Supprimer'),
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Palette.deleteColors,
-                                  minimumSize: Size(width, 50)),
-                            )
-                          ],
+                              Text('Création de Type de matière première'),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                            ],
+                          ),
                         ),
-                      )
-                    ],
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width - 50,
+                          child: TextFormField(
+                            controller: nomController,
+                            keyboardType: TextInputType.emailAddress,
+                            onChanged: (value) {},
+                            decoration: InputDecoration(
+                                hoverColor: Palette.primaryBackgroundColor,
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 42, vertical: 20),
+                                filled: true,
+                                fillColor: Palette.primaryBackgroundColor,
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: const BorderSide(
+                                      color: Palette.secondaryBackgroundColor),
+                                  gapPadding: 10,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: const BorderSide(
+                                      color: Palette.secondaryBackgroundColor),
+                                  gapPadding: 10,
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: const BorderSide(
+                                      color: Palette.secondaryBackgroundColor),
+                                  gapPadding: 10,
+                                ),
+                                labelText: "Nom du type",
+                                hintText: "Entrer le nom du type",
+                                // If  you are using latest version of flutter then lable text and hint text shown like this
+                                // if you r using flutter less then 1.20.* then maybe this is not working properly
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.always,
+                                suffixIcon: Icon(Icons.food_bank)),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width - 50,
+                          child: TextFormField(
+                            controller: stockController,
+                            //keyboardType: TextInputType.emailAddress,
+                            onChanged: (value) {},
+                            decoration: InputDecoration(
+                                hoverColor: Palette.primaryBackgroundColor,
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 42, vertical: 20),
+                                filled: true,
+                                fillColor: Palette.primaryBackgroundColor,
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: const BorderSide(
+                                      color: Palette.secondaryBackgroundColor),
+                                  gapPadding: 10,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: const BorderSide(
+                                      color: Palette.secondaryBackgroundColor),
+                                  gapPadding: 10,
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: const BorderSide(
+                                      color: Palette.secondaryBackgroundColor),
+                                  gapPadding: 10,
+                                ),
+                                labelText: "Stock",
+                                hintText: "Entrer le stock de base",
+                                // If  you are using latest version of flutter then lable text and hint text shown like this
+                                // if you r using flutter less then 1.20.* then maybe this is not working properly
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.always,
+                                suffixIcon: Icon(Icons.food_bank)),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        // --------------------------------------------
+                        Container(
+                          width: MediaQuery.of(context).size.width - 50,
+                          child: Row(
+                            children: [
+                              const SizedBox(width: 10),
+                              const Text("Date de péremption"),
+                              const SizedBox(width: 6),
+                              ElevatedButton(
+                                onPressed: () async {
+                                  DateTime? newDate = await showDatePicker(
+                                    context: context,
+                                    initialDate: date,
+                                    firstDate: DateTime(1900),
+                                    lastDate: DateTime(2100),
+                                  );
+
+                                  if (newDate == null) return;
+
+                                  setState(() {
+                                    date = newDate;
+                                    dd = true;
+                                    dateJour =
+                                        "${date.year}/${date.month}/${date.day}";
+                                  });
+                                  print(date);
+                                },
+                                child: const Text("Choisir la date:"),
+                              ),
+                              const SizedBox(width: 10),
+                              dd == false
+                                  ? Text(
+                                      "${date.year}/${date.month}/${date.day}",
+                                      style: const TextStyle(fontSize: 18),
+                                    )
+                                  : Text(
+                                      dateJour,
+                                      style: const TextStyle(fontSize: 18),
+                                    )
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(
+                          height: 50,
+                        ),
+
+                        // --------------------------------------------
+
+                        Container(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            width: 350,
+                            child: Row(children: [
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              ElevatedButton(
+                                onPressed: (() {
+                                  setState(() {});
+                                }),
+                                child: Text('Enregistrer'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Palette.primaryColor,
+                                  minimumSize: Size(150, 50),
+                                  maximumSize: Size(200, 70),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              ElevatedButton(
+                                onPressed: (() {
+                                  setState(() {
+                                    ajout = false;
+                                  });
+                                }),
+                                child: Text(
+                                  'Annuler',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      Palette.secondaryBackgroundColor,
+                                  minimumSize: Size(150, 50),
+                                  maximumSize: Size(200, 70),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                ),
+                              ),
+                            ]),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                );
-              }),
-        ),
-      ],
-    ));
+                ),
+          const SizedBox(
+            height: 5,
+          ),
+          Container(
+            height: ajout == false ? height - 175 : height - 400,
+            width: width - 20,
+            child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 200,
+                    childAspectRatio: 3 / 2,
+                    crossAxisSpacing: 20,
+                    mainAxisSpacing: 50,
+                    mainAxisExtent: 300),
+                itemCount: matiere.length,
+                itemBuilder: (BuildContext ctx, index) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(15.0),
+                      image: DecorationImage(
+                          opacity: 50,
+                          image: AssetImage(matiere[index].image!),
+                          fit: BoxFit.cover),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          matiere[index].type!,
+                          style: GoogleFonts.raleway().copyWith(
+                              fontSize: 30,
+                              color: Colors.white,
+                              fontWeight: FontWeight.normal),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          'Initiale: ${matiere[index].initial.toString()} ${matiere[index].mesure!}',
+                          style: GoogleFonts.raleway().copyWith(
+                              fontSize: 15,
+                              color: Colors.white,
+                              fontWeight: FontWeight.normal),
+                        ),
+                        Text(
+                          'Consommation: ${matiere[index].consommation.toString()} ${matiere[index].mesure!}',
+                          style: GoogleFonts.raleway().copyWith(
+                              fontSize: 15,
+                              color: Colors.white,
+                              fontWeight: FontWeight.normal),
+                        ),
+                        Text(
+                          'Reste: ${(matiere[index].initial! - matiere[index].consommation!).toString()} ${matiere[index].mesure!}',
+                          style: GoogleFonts.raleway().copyWith(
+                              fontSize: 15,
+                              color: Colors.white,
+                              fontWeight: FontWeight.normal),
+                        ),
+                        Expanded(child: Container()),
+                        Container(
+                          height: 100,
+                          child: Column(
+                            children: [
+                              ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  minimumSize: Size(width, 50),
+                                  backgroundColor: Palette.secondaryColor,
+                                ),
+                                onPressed: (() {
+                                  dialogModif(
+                                      context,
+                                      matiere[index].type!,
+                                      matiere[index].initial!,
+                                      matiere[index].mesure!);
+                                }),
+                                icon: Icon(Icons.edit),
+                                label: Text('Modifier'),
+                              ),
+                              ElevatedButton.icon(
+                                onPressed: (() {
+                                  dialogDelete(matiere[index].type!);
+                                }),
+                                icon: Icon(Icons.delete),
+                                label: Text('Supprimer'),
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Palette.deleteColors,
+                                    minimumSize: Size(width, 50)),
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                }),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget verticalView(
@@ -883,5 +888,147 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
             }),
           );
         });
+  }
+
+  Future<void> creationMatierePremiere(
+    BuildContext context,
+    String nomMatierePremiere,
+    DateTime peremption,
+    int quantite,
+  ) async {
+    ////////////
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var id = prefs.getString('IdUser').toString();
+    var restaurantId = prefs.getString('IdRestaurant').toString();
+    var token = prefs.getString('token');
+
+    var url = Uri.parse("http://13.39.81.126:4001/api/materials/create");
+    final request = MultipartRequest(
+      'POST',
+      url,
+      onProgress: (int bytes, int total) {
+        final progress = bytes / total;
+        print('progress: $progress ($bytes/$total)');
+      },
+    );
+    var json = {
+      'restaurant': restaurantId,
+      'mp_name': nomMatierePremiere,
+      'lifetime': peremption,
+      'quantity': quantite,
+      '_creator': id,
+    };
+    var body = jsonEncode(json);
+
+    request.headers.addAll({
+      "body": body,
+    });
+
+    print("RESPENSE SEND STEAM FILE REQ");
+    //var responseString = await streamedResponse.stream.bytesToString();
+    var response = await request.send();
+    print("Upload Response" + response.toString());
+    print(response.statusCode);
+    print(request.headers);
+
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        await response.stream.bytesToString().then((value) {
+          print(value);
+        });
+        //stopMessage();
+        //finishWorking();
+
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("La matière première crée"),
+        ));
+        ref.refresh(getDataMatiereFuture);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Erreur de serveur"),
+        ));
+        print("Error Create Programme  !!!");
+      }
+    } catch (e) {
+      throw e;
+    }
+
+    /*if (result != null) {
+      PlatformFile file = result.files.single;
+
+      Uint8List? fileBytes;
+      if ((result.files.single.bytes ?? []).isEmpty) {
+        // Speciale Android
+
+        print('Speciale Android');
+
+        final file = File.fromUri(Uri.parse(result.files.single.path!));
+        fileBytes = file.readAsBytesSync();
+      } else {
+        // Speciale web
+
+        print('Speciale web');
+        fileBytes = result.files.single.bytes as Uint8List;
+      }
+
+      List<int> selectedFile = fileBytes as List<int>;
+
+      var url = Uri.parse("http://13.39.81.126:4002/api/restaurants/create");
+      final request = MultipartRequest(
+        'POST',
+        url,
+        onProgress: (int bytes, int total) {
+          final progress = bytes / total;
+          print('progress: $progress ($bytes/$total)');
+        },
+      );
+      var json = {
+        'restaurant_name': nomRestaurant,
+        'address': adresseRestaurant,
+        'town': villeRestaurant,
+        '_creator': id,
+      };
+      var body = jsonEncode(json);
+
+      request.headers.addAll({
+        "body": body,
+      });
+
+      request.fields['form_key'] = 'form_value';
+      request.headers['authorization'] = 'Bearer $token';
+      request.files.add(await http.MultipartFile.fromBytes('file', selectedFile,
+          contentType: MediaType('application', 'octet-stream'),
+          filename: result.files.first.name));
+
+      print("RESPENSE SEND STEAM FILE REQ");
+      //var responseString = await streamedResponse.stream.bytesToString();
+      var response = await request.send();
+      print("Upload Response" + response.toString());
+      print(response.statusCode);
+      print(request.headers);
+
+      try {
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          await response.stream.bytesToString().then((value) {
+            print(value);
+          });
+          //stopMessage();
+          //finishWorking();
+
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Restaurant crée"),
+          ));
+          ref.refresh(getDataRsetaurantFuture);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Erreur de serveur"),
+          ));
+          print("Error Create Programme  !!!");
+        }
+      } catch (e) {
+        throw e;
+      }
+    }*/
   }
 }
