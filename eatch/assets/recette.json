@@ -1,0 +1,70 @@
+[
+    {
+        "id": "iddd",
+        "titreRecette": "Titre de la recetA",
+        "tempsPreparation": 10,
+        "tempsCuisson": 20,
+        "tempsTotal": 24,
+        "imageUrl": "assets/recette.jpg",
+        "Ingrdients": [
+            {
+                "matiere": {
+                    "_id": "6447f9959c9ed555eea7915c"
+                },
+                "Quantité": 2,
+                "Unité": "g"
+            }
+        ]
+    },
+    {
+        "id": "iddd",
+        "titreRecette": "Titre de la recettB",
+        "tempsPreparation": 10,
+        "tempsCuisson": 20,
+        "tempsTotal": 69,
+        "imageUrl": "assets/recette.jpg",
+        "Ingrdients": [
+            {
+                "matiere": {
+                    "_id": "6447f9959c9ed555eea7915c"
+                },
+                "Quantité": 2,
+                "Unité": "g"
+            }
+        ]
+    },
+    {
+        "id": "iddd",
+        "titreRecette": "Titre de la recettC",
+        "tempsPreparation": 10,
+        "tempsCuisson": 20,
+        "tempsTotal": 25,
+        "imageUrl": "assets/recette.jpg",
+        "Ingrdients": [
+            {
+                "matiere": {
+                    "_id": "6447f9959c9ed555eea7915c"
+                },
+                "Quantité": 2,
+                "Unité": "g"
+            }
+        ]
+    },
+    {
+        "id": "iddd",
+        "titreRecette": "Titre de la recetteD",
+        "tempsPreparation": 10,
+        "tempsCuisson": 20,
+        "tempsTotal": 30,
+        "imageUrl": "assets/recette.jpg",
+        "Ingrdients": [
+            {
+                "matiere": {
+                    "_id": "6447f9959c9ed555eea7915c"
+                },
+                "Quantité": 2,
+                "Unité": "g"
+            }
+        ]
+    }
+]
