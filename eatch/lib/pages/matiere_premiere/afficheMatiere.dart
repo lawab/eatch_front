@@ -1,14 +1,19 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'dart:ui';
+import 'package:dio/dio.dart';
 import 'package:eatch/servicesAPI/getMatiere.dart';
 import 'package:eatch/utils/applayout.dart';
 import 'package:eatch/utils/palettes/palette.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../servicesAPI/multipart.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart' show MediaType;
 
 class MatiereAffiche extends ConsumerStatefulWidget {
   const MatiereAffiche({Key? key}) : super(key: key);
@@ -21,6 +26,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
   bool ajout = false;
   var nomController = TextEditingController();
   var stockController = TextEditingController();
+  var peremptionController = TextEditingController();
 
   MediaQueryData mediaQueryData(BuildContext context) {
     return MediaQuery.of(context);
@@ -36,6 +42,35 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
 
   double height(BuildContext buildContext) {
     return size(buildContext).height;
+  }
+
+  List<int>? _selectedFile = [];
+  FilePickerResult? result;
+  PlatformFile? file;
+
+  bool checkImagee = false;
+  bool checkImage = false;
+  bool _working = false;
+  String message = "";
+
+  void startWorking() async {
+    setState(() {
+      _working = true;
+      checkImagee = false;
+    });
+  }
+
+  void stopMessage() async {
+    setState(() {
+      checkImagee = true;
+      checkImage = false;
+    });
+  }
+
+  void finishWorking() async {
+    setState(() {
+      _working = false;
+    });
   }
 
   DateTime date = DateTime.now();
@@ -71,20 +106,20 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
               ? Container(
                   alignment: Alignment.centerRight,
                   height: 80,
-                  color: Color(0xFFFCEBD1),
+                  color: const Color(0xFFFCEBD1),
                   child: Row(
                     children: [
                       const SizedBox(
                         width: 50,
                       ),
-                      Text('Matières premières'),
+                      const Text('Matières premières'),
                       Expanded(child: Container()),
                       ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Palette.primaryColor,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10)),
-                            minimumSize: Size(180, 50)),
+                            minimumSize: const Size(180, 50)),
                         onPressed: () {
                           setState(() {
                             ajout = true;
@@ -94,8 +129,8 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                       MaterialPageRoute(
                           builder: (context) => RestaurantCreation()));*/
                         },
-                        icon: Icon(Icons.add),
-                        label: Text('Ajouter un type de matière'),
+                        icon: const Icon(Icons.add),
+                        label: const Text('Ajouter un type de matière'),
                       ),
                       const SizedBox(
                         width: 20,
@@ -112,14 +147,14 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                         Container(
                           alignment: Alignment.centerRight,
                           height: 50,
-                          color: Color(0xFFFCEBD1),
+                          color: const Color(0xFFFCEBD1),
                           child: Row(
-                            children: [
-                              const SizedBox(
+                            children: const [
+                              SizedBox(
                                 width: 50,
                               ),
                               Text('Création de Type de matière première'),
-                              const SizedBox(
+                              SizedBox(
                                 width: 20,
                               ),
                             ],
@@ -164,7 +199,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                                 // if you r using flutter less then 1.20.* then maybe this is not working properly
                                 floatingLabelBehavior:
                                     FloatingLabelBehavior.always,
-                                suffixIcon: Icon(Icons.food_bank)),
+                                suffixIcon: const Icon(Icons.food_bank)),
                           ),
                         ),
                         const SizedBox(
@@ -206,20 +241,23 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                                 // if you r using flutter less then 1.20.* then maybe this is not working properly
                                 floatingLabelBehavior:
                                     FloatingLabelBehavior.always,
-                                suffixIcon: Icon(Icons.food_bank)),
+                                suffixIcon: const Icon(Icons.food_bank)),
                           ),
                         ),
                         const SizedBox(
                           height: 20,
                         ),
-                        // --------------------------------------------
+                        // début --------------------------------------------
                         Container(
                           width: MediaQuery.of(context).size.width - 50,
                           child: Row(
                             children: [
-                              const SizedBox(width: 10),
-                              const Text("Date de péremption"),
-                              const SizedBox(width: 6),
+                              const SizedBox(width: 15),
+                              const Text(
+                                "Date de péremption",
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              const SizedBox(width: 20),
                               ElevatedButton(
                                 onPressed: () async {
                                   DateTime? newDate = await showDatePicker(
@@ -234,15 +272,40 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                                   setState(() {
                                     date = newDate;
                                     dd = true;
-                                    dateJour =
-                                        "${date.year}/${date.month}/${date.day}";
+                                    //dateJour =
+                                    //"${date.year}/${date.month}/${date.day}";
                                   });
                                   print(date);
                                 },
-                                child: const Text("Choisir la date:"),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Palette.primaryColor,
+                                  minimumSize: const Size(150, 40),
+                                  maximumSize: const Size(200, 50),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                ),
+                                child: dd == false
+                                    ? Text(
+                                        "${date.year}-${date.month}-${date.day}",
+                                        style: const TextStyle(fontSize: 18),
+                                      )
+                                    : Text(
+                                        "${date.year}-${date.month}-${date.day}",
+                                        style: const TextStyle(fontSize: 18),
+                                      ),
                               ),
-                              const SizedBox(width: 10),
+
+                              /*const SizedBox(width: 10),
                               dd == false
+                                  ? Text(
+                                      date.toString(),
+                                      style: const TextStyle(fontSize: 18),
+                                    )
+                                  : Text(
+                                      date.toString(),
+                                      style: const TextStyle(fontSize: 18),
+                                    )*/
+                              /*dd == false
                                   ? Text(
                                       "${date.year}/${date.month}/${date.day}",
                                       style: const TextStyle(fontSize: 18),
@@ -250,17 +313,63 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                                   : Text(
                                       dateJour,
                                       style: const TextStyle(fontSize: 18),
-                                    )
+                                    )*/
                             ],
                           ),
                         ),
 
                         const SizedBox(
-                          height: 50,
+                          height: 10,
                         ),
 
-                        // --------------------------------------------
+                        // fin --------------------------------------------
+                        // Creation du bouton qui reécupere l'image
+                        Container(
+                          //width: 350,
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    final result = await FilePicker.platform
+                                        .pickFiles(
+                                            type: FileType.custom,
+                                            allowedExtensions: [
+                                          "png",
+                                          "jpg",
+                                          "jpeg",
+                                        ]);
 
+                                    if (result != null) {
+                                      file = result.files.single;
+                                      Uint8List fileBytes = result
+                                          .files.single.bytes as Uint8List;
+                                      //print(base64Encode (fileBytes))
+                                      //List<int>
+                                      _selectedFile = fileBytes;
+                                      /*setState(() {
+                                  filee = true;
+                                });*/
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Palette.primaryColor,
+                                    minimumSize: const Size(150, 40),
+                                    maximumSize: const Size(200, 60),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                  ),
+                                  child: const Text("Image"),
+                                ),
+                              ]),
+                        ),
+
+                        const SizedBox(
+                          height: 30,
+                        ),
+
+                        // fin de la creation du bouton image
                         Container(
                           alignment: Alignment.centerRight,
                           child: Container(
@@ -271,16 +380,27 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                               ),
                               ElevatedButton(
                                 onPressed: (() {
-                                  setState(() {});
+                                  creationMatierePremiere(
+                                    context,
+                                    nomController.text,
+                                    stockController.text,
+                                    date.toString(),
+                                    _selectedFile!,
+                                    result,
+                                  );
+                                  setState(() {
+                                    ajout = false;
+                                  });
+                                  //setState(() {});
                                 }),
-                                child: Text('Enregistrer'),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Palette.primaryColor,
-                                  minimumSize: Size(150, 50),
-                                  maximumSize: Size(200, 70),
+                                  minimumSize: const Size(150, 50),
+                                  maximumSize: const Size(200, 70),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10)),
                                 ),
+                                child: const Text('Enregistrer'),
                               ),
                               const SizedBox(
                                 width: 20,
@@ -291,17 +411,17 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                                     ajout = false;
                                   });
                                 }),
-                                child: Text(
-                                  'Annuler',
-                                  style: TextStyle(color: Colors.grey),
-                                ),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor:
                                       Palette.secondaryBackgroundColor,
-                                  minimumSize: Size(150, 50),
-                                  maximumSize: Size(200, 70),
+                                  minimumSize: const Size(150, 50),
+                                  maximumSize: const Size(200, 70),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10)),
+                                ),
+                                child: const Text(
+                                  'Annuler',
+                                  style: TextStyle(color: Colors.grey),
                                 ),
                               ),
                             ]),
@@ -332,7 +452,8 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                       borderRadius: BorderRadius.circular(15.0),
                       image: DecorationImage(
                           opacity: 50,
-                          image: AssetImage(matiere[index].image!),
+                          image: NetworkImage(
+                              "http://13.39.81.126:5000${matiere[index].image!}"),
                           fit: BoxFit.cover),
                     ),
                     child: Column(
@@ -340,7 +461,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          matiere[index].type!,
+                          matiere[index].mpName!,
                           style: GoogleFonts.raleway().copyWith(
                               fontSize: 30,
                               color: Colors.white,
@@ -350,21 +471,21 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                           height: 10,
                         ),
                         Text(
-                          'Initiale: ${matiere[index].initial.toString()} ${matiere[index].mesure!}',
+                          'Initiale: ${matiere[index].quantity.toString()} ${matiere[index].unity!}',
                           style: GoogleFonts.raleway().copyWith(
                               fontSize: 15,
                               color: Colors.white,
                               fontWeight: FontWeight.normal),
                         ),
                         Text(
-                          'Consommation: ${matiere[index].consommation.toString()} ${matiere[index].mesure!}',
+                          'Consommation: ${matiere[index].consumerQuantity.toString()} ${matiere[index].unity!}',
                           style: GoogleFonts.raleway().copyWith(
                               fontSize: 15,
                               color: Colors.white,
                               fontWeight: FontWeight.normal),
                         ),
                         Text(
-                          'Reste: ${(matiere[index].initial! - matiere[index].consommation!).toString()} ${matiere[index].mesure!}',
+                          'Reste: ${(matiere[index].quantity! - matiere[index].consumerQuantity!).toString()} ${matiere[index].unity!}',
                           style: GoogleFonts.raleway().copyWith(
                               fontSize: 15,
                               color: Colors.white,
@@ -383,19 +504,20 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                                 onPressed: (() {
                                   dialogModif(
                                       context,
-                                      matiere[index].type!,
-                                      matiere[index].initial!,
-                                      matiere[index].mesure!);
+                                      matiere[index].mpName!,
+                                      matiere[index].quantity!,
+                                      matiere[index].unity!);
                                 }),
-                                icon: Icon(Icons.edit),
-                                label: Text('Modifier'),
+                                icon: const Icon(Icons.edit),
+                                label: const Text('Modifier'),
                               ),
                               ElevatedButton.icon(
                                 onPressed: (() {
-                                  dialogDelete(matiere[index].type!);
+                                  dialogDelete(matiere[index].mpName!,
+                                      matiere[index].sId!);
                                 }),
-                                icon: Icon(Icons.delete),
-                                label: Text('Supprimer'),
+                                icon: const Icon(Icons.delete),
+                                label: const Text('Supprimer'),
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: Palette.deleteColors,
                                     minimumSize: Size(width, 50)),
@@ -422,20 +544,20 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
             ? Container(
                 alignment: Alignment.centerRight,
                 height: 80,
-                color: Color(0xFFFCEBD1),
+                color: const Color(0xFFFCEBD1),
                 child: Row(
                   children: [
                     const SizedBox(
                       width: 50,
                     ),
-                    Text('Matières premières'),
+                    const Text('Matières premières'),
                     Expanded(child: Container()),
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Palette.primaryColor,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
-                          minimumSize: Size(180, 50)),
+                          minimumSize: const Size(180, 50)),
                       onPressed: () {
                         setState(() {
                           ajout = true;
@@ -445,8 +567,8 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                       MaterialPageRoute(
                           builder: (context) => RestaurantCreation()));*/
                       },
-                      icon: Icon(Icons.add),
-                      label: Text('Ajouter un type de matière'),
+                      icon: const Icon(Icons.add),
+                      label: const Text('Ajouter un type de matière'),
                     ),
                     const SizedBox(
                       width: 20,
@@ -463,14 +585,14 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                       Container(
                         alignment: Alignment.centerRight,
                         height: 50,
-                        color: Color(0xFFFCEBD1),
+                        color: const Color(0xFFFCEBD1),
                         child: Row(
-                          children: [
-                            const SizedBox(
+                          children: const [
+                            SizedBox(
                               width: 50,
                             ),
                             Text('Création de Type de matière première'),
-                            const SizedBox(
+                            SizedBox(
                               width: 20,
                             ),
                           ],
@@ -515,12 +637,134 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                               // if you r using flutter less then 1.20.* then maybe this is not working properly
                               floatingLabelBehavior:
                                   FloatingLabelBehavior.always,
-                              suffixIcon: Icon(Icons.food_bank)),
+                              suffixIcon: const Icon(Icons.food_bank)),
                         ),
                       ),
                       const SizedBox(
                         height: 20,
                       ),
+                      // début --------------------------------------------
+                      Container(
+                        width: MediaQuery.of(context).size.width - 50,
+                        child: Row(
+                          children: [
+                            const SizedBox(width: 15),
+                            const Text(
+                              "Date de péremption",
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            const SizedBox(width: 20),
+                            ElevatedButton(
+                              onPressed: () async {
+                                DateTime? newDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: date,
+                                  firstDate: DateTime(1900),
+                                  lastDate: DateTime(2100),
+                                );
+
+                                if (newDate == null) return;
+
+                                setState(() {
+                                  date = newDate;
+                                  dd = true;
+                                  //dateJour =
+                                  //"${date.year}/${date.month}/${date.day}";
+                                });
+                                print(date);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Palette.primaryColor,
+                                minimumSize: const Size(150, 40),
+                                maximumSize: const Size(200, 50),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                              child: dd == false
+                                  ? Text(
+                                      "${date.year}-${date.month}-${date.day}",
+                                      style: const TextStyle(fontSize: 18),
+                                    )
+                                  : Text(
+                                      "${date.year}-${date.month}-${date.day}",
+                                      style: const TextStyle(fontSize: 18),
+                                    ),
+                            ),
+
+                            /*const SizedBox(width: 10),
+                              dd == false
+                                  ? Text(
+                                      date.toString(),
+                                      style: const TextStyle(fontSize: 18),
+                                    )
+                                  : Text(
+                                      date.toString(),
+                                      style: const TextStyle(fontSize: 18),
+                                    )*/
+                            /*dd == false
+                                  ? Text(
+                                      "${date.year}/${date.month}/${date.day}",
+                                      style: const TextStyle(fontSize: 18),
+                                    )
+                                  : Text(
+                                      dateJour,
+                                      style: const TextStyle(fontSize: 18),
+                                    )*/
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(
+                        height: 10,
+                      ),
+
+                      // fin --------------------------------------------
+                      // Creation du bouton qui reécupere l'image
+                      Container(
+                        //width: 350,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () async {
+                                  final result = await FilePicker.platform
+                                      .pickFiles(
+                                          type: FileType.custom,
+                                          allowedExtensions: [
+                                        "png",
+                                        "jpg",
+                                        "jpeg",
+                                      ]);
+
+                                  if (result != null) {
+                                    file = result.files.single;
+                                    Uint8List fileBytes =
+                                        result.files.single.bytes as Uint8List;
+                                    //print(base64Encode (fileBytes))
+                                    //List<int>
+                                    _selectedFile = fileBytes;
+                                    /*setState(() {
+                                  filee = true;
+                                });*/
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Palette.primaryColor,
+                                  minimumSize: const Size(150, 40),
+                                  maximumSize: const Size(200, 60),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                ),
+                                child: const Text("Image"),
+                              ),
+                            ]),
+                      ),
+
+                      const SizedBox(
+                        height: 30,
+                      ),
+
+                      // fin de la creation du bouton image
                       Container(
                         width: MediaQuery.of(context).size.width - 50,
                         child: TextFormField(
@@ -557,7 +801,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                               // if you r using flutter less then 1.20.* then maybe this is not working properly
                               floatingLabelBehavior:
                                   FloatingLabelBehavior.always,
-                              suffixIcon: Icon(Icons.food_bank)),
+                              suffixIcon: const Icon(Icons.food_bank)),
                         ),
                       ),
                       const SizedBox(
@@ -575,14 +819,14 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                               onPressed: (() {
                                 setState(() {});
                               }),
-                              child: Text('Enregistrer'),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Palette.primaryColor,
-                                minimumSize: Size(150, 50),
-                                maximumSize: Size(200, 70),
+                                minimumSize: const Size(150, 50),
+                                maximumSize: const Size(200, 70),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10)),
                               ),
+                              child: const Text('Enregistrer'),
                             ),
                             const SizedBox(
                               width: 20,
@@ -593,17 +837,17 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                                   ajout = false;
                                 });
                               }),
-                              child: Text(
-                                'Annuler',
-                                style: TextStyle(color: Colors.grey),
-                              ),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:
                                     Palette.secondaryBackgroundColor,
-                                minimumSize: Size(150, 50),
-                                maximumSize: Size(200, 70),
+                                minimumSize: const Size(150, 50),
+                                maximumSize: const Size(200, 70),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10)),
+                              ),
+                              child: const Text(
+                                'Annuler',
+                                style: TextStyle(color: Colors.grey),
                               ),
                             ),
                           ]),
@@ -634,7 +878,8 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                     borderRadius: BorderRadius.circular(15.0),
                     image: DecorationImage(
                         opacity: 50,
-                        image: AssetImage(matiere[index].image!),
+                        image: NetworkImage(
+                            "http://13.39.81.126:5000${matiere[index].image!}"),
                         fit: BoxFit.cover),
                   ),
                   child: Column(
@@ -642,7 +887,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        matiere[index].type!,
+                        matiere[index].mpName!,
                         style: GoogleFonts.raleway().copyWith(
                             fontSize: 30,
                             color: Colors.white,
@@ -652,21 +897,21 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                         height: 10,
                       ),
                       Text(
-                        'Initiale: ${matiere[index].initial.toString()} ${matiere[index].mesure!}',
+                        'Initiale: ${matiere[index].quantity.toString()} ${matiere[index].unity!}',
                         style: GoogleFonts.raleway().copyWith(
                             fontSize: 15,
                             color: Colors.white,
                             fontWeight: FontWeight.normal),
                       ),
                       Text(
-                        'Consommation: ${matiere[index].consommation.toString()} ${matiere[index].mesure!}',
+                        'Consommation: ${matiere[index].consumerQuantity.toString()} ${matiere[index].unity!}',
                         style: GoogleFonts.raleway().copyWith(
                             fontSize: 15,
                             color: Colors.white,
                             fontWeight: FontWeight.normal),
                       ),
                       Text(
-                        'Reste: ${(matiere[index].initial! - matiere[index].consommation!).toString()} ${matiere[index].mesure!}',
+                        'Reste: ${(matiere[index].quantity! - matiere[index].consumerQuantity!).toString()} ${matiere[index].unity!}',
                         style: GoogleFonts.raleway().copyWith(
                             fontSize: 15,
                             color: Colors.white,
@@ -685,19 +930,20 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                               onPressed: (() {
                                 dialogModif(
                                     context,
-                                    matiere[index].type!,
-                                    matiere[index].initial!,
-                                    matiere[index].mesure!);
+                                    matiere[index].mpName!,
+                                    matiere[index].quantity!,
+                                    matiere[index].unity!);
                               }),
-                              icon: Icon(Icons.edit),
-                              label: Text('Modifier'),
+                              icon: const Icon(Icons.edit),
+                              label: const Text('Modifier'),
                             ),
                             ElevatedButton.icon(
                               onPressed: (() {
-                                dialogDelete(matiere[index].type!);
+                                dialogDelete(matiere[index].mpName!,
+                                    matiere[index].sId!);
                               }),
-                              icon: Icon(Icons.delete),
-                              label: Text('Supprimer'),
+                              icon: const Icon(Icons.delete),
+                              label: const Text('Supprimer'),
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: Palette.deleteColors,
                                   minimumSize: Size(width, 50)),
@@ -714,10 +960,10 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
     ));
   }
 
-  Future dialogDelete(String nom) {
+  Future dialogDelete(String nom, String idMatiere) {
     return showDialog(
         context: context,
-        builder: (_) {
+        builder: (con) {
           return AlertDialog(
               backgroundColor: Colors.white,
               title: const Center(
@@ -739,9 +985,9 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                     style:
                         ElevatedButton.styleFrom(backgroundColor: Colors.grey),
                     onPressed: () {
-                      Navigator.of(context, rootNavigator: true).pop();
+                      Navigator.of(con, rootNavigator: true).pop();
                     },
-                    label: Text("Quitter   ")),
+                    label: const Text("Quitter   ")),
                 const SizedBox(
                   width: 20,
                 ),
@@ -752,8 +998,11 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                     ),
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Palette.deleteColors),
-                    onPressed: () {},
-                    label: Text("Supprimer."))
+                    onPressed: () {
+                      deleteMatierePremiere(context, idMatiere);
+                      Navigator.of(con, rootNavigator: true).pop();
+                    },
+                    label: const Text("Supprimer."))
               ],
               content: Container(
                   alignment: Alignment.center,
@@ -761,7 +1010,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                   height: 150,
                   child: Text(
                     "Voulez vous supprimer $nom ?",
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black,
                       fontFamily: 'HelveticaNeue',
                     ),
@@ -798,7 +1047,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                   onPressed: () {
                     Navigator.of(context, rootNavigator: true).pop();
                   },
-                  label: Text("Quitter   ")),
+                  label: const Text("Quitter   ")),
               const SizedBox(
                 width: 20,
               ),
@@ -810,7 +1059,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Palette.deleteColors),
                   onPressed: () {},
-                  label: Text("Valider."))
+                  label: const Text("Valider."))
             ],
             content: StatefulBuilder(
                 builder: (BuildContext context, StateSetter setState) {
@@ -822,7 +1071,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                   children: [
                     Text(
                       'Type : $nom',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(
                       height: 30,
@@ -833,7 +1082,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                     ),
                     Container(
                       width: 100,
-                      padding: EdgeInsets.all(3),
+                      padding: const EdgeInsets.all(3),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
                           color: Palette.greenColors),
@@ -846,15 +1095,15 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                                 });
                                 print(count);
                               },
-                              child: Icon(
+                              child: const Icon(
                                 Icons.remove,
                                 color: Colors.white,
                                 size: 16,
                               )),
                           Expanded(
                             child: Container(
-                              margin: EdgeInsets.symmetric(horizontal: 3),
-                              padding: EdgeInsets.symmetric(
+                              margin: const EdgeInsets.symmetric(horizontal: 3),
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 3, vertical: 2),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(3),
@@ -862,7 +1111,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                               child: Center(
                                 child: Text(
                                   count.toString(),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.black, fontSize: 16),
                                 ),
                               ),
@@ -874,7 +1123,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                                   count++;
                                 });
                               },
-                              child: Icon(
+                              child: const Icon(
                                 Icons.add,
                                 color: Colors.white,
                                 size: 16,
@@ -890,33 +1139,39 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
         });
   }
 
+/////////Création de matière premiere
+  ///
   Future<void> creationMatierePremiere(
     BuildContext context,
     String nomMatierePremiere,
-    DateTime peremption,
-    int quantite,
+    String quantite,
+    String peremption,
+    List<int> selectedFile,
+    FilePickerResult? result,
   ) async {
     ////////////
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var id = prefs.getString('IdUser').toString();
-    var restaurantId = prefs.getString('IdRestaurant').toString();
+    var restaurantId = prefs.getString('idRestaurant').toString();
     var token = prefs.getString('token');
 
-    var url = Uri.parse("http://13.39.81.126:4001/api/materials/create");
+    var url = Uri.parse("http://13.39.81.126:5000/api/materials/create");
     final request = MultipartRequest(
       'POST',
       url,
+      // ignore: avoid_returning_null_for_void
       onProgress: (int bytes, int total) {
         final progress = bytes / total;
         print('progress: $progress ($bytes/$total)');
       },
     );
+
     var json = {
       'restaurant': restaurantId,
       'mp_name': nomMatierePremiere,
-      'lifetime': peremption,
       'quantity': quantite,
+      'lifetime': peremption,
       '_creator': id,
     };
     var body = jsonEncode(json);
@@ -924,6 +1179,12 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
     request.headers.addAll({
       "body": body,
     });
+
+    request.fields['form_key'] = 'form_value';
+    request.headers['authorization'] = 'Bearer $token';
+    request.files.add(await http.MultipartFile.fromBytes('file', selectedFile,
+        contentType: MediaType('application', 'octet-stream'),
+        filename: result?.files.first.name));
 
     print("RESPENSE SEND STEAM FILE REQ");
     //var responseString = await streamedResponse.stream.bytesToString();
@@ -939,96 +1200,55 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
         });
         //stopMessage();
         //finishWorking();
-
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("La matière première crée"),
-        ));
         ref.refresh(getDataMatiereFuture);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Erreur de serveur"),
-        ));
         print("Error Create Programme  !!!");
       }
     } catch (e) {
       throw e;
     }
+  }
 
-    /*if (result != null) {
-      PlatformFile file = result.files.single;
+  //////////Suppression de produit
+  ///
+  Future<http.Response> deleteMatierePremiere(
+      BuildContext context, String idMatierePremiere) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var id = prefs.getString('IdUser').toString();
 
-      Uint8List? fileBytes;
-      if ((result.files.single.bytes ?? []).isEmpty) {
-        // Speciale Android
+      print(id);
+      print(idMatierePremiere);
 
-        print('Speciale Android');
+      var token = prefs.getString('token');
+      String urlDelete =
+          "http://13.39.81.126:5000/api/materials/delete/$idMatierePremiere";
 
-        final file = File.fromUri(Uri.parse(result.files.single.path!));
-        fileBytes = file.readAsBytesSync();
-      } else {
-        // Speciale web
+      var json = {'_creator': id};
 
-        print('Speciale web');
-        fileBytes = result.files.single.bytes as Uint8List;
-      }
-
-      List<int> selectedFile = fileBytes as List<int>;
-
-      var url = Uri.parse("http://13.39.81.126:4002/api/restaurants/create");
-      final request = MultipartRequest(
-        'POST',
-        url,
-        onProgress: (int bytes, int total) {
-          final progress = bytes / total;
-          print('progress: $progress ($bytes/$total)');
-        },
-      );
-      var json = {
-        'restaurant_name': nomRestaurant,
-        'address': adresseRestaurant,
-        'town': villeRestaurant,
-        '_creator': id,
-      };
       var body = jsonEncode(json);
 
-      request.headers.addAll({
-        "body": body,
+      final http.Response response =
+          await http.delete(Uri.parse(urlDelete), headers: {
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'Accept': 'application/json',
+        'authorization': 'Bearer $token',
+        //'body': body
+      }, body: {
+        '_creator': id
       });
 
-      request.fields['form_key'] = 'form_value';
-      request.headers['authorization'] = 'Bearer $token';
-      request.files.add(await http.MultipartFile.fromBytes('file', selectedFile,
-          contentType: MediaType('application', 'octet-stream'),
-          filename: result.files.first.name));
-
-      print("RESPENSE SEND STEAM FILE REQ");
-      //var responseString = await streamedResponse.stream.bytesToString();
-      var response = await request.send();
-      print("Upload Response" + response.toString());
       print(response.statusCode);
-      print(request.headers);
+      print(response.body);
 
-      try {
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          await response.stream.bytesToString().then((value) {
-            print(value);
-          });
-          //stopMessage();
-          //finishWorking();
-
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text("Restaurant crée"),
-          ));
-          ref.refresh(getDataRsetaurantFuture);
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text("Erreur de serveur"),
-          ));
-          print("Error Create Programme  !!!");
-        }
-      } catch (e) {
-        throw e;
+      if (response.statusCode == 200) {
+        ref.refresh(getDataMatiereFuture);
+        return response;
+      } else {
+        return Future.error("Server Error");
       }
-    }*/
+    } catch (e) {
+      return Future.error(e);
+    }
   }
 }

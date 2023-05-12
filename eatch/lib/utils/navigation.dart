@@ -3,7 +3,7 @@
 import 'package:eatch/pages/authentification/authentification.dart';
 import 'package:eatch/pages/categories/presentation/categories.dart';
 import 'package:eatch/pages/dashboard/dashboard_manager.dart';
-import 'package:eatch/pages/matiere_premiere/afficheMatie%C3%A8re.dart';
+import 'package:eatch/pages/matiere_premiere/afficheMatiere.dart';
 import 'package:eatch/pages/menus/presentation/menu.dart';
 import 'package:eatch/pages/menus/presentation/menu_grid.dart';
 import 'package:eatch/pages/promotion/affichePromotion.dart';

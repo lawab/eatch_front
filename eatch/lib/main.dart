@@ -1,4 +1,5 @@
 import 'package:eatch/pages/authentification/authentification.dart';
+import 'package:eatch/pages/matiere_premiere/afficheMatiere.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
