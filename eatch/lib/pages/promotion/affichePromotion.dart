@@ -64,7 +64,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
             ? Container(
                 alignment: Alignment.centerRight,
                 height: 80,
-                color: Color(0xFFFCEBD1),
+                color: Palette.yellowColor,
                 child: Row(
                   children: [
                     const SizedBox(
@@ -233,14 +233,15 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
         ajout == true
             ? const Divider(
                 height: 5,
-                color: Colors.black,
+                color: Palette.yellowColor,
               )
             : const SizedBox(
                 height: 5,
               ),
         Container(
-          height: ajout == false ? height - 175 : height - 400,
-          width: width - 20,
+          height: ajout == false ? height - 147 : height - 371,
+          width: width,
+          padding: const EdgeInsets.all(10),
           child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: 400,
@@ -441,13 +442,13 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
             ? Container(
                 alignment: Alignment.centerRight,
                 height: 80,
-                color: Color(0xFFFCEBD1),
+                color: Palette.yellowColor,
                 child: Row(
                   children: [
                     const SizedBox(
                       width: 50,
                     ),
-                    Text('Matières premières'),
+                    Text('Promotions'),
                     Expanded(child: Container()),
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
@@ -459,10 +460,6 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                         setState(() {
                           ajout = true;
                         });
-                        /*Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => RestaurantCreation()));*/
                       },
                       icon: Icon(Icons.add),
                       label: Text('Ajouter un type de matière'),
@@ -484,12 +481,12 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                         height: 50,
                         color: Color(0xFFFCEBD1),
                         child: Row(
-                          children: [
-                            const SizedBox(
+                          children: const [
+                            SizedBox(
                               width: 50,
                             ),
                             Text('Création de Type de matière première'),
-                            const SizedBox(
+                            SizedBox(
                               width: 20,
                             ),
                           ],
@@ -542,42 +539,21 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width - 50,
-                        child: TextFormField(
-                          controller: stockController,
-                          //keyboardType: TextInputType.emailAddress,
-                          onChanged: (value) {},
-                          decoration: InputDecoration(
-                              hoverColor: Palette.primaryBackgroundColor,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 42, vertical: 20),
-                              filled: true,
-                              fillColor: Palette.primaryBackgroundColor,
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: const BorderSide(
-                                    color: Palette.secondaryBackgroundColor),
-                                gapPadding: 10,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: const BorderSide(
-                                    color: Palette.secondaryBackgroundColor),
-                                gapPadding: 10,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: const BorderSide(
-                                    color: Palette.secondaryBackgroundColor),
-                                gapPadding: 10,
-                              ),
-                              labelText: "Stock",
-                              hintText: "Entrer le stock de base",
-                              // If  you are using latest version of flutter then lable text and hint text shown like this
-                              // if you r using flutter less then 1.20.* then maybe this is not working properly
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.always,
-                              suffixIcon: Icon(Icons.food_bank)),
-                        ),
+                        child: const Text('MENU'),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width - 50,
+                        child: const Text('PRODUITS'),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width - 50,
+                        child: const Text('MATIERE PREMIERE'),
                       ),
                       const SizedBox(
                         height: 50,
@@ -632,14 +608,204 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                   ),
                 ),
               ),
-        const SizedBox(
-          height: 5,
+        ajout == true
+            ? const Divider(
+                height: 5,
+                color: Palette.yellowColor,
+              )
+            : const SizedBox(
+                height: 5,
+              ),
+        Container(
+          height: ajout == false ? height - 226 : height - 436,
+          width: width,
+          padding: const EdgeInsets.all(10),
+          child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 400,
+                childAspectRatio: 3 / 2,
+                crossAxisSpacing: 20,
+                mainAxisSpacing: 50,
+                mainAxisExtent: 350),
+            itemCount: 5,
+            itemBuilder: ((context, index) {
+              return index % 2 == 0
+                  ? Card(
+                      elevation: 10,
+                      child: Container(
+                          child: Column(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                color: Colors.black,
+                                image: DecorationImage(
+                                    opacity: 50,
+                                    image: AssetImage('boisson.png'),
+                                    fit: BoxFit.cover),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                              child: Container(
+                            color: Colors.white,
+                            child: Column(
+                              children: [
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  child: Row(
+                                    children: const [
+                                      Expanded(
+                                        child: Text('Menu Ramadan'),
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          '100 DH',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                                Container(
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        child: Text('Nombre de Commandes :  '),
+                                      ),
+                                      const Expanded(
+                                        child: Text('158'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  height: 15,
+                                  width: 550 / 2,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: 5,
+                                    itemBuilder: ((context, index) {
+                                      return const Icon(
+                                        Icons.star,
+                                        color:
+                                            Color.fromARGB(255, 250, 230, 50),
+                                        size: 12,
+                                      );
+                                    }),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                const Text(
+                                    "Cette promotion composée d'un burger,une boisson,d'un mini burger,des frites maxi")
+                              ],
+                            ),
+                          ))
+                        ],
+                      )),
+                    )
+                  : Card(
+                      elevation: 10,
+                      child: Container(
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                color: Colors.white,
+                                child: Column(
+                                  children: [
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Container(
+                                      child: Row(
+                                        children: const [
+                                          Expanded(
+                                            child: Text('Menu Ramadan'),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              '100 DH',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    Container(
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            child:
+                                                Text('Nombre de Commandes :  '),
+                                          ),
+                                          const Expanded(
+                                            child: Text('158'),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Container(
+                                      height: 15,
+                                      width: 550 / 2,
+                                      child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: 5,
+                                        itemBuilder: ((context, index) {
+                                          return const Icon(
+                                            Icons.star,
+                                            color: Color.fromARGB(
+                                                255, 250, 230, 50),
+                                            size: 12,
+                                          );
+                                        }),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    const Text(
+                                        "Cette promotion composée d'un burger,une boisson,d'un mini burger,des frites maxi")
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                  color: Colors.black,
+                                  image: DecorationImage(
+                                      opacity: 50,
+                                      image: AssetImage('boisson.png'),
+                                      fit: BoxFit.cover),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+            }),
+          ),
         ),
-        /*Container(
-          height: ajout == true ? height - 465 : height - 245, //85,
-          width: width - 20,
-          child: 
-        ),*/
       ],
     ));
   }
@@ -649,68 +815,10 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
         context: context,
         builder: (_) {
           return AlertDialog(
-              backgroundColor: Colors.white,
-              title: const Center(
-                child: Text(
-                  "Confirmez la suppression",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'HelveticaNeue',
-                  ),
-                ),
-              ),
-              actions: [
-                ElevatedButton.icon(
-                    icon: const Icon(
-                      Icons.close,
-                      size: 14,
-                    ),
-                    style:
-                        ElevatedButton.styleFrom(backgroundColor: Colors.grey),
-                    onPressed: () {
-                      Navigator.of(context, rootNavigator: true).pop();
-                    },
-                    label: Text("Quitter   ")),
-                const SizedBox(
-                  width: 20,
-                ),
-                ElevatedButton.icon(
-                    icon: const Icon(
-                      Icons.delete,
-                      size: 14,
-                    ),
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Palette.deleteColors),
-                    onPressed: () {},
-                    label: Text("Supprimer."))
-              ],
-              content: Container(
-                  alignment: Alignment.center,
-                  color: Colors.white,
-                  height: 150,
-                  child: Text(
-                    "Voulez vous supprimer $nom ?",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontFamily: 'HelveticaNeue',
-                    ),
-                  )));
-        });
-  }
-
-  Future dialogModif(
-      BuildContext contextt, String nom, int init, String mesure) {
-    print('dedans');
-    int count = init;
-    return showDialog(
-        context: contextt,
-        builder: (contextt) {
-          return AlertDialog(
             backgroundColor: Colors.white,
             title: const Center(
               child: Text(
-                "Modification",
+                "Confirmez la suppression",
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
@@ -740,82 +848,20 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Palette.deleteColors),
                   onPressed: () {},
-                  label: Text("Valider."))
+                  label: Text("Supprimer."))
             ],
-            content: StatefulBuilder(
-                builder: (BuildContext context, StateSetter setState) {
-              return Container(
-                alignment: Alignment.center,
-                color: Colors.white,
-                height: 150,
-                child: Column(
-                  children: [
-                    Text(
-                      'Type : $nom',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Text('Stock Initial : $init $mesure'),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      width: 100,
-                      padding: EdgeInsets.all(3),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: Palette.greenColors),
-                      child: Row(
-                        children: [
-                          InkWell(
-                              onTap: () {
-                                setState(() {
-                                  count--;
-                                });
-                                print(count);
-                              },
-                              child: Icon(
-                                Icons.remove,
-                                color: Colors.white,
-                                size: 16,
-                              )),
-                          Expanded(
-                            child: Container(
-                              margin: EdgeInsets.symmetric(horizontal: 3),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 3, vertical: 2),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(3),
-                                  color: Colors.white),
-                              child: Center(
-                                child: Text(
-                                  count.toString(),
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 16),
-                                ),
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                              onTap: () {
-                                setState(() {
-                                  count++;
-                                });
-                              },
-                              child: Icon(
-                                Icons.add,
-                                color: Colors.white,
-                                size: 16,
-                              )),
-                        ],
-                      ),
-                    ),
-                  ],
+            content: Container(
+              alignment: Alignment.center,
+              color: Colors.white,
+              height: 150,
+              child: Text(
+                "Voulez vous supprimer $nom ?",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'HelveticaNeue',
                 ),
-              );
-            }),
+              ),
+            ),
           );
         });
   }

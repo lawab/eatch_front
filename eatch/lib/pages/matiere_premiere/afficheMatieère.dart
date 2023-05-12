@@ -63,7 +63,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
             ? Container(
                 alignment: Alignment.centerRight,
                 height: 80,
-                color: Color(0xFFFCEBD1),
+                color: Palette.yellowColor,
                 child: Row(
                   children: [
                     const SizedBox(
@@ -254,12 +254,18 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                   ),
                 ),
               ),
-        const SizedBox(
-          height: 5,
-        ),
+        ajout == true
+            ? const Divider(
+                height: 5,
+                color: Palette.yellowColor,
+              )
+            : const SizedBox(
+                height: 5,
+              ),
         Container(
-          height: ajout == false ? height - 175 : height - 400,
+          height: ajout == false ? height - 145 : height - 368,
           width: width - 20,
+          padding: const EdgeInsets.all(10),
           child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: 200,
@@ -555,12 +561,17 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                   ),
                 ),
               ),
-        const SizedBox(
-          height: 5,
-        ),
+        ajout == true
+            ? const Divider(
+                height: 5,
+                color: Palette.yellowColor,
+              )
+            : const SizedBox(
+                height: 5,
+              ),
         Container(
-          height: ajout == true ? height - 465 : height - 245, //85,
-          width: width - 20,
+          height: ajout == true ? height - 436 : height - 216,
+          width: width,
           child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: 200,

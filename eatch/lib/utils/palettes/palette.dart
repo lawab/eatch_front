@@ -5,7 +5,10 @@ class Palette {
   static const deleteColors = Color.fromARGB(255, 235, 24, 9);
   //static const primaryColor = Color(0xFFFB6D3B);
 
+  static const violetColor = Color(0xFF352150);
+  static const marronColor = Color(0xFF3C2014);
   static const secondaryColor = Color(0xFFFC8B63);
+  static const yellowColor = Color(0xFFF4B012);
 
   static const tertiaryColor = Color(0xFFFFF9F6);
 

@@ -1,9 +1,20 @@
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:eatch/pages/restaurant/afficheRestaurant.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
 import 'package:eatch/servicesAPI/getRestaurant.dart';
+import 'package:eatch/servicesAPI/multipart.dart';
 import 'package:eatch/utils/applayout.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http_parser/http_parser.dart' show MediaType;
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
-class RestaurantModification extends StatefulWidget {
+class RestaurantModification extends ConsumerStatefulWidget {
   Restaurant restaurant;
   RestaurantModification({Key? key, required this.restaurant})
       : super(key: key);
@@ -12,7 +23,8 @@ class RestaurantModification extends StatefulWidget {
   RestaurantModificationState createState() => RestaurantModificationState();
 }
 
-class RestaurantModificationState extends State<RestaurantModification> {
+class RestaurantModificationState
+    extends ConsumerState<RestaurantModification> {
   @override
   void initState() {
     donne();
@@ -32,6 +44,10 @@ class RestaurantModificationState extends State<RestaurantModification> {
   var villeController = TextEditingController();
   var adresseController = TextEditingController();
   var employeController = TextEditingController();
+  List<int> _selectedFile = [];
+  FilePickerResult? result;
+  PlatformFile? file;
+  bool filee = false;
 
   MediaQueryData mediaQueryData(BuildContext context) {
     return MediaQuery.of(context);
@@ -60,7 +76,7 @@ class RestaurantModificationState extends State<RestaurantModification> {
               Container(
                 alignment: Alignment.centerRight,
                 height: 80,
-                color: Color(0xFFFCEBD1),
+                color: Palette.yellowColor, //Color(0xFFFCEBD1),
                 child: Row(
                   children: [
                     const SizedBox(
@@ -257,52 +273,94 @@ class RestaurantModificationState extends State<RestaurantModification> {
                 height: 100,
                 child: Row(children: [
                   const SizedBox(
-                    width: 25,
-                  ),
-                  const Text('Image au préalable :'),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  Container(
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.0),
-                      //color: Colors.white,
-                      image: DecorationImage(
-                          image: NetworkImage(
-                              'http://13.39.81.126:4002${widget.restaurant.info!.logo.toString()}'),
-                          fit: BoxFit.cover),
-                      //image: AssetImage('eatch.jpg'), fit: BoxFit.cover),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 20,
+                    width: 50,
                   ),
                   Container(
                     height: 100,
                     width: 200,
-                    child: ElevatedButton.icon(
-                      icon: Icon(Icons.add_a_photo),
-                      onPressed: (() {}),
-                      label: Text('Modifier'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Palette.primaryColor,
-                        minimumSize: Size(200, 70),
-                        maximumSize: Size(200, 100),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: InkWell(
+                      onTap: () async {
+                        /////////////////////
+                        result = await FilePicker.platform.pickFiles(
+                            type: FileType.custom,
+                            allowedExtensions: [
+                              "png",
+                              "jpg",
+                              "jpeg",
+                            ]);
+                        if (result != null) {
+                          file = result!.files.single;
+
+                          Uint8List fileBytes =
+                              result!.files.single.bytes as Uint8List;
+                          //print(base64Encode(fileBytes));
+                          //List<int>
+                          _selectedFile = fileBytes;
+                          setState(() {
+                            filee = true;
+                          });
+                        } else {
+                          setState(() {
+                            filee = false;
+                          });
+                        }
+                        ////////////////////
+                      },
+                      //splashColor: Colors.brown.withOpacity(0.5),
+                      child: Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15.0),
+                          color: Palette.greenColors,
+                          image: DecorationImage(
+                              opacity: 100,
+                              image: NetworkImage(
+                                  'http://13.39.81.126:4002${widget.restaurant.info!.logo.toString()}'),
+                              fit: BoxFit.cover),
+                        ),
+                        child: const Text(
+                          "Modifier",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Colors.white),
+                        ),
                       ),
                     ),
-                  )
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  filee == true
+                      ? Container(
+                          height: 100,
+                          width: 100,
+                          alignment: Alignment.center,
+                          child: Text(file!.name),
+                        )
+                      : Container(
+                          height: 100,
+                          width: 100,
+                        ),
                 ]),
               ),
               const SizedBox(
                 height: 80,
               ),
               ElevatedButton(
-                onPressed: (() {}),
-                child: Text('Modifier'),
+                onPressed: (() {
+                  modificationRestaurant(
+                      context,
+                      nomController.text,
+                      villeController.text,
+                      adresseController.text,
+                      _selectedFile,
+                      result,
+                      widget.restaurant.sId.toString());
+                }),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Palette.primaryColor,
                   minimumSize: Size(150, 50),
@@ -310,11 +368,94 @@ class RestaurantModificationState extends State<RestaurantModification> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                 ),
+                child: const Text('Modifier'),
               )
             ],
           ),
         ),
       ),
     );
+  }
+
+  Future<void> modificationRestaurant(
+      contextt,
+      String nomRestaurant,
+      String villeRestaurant,
+      String adresseRestaurant,
+      selectedFile,
+      result,
+      idChoisie) async {
+    ////////////
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var id = prefs.getString('IdUser').toString();
+    var token = prefs.getString('token');
+
+    var url =
+        Uri.parse("http://13.39.81.126:4002/api/restaurants/update/$idChoisie");
+    final request = MultipartRequest(
+      'PUT',
+      url,
+      onProgress: (int bytes, int total) {
+        final progress = bytes / total;
+        print('progress: $progress ($bytes/$total)');
+      },
+    );
+    var json = {
+      'restaurant_name': nomRestaurant,
+      'address': adresseRestaurant,
+      'town': villeRestaurant,
+      '_creator': id,
+    };
+    var body = jsonEncode(json);
+
+    request.headers.addAll({
+      "body": body,
+    });
+
+    request.fields['form_key'] = 'form_value';
+    request.headers['authorization'] = 'Bearer $token';
+    if (result != null) {
+      request.files.add(await http.MultipartFile.fromBytes('file', selectedFile,
+          contentType: MediaType('application', 'octet-stream'),
+          filename: result.files.first.name));
+    }
+
+    print("RESPENSE SEND STEAM FILE REQ");
+    //var responseString = await streamedResponse.stream.bytesToString();
+    var response = await request.send();
+    print("Upload Response" + response.toString());
+    print(response.statusCode);
+    print(request.headers);
+
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        await response.stream.bytesToString().then((value) {
+          print(value);
+        });
+        //stopMessage();
+        //finishWorking();
+        showTopSnackBar(
+          Overlay.of(contextt)!,
+          const CustomSnackBar.info(
+            backgroundColor: Colors.green,
+            message: "Restaurant Modifié",
+          ),
+        );
+        ref.refresh(getDataRsetaurantFuture);
+        Navigator.pop(contextt);
+      } else {
+        showTopSnackBar(
+          Overlay.of(contextt)!,
+          const CustomSnackBar.info(
+            backgroundColor: Colors.red,
+            message: "Erreur de création",
+          ),
+        );
+        print("Error Create Programme  !!!");
+      }
+    } catch (e) {
+      throw e;
+    }
   }
 }

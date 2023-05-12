@@ -8,6 +8,7 @@ import 'package:eatch/pages/menus/presentation/menu.dart';
 import 'package:eatch/pages/menus/presentation/menu_grid.dart';
 import 'package:eatch/pages/promotion/affichePromotion.dart';
 import 'package:eatch/pages/restaurant/afficheRestaurant.dart';
+import 'package:eatch/servicesAPI/deconnexion.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -199,12 +200,7 @@ class _NavigationState extends State<Navigation> {
               index = 7;
               prefs.setInt('index', 0);
             });
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => const Authentification(),
-              ),
-            );
+            deconnexionUser(context);
           },
         ),
       ],

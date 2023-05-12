@@ -63,9 +63,8 @@ class _AppLayoutState extends State<AppLayout> {
                 decoration: const BoxDecoration(
                   border: Border(
                     right: BorderSide(
-                      width: 4,
-                      color: Palette.fourthColor,
-                    ),
+                        width: 4, color: Palette.yellowColor //fourthColor,
+                        ),
                   ),
                   color: Palette.primaryBackgroundColor,
                 ),
@@ -88,14 +87,18 @@ class _AppLayoutState extends State<AppLayout> {
             Expanded(
               flex: 5,
               child: Padding(
-                padding: const EdgeInsets.only(right: 10.0, bottom: 20.0),
+                padding: const EdgeInsets.only(right: 0.0, bottom: 0.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    const SizedBox(
+                      height: 60,
+                      child: BarreHaute(),
+                    ),
                     /**
                         !BARRE HAUTE 
                                       **/
-                    const BarreHaute(),
+
                     Expanded(child: widget.content),
                   ],
                 ),
@@ -116,7 +119,10 @@ class _AppLayoutState extends State<AppLayout> {
             /**
                         !BARRE HAUTE 
                                       **/
-            const BarreHaute(),
+            const SizedBox(
+              height: 60,
+              child: BarreHaute(),
+            ),
             /**
             !BARRE DE NAVIGATION VERTICAL 
                                       **/
@@ -128,7 +134,7 @@ class _AppLayoutState extends State<AppLayout> {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(0.0),
                 child: widget.content,
               ),
             ),

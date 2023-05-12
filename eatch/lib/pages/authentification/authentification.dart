@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:html';
 
 import 'package:eatch/pages/dashboard/dashboard_manager.dart';
 import 'package:eatch/pages/restaurantAccueil.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -642,21 +644,33 @@ class AuthentificationState extends State<Authentification> {
 
   Future<void> login(BuildContext context, email, pass) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String url = "http://13.39.81.126:4001/api/users/login";
-    //13.39.81.126
+
+    final String response = await rootBundle.loadString('assets/server.json');
+    final data = await json.decode(response);
+    String adress_url = data['ip'] + ":" + data['port'];
+
+    prefs.setString('ipport', adress_url);
+    String url = "http://$adress_url/api/users/login"; //13.39.81.126:4001
     print(url);
+    print(email);
+    print(pass);
 
     if (pass.isNotEmpty && email.isNotEmpty) {
-      var response = await http.post(Uri.parse(url),
-          body: ({
-            'email': email,
-            'password': pass,
-          }));
+      var response = await http.post(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'email': email,
+          'password': pass,
+        }),
+      );
       print(response.statusCode);
 
       if (response.statusCode == 200) {
         var data = json.decode(response.body);
-        print(data);
+
         prefs.setString('IdUser', data['user']['_id']);
         prefs.setString('token', data['accessToken']);
 
