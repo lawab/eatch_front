@@ -1,6 +1,3 @@
-import 'package:eatch/pages/users/application/search_users_text_field.dart';
-import 'package:eatch/pages/users/domain/user.dart';
-import 'package:eatch/pages/users/infrastructure/users_data.dart';
 import 'package:eatch/servicesAPI/getUser.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
@@ -26,14 +23,14 @@ class ManagerUsersState extends ConsumerState<ManagerUsers> {
     dummySearchList.addAll(viewModel.listManager);
     if (query.isNotEmpty) {
       List<User> dummyListData = [];
-      dummySearchList.forEach((item) {
-        if (item.userNom!.contains(query) ||
-            item.userPrenom!.contains(query) ||
-            item.userUserNom!.contains(query)) {
+      for (var item in dummySearchList) {
+        if (item.lastName!.contains(query) ||
+            item.firstName!.contains(query) ||
+            item.username!.contains(query)) {
           dummyListData.add(item);
           //print(dummyListData);
         }
-      });
+      }
       setState(() {
         search = true;
         UserSearch.clear();
@@ -54,7 +51,7 @@ class ManagerUsersState extends ConsumerState<ManagerUsers> {
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
               vertical: 20,
             ),
             child: SizedBox(
@@ -71,8 +68,9 @@ class ManagerUsersState extends ConsumerState<ManagerUsers> {
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Palette.fourthColor,
-                  contentPadding: EdgeInsets.all(0),
-                  prefixIcon: Icon(Icons.search, color: Palette.primaryColor),
+                  contentPadding: const EdgeInsets.all(0),
+                  prefixIcon:
+                      const Icon(Icons.search, color: Palette.primaryColor),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(50),
                     borderSide: BorderSide.none,
@@ -87,47 +85,47 @@ class ManagerUsersState extends ConsumerState<ManagerUsers> {
             ),
           ),
           Card(
-            child: Container(
+            child: SizedBox(
               height: 50,
-              child: Row(children: [
-                const Expanded(
+              child: Row(children: const [
+                Expanded(
                     child: Center(
                   child: Text(
                     'Nom',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 )),
-                const Expanded(
+                Expanded(
                     child: Center(
                   child: Text(
                     'Prénom',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 )),
-                const Expanded(
+                Expanded(
                     child: Center(
                   child: Text(
                     "Nom d'utilisateur",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 )),
-                const Expanded(
+                Expanded(
                     child: Center(
                   child: Text(
                     'Email',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 )),
-                const Expanded(
+                Expanded(
                     child: Center(
                   child: Text(
                     'Role',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 )),
-                Container(
+                SizedBox(
                   width: 100,
-                  child: const Center(
+                  child: Center(
                     child: Text(
                       'Actions',
                       style: TextStyle(fontWeight: FontWeight.bold),
@@ -138,124 +136,61 @@ class ManagerUsersState extends ConsumerState<ManagerUsers> {
             ),
           ),
           search == false
-              ? Container(
+              ? SizedBox(
                   height: MediaQuery.of(context).size.height - 403,
                   child: ListView.builder(
                       itemCount: viewModel.listManager.length,
                       itemBuilder: ((context, index) {
                         return Card(
-                          child: Container(
+                          child: SizedBox(
                             height: 50,
                             child: Row(children: [
                               Expanded(
                                   child: Center(
-                                child:
-                                    Text(viewModel.listManager[index].userNom!),
-                              )),
-                              Expanded(
-                                  child: Center(
                                 child: Text(
-                                    viewModel.listManager[index].userPrenom!),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text(
-                                    viewModel.listManager[index].userUserNom!),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text(
-                                    viewModel.listManager[index].userEmail!),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text(
-                                    viewModel.listManager[index].userRole!),
-                              )),
-                              Container(
-                                width: 100,
-                                child: Center(
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                          child: IconButton(
-                                        icon: Icon(Icons.edit),
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                              return ModificationUser(
-                                                userEmail: viewModel
-                                                    .listManager[index]
-                                                    .userEmail!,
-                                                userNom: viewModel
-                                                    .listManager[index]
-                                                    .userNom!,
-                                                userPrenom: viewModel
-                                                    .listManager[index]
-                                                    .userEmail!,
-                                                userRole: viewModel
-                                                    .listManager[index]
-                                                    .userRole!,
-                                                userUserNom: viewModel
-                                                    .listManager[index]
-                                                    .userUserNom!,
-                                              );
-                                            }),
-                                          );
-                                        },
-                                      )),
-                                      Expanded(
-                                          child: IconButton(
-                                        icon: const Icon(
-                                          Icons.delete,
-                                          color: Palette.deleteColors,
-                                        ),
-                                        onPressed: () {
-                                          dialogDelete(viewModel
-                                              .listManager[index].userNom!);
-                                        },
-                                      ))
-                                    ],
-                                  ),
+                                  viewModel.listManager[index].lastName!,
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                  softWrap: false,
                                 ),
-                              ),
-                            ]),
-                          ),
-                        );
-                      })),
-                )
-              : Container(
-                  height: MediaQuery.of(context).size.height - 403,
-                  child: ListView.builder(
-                      itemCount: UserSearch.length,
-                      itemBuilder: ((context, index) {
-                        return Card(
-                          child: Container(
-                            height: 50,
-                            child: Row(children: [
-                              Expanded(
-                                  child: Center(
-                                child: Text(UserSearch[index].userNom!),
                               )),
                               Expanded(
                                   child: Center(
-                                child: Text(UserSearch[index].userPrenom!),
+                                child: Text(
+                                  viewModel.listManager[index].firstName!,
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
                               )),
                               Expanded(
                                   child: Center(
-                                child: Text(UserSearch[index].userUserNom!),
+                                child: Text(
+                                  viewModel.listManager[index].username!,
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
                               )),
                               Expanded(
                                   child: Center(
-                                child: Text(UserSearch[index].userEmail!),
+                                child: Text(
+                                  viewModel.listManager[index].email!,
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
                               )),
                               Expanded(
                                   child: Center(
-                                child: Text(UserSearch[index].userRole!),
+                                child: Text(
+                                  viewModel.listManager[index].role!,
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
                               )),
-                              Container(
+                              SizedBox(
                                 width: 100,
                                 child: Center(
                                   child: Row(
@@ -269,16 +204,121 @@ class ManagerUsersState extends ConsumerState<ManagerUsers> {
                                             MaterialPageRoute(
                                                 builder: (context) {
                                               return ModificationUser(
-                                                userEmail: UserSearch[index]
-                                                    .userEmail!,
+                                                userEmail: viewModel
+                                                    .listManager[index].email!,
+                                                userNom: viewModel
+                                                    .listManager[index]
+                                                    .lastName!,
+                                                userPrenom: viewModel
+                                                    .listManager[index].email!,
+                                                userRole: viewModel
+                                                    .listManager[index].role!,
+                                                userUserNom: viewModel
+                                                    .listManager[index]
+                                                    .username!,
+                                              );
+                                            }),
+                                          );
+                                        },
+                                      )),
+                                      Expanded(
+                                          child: IconButton(
+                                        icon: const Icon(
+                                          Icons.delete,
+                                          color: Palette.deleteColors,
+                                        ),
+                                        onPressed: () {
+                                          dialogDelete(viewModel
+                                              .listManager[index].lastName!);
+                                        },
+                                      ))
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ]),
+                          ),
+                        );
+                      })),
+                )
+              : SizedBox(
+                  height: MediaQuery.of(context).size.height - 403,
+                  child: ListView.builder(
+                      itemCount: UserSearch.length,
+                      itemBuilder: ((context, index) {
+                        return Card(
+                          child: SizedBox(
+                            height: 50,
+                            child: Row(children: [
+                              Expanded(
+                                  child: Center(
+                                child: Text(
+                                  UserSearch[index].lastName!,
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
+                              )),
+                              Expanded(
+                                  child: Center(
+                                child: Text(
+                                  UserSearch[index].firstName!,
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
+                              )),
+                              Expanded(
+                                  child: Center(
+                                child: Text(
+                                  UserSearch[index].username!,
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
+                              )),
+                              Expanded(
+                                  child: Center(
+                                child: Text(
+                                  UserSearch[index].email!,
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
+                              )),
+                              Expanded(
+                                  child: Center(
+                                child: Text(
+                                  UserSearch[index].role!,
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
+                              )),
+                              SizedBox(
+                                width: 100,
+                                child: Center(
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                          child: IconButton(
+                                        icon: const Icon(Icons.edit),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                              return ModificationUser(
+                                                userEmail:
+                                                    UserSearch[index].email!,
                                                 userNom:
-                                                    UserSearch[index].userNom!,
-                                                userPrenom: UserSearch[index]
-                                                    .userEmail!,
+                                                    UserSearch[index].lastName!,
+                                                userPrenom:
+                                                    UserSearch[index].email!,
                                                 userRole:
-                                                    UserSearch[index].userRole!,
-                                                userUserNom: UserSearch[index]
-                                                    .userUserNom!,
+                                                    UserSearch[index].role!,
+                                                userUserNom:
+                                                    UserSearch[index].username!,
                                               );
                                             }),
                                           );
@@ -292,7 +332,7 @@ class ManagerUsersState extends ConsumerState<ManagerUsers> {
                                         ),
                                         onPressed: () {
                                           dialogDelete(
-                                              UserSearch[index].userNom!);
+                                              UserSearch[index].lastName!);
                                         },
                                       ))
                                     ],
