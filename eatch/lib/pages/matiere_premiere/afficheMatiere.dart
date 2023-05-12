@@ -147,7 +147,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                         Container(
                           alignment: Alignment.centerRight,
                           height: 50,
-                          color: Palette.yellowColor,
+                          color: Palette.secondaryColor,
                           child: Row(
                             children: const [
                               SizedBox(
