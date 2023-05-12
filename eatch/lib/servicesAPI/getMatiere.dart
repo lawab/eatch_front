@@ -26,7 +26,7 @@ class GetDataMatiereFuture extends ChangeNotifier {
 
     try {
       http.Response response = await http.get(
-        Uri.parse('http://13.39.81.126:4008/api/materials/fetch/all'),
+        Uri.parse('http://13.39.81.126:5000/api/materials/fetch/all'),
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',
@@ -35,7 +35,7 @@ class GetDataMatiereFuture extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        print("###################################");
+
         print(response.body);
         for (int i = 0; i < data.length; i++) {
           if (data[i]["deletedAt"] == null) {
