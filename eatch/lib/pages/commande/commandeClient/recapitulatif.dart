@@ -54,9 +54,11 @@ class RecapitulatifState extends ConsumerState<Recapitulatif> {
                     itemBuilder: ((context, index) {
                       return Container(
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Colors.grey,
-                                strokeAlign: StrokeAlign.center)),
+                          border: Border.all(
+                            color: Colors.grey,
+                            //strokeAlign: StrokeAlign.center,
+                          ),
+                        ),
                         child: Row(
                           children: [
                             Container(
