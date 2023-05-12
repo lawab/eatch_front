@@ -75,7 +75,7 @@ class _MenuState extends ConsumerState<Menu> {
                 ? Container(
                     alignment: Alignment.centerRight,
                     height: 80,
-                    color: Color(0xFFFCEBD1),
+                    color: Palette.yellowColor,
                     child: Row(
                       children: [
                         const SizedBox(
@@ -104,239 +104,20 @@ class _MenuState extends ConsumerState<Menu> {
                     ),
                   )
                 : Container(
-                    height: 300,
-                    color: Palette.secondaryBackgroundColor,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Container(
-                            alignment: Alignment.centerRight,
-                            height: 50,
-                            color: Color(0xFFFCEBD1),
-                            child: Row(
-                              children: const [
-                                SizedBox(
-                                  width: 50,
-                                ),
-                                Text('Création Menu'),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width - 50,
-                            child: TextFormField(
-                              controller: nomcontroller,
-                              keyboardType: TextInputType.emailAddress,
-                              onChanged: (value) {},
-                              decoration: InputDecoration(
-                                  hoverColor: Palette.primaryBackgroundColor,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 42, vertical: 20),
-                                  filled: true,
-                                  fillColor: Palette.primaryBackgroundColor,
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: const BorderSide(
-                                        color:
-                                            Palette.secondaryBackgroundColor),
-                                    gapPadding: 10,
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: const BorderSide(
-                                        color:
-                                            Palette.secondaryBackgroundColor),
-                                    gapPadding: 10,
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: const BorderSide(
-                                        color:
-                                            Palette.secondaryBackgroundColor),
-                                    gapPadding: 10,
-                                  ),
-                                  labelText: "Nom",
-                                  hintText: "Entrer le nom du menu",
-                                  // If  you are using latest version of flutter then lable text and hint text shown like this
-                                  // if you r using flutter less then 1.20.* then maybe this is not working properly
-                                  floatingLabelBehavior:
-                                      FloatingLabelBehavior.always,
-                                  suffixIcon: Icon(Icons.food_bank)),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width - 50,
-                            height: 200,
-                            child: GridView.builder(
-                              gridDelegate:
-                                  const SliverGridDelegateWithMaxCrossAxisExtent(
-                                      maxCrossAxisExtent: 500,
-                                      childAspectRatio: 3 / 2,
-                                      crossAxisSpacing: 20,
-                                      mainAxisSpacing: 20,
-                                      mainAxisExtent: 50),
-                              itemCount: categoriee.length,
-                              itemBuilder: (context, index) {
-                                List<String> listProduits = [];
-                                String? produit;
-                                final inputController = TextEditingController();
-                                _controllerInput.add(inputController);
-                                for (int i = 0;
-                                    i < categoriee[index].produits!.length;
-                                    i++) {
-                                  listProduits.add(
-                                      categoriee[index].produits![i].title!);
-                                }
-
-                                return Container(
-                                  height: 50,
-                                  child: DropdownButtonFormField(
-                                    decoration: InputDecoration(
-                                      hoverColor:
-                                          Palette.primaryBackgroundColor,
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 42, vertical: 20),
-                                      filled: true,
-                                      fillColor: Palette.primaryBackgroundColor,
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                        borderSide: const BorderSide(
-                                            color: Palette
-                                                .secondaryBackgroundColor),
-                                        gapPadding: 10,
-                                      ),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                        borderSide: const BorderSide(
-                                            color: Palette
-                                                .secondaryBackgroundColor),
-                                        gapPadding: 10,
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                        borderSide: const BorderSide(
-                                            color: Palette
-                                                .secondaryBackgroundColor),
-                                        gapPadding: 10,
-                                      ),
-                                      floatingLabelBehavior:
-                                          FloatingLabelBehavior.always,
-                                    ),
-                                    value: produit,
-                                    hint: Text(
-                                      categoriee[index].title!,
-                                    ),
-                                    isExpanded: true,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        produit = value!;
-
-                                        inputController.text = value;
-                                      });
-                                    },
-                                    onSaved: (value) {
-                                      setState(() {
-                                        produit = value;
-                                      });
-                                    },
-                                    items: listProduits.map((String val) {
-                                      return DropdownMenuItem(
-                                        value: val,
-                                        child: Text(
-                                          val,
-                                        ),
-                                      );
-                                    }).toList(),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 50,
-                          ),
-                          Container(
-                            alignment: Alignment.centerRight,
-                            child: Container(
-                              width: 350,
-                              child: Row(children: [
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                ElevatedButton(
-                                  onPressed: (() {
-                                    for (int i = 0;
-                                        i < _controllerInput.length;
-                                        i++) {
-                                      print(i);
-                                      if (_controllerInput[i].text.isNotEmpty) {
-                                        print(_controllerInput[i].text);
-                                      }
-                                    }
-                                    setState(() {
-                                      ajout = false;
-                                    });
-                                  }),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Palette.primaryColor,
-                                    minimumSize: Size(150, 50),
-                                    maximumSize: Size(200, 70),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                  ),
-                                  child: const Text('Enregistrer'),
-                                ),
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                                ElevatedButton(
-                                  onPressed: (() {
-                                    setState(() {
-                                      ajout = false;
-                                    });
-                                  }),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        Palette.secondaryBackgroundColor,
-                                    minimumSize: Size(150, 50),
-                                    maximumSize: Size(200, 70),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                  ),
-                                  child: const Text(
-                                    'Annuler',
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                ),
-                              ]),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    height: 400,
+                    child: Creation(categoriee, height, width),
                   ),
             ajout == true
                 ? const Divider(
                     height: 5,
-                    color: Colors.black,
+                    color: Palette.yellowColor,
                   )
                 : const SizedBox(
                     height: 5,
                   ),
             Container(
-              height: ajout == false ? height - 175 : height - 395,
+              height: ajout == false ? height - 145 : height - 465,
+              padding: EdgeInsets.all(10),
               child: SingleChildScrollView(
                 child: GridView.builder(
                     physics: const NeverScrollableScrollPhysics(),
@@ -347,12 +128,10 @@ class _MenuState extends ConsumerState<Menu> {
                             maxCrossAxisExtent: 500,
                             childAspectRatio: 3 / 2,
                             crossAxisSpacing: 20,
-                            mainAxisSpacing: 50,
+                            mainAxisSpacing: 30,
                             mainAxisExtent: 200),
                     itemBuilder: (context, index) {
                       return Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 50, vertical: 18),
                         child: MenuCard(
                           description: menusList[index].description,
                           imageUrl: menusList[index].imageUrl,
@@ -382,13 +161,13 @@ class _MenuState extends ConsumerState<Menu> {
                 ? Container(
                     alignment: Alignment.centerRight,
                     height: 80,
-                    color: Color(0xFFFCEBD1),
+                    color: Palette.yellowColor,
                     child: Row(
                       children: [
                         const SizedBox(
                           width: 50,
                         ),
-                        Text('Menusss'),
+                        const Text('Menus'),
                         Expanded(child: Container()),
                         ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
@@ -411,239 +190,19 @@ class _MenuState extends ConsumerState<Menu> {
                     ),
                   )
                 : Container(
-                    height: 300,
-                    color: Palette.secondaryBackgroundColor,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Container(
-                            alignment: Alignment.centerRight,
-                            height: 50,
-                            color: Color(0xFFFCEBD1),
-                            child: Row(
-                              children: const [
-                                SizedBox(
-                                  width: 50,
-                                ),
-                                Text('Création Menu'),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width - 50,
-                            child: TextFormField(
-                              controller: nomcontroller,
-                              keyboardType: TextInputType.emailAddress,
-                              onChanged: (value) {},
-                              decoration: InputDecoration(
-                                  hoverColor: Palette.primaryBackgroundColor,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 42, vertical: 20),
-                                  filled: true,
-                                  fillColor: Palette.primaryBackgroundColor,
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: const BorderSide(
-                                        color:
-                                            Palette.secondaryBackgroundColor),
-                                    gapPadding: 10,
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: const BorderSide(
-                                        color:
-                                            Palette.secondaryBackgroundColor),
-                                    gapPadding: 10,
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: const BorderSide(
-                                        color:
-                                            Palette.secondaryBackgroundColor),
-                                    gapPadding: 10,
-                                  ),
-                                  labelText: "Nom",
-                                  hintText: "Entrer le nom du menu",
-                                  // If  you are using latest version of flutter then lable text and hint text shown like this
-                                  // if you r using flutter less then 1.20.* then maybe this is not working properly
-                                  floatingLabelBehavior:
-                                      FloatingLabelBehavior.always,
-                                  suffixIcon: Icon(Icons.food_bank)),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width - 50,
-                            height: 200,
-                            child: GridView.builder(
-                              gridDelegate:
-                                  const SliverGridDelegateWithMaxCrossAxisExtent(
-                                      maxCrossAxisExtent: 500,
-                                      childAspectRatio: 3 / 2,
-                                      crossAxisSpacing: 20,
-                                      mainAxisSpacing: 20,
-                                      mainAxisExtent: 50),
-                              itemCount: categoriee.length,
-                              itemBuilder: (context, index) {
-                                List<String> listProduits = [];
-                                String? produit;
-                                final inputController = TextEditingController();
-                                _controllerInput.add(inputController);
-                                for (int i = 0;
-                                    i < categoriee[index].produits!.length;
-                                    i++) {
-                                  listProduits.add(
-                                      categoriee[index].produits![i].title!);
-                                }
-
-                                return Container(
-                                  height: 50,
-                                  child: DropdownButtonFormField(
-                                    decoration: InputDecoration(
-                                      hoverColor:
-                                          Palette.primaryBackgroundColor,
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 42, vertical: 20),
-                                      filled: true,
-                                      fillColor: Palette.primaryBackgroundColor,
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                        borderSide: const BorderSide(
-                                            color: Palette
-                                                .secondaryBackgroundColor),
-                                        gapPadding: 10,
-                                      ),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                        borderSide: const BorderSide(
-                                            color: Palette
-                                                .secondaryBackgroundColor),
-                                        gapPadding: 10,
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                        borderSide: const BorderSide(
-                                            color: Palette
-                                                .secondaryBackgroundColor),
-                                        gapPadding: 10,
-                                      ),
-                                      floatingLabelBehavior:
-                                          FloatingLabelBehavior.always,
-                                    ),
-                                    value: produit,
-                                    hint: Text(
-                                      categoriee[index].title!,
-                                    ),
-                                    isExpanded: true,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        produit = value!;
-
-                                        inputController.text = value;
-                                      });
-                                    },
-                                    onSaved: (value) {
-                                      setState(() {
-                                        produit = value;
-                                      });
-                                    },
-                                    items: listProduits.map((String val) {
-                                      return DropdownMenuItem(
-                                        value: val,
-                                        child: Text(
-                                          val,
-                                        ),
-                                      );
-                                    }).toList(),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 50,
-                          ),
-                          Container(
-                            alignment: Alignment.centerRight,
-                            child: Container(
-                              width: 350,
-                              child: Row(children: [
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                ElevatedButton(
-                                  onPressed: (() {
-                                    for (int i = 0;
-                                        i < _controllerInput.length;
-                                        i++) {
-                                      print(i);
-                                      if (_controllerInput[i].text.isNotEmpty) {
-                                        print(_controllerInput[i].text);
-                                      }
-                                    }
-                                    setState(() {
-                                      ajout = false;
-                                    });
-                                  }),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Palette.primaryColor,
-                                    minimumSize: Size(150, 50),
-                                    maximumSize: Size(200, 70),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                  ),
-                                  child: const Text('Enregistrer'),
-                                ),
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                                ElevatedButton(
-                                  onPressed: (() {
-                                    setState(() {
-                                      ajout = false;
-                                    });
-                                  }),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        Palette.secondaryBackgroundColor,
-                                    minimumSize: Size(150, 50),
-                                    maximumSize: Size(200, 70),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                  ),
-                                  child: const Text(
-                                    'Annuler',
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                ),
-                              ]),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    height: 400,
+                    child: Creation(categoriee, height, width),
                   ),
             ajout == true
                 ? const Divider(
                     height: 5,
-                    color: Colors.black,
+                    color: Palette.yellowColor,
                   )
                 : const SizedBox(
                     height: 5,
                   ),
             Container(
-              height: ajout == false ? height - 250 : height - 470,
+              height: ajout == false ? height - 216 : height - 536,
               child: SingleChildScrollView(
                 child: GridView.builder(
                     physics: const NeverScrollableScrollPhysics(),
@@ -658,8 +217,6 @@ class _MenuState extends ConsumerState<Menu> {
                             mainAxisExtent: 200),
                     itemBuilder: (context, index) {
                       return Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 50, vertical: 18),
                         child: MenuCard(
                           description: menusList[index].description,
                           imageUrl: menusList[index].imageUrl,
@@ -670,6 +227,217 @@ class _MenuState extends ConsumerState<Menu> {
                       );
                     }),
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget Creation(List<Categorie> categoriee, heigth, width) {
+    return Container(
+      height: 300,
+      color: Palette.secondaryBackgroundColor,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              alignment: Alignment.centerRight,
+              height: 50,
+              color: Color(0xFFFCEBD1),
+              child: Row(
+                children: const [
+                  SizedBox(
+                    width: 50,
+                  ),
+                  Text('Création Menu'),
+                  SizedBox(
+                    width: 20,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Container(
+              width: width - 50,
+              child: TextFormField(
+                controller: nomcontroller,
+                keyboardType: TextInputType.emailAddress,
+                onChanged: (value) {},
+                decoration: InputDecoration(
+                    hoverColor: Palette.primaryBackgroundColor,
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 42, vertical: 20),
+                    filled: true,
+                    fillColor: Palette.primaryBackgroundColor,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(
+                          color: Palette.secondaryBackgroundColor),
+                      gapPadding: 10,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(
+                          color: Palette.secondaryBackgroundColor),
+                      gapPadding: 10,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(
+                          color: Palette.secondaryBackgroundColor),
+                      gapPadding: 10,
+                    ),
+                    labelText: "Nom",
+                    hintText: "Entrer le nom du menu",
+                    // If  you are using latest version of flutter then lable text and hint text shown like this
+                    // if you r using flutter less then 1.20.* then maybe this is not working properly
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    suffixIcon: Icon(Icons.food_bank)),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              width: width - 50,
+              height: 200,
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 500,
+                    childAspectRatio: 3 / 2,
+                    crossAxisSpacing: 20,
+                    mainAxisSpacing: 20,
+                    mainAxisExtent: 50),
+                itemCount: categoriee.length,
+                itemBuilder: (context, index) {
+                  List<String> listProduits = [];
+                  String? produit;
+                  final inputController = TextEditingController();
+                  _controllerInput.add(inputController);
+                  for (int i = 0; i < categoriee[index].produits!.length; i++) {
+                    listProduits.add(categoriee[index].produits![i].title!);
+                  }
+
+                  return Container(
+                    height: 50,
+                    child: DropdownButtonFormField(
+                      decoration: InputDecoration(
+                        hoverColor: Palette.primaryBackgroundColor,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 42, vertical: 20),
+                        filled: true,
+                        fillColor: Palette.primaryBackgroundColor,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(
+                              color: Palette.secondaryBackgroundColor),
+                          gapPadding: 10,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(
+                              color: Palette.secondaryBackgroundColor),
+                          gapPadding: 10,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(
+                              color: Palette.secondaryBackgroundColor),
+                          gapPadding: 10,
+                        ),
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                      value: produit,
+                      hint: Text(
+                        categoriee[index].title!,
+                      ),
+                      isExpanded: true,
+                      onChanged: (value) {
+                        setState(() {
+                          produit = value!;
+
+                          inputController.text = value;
+                        });
+                      },
+                      onSaved: (value) {
+                        setState(() {
+                          produit = value;
+                        });
+                      },
+                      items: listProduits.map((String val) {
+                        return DropdownMenuItem(
+                          value: val,
+                          child: Text(
+                            val,
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(
+              height: 40,
+            ),
+            Container(
+              alignment: Alignment.centerRight,
+              child: Container(
+                width: 350,
+                child: Row(children: [
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  ElevatedButton(
+                    onPressed: (() {
+                      for (int i = 0; i < _controllerInput.length; i++) {
+                        print(i);
+                        if (_controllerInput[i].text.isNotEmpty) {
+                          print(_controllerInput[i].text);
+                        }
+                      }
+                      setState(() {
+                        ajout = false;
+                      });
+                    }),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Palette.primaryColor,
+                      minimumSize: Size(150, 50),
+                      maximumSize: Size(200, 70),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                    child: const Text('Enregistrer'),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  ElevatedButton(
+                    onPressed: (() {
+                      setState(() {
+                        ajout = false;
+                      });
+                    }),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Palette.secondaryBackgroundColor,
+                      minimumSize: Size(150, 50),
+                      maximumSize: Size(200, 70),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                    child: const Text(
+                      'Annuler',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ),
+                ]),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
             ),
           ],
         ),

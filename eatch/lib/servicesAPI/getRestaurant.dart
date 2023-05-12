@@ -22,7 +22,7 @@ class GetDataRsetaurantFuture extends ChangeNotifier {
     var token = prefs.getString('token');
     try {
       http.Response response = await http.get(
-        Uri.parse('http://13.39.81.126:4002/api/restaurants/fetch/all'),
+        Uri.parse('http://13.39.81.126:5000/api/restaurants/fetch/all'), //4002
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',
@@ -33,7 +33,7 @@ class GetDataRsetaurantFuture extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        print(data);
+        //print(data);
         for (int i = 0; i < data.length; i++) {
           if (data[i]['deletedAt'] == null) {
             listRsetaurant.add(Restaurant.fromJson(data[i]));

@@ -1,24 +1,9 @@
-import 'dart:io';
-import 'dart:typed_data';
-import 'dart:ui';
 import 'package:eatch/pages/dashboard/dashboard_manager.dart';
-import 'package:eatch/pages/restaurant/detailRestaurant.dart';
-import 'package:eatch/servicesAPI/multipart.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:http/http.dart' as http;
-
-import 'package:eatch/pages/restaurant/modificationRestaurant.dart';
 import 'package:eatch/servicesAPI/getRestaurant.dart';
-import 'package:eatch/utils/applayout.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:html' as h;
-import 'package:dio/dio.dart' as dio;
-import 'package:http_parser/http_parser.dart' show MediaType;
-import 'dart:convert';
-import 'package:http_parser/http_parser.dart';
 
 class RestaurantAccueil extends ConsumerStatefulWidget {
   const RestaurantAccueil({Key? key}) : super(key: key);
@@ -49,11 +34,12 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
     final viewModel = ref.watch(getDataRsetaurantFuture);
 
     return Scaffold(
-      backgroundColor: Palette.fourthColor,
+      backgroundColor: Palette.yellowColor, //Palette.fourthColor,
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width - 20,
         alignment: Alignment.center,
+<<<<<<< HEAD
         child: Container(
           child: ListView.builder(
             itemCount: viewModel.listRsetaurant.length,
@@ -69,24 +55,58 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
                           viewModel.listRsetaurant[index].restaurantName!,
                           style: const TextStyle(
                               fontSize: 40, fontWeight: FontWeight.bold),
+=======
+        child: Card(
+          color: Palette.primaryColor,
+          child: Container(
+            height: MediaQuery.of(context).size.height - 100,
+            width: MediaQuery.of(context).size.width / 2,
+            alignment: Alignment.center,
+            child: ListView.builder(
+              itemCount: viewModel.listRsetaurant.length,
+              itemBuilder: ((context, index) {
+                return InkWell(
+                  child: Container(
+                    height: MediaQuery.of(context).size.height / 4,
+                    child: Column(children: [
+                      Container(
+                        height: MediaQuery.of(context).size.height / 4 - 50,
+                        width: MediaQuery.of(context).size.width / 4,
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(15.0),
+                          //color: Colors.white,
+
+                          image: DecorationImage(
+                              image: NetworkImage(
+                                  'http://13.39.81.126:4002${viewModel.listRsetaurant[index].info!.logo.toString()}'),
+                              //image: AssetImage('Logo_Eatch_png.png'),
+                              fit: BoxFit.cover),
+>>>>>>> main
                         ),
                       ),
-                      Container(
-                        height: MediaQuery.of(context).size.height / 3,
-                        width: MediaQuery.of(context).size.height / 3,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(120.0),
-                          color: Palette.secondaryColor,
-                        ),
-                        child: CircleAvatar(
-                          radius: (MediaQuery.of(context).size.height / 3) - 50,
+                      /*CircleAvatar(
+                          radius: 75,
                           backgroundImage: NetworkImage(
                               'http://13.39.81.126:4002${viewModel.listRsetaurant[index].info!.logo.toString()}'),
                           //image: AssetImage('eatch.jpg'),
+                        ),*/
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        height: 40,
+                        child: Text(
+                          viewModel.listRsetaurant[index].restaurantName!,
+                          style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Palette.yellowColor),
                         ),
                       ),
                     ]),
                   ),
+<<<<<<< HEAD
                 ),
                 onTap: () async {
                   SharedPreferences prefs =
@@ -101,6 +121,21 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
                 },
               );
             }),
+=======
+                  onTap: () async {
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    prefs.setString('idRestaurant',
+                        viewModel.listRsetaurant[index].sId.toString());
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DashboardManager()));
+                  },
+                );
+              }),
+            ),
+>>>>>>> main
           ),
         ),
       ),

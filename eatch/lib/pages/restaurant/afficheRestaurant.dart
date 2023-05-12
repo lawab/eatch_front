@@ -5,7 +5,6 @@ import 'package:eatch/pages/restaurant/detailRestaurant.dart';
 import 'package:eatch/servicesAPI/multipart.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
-
 import 'package:eatch/pages/restaurant/modificationRestaurant.dart';
 import 'package:eatch/servicesAPI/getRestaurant.dart';
 import 'package:eatch/utils/applayout.dart';
@@ -13,11 +12,11 @@ import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:dio/dio.dart' as dio;
 import 'package:http_parser/http_parser.dart' show MediaType;
 import 'dart:convert';
 import 'package:http_parser/http_parser.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class RestaurantAffiche extends ConsumerStatefulWidget {
   const RestaurantAffiche({Key? key}) : super(key: key);
@@ -32,6 +31,10 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
   var adresseController = TextEditingController();
   var employeController = TextEditingController();
   bool ajout = false;
+  List<int> _selectedFile = [];
+  FilePickerResult? result;
+  PlatformFile? file;
+  bool filee = false;
 
   MediaQueryData mediaQueryData(BuildContext context) {
     return MediaQuery.of(context);
@@ -102,7 +105,11 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
               ? Container(
                   alignment: Alignment.centerRight,
                   height: 80,
+<<<<<<< HEAD
                   color: const Color(0xFFFCEBD1),
+=======
+                  color: Palette.yellowColor, //Color(0xFFFCEBD1),
+>>>>>>> main
                   child: Row(
                     children: [
                       const SizedBox(
@@ -134,12 +141,28 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                   height: 400,
                   child: creation(),
                 ),
+<<<<<<< HEAD
           const SizedBox(
             height: 5,
           ),
           SizedBox(
             height: ajout == false ? height - 175 : height - 495,
             width: width - 20,
+=======
+          ajout == true
+              ? const Divider(
+                  height: 5,
+                  color: Palette.yellowColor,
+                )
+              : const SizedBox(
+                  height: 5,
+                ),
+          Container(
+            height: ajout == false ? height - 145 : height - 465,
+            width: width,
+            padding:
+                const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+>>>>>>> main
             child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 470,
@@ -175,23 +198,10 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                         opacity: 150,
                                         image: NetworkImage(
                                             'http://13.39.81.126:4002${listRsetaurant[index].info!.logo.toString()}'),
-                                        //image: AssetImage('eatch.jpg'),
                                         fit: BoxFit.cover),
                                   ),
                                 ),
-                                //Image.asset('eatch.jpg', fit: BoxFit.cover),
-                                /*ClipRRect(
-                                // Clip it cleanly.
-                                child: BackdropFilter(
-                                  filter:
-                                      ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                  child: Container(
-                                      /*color: Colors.grey.withOpacity(0.1),
-                                    alignment: Alignment.center,
-                                    child: Text('CHOCOLATE'),*/
-                                      ),
-                                ),
-                              ),*/
+
                                 Positioned(
                                   top: 5,
                                   left: 30,
@@ -325,6 +335,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
   Widget verticalView(
       double height, double width, context, List<Restaurant> listRsetaurant) {
     return AppLayout(
+<<<<<<< HEAD
         content: Column(
       children: [
         ajout == false
@@ -525,26 +536,228 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                       icon: const Icon(
                                         Icons.delete,
                                         color: Color(0xFFF09F1B),
+=======
+      content: Column(
+        children: [
+          ajout == false
+              ? Container(
+                  alignment: Alignment.centerRight,
+                  height: 80,
+                  color: Palette.yellowColor,
+                  child: Row(
+                    children: [
+                      const SizedBox(
+                        width: 50,
+                      ),
+                      Text('Gestion de restaurant'),
+                      Expanded(child: Container()),
+                      ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Palette.primaryColor,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            minimumSize: Size(180, 50)),
+                        onPressed: () {
+                          setState(() {
+                            ajout = true;
+                          });
+                        },
+                        icon: Icon(Icons.add),
+                        label: Text('Créer un restaurant'),
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                    ],
+                  ),
+                )
+              : Container(
+                  height: 300,
+                  child: creation(),
+                ),
+          ajout == true
+              ? const Divider(
+                  height: 5,
+                  color: Palette.yellowColor,
+                )
+              : const SizedBox(
+                  height: 5,
+                ),
+          Container(
+              height: ajout == false ? height - 216 : height - 436,
+              width: width,
+              padding: const EdgeInsets.all(10),
+              child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 450,
+                      childAspectRatio: 1,
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 50,
+                      mainAxisExtent: 300),
+                  itemCount: listRsetaurant.length,
+                  itemBuilder: (BuildContext ctx, index) {
+                    return GestureDetector(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.green, //Color(0xFF1E9647),
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              width: width / 3,
+                              height: height / 3 - 20,
+                              child: Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  //Logo_Eatch_png.png
+                                  Container(
+                                    width: width / 5,
+                                    height: height / 3 - 20,
+                                    decoration: BoxDecoration(
+                                      color: Colors.black,
+                                      borderRadius: BorderRadius.circular(15.0),
+                                      //color: Colors.white,
+
+                                      image: DecorationImage(
+                                          opacity: 150,
+                                          image: NetworkImage(
+                                              'http://13.39.81.126:4002${listRsetaurant[index].info!.logo.toString()}'),
+                                          //image: AssetImage('Logo_Eatch_png.png'),
+                                          fit: BoxFit.cover),
+                                    ),
+                                  ),
+
+                                  Positioned(
+                                    top: 5,
+                                    left: 30,
+                                    width: width / 5,
+                                    height: 50,
+                                    child: Text(
+                                      'Nom du restaurant: ${listRsetaurant[index].restaurantName!}',
+                                      style: TextStyle(
+                                          fontFamily: 'Righteous',
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontStyle: FontStyle.italic),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 60,
+                                    left: 30,
+                                    width: width / 5,
+                                    height: 30,
+                                    child: Text(
+                                      "Ville: ${listRsetaurant[index].info!.town!}",
+                                      style: TextStyle(
+                                        fontFamily: 'Righteous',
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 90,
+                                    left: 30,
+                                    width: width / 5,
+                                    height: 30,
+                                    child: Text(
+                                      "Adresse: ${listRsetaurant[index].info!.address!}",
+                                      style: TextStyle(
+                                        fontFamily: 'Righteous',
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 120,
+                                    left: 30,
+                                    width: width / 5,
+                                    height: 30,
+                                    child: const Text(
+                                      "Nombre d'emplyé: 50",
+                                      style: TextStyle(
+                                        fontFamily: 'Righteous',
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 150,
+                                    left: 30,
+                                    width: width / 5,
+                                    height: 30,
+                                    child: Text(
+                                      "Date de création: ${listRsetaurant[index].createdAt}",
+                                      style: TextStyle(
+                                        fontFamily: 'Righteous',
+                                        color: Colors.white,
+>>>>>>> main
                                       ),
                                     ),
                                   ),
                                 ],
-                              )),
-                        ],
+                              ),
+                            ),
+                            Container(
+                                width: width / 5,
+                                height: 50,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: IconButton(
+                                        onPressed: (() {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      RestaurantModification(
+                                                        restaurant:
+                                                            listRsetaurant[
+                                                                index],
+                                                      )));
+                                        }),
+                                        icon: Icon(
+                                          Icons.edit,
+                                          color: Color(0xFFF09F1B),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: IconButton(
+                                        onPressed: (() {
+                                          dialogDelete(
+                                              listRsetaurant[index]
+                                                  .sId
+                                                  .toString(),
+                                              listRsetaurant[index]
+                                                  .restaurantName
+                                                  .toString());
+                                        }),
+                                        icon: Icon(
+                                          Icons.delete,
+                                          color: Palette.deleteColors,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                          ],
+                        ),
                       ),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RestaurantDetail(
-                                    restaurant: listRsetaurant[index],
-                                  )));
-                    },
-                  );
-                })),
-      ],
-    ));
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RestaurantDetail(
+                                      restaurant: listRsetaurant[index],
+                                    )));
+                      },
+                    );
+                  })),
+        ],
+      ),
+    );
   }
 
   Widget creation() {
@@ -735,15 +948,63 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
               ),
             ),
             const SizedBox(
-              height: 50,
+              height: 30,
             ),
-            const ListTile(
-              leading: Icon(Icons.info),
-              title: Text(
-                  "Vous devriez joindre une image du restaurant lors de l'enregistrement"),
+            Container(
+              child: Row(children: [
+                Expanded(child: Container()),
+                Container(
+                  height: 50,
+                  width: 200,
+                  child: ElevatedButton.icon(
+                    label: Text('Image restaurant'),
+                    icon: Icon(Icons.download),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(150, 50),
+                      maximumSize: Size(200, 70),
+                      backgroundColor: Palette.primaryColor,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                    onPressed: () async {
+                      ///////////////////// Prendre l'image
+                      result = await FilePicker.platform
+                          .pickFiles(type: FileType.custom, allowedExtensions: [
+                        "png",
+                        "jpg",
+                        "jpeg",
+                      ]);
+                      if (result != null) {
+                        file = result!.files.single;
+
+                        Uint8List fileBytes =
+                            result!.files.single.bytes as Uint8List;
+                        //print(base64Encode(fileBytes));
+                        //List<int>
+                        _selectedFile = fileBytes;
+                        setState(() {
+                          filee = true;
+                        });
+                      }
+                      ////////////////////
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                filee == true
+                    ? Container(
+                        child: Text(
+                          file!.name,
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      )
+                    : Container(),
+              ]),
             ),
             const SizedBox(
-              height: 5,
+              height: 10,
             ),
             Container(
               alignment: Alignment.centerRight,
@@ -755,8 +1016,14 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                   ),
                   ElevatedButton(
                     onPressed: (() {
-                      creationRestaurant(context, nomController.text,
-                          villeController.text, adresseController.text);
+                      creationRestaurant(
+                        context,
+                        nomController.text,
+                        villeController.text,
+                        adresseController.text,
+                        _selectedFile,
+                        result,
+                      );
                       setState(() {
                         ajout = false;
                       });
@@ -862,36 +1129,76 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
   }
 
   Future<void> creationRestaurant(
-    BuildContext context,
+    contextt,
     String nomRestaurant,
     String villeRestaurant,
     String adresseRestaurant,
+    selectedFile,
+    result,
   ) async {
     ////////////
-    final result = await FilePicker.platform
-        .pickFiles(type: FileType.custom, allowedExtensions: [
-      "png",
-      "jpg",
-      "jpeg",
-    ]);
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var id = prefs.getString('IdUser').toString();
     var token = prefs.getString('token');
+<<<<<<< HEAD
     var nomFile = '';
+=======
+>>>>>>> main
 
-    if (result != null) {
-      PlatformFile file = result.files.single;
+    var url = Uri.parse(
+        "http://13.39.81.126:5000/api/restaurants/create"); //13.39.81.126
+    final request = MultipartRequest(
+      'POST',
+      url,
+      onProgress: (int bytes, int total) {
+        final progress = bytes / total;
+        print('progress: $progress ($bytes/$total)');
+      },
+    );
+    var json = {
+      'restaurant_name': nomRestaurant,
+      'address': adresseRestaurant,
+      'town': villeRestaurant,
+      '_creator': id,
+    };
+    var body = jsonEncode(json);
 
-      Uint8List? fileBytes;
-      if ((result.files.single.bytes ?? []).isEmpty) {
-        // Speciale Android
+    request.headers.addAll({
+      "body": body,
+    });
 
-        print('Speciale Android');
+    request.fields['form_key'] = 'form_value';
+    request.headers['authorization'] = 'Bearer $token';
+    request.files.add(await http.MultipartFile.fromBytes('file', selectedFile,
+        contentType: MediaType('application', 'octet-stream'),
+        filename: result.files.first.name));
 
-        final file = File.fromUri(Uri.parse(result.files.single.path!));
-        fileBytes = file.readAsBytesSync();
+    print("RESPENSE SEND STEAM FILE REQ");
+    //var responseString = await streamedResponse.stream.bytesToString();
+    var response = await request.send();
+    print("Upload Response" + response.toString());
+    print(response.statusCode);
+    print(request.headers);
+
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        await response.stream.bytesToString().then((value) {
+          print(value);
+        });
+        //stopMessage();
+        //finishWorking();
+
+        showTopSnackBar(
+          Overlay.of(contextt)!,
+          const CustomSnackBar.info(
+            backgroundColor: Colors.green,
+            message: "Restaurant Modifié",
+          ),
+        );
+        ref.refresh(getDataRsetaurantFuture);
       } else {
+<<<<<<< HEAD
         // Speciale web
 
         print('Speciale web');
@@ -954,266 +1261,60 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
         }
       } catch (e) {
         rethrow;
+=======
+        showTopSnackBar(
+          Overlay.of(contextt)!,
+          const CustomSnackBar.info(
+            backgroundColor: Colors.red,
+            message: "Erreur de création",
+          ),
+        );
+        print("Error Create Programme  !!!");
+>>>>>>> main
       }
+    } catch (e) {
+      throw e;
     }
   }
 
-  Future<http.Response> deleteRestaurant(
-      BuildContext context, String id) async {
+  Future<http.Response> deleteRestaurant(contextt, String id) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
-      String urlDelete = "http://13.39.81.126:4002/api/restaurants/delete/$id";
+      String urlDelete = "http://13.39.81.126:5000/api/restaurants/delete/$id";
 
       final http.Response response = await http.delete(
         Uri.parse(urlDelete),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
           'Accept': 'application/json',
-          'authorization': 'Bearer $token'
+          'authorization': 'Bearer $token',
         },
       );
 
       print(response.statusCode);
       if (response.statusCode == 200) {
+        showTopSnackBar(
+          Overlay.of(contextt)!,
+          const CustomSnackBar.info(
+            backgroundColor: Colors.green,
+            message: "Restaurant supprimé",
+          ),
+        );
         ref.refresh(getDataRsetaurantFuture);
         return response;
       } else {
+        showTopSnackBar(
+          Overlay.of(contextt)!,
+          const CustomSnackBar.info(
+            backgroundColor: Colors.red,
+            message: "Erreur de suppression",
+          ),
+        );
         return Future.error("Server Error");
       }
     } catch (e) {
       return Future.error(e);
     }
   }
-  /*Future<void> creationRestaurant(
-    String nomRestaurant,
-    String villeRestaurant,
-    String adresseRestaurant,
-  ) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var id = prefs.getString('IdUser').toString();
-    var token = prefs.getString('token');
-    try {
-      /////file picker
-      final result = await FilePicker.platform
-          .pickFiles(type: FileType.custom, allowedExtensions: [
-        "png",
-        "jpg",
-        "jpeg",
-      ]);
-      PlatformFile file = result!.files.single;
-      //print(result.files.single.bytes);
-
-      /*print(file.name);
-    print(file.extension);*/
-
-      Uint8List? fileBytes;
-      if ((result.files.single.bytes ?? []).isEmpty) {
-        // Speciale Android
-
-        print('Speciale Android');
-
-        final file = File.fromUri(Uri.parse(result.files.single.path!));
-        fileBytes = file.readAsBytesSync();
-      } else {
-        // Speciale web
-
-        print('Speciale web');
-        fileBytes = result.files.single.bytes as Uint8List;
-      }
-
-      List<int> selectedFile = fileBytes as List<int>;
-
-      ///[1] CREATING INSTANCE
-      var dioRequest = dio.Dio();
-      dioRequest.options.baseUrl =
-          'http://13.39.81.126:4002/api/restaurant/create';
-
-      //[2] ADDING TOKEN
-      dioRequest.options.headers = {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/x-www-form-urlencoded'
-      };
-
-      //[3] ADDING EXTRA INFO
-      var formData = dio.FormData.fromMap({
-        'restaurant_name': nomRestaurant,
-        'address': adresseRestaurant,
-        'town': villeRestaurant,
-        '_creator': id,
-      });
-      print(file.name);
-
-      //[4] ADD IMAGE TO UPLOAD
-      /*var file = await dio.MultipartFile.fromBytes(value) .fromFile(image.path,
-          filename: basename(image.path),
-        contentType: MediaType("image", basename(image.path)));*/
-      var filet = await dio.MultipartFile.fromBytes(selectedFile,
-          contentType: MediaType('application', 'octet-stream'),
-          filename: result.files.first.name);
-
-      formData.files.add(MapEntry('image', filet));
-
-      //[5] SEND TO SERVER
-      var response = await dioRequest.post(
-        'http://13.39.81.126:4002/api/restaurant/create',
-        data: formData,
-      );
-      print(response.statusCode);
-      final resultt = json.decode(response.toString())['result'];
-    } catch (err) {
-      print('ERROR  $err');
-    }
-  }
-
-  Future<void> creationRestaurant(
-    String nomRestaurant,
-    String villeRestaurant,
-    String adresseRestaurant,
-  ) async {
-    ////////////
-    final result = await FilePicker.platform
-        .pickFiles(type: FileType.custom, allowedExtensions: [
-      "png",
-      "jpg",
-      "jpeg",
-    ]);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var id = prefs.getString('IdUser').toString();
-    var token = prefs.getString('token');
-    var nom_file = '';
-
-    if (result != null) {
-      PlatformFile file = result.files.single;
-      //print(result.files.single.bytes);
-
-      /*print(file.name);
-    print(file.extension);*/
-
-      Uint8List? fileBytes;
-      if ((result.files.single.bytes ?? []).isEmpty) {
-        // Speciale Android
-
-        print('Speciale Android');
-
-        final file = File.fromUri(Uri.parse(result.files.single.path!));
-        fileBytes = file.readAsBytesSync();
-      } else {
-        // Speciale web
-
-        print('Speciale web');
-        fileBytes = result.files.single.bytes as Uint8List;
-      }
-
-      List<int> selectedFile = fileBytes as List<int>;
-
-      var url = Uri.parse("http://13.39.81.126:4002/api/restaurant/create");
-      final request = http.MultipartRequest(
-        'POST',
-        url,
-        /*onProgress: (int bytes, int total) {
-          final progress = bytes / total;
-          print('progress: $progress ($bytes/$total)');
-        },*/
-      );
-
-      //var date = DateTime.parse(DateTime.now().toString());
-
-      /*request.headers.addAll({
-        "nom_image_salle": nom_image,
-        "date_image": 'date',
-      });*/
-
-      request.fields['restaurant_name'] = nomRestaurant;
-      request.fields['address'] = adresseRestaurant;
-      request.fields['town'] = villeRestaurant;
-      request.fields['_creator'] = id;
-      request.headers['authorization'] = 'Bearer $token';
-      //request.headers['content-type'] = 'application/x-www-form-urlencoded';
-      request.fields['form_key'] = 'form_value';
-      request.headers
-          .addAll({'content-type': 'application/x-www-form-urlencoded'});
-      request.files.add(await http.MultipartFile.fromBytes(
-          'image', selectedFile,
-          contentType: MediaType('application', 'octet-stream'),
-          filename: result.files.first.name));
-
-      print("RESPENSE SEND STEAM FILE REQ");
-      //var responseString = await streamedResponse.stream.bytesToString();
-      var response = await request.send();
-      print("Upload Response" + response.toString());
-      print(response.statusCode);
-      print(request.headers);
-      print(request.fields);
-
-      try {
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          await response.stream.bytesToString().then((value) {
-            print(value);
-          });
-
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text("Image Téléchager"),
-          ));
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text("Erreur de serveur"),
-          ));
-          print("Error Create Programme  !!!");
-        }
-      } catch (e) {
-        throw e;
-      }
-    }
-  }
-  Future<void> creationRestaurant(
-    String nomRestaurant,
-    String villeRestaurant,
-    String adresseRestaurant,
-  ) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var id = prefs.getString('IdUser').toString();
-    var token = prefs.getString('token');
-    // Créer un objet FormData
-    var formData = h.FormData();
-
-    // Ajouter les données du formulaire
-    print(id);
-    formData.append('restaurant_name', nomRestaurant);
-    formData.append('address', adresseRestaurant);
-    formData.append('town', villeRestaurant);
-    formData.append('_creator', id);
-
-    // Ajouter un fichier
-    h.FileUploadInputElement fileInput = h.FileUploadInputElement();
-    fileInput.click();
-    await fileInput.onChange.first;
-    List<h.File> files = fileInput.files!;
-    if (files.isNotEmpty) {
-      formData.appendBlob('file', files.first);
-    }
-    print(files.first);
-    // Envoyer la requête
-    var request = h.HttpRequest();
-
-    request.open(
-      'POST',
-      'http://13.39.81.126:4002/api/restaurant/create',
-    );
-    request.setRequestHeader('authorization', 'Bearer $token');
-    request.setRequestHeader('enctype', "multipart/form-data");
-
-    request.send(formData);
-
-    // Traiter la réponse
-    await request.onLoadEnd.first;
-    print(request.status);
-    if (request.status == 200) {
-      print('Requête réussie !');
-    } else {
-      print('Erreur ${request.status} : ${request.statusText}');
-    }
-    ref.refresh(getDataRsetaurantFuture);
-  }
-}*/
 }

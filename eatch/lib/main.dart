@@ -1,9 +1,18 @@
 import 'package:eatch/pages/authentification/authentification.dart';
+<<<<<<< HEAD
 import 'package:eatch/pages/matiere_premiere/afficheMatiere.dart';
 import 'package:eatch/pages/recettes/recettes.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+=======
+import 'package:eatch/pages/commande/commandeClient/accueilClient.dart';
+import 'package:eatch/pages/commande/commandeClient/accueilMenu.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'pages/categories/presentation/categories.dart';
+>>>>>>> main
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -16,19 +25,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      scrollBehavior: ScrollConfiguration.of(context).copyWith(
-        dragDevices: {
-          PointerDeviceKind.touch,
-          PointerDeviceKind.mouse,
-        },
-      ),
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Authentification(), //const Authentification(),
-    );
+        debugShowCheckedModeBanner: false,
+        scrollBehavior: ScrollConfiguration.of(context).copyWith(
+          dragDevices: {
+            PointerDeviceKind.touch,
+            PointerDeviceKind.mouse,
+          },
+        ),
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const Authentification() //Authentification(),ClientAccueil()
+        );
   }
 }
 
