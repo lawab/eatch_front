@@ -35,11 +35,12 @@ class GetDataRecettesFuture extends ChangeNotifier {
 class Recette {
   String? id;
   String? titreRecette;
-  int? tempsPreparation;
-  int? tempsCuisson;
-  int? tempsTotal;
+  String? tempsPreparation;
+  String? tempsCuisson;
+  String? tempsTotal;
   String? imageUrl;
-  List<Ingrdients>? ingrdients;
+  String? imageName;
+  List<Ingredients>? ingredients;
 
   Recette(
       {this.id,
@@ -48,7 +49,8 @@ class Recette {
       this.tempsCuisson,
       this.tempsTotal,
       this.imageUrl,
-      this.ingrdients});
+      this.imageName,
+      this.ingredients});
 
   Recette.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -57,10 +59,11 @@ class Recette {
     tempsCuisson = json['tempsCuisson'];
     tempsTotal = json['tempsTotal'];
     imageUrl = json['imageUrl'];
-    if (json['Ingrdients'] != null) {
-      ingrdients = <Ingrdients>[];
-      json['Ingrdients'].forEach((v) {
-        ingrdients!.add(Ingrdients.fromJson(v));
+    imageName = json['imageName'];
+    if (json['ingredients'] != null) {
+      ingredients = <Ingredients>[];
+      json['ingredients'].forEach((v) {
+        ingredients!.add(Ingredients.fromJson(v));
       });
     }
   }
@@ -73,50 +76,32 @@ class Recette {
     data['tempsCuisson'] = tempsCuisson;
     data['tempsTotal'] = tempsTotal;
     data['imageUrl'] = imageUrl;
-    if (ingrdients != null) {
-      data['Ingrdients'] = ingrdients!.map((v) => v.toJson()).toList();
+    data['imageName'] = imageName;
+    if (ingredients != null) {
+      data['ingredients'] = ingredients!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
-class Ingrdients {
-  Matiere? matiere;
-  int? quantit;
-  String? unit;
+class Ingredients {
+  String? matiere;
+  String? quantite;
+  String? unite;
 
-  Ingrdients({this.matiere, this.quantit, this.unit});
+  Ingredients({this.matiere, this.quantite, this.unite});
 
-  Ingrdients.fromJson(Map<String, dynamic> json) {
-    matiere =
-        json['matiere'] != null ? Matiere.fromJson(json['matiere']) : null;
-    quantit = json['Quantité'];
-    unit = json['Unité'];
+  Ingredients.fromJson(Map<String, dynamic> json) {
+    matiere = json['matiere'];
+    quantite = json['quantite'];
+    unite = json['unite'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    if (matiere != null) {
-      data['matiere'] = matiere!.toJson();
-    }
-    data['Quantité'] = quantit;
-    data['Unité'] = unit;
-    return data;
-  }
-}
-
-class Matiere {
-  String? sId;
-
-  Matiere({this.sId});
-
-  Matiere.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['_id'] = sId;
+    data['matiere'] = matiere;
+    data['quantite'] = quantite;
+    data['unite'] = unite;
     return data;
   }
 }

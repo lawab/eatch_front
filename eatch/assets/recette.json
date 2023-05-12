@@ -1,69 +1,80 @@
 [
     {
         "id": "iddd",
-        "titreRecette": "Titre de la recetA",
-        "tempsPreparation": 10,
-        "tempsCuisson": 20,
-        "tempsTotal": 24,
+        "titreRecette": "Recette 001",
+        "tempsPreparation": "10",
+        "tempsCuisson": "20",
+        "tempsTotal": "30",
         "imageUrl": "assets/recette.jpg",
-        "Ingrdients": [
+        "imageName": "recette.jpg",
+        "ingredients": [
             {
-                "matiere": {
-                    "_id": "6447f9959c9ed555eea7915c"
-                },
-                "Quantité": 2,
-                "Unité": "g"
+                "matiere": "6447f9959c9ed555eea7915ggc",
+                "quantite": "2",
+                "unite": "g"
+            },
+            {
+                "matiere": "6447f9959c9eddd555eea7915ggc",
+                "quantite": "32",
+                "unite": "Cl"
             }
         ]
     },
     {
-        "id": "iddd",
-        "titreRecette": "Titre de la recettB",
-        "tempsPreparation": 10,
-        "tempsCuisson": 20,
-        "tempsTotal": 69,
+        "id": "iddd2",
+        "titreRecette": "Recette 002",
+        "tempsPreparation": "20",
+        "tempsCuisson": "30",
+        "tempsTotal": "50",
         "imageUrl": "assets/recette.jpg",
-        "Ingrdients": [
+        "imageName": "recdddddette.jpg",
+        "ingredients": [
             {
-                "matiere": {
-                    "_id": "6447f9959c9ed555eea7915c"
-                },
-                "Quantité": 2,
-                "Unité": "g"
+                "matiere": "6447f9959c9gged555eea7915c",
+                "quantite": "2",
+                "unite": "g"
             }
         ]
     },
     {
-        "id": "iddd",
-        "titreRecette": "Titre de la recettC",
-        "tempsPreparation": 10,
-        "tempsCuisson": 20,
-        "tempsTotal": 25,
+        "id": "idddf2",
+        "titreRecette": "Recette 002rr",
+        "tempsPreparation": "30",
+        "tempsCuisson": "30",
+        "tempsTotal": "60",
         "imageUrl": "assets/recette.jpg",
-        "Ingrdients": [
+        "imageName": "recdddfffddddette.jpg",
+        "ingredients": [
             {
-                "matiere": {
-                    "_id": "6447f9959c9ed555eea7915c"
-                },
-                "Quantité": 2,
-                "Unité": "g"
+                "matiere": "6447f995gg9c9ed555eea7915c",
+                "quantite": "2",
+                "unite": "g"
             }
         ]
     },
     {
-        "id": "iddd",
-        "titreRecette": "Titre de la recetteD",
-        "tempsPreparation": 10,
-        "tempsCuisson": 20,
-        "tempsTotal": 30,
+        "id": "idddfrr2",
+        "titreRecette": "Recette 002dfrr",
+        "tempsPreparation": "30",
+        "tempsCuisson": "9",
+        "tempsTotal": "39",
         "imageUrl": "assets/recette.jpg",
-        "Ingrdients": [
+        "imageName": "recdddfffdduuddette.jpg",
+        "ingredients": [
             {
-                "matiere": {
-                    "_id": "6447f9959c9ed555eea7915c"
-                },
-                "Quantité": 2,
-                "Unité": "g"
+                "matiere": "6447f995fffq9c9ed555eea7915c",
+                "quantite": "2",
+                "unite": "g"
+            },
+            {
+                "matiere": "6447f995fffq9c9hhed555eea7915c",
+                "quantite": "2",
+                "unite": "l"
+            },
+            {
+                "matiere": "6447f995fffq9c9ed5dd55eea7915c",
+                "quantite": "2",
+                "unite": "kg"
             }
         ]
     }

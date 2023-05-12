@@ -1,6 +1,5 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
+import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:eatch/pages/recettes/grid.dart';
 import 'package:eatch/servicesAPI/get_categories.dart';
 import 'package:eatch/servicesAPI/get_recettes.dart';
@@ -12,6 +11,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class RecettesPage extends ConsumerStatefulWidget {
   const RecettesPage({super.key});
@@ -42,17 +43,12 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
   bool isLoading = false;
   bool _selectFile = false;
 
-  var tempsPreparation = "0";
-  var tempsCuisson = "0";
-
   Uint8List? selectedImageInBytes;
   FilePickerResult? result;
 
-  PlatformFile? file;
   List<int> _selectedFile = [];
   bool filee = false;
-
-  Uint8List? fileBytes;
+  PlatformFile? file;
 
   List<String> listOfUnities = [
     "g",
@@ -62,15 +58,16 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
     "Pincée",
     "Gousse",
     "Cuillerée à café",
-    "Sachets",
+    "Sachet",
     "x",
   ];
 
+  String? recetteImage;
+  final _nomRecetteImage = TextEditingController();
   final _titreRecette = TextEditingController();
   final _tempsPreparation = TextEditingController();
   final _tempsCuisson = TextEditingController();
   final _tempsTotal = TextEditingController();
-  final _nomRecetteImage = TextEditingController();
 
   final FocusNode _tempsPreparationFocusNode = FocusNode();
   final FocusNode _tempsCuissonFocusNode = FocusNode();
@@ -97,6 +94,10 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
   final List<TextEditingController> _uniteDeMesure = [];
 
   final _formkey = GlobalKey<FormState>();
+
+  // List<dynamic> listingredients = [];
+  int ingredientindex = 0;
+  bool ingredientbool = false;
 
   @override
   void initState() {
@@ -143,24 +144,26 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
     }
     _formkey.currentState!.save();
 
-    FormData formData = FormData.fromMap({});
+    List<dynamic> ingredientsList = [];
 
     for (int i = 0; i < _matierePremieres.length; i++) {
-      formData.fields
-          .add(MapEntry("Matière Premières", _matierePremieres[i].text));
-      formData.fields.add(MapEntry("Quantité", _quantite[i].text));
-      formData.fields.add(MapEntry("Unité De Mesure", _uniteDeMesure[i].text));
+      ingredientsList.add({
+        "matiere": _matierePremieres[i].text,
+        "quantite": _quantite[i].text,
+        "unite": _uniteDeMesure[i].text,
+      });
     }
     print(_titreRecette.text);
     print(_tempsPreparation.text);
     print(_tempsCuisson.text);
     print(_tempsTotal.text);
     print(_nomRecetteImage.text);
-    print(formData.fields);
+    print(ingredientsList);
 
     _clear();
     setState(() {
       _selectFile = false;
+      recetteImage = null;
     });
   }
 
@@ -244,6 +247,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                       onPressed: () {
                         setState(() {
                           _showContent = !_showContent;
+                          ingredientbool = false;
                         });
                       },
                       style: ElevatedButton.styleFrom(
@@ -282,6 +286,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                             color: Palette.secondaryBackgroundColor,
                             child: GestureDetector(
                               onTap: () async {
+                                recetteImage = null;
                                 result = await FilePicker.platform.pickFiles(
                                     type: FileType.custom,
                                     allowedExtensions: [
@@ -320,18 +325,23 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(16),
-                                  child: _selectFile == false
-                                      ? const Icon(
-                                          Icons.camera_alt_outlined,
-                                          color: Color(0xFFDCE0E0),
-                                          size: 40,
+                                  child: recetteImage != null
+                                      ? Image.asset(
+                                          recetteImage!,
+                                          fit: BoxFit.fill,
                                         )
-                                      : isLoading
-                                          ? const CircularProgressIndicator()
-                                          : Image.memory(
-                                              selectedImageInBytes!,
-                                              fit: BoxFit.fill,
-                                            ),
+                                      : _selectFile == false
+                                          ? const Icon(
+                                              Icons.camera_alt_outlined,
+                                              color: Color(0xFFDCE0E0),
+                                              size: 40,
+                                            )
+                                          : isLoading
+                                              ? const CircularProgressIndicator()
+                                              : Image.memory(
+                                                  selectedImageInBytes!,
+                                                  fit: BoxFit.fill,
+                                                ),
                                 ),
                               ),
                             ),
@@ -409,15 +419,36 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                 .requestFocus(_tempsCuissonFocusNode)),
                             keyboardType: TextInputType.number,
                             onChanged: (value) {
-                              tempsPreparation = value;
-                              _tempsTotal.text = (value.isEmpty &&
-                                      tempsCuisson.isEmpty)
-                                  ? (0 + 0).toString()
-                                  : value.isEmpty
-                                      ? (int.parse(tempsCuisson) + 0).toString()
-                                      : (int.parse(tempsCuisson) +
-                                              int.parse(tempsPreparation))
+                              _tempsPreparation.text = value;
+                              _tempsPreparation.selection =
+                                  TextSelection.fromPosition(TextPosition(
+                                      offset: _tempsPreparation.text.length));
+                              if (_tempsPreparation.text.isEmpty &&
+                                  _tempsCuisson.text.isEmpty) {
+                                setState(() {
+                                  _tempsTotal.text = "0";
+                                });
+                              } else if (_tempsCuisson.text.isEmpty &&
+                                  _tempsPreparation.text.isNotEmpty) {
+                                setState(() {
+                                  _tempsTotal.text =
+                                      int.parse(_tempsPreparation.text)
                                           .toString();
+                                });
+                              } else if (_tempsCuisson.text.isNotEmpty &&
+                                  _tempsPreparation.text.isEmpty) {
+                                setState(() {
+                                  _tempsTotal.text =
+                                      int.parse(_tempsCuisson.text).toString();
+                                });
+                              } else {
+                                setState(() {
+                                  _tempsTotal.text =
+                                      (int.parse(_tempsCuisson.text) +
+                                              int.parse(_tempsPreparation.text))
+                                          .toString();
+                                });
+                              }
                             },
                             validator: (value) {
                               if (value!.isEmpty) {
@@ -453,22 +484,41 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                             focusNode: _tempsCuissonFocusNode,
                             keyboardType: TextInputType.number,
                             onChanged: (value) {
-                              tempsCuisson = value;
-                              _tempsTotal.text =
-                                  (value.isEmpty && tempsPreparation.isEmpty)
-                                      ? (0 + 0).toString()
-                                      : value.isEmpty
-                                          ? (0 + int.parse(tempsPreparation))
-                                              .toString()
-                                          : (int.parse(tempsCuisson) +
-                                                  int.parse(tempsPreparation))
-                                              .toString();
+                              _tempsCuisson.text = value;
+                              _tempsCuisson.selection =
+                                  TextSelection.fromPosition(
+                                TextPosition(offset: _tempsCuisson.text.length),
+                              );
+                              if (_tempsPreparation.text.isEmpty &&
+                                  _tempsCuisson.text.isEmpty) {
+                                setState(() {
+                                  _tempsTotal.text = "0";
+                                });
+                              } else if (_tempsCuisson.text.isEmpty &&
+                                  _tempsPreparation.text.isNotEmpty) {
+                                setState(() {
+                                  _tempsTotal.text =
+                                      int.parse(_tempsPreparation.text)
+                                          .toString();
+                                });
+                              } else if (_tempsCuisson.text.isNotEmpty &&
+                                  _tempsPreparation.text.isEmpty) {
+                                setState(() {
+                                  _tempsTotal.text =
+                                      int.parse(_tempsCuisson.text).toString();
+                                });
+                              } else {
+                                setState(() {
+                                  _tempsTotal.text =
+                                      (int.parse(_tempsCuisson.text) +
+                                              int.parse(_tempsPreparation.text))
+                                          .toString();
+                                });
+                              }
                             },
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return "Le temps de cuisson est obligatoire !";
-                              } else if (value == "0") {
-                                return "Le temps de cuisson doit être supérieur a zéro minute !";
                               }
                               return null;
                             },
@@ -526,6 +576,197 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                             ),
                           ),
                           const SizedBox(height: 20),
+                          //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                          //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                          //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                          //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                          //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                          //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                          //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                          //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                          //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                          if (ingredientbool)
+                            Column(
+                              children: [
+                                for (int j = 0;
+                                    j <
+                                        viewRecetteModel
+                                            .listRecettes[ingredientindex]
+                                            .ingredients!
+                                            .length;
+                                    j++)
+                                  Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          InkWell(
+                                            child:
+                                                const Icon(Icons.remove_circle),
+                                            onTap: () {
+                                              _removeItem(j);
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Expanded(
+                                            flex: 3,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(2),
+                                              child: Container(
+                                                color: Palette
+                                                    .secondaryBackgroundColor,
+                                                child: DropdownButtonFormField(
+                                                  hint: Text(
+                                                    viewRecetteModel
+                                                        .listRecettes[
+                                                            ingredientindex]
+                                                        .ingredients![j]
+                                                        .matiere!,
+                                                  ),
+                                                  validator: (value) {
+                                                    if (value == null) {
+                                                      return "Le nom de la matière première est obligatoire.";
+                                                    } else {
+                                                      return null;
+                                                    }
+                                                  },
+                                                  decoration: InputDecoration(
+                                                    border: OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10.0),
+                                                    ),
+                                                  ),
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      _matierePremieres[j]
+                                                              .text =
+                                                          value.toString();
+                                                    });
+                                                  },
+                                                  onSaved: (value) {
+                                                    setState(() {
+                                                      _matierePremieres[j]
+                                                              .text =
+                                                          value.toString();
+                                                    });
+                                                  },
+                                                  items: viewModel
+                                                      .listCategories
+                                                      .map((val) {
+                                                    return DropdownMenuItem(
+                                                      value: val.title,
+                                                      child: Text(
+                                                        val.title!,
+                                                      ),
+                                                    );
+                                                  }).toList(),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 20),
+                                          Expanded(
+                                            flex: 1,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(2),
+                                              child: TextFormField(
+                                                // initialValue: viewRecetteModel
+                                                //     .listRecettes[
+                                                //         ingredientindex]
+                                                //     .ingredients![j]
+                                                //     .quantite!,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                controller: _quantite[j],
+                                                validator: (value) {
+                                                  if (value!.isEmpty) {
+                                                    return "La quantité est obligatoire !";
+                                                  } else if (value == "0") {
+                                                    return "La quantité doit être supérieur a zéro minute !";
+                                                  }
+                                                  return null;
+                                                },
+                                                inputFormatters: <
+                                                    TextInputFormatter>[
+                                                  FilteringTextInputFormatter
+                                                      .allow(RegExp(r'[0-9]')),
+                                                ],
+                                                decoration: InputDecoration(
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0),
+                                                  ),
+                                                  hintText: "Quantité*",
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 20),
+                                          Expanded(
+                                            flex: 2,
+                                            child: Container(
+                                              color: Palette
+                                                  .secondaryBackgroundColor,
+                                              child: DropdownButtonFormField(
+                                                hint: Text(viewRecetteModel
+                                                    .listRecettes[
+                                                        ingredientindex]
+                                                    .ingredients![j]
+                                                    .unite!),
+                                                validator: (value) {
+                                                  if (value == null) {
+                                                    return "L ' Unité de mésure est obligatoire.";
+                                                  } else {
+                                                    return null;
+                                                  }
+                                                },
+                                                decoration: InputDecoration(
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0),
+                                                  ),
+                                                ),
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    _uniteDeMesure[j].text =
+                                                        value.toString();
+                                                  });
+                                                },
+                                                onSaved: (value) {
+                                                  setState(() {
+                                                    _uniteDeMesure[j].text =
+                                                        value.toString();
+                                                  });
+                                                },
+                                                items: listOfUnities
+                                                    .map((String val) {
+                                                  return DropdownMenuItem(
+                                                    value: val,
+                                                    child: Text(
+                                                      val,
+                                                    ),
+                                                  );
+                                                }).toList(),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 20),
+                                    ],
+                                  ),
+                              ],
+                            ),
                           Column(
                             children: [
                               for (int i = 0; i < _matierePremieres.length; i++)
@@ -684,7 +925,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                     ),
                                     const SizedBox(height: 20),
                                   ],
-                                )
+                                ),
                             ],
                           ),
                           Row(
@@ -727,6 +968,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                     _clear();
                                     setState(() {
                                       _selectFile = false;
+                                      recetteImage = null;
                                       _showContent = !_showContent;
                                     });
                                   },
@@ -799,101 +1041,191 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                       itemBuilder: (_, index) {
                                         final recette = viewRecetteModel
                                             .listRecettes[index];
-                                        return InkWell(
-                                          hoverColor: Colors.transparent,
-                                          onTap: () {},
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15.0),
-                                            ),
-                                            elevation: 7,
-                                            child: Column(
-                                              children: [
-                                                Stack(
-                                                  children: [
-                                                    ClipRRect(
-                                                      borderRadius:
-                                                          const BorderRadius
-                                                              .only(
-                                                        topLeft:
-                                                            Radius.circular(15),
-                                                        topRight:
-                                                            Radius.circular(15),
+                                        return Card(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15.0),
+                                          ),
+                                          elevation: 7,
+                                          child: Column(
+                                            children: [
+                                              Stack(
+                                                children: [
+                                                  ClipRRect(
+                                                    borderRadius:
+                                                        const BorderRadius.only(
+                                                      topLeft:
+                                                          Radius.circular(15),
+                                                      topRight:
+                                                          Radius.circular(15),
+                                                    ),
+                                                    child: Image.asset(
+                                                      recette.imageUrl!,
+                                                      height: 180,
+                                                      width: double.infinity,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    height: 180,
+                                                    alignment:
+                                                        Alignment.bottomRight,
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                      vertical: 10,
+                                                      horizontal: 10,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                        gradient: LinearGradient(
+                                                            begin: Alignment
+                                                                .topCenter,
+                                                            end: Alignment
+                                                                .bottomCenter,
+                                                            colors: [
+                                                          Colors.black
+                                                              .withOpacity(0),
+                                                          Colors.black
+                                                              .withOpacity(0.8),
+                                                        ],
+                                                            stops: const [
+                                                          0.6,
+                                                          1
+                                                        ])),
+                                                    child: Text(
+                                                      recette.titreRecette!,
+                                                      style: const TextStyle(
+                                                        fontSize: 15,
+                                                        color: Palette
+                                                            .primaryBackgroundColor,
                                                       ),
-                                                      child: Image.asset(
-                                                        recette.imageUrl!,
-                                                        height: 180,
-                                                        width: double.infinity,
-                                                        fit: BoxFit.cover,
+                                                      overflow:
+                                                          TextOverflow.fade,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(15.0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.end,
+                                                  children: [
+                                                    Container(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              4),
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: Palette
+                                                            .primaryColor,
+                                                      ),
+                                                      child: InkWell(
+                                                        onTap: () {},
+                                                        child: const Icon(
+                                                          Icons
+                                                              .remove_red_eye_outlined,
+                                                          size: 15.0,
+                                                          color: Colors.white,
+                                                        ),
                                                       ),
                                                     ),
                                                     Container(
-                                                      height: 180,
-                                                      alignment:
-                                                          Alignment.bottomRight,
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                        vertical: 10,
-                                                        horizontal: 10,
-                                                      ),
+                                                      margin: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 10),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              4),
                                                       decoration: BoxDecoration(
-                                                          gradient: LinearGradient(
-                                                              begin: Alignment
-                                                                  .topCenter,
-                                                              end: Alignment
-                                                                  .bottomCenter,
-                                                              colors: [
-                                                            Colors.black
-                                                                .withOpacity(0),
-                                                            Colors.black
-                                                                .withOpacity(
-                                                                    0.8),
-                                                          ],
-                                                              stops: const [
-                                                            0.6,
-                                                            1
-                                                          ])),
-                                                      child: Text(
-                                                        recette.titreRecette!,
-                                                        style: const TextStyle(
-                                                          fontSize: 15,
-                                                          color: Palette
-                                                              .primaryBackgroundColor,
+                                                        shape: BoxShape.circle,
+                                                        color:
+                                                            Colors.yellow[600],
+                                                      ),
+                                                      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                                      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                                      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                                      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                                      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                                      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                                      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                                      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                                      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            _showContent =
+                                                                !_showContent;
+
+                                                            recetteImage =
+                                                                recette
+                                                                    .imageUrl;
+
+                                                            _nomRecetteImage
+                                                                    .text =
+                                                                recette
+                                                                    .imageName!;
+
+                                                            _titreRecette.text =
+                                                                recette
+                                                                    .titreRecette!;
+
+                                                            _tempsPreparation
+                                                                    .text =
+                                                                recette
+                                                                    .tempsPreparation!;
+
+                                                            _tempsCuisson.text =
+                                                                recette
+                                                                    .tempsCuisson!;
+                                                            _tempsTotal.text =
+                                                                recette
+                                                                    .tempsTotal!;
+                                                            ingredientindex =
+                                                                index;
+
+                                                            ingredientbool =
+                                                                true;
+                                                          });
+                                                        },
+                                                        child: const Icon(
+                                                          Icons.mode_rounded,
+                                                          size: 15.0,
+                                                          color: Colors.white,
                                                         ),
-                                                        overflow:
-                                                            TextOverflow.fade,
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              4),
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: Colors.red,
+                                                      ),
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          dialogDelete(
+                                                              recetteId:
+                                                                  recette.id!,
+                                                              recetteTitle: recette
+                                                                  .titreRecette!);
+                                                        },
+                                                        child: const Icon(
+                                                          Icons.delete,
+                                                          size: 15.0,
+                                                          color: Colors.white,
+                                                        ),
                                                       ),
                                                     ),
                                                   ],
                                                 ),
-                                                Padding(
-                                                  padding: const EdgeInsets.all(
-                                                      15.0),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment.end,
-                                                    children: [
-                                                      Text(
-                                                        "${recette.tempsTotal!} Min.",
-                                                        style: const TextStyle(
-                                                          color: Palette
-                                                              .textPrimaryColor,
-                                                        ),
-                                                      ),
-                                                      const SizedBox(width: 4),
-                                                      const Icon(
-                                                          Icons
-                                                              .access_time_filled_sharp,
-                                                          color: Palette
-                                                              .primaryColor),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
                                         );
                                       },
@@ -1014,6 +1346,24 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                                                   .access_time_filled_sharp,
                                                               color: Palette
                                                                   .primaryColor),
+                                                          Container(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(4),
+                                                            decoration:
+                                                                const BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                            child: const Icon(
+                                                              Icons.add,
+                                                              size: 15.0,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          ),
                                                         ],
                                                       ),
                                                     ),
@@ -1038,5 +1388,99 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
     return AppLayout(
       content: Container(),
     );
+  }
+
+  Future dialogDelete({
+    required String recetteTitle,
+    required String recetteId,
+  }) {
+    return showDialog(
+        context: context,
+        builder: (con) {
+          return AlertDialog(
+              backgroundColor: Colors.white,
+              title: const Center(
+                child: Text(
+                  "Confirmez la suppression",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              actions: [
+                ElevatedButton.icon(
+                    icon: const Icon(
+                      Icons.close,
+                      size: 14,
+                    ),
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.grey),
+                    onPressed: () {
+                      Navigator.of(context, rootNavigator: true).pop();
+                    },
+                    label: const Text("Quitter   ")),
+                const SizedBox(
+                  width: 20,
+                ),
+                ElevatedButton.icon(
+                  icon: const Icon(
+                    Icons.delete,
+                    size: 14,
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Palette.deleteColors),
+                  onPressed: () {
+                    // deleteUser(context, viewId);
+                    Navigator.pop(con);
+                  },
+                  label: const Text("Supprimer."),
+                )
+              ],
+              content: Container(
+                  alignment: Alignment.center,
+                  color: Colors.white,
+                  height: 150,
+                  child: Text(
+                    "Voulez vous supprimer le recette $recetteTitle ?",
+                    style: const TextStyle(
+                      color: Colors.black,
+                    ),
+                  )));
+        });
+  }
+
+  Future<http.Response> deleteUser(BuildContext context, String id) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var userdelete = prefs.getString('IdUser').toString();
+      var token = prefs.getString('token');
+      String urlDelete = "http://13.39.81.126:4001/api/users/delete/$id";
+      var json = {
+        '_creator': userdelete,
+      };
+      var body = jsonEncode(json);
+
+      final http.Response response = await http.delete(
+        Uri.parse(urlDelete),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'Accept': 'application/json',
+          'authorization': 'Bearer $token',
+          'body': body,
+        },
+      );
+
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        // ref.refresh(getDataUserFuture);
+
+        return response;
+      } else {
+        return Future.error("Server Error");
+      }
+    } catch (e) {
+      return Future.error(e);
+    }
   }
 }
