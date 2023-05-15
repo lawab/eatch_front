@@ -5,8 +5,8 @@ import 'package:eatch/pages/categories/presentation/categories.dart';
 import 'package:eatch/pages/dashboard/dashboard_manager.dart';
 import 'package:eatch/pages/matiere_premiere/afficheMatiere.dart';
 import 'package:eatch/pages/menus/presentation/menu.dart';
-import 'package:eatch/pages/menus/presentation/menu_grid.dart';
 import 'package:eatch/pages/promotion/affichePromotion.dart';
+import 'package:eatch/pages/recettes/recettes.dart';
 import 'package:eatch/pages/restaurant/afficheRestaurant.dart';
 import 'package:eatch/servicesAPI/deconnexion.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../pages/users/presentation/users.dart';
 import 'palettes/palette.dart';
-import 'size/size.dart';
 
 class Navigation extends StatefulWidget {
   Navigation({
@@ -192,8 +191,27 @@ class _NavigationState extends State<Navigation> {
         NavigationButton(
           axis: widget.orientation,
           index: index,
-          text: "QUITTER L'APPLICATION",
+          text: "RECETTES",
           selectedIndex: 7,
+          onPress: () async {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            setState(() {
+              index = 7;
+              prefs.setInt('index', index);
+            });
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => const RecettesPage(),
+              ),
+            );
+          },
+        ),
+        NavigationButton(
+          axis: widget.orientation,
+          index: index,
+          text: "QUITTER L'APPLICATION",
+          selectedIndex: 8,
           onPress: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             setState(() {

@@ -32,14 +32,19 @@ class RestaurantModificationState
     super.initState();
   }
 
-  void donne() {
+  String adress_url = '';
+
+  void donne() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
+      adress_url = prefs.getString('ipport').toString();
       nomController.text = widget.restaurant.restaurantName!;
       villeController.text = widget.restaurant.info!.town!;
       adresseController.text = widget.restaurant.info!.address!;
     });
   }
 
+  Uint8List? selectedImageInBytes;
   var nomController = TextEditingController();
   var villeController = TextEditingController();
   var adresseController = TextEditingController();
@@ -277,7 +282,7 @@ class RestaurantModificationState
                   ),
                   Container(
                     height: 100,
-                    width: 200,
+                    width: 100,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15.0),
                     ),
@@ -301,6 +306,7 @@ class RestaurantModificationState
                           _selectedFile = fileBytes;
                           setState(() {
                             filee = true;
+                            selectedImageInBytes = result!.files.first.bytes;
                           });
                         } else {
                           setState(() {
@@ -311,40 +317,37 @@ class RestaurantModificationState
                       },
                       //splashColor: Colors.brown.withOpacity(0.5),
                       child: Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15.0),
-                          color: Palette.greenColors,
-                          image: DecorationImage(
-                              opacity: 100,
-                              image: NetworkImage(
-                                  'http://13.39.81.126:4002${widget.restaurant.info!.logo.toString()}'),
-                              fit: BoxFit.cover),
-                        ),
-                        child: const Text(
-                          "Modifier",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: Colors.white),
-                        ),
-                      ),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 3,
+                              color: Palette.greenColors,
+                            ),
+                            borderRadius: BorderRadius.circular(15.0),
+                            color: Palette.secondaryBackgroundColor,
+                            image: filee == true
+                                ? DecorationImage(
+                                    image: MemoryImage(
+                                      selectedImageInBytes!,
+                                      //fit: BoxFit.fill,
+                                    ),
+                                  )
+                                : DecorationImage(
+                                    //opacity: 100,
+                                    image: NetworkImage(
+                                        'http://$adress_url${widget.restaurant.info!.logo.toString()}'),
+                                    fit: BoxFit.cover),
+                          ),
+                          child: const Icon(
+                            Icons.camera_alt_outlined,
+                            color: Palette.greenColors,
+                            size: 40,
+                          )),
                     ),
                   ),
                   const SizedBox(
                     width: 20,
                   ),
-                  filee == true
-                      ? Container(
-                          height: 100,
-                          width: 100,
-                          alignment: Alignment.center,
-                          child: Text(file!.name),
-                        )
-                      : Container(
-                          height: 100,
-                          width: 100,
-                        ),
                 ]),
               ),
               const SizedBox(
@@ -390,9 +393,9 @@ class RestaurantModificationState
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var id = prefs.getString('IdUser').toString();
     var token = prefs.getString('token');
+    String adress_url = prefs.getString('ipport').toString();
 
-    var url =
-        Uri.parse("http://13.39.81.126:4002/api/restaurants/update/$idChoisie");
+    var url = Uri.parse("http://$adress_url/api/restaurants/update/$idChoisie");
     final request = MultipartRequest(
       'PUT',
       url,

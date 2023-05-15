@@ -39,13 +39,15 @@ dependencies:
   flutter_svg: ^1.1.6
   cupertino_icons: ^1.0.2
   shared_preferences: ^2.0.15
-
   google_fonts: ^4.0.3
   http: ^0.13.5
   flutter_riverpod: ^2.3.5
   file_picker: ^5.2.1
   dio: ^5.1.1
   top_snackbar_flutter: ^3.0.0+1
+  http_parser: ^4.0.2
+  flutter_layout_grid: ^2.0.3
+
 
 dev_dependencies:
   flutter_test:

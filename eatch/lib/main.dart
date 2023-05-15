@@ -5,6 +5,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'pages/categories/presentation/categories.dart';
+import 'package:eatch/pages/recettes/recettes.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -28,7 +32,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const Authentification() //Authentification(),ClientAccueil()
+        home: const ClientAccueil() //Authentification(),ClientAccueil()
         );
   }
 }

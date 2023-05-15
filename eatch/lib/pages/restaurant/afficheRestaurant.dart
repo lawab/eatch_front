@@ -26,6 +26,20 @@ class RestaurantAffiche extends ConsumerStatefulWidget {
 }
 
 class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
+  @override
+  void initState() {
+    ip();
+    // TODO: implement initState
+    super.initState();
+  }
+
+  String adress_url = '';
+  void ip() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    adress_url = prefs.getString('ipport').toString();
+  }
+
   var nomController = TextEditingController();
   var villeController = TextEditingController();
   var adresseController = TextEditingController();
@@ -35,6 +49,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
   FilePickerResult? result;
   PlatformFile? file;
   bool filee = false;
+  Uint8List? selectedImageInBytes;
 
   MediaQueryData mediaQueryData(BuildContext context) {
     return MediaQuery.of(context);
@@ -52,6 +67,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
     return size(buildContext).height;
   }
 
+  bool _selectFile = false;
   bool checkImagee = false;
   bool checkImage = false;
   bool _working = false;
@@ -111,21 +127,21 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                       const SizedBox(
                         width: 50,
                       ),
-                      Text('Gestion de restaurant'),
+                      const Text('Gestion de restaurant'),
                       Expanded(child: Container()),
                       ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Palette.primaryColor,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10)),
-                            minimumSize: Size(180, 50)),
+                            minimumSize: const Size(180, 50)),
                         onPressed: () {
                           setState(() {
                             ajout = true;
                           });
                         },
-                        icon: Icon(Icons.add),
-                        label: Text('Créer un restaurant'),
+                        icon: const Icon(Icons.add),
+                        label: const Text('Créer un restaurant'),
                       ),
                       const SizedBox(
                         width: 20,
@@ -133,7 +149,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                     ],
                   ),
                 )
-              : Container(
+              : SizedBox(
                   height: 400,
                   child: creation(),
                 ),
@@ -163,7 +179,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                     child: Container(
                       height: height,
                       decoration: BoxDecoration(
-                        color: Color(0xFF1E9647),
+                        color: const Color(0xFF1E9647),
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       child: Column(
@@ -184,7 +200,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                     image: DecorationImage(
                                         opacity: 150,
                                         image: NetworkImage(
-                                            'http://13.39.81.126:4002${listRsetaurant[index].info!.logo.toString()}'),
+                                            'http://$adress_url${listRsetaurant[index].info!.logo.toString()}'),
                                         fit: BoxFit.cover),
                                   ),
                                 ),
@@ -196,7 +212,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   height: 50,
                                   child: Text(
                                     'Nom du restaurant: ${listRsetaurant[index].restaurantName!}',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontFamily: 'Righteous',
                                         fontSize: 18,
                                         color: Colors.white,
@@ -211,7 +227,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   height: 30,
                                   child: Text(
                                     "Ville: ${listRsetaurant[index].info!.town!}",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontFamily: 'Righteous',
                                       color: Colors.white,
                                     ),
@@ -224,7 +240,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   height: 30,
                                   child: Text(
                                     "Adresse: ${listRsetaurant[index].info!.address!}",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontFamily: 'Righteous',
                                       color: Colors.white,
                                     ),
@@ -235,7 +251,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   left: 30,
                                   width: width / 5,
                                   height: 30,
-                                  child: Text(
+                                  child: const Text(
                                     "Nombre d'emplyé: 50",
                                     style: TextStyle(
                                       fontFamily: 'Righteous',
@@ -250,7 +266,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   height: 30,
                                   child: Text(
                                     "Date de création: ${listRsetaurant[index].createdAt}",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontFamily: 'Righteous',
                                       color: Colors.white,
                                     ),
@@ -259,7 +275,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                               ],
                             ),
                           ),
-                          Container(
+                          SizedBox(
                             width: width / 5,
                             height: 50,
                             child: Row(
@@ -276,7 +292,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                                         listRsetaurant[index],
                                                   )));
                                     }),
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.edit,
                                       color: Color(0xFFF09F1B),
                                     ),
@@ -291,7 +307,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                               .restaurantName
                                               .toString());
                                     }),
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.delete,
                                       color: Color(0xFFF09F1B),
                                     ),
@@ -407,7 +423,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                       image: DecorationImage(
                                           opacity: 150,
                                           image: NetworkImage(
-                                              'http://13.39.81.126:4002${listRsetaurant[index].info!.logo.toString()}'),
+                                              'http://$adress_url${listRsetaurant[index].info!.logo.toString()}'),
                                           //image: AssetImage('Logo_Eatch_png.png'),
                                           fit: BoxFit.cover),
                                     ),
@@ -553,13 +569,13 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
             Container(
               alignment: Alignment.centerRight,
               height: 50,
-              color: Color(0xFFFCEBD1),
+              color: const Color(0xFFFCEBD1),
               child: Row(
                 children: [
                   const SizedBox(
                     width: 50,
                   ),
-                  Text('Création de restaurant'),
+                  const Text('Création de restaurant'),
                   Expanded(child: Container()),
                   const SizedBox(
                     width: 20,
@@ -570,7 +586,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
             const SizedBox(
               height: 10,
             ),
-            Container(
+            SizedBox(
               width: MediaQuery.of(context).size.width - 50,
               child: TextFormField(
                 controller: nomController,
@@ -605,13 +621,13 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                     // If  you are using latest version of flutter then lable text and hint text shown like this
                     // if you r using flutter less then 1.20.* then maybe this is not working properly
                     floatingLabelBehavior: FloatingLabelBehavior.always,
-                    suffixIcon: Icon(Icons.food_bank)),
+                    suffixIcon: const Icon(Icons.food_bank)),
               ),
             ),
             const SizedBox(
               height: 20,
             ),
-            Container(
+            SizedBox(
               width: MediaQuery.of(context).size.width - 50,
               child: TextFormField(
                 controller: villeController,
@@ -646,13 +662,13 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                     // If  you are using latest version of flutter then lable text and hint text shown like this
                     // if you r using flutter less then 1.20.* then maybe this is not working properly
                     floatingLabelBehavior: FloatingLabelBehavior.always,
-                    suffixIcon: Icon(Icons.location_city)),
+                    suffixIcon: const Icon(Icons.location_city)),
               ),
             ),
             const SizedBox(
               height: 20,
             ),
-            Container(
+            SizedBox(
               width: MediaQuery.of(context).size.width - 50,
               child: TextFormField(
                 controller: adresseController,
@@ -687,13 +703,13 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                     // If  you are using latest version of flutter then lable text and hint text shown like this
                     // if you r using flutter less then 1.20.* then maybe this is not working properly
                     floatingLabelBehavior: FloatingLabelBehavior.always,
-                    suffixIcon: Icon(Icons.local_activity)),
+                    suffixIcon: const Icon(Icons.local_activity)),
               ),
             ),
             const SizedBox(
               height: 20,
             ),
-            Container(
+            SizedBox(
               width: MediaQuery.of(context).size.width - 50,
               child: TextFormField(
                 controller: employeController,
@@ -728,71 +744,72 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                     // If  you are using latest version of flutter then lable text and hint text shown like this
                     // if you r using flutter less then 1.20.* then maybe this is not working properly
                     floatingLabelBehavior: FloatingLabelBehavior.always,
-                    suffixIcon: Icon(Icons.person)),
+                    suffixIcon: const Icon(Icons.person)),
               ),
             ),
             const SizedBox(
               height: 30,
             ),
             Container(
-              child: Row(children: [
-                Expanded(child: Container()),
-                Container(
-                  height: 50,
-                  width: 200,
-                  child: ElevatedButton.icon(
-                    label: Text('Image restaurant'),
-                    icon: Icon(Icons.download),
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size(150, 50),
-                      maximumSize: Size(200, 70),
-                      backgroundColor: Palette.primaryColor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                    ),
-                    onPressed: () async {
-                      ///////////////////// Prendre l'image
-                      result = await FilePicker.platform
-                          .pickFiles(type: FileType.custom, allowedExtensions: [
-                        "png",
-                        "jpg",
-                        "jpeg",
-                      ]);
-                      if (result != null) {
-                        file = result!.files.single;
+              padding: EdgeInsets.only(right: 70),
+              color: Palette.secondaryBackgroundColor,
+              alignment: Alignment.centerRight,
+              child: GestureDetector(
+                onTap: () async {
+                  result = await FilePicker.platform
+                      .pickFiles(type: FileType.custom, allowedExtensions: [
+                    "png",
+                    "jpg",
+                    "jpeg",
+                  ]);
+                  if (result != null) {
+                    setState(() {
+                      file = result!.files.single;
 
-                        Uint8List fileBytes =
-                            result!.files.single.bytes as Uint8List;
-                        //print(base64Encode(fileBytes));
-                        //List<int>
-                        _selectedFile = fileBytes;
-                        setState(() {
-                          filee = true;
-                        });
-                      }
-                      ////////////////////
-                    },
+                      Uint8List fileBytes =
+                          result!.files.single.bytes as Uint8List;
+
+                      _selectedFile = fileBytes;
+
+                      filee = true;
+
+                      selectedImageInBytes = result!.files.first.bytes;
+                      _selectFile = true;
+                    });
+                  }
+                },
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 3,
+                      color: Palette.greenColors,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: _selectFile == false
+                        ? const Icon(
+                            Icons.camera_alt_outlined,
+                            color: Palette.greenColors,
+                            size: 40,
+                          )
+                        : Image.memory(
+                            selectedImageInBytes!,
+                            fit: BoxFit.fill,
+                          ),
                   ),
                 ),
-                const SizedBox(
-                  width: 10,
-                ),
-                filee == true
-                    ? Container(
-                        child: Text(
-                          file!.name,
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      )
-                    : Container(),
-              ]),
+              ),
             ),
             const SizedBox(
               height: 10,
             ),
             Container(
               alignment: Alignment.centerRight,
-              child: Container(
+              child: SizedBox(
                 width: 350,
                 child: Row(children: [
                   const SizedBox(
@@ -812,14 +829,14 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                         ajout = false;
                       });
                     }),
-                    child: Text('Enregistrer'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Palette.primaryColor,
-                      minimumSize: Size(150, 50),
-                      maximumSize: Size(200, 70),
+                      minimumSize: const Size(150, 50),
+                      maximumSize: const Size(200, 70),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                     ),
+                    child: const Text('Enregistrer'),
                   ),
                   const SizedBox(
                     width: 20,
@@ -830,16 +847,16 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                         ajout = false;
                       });
                     }),
-                    child: Text(
-                      'Annuler',
-                      style: TextStyle(color: Colors.grey),
-                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Palette.secondaryBackgroundColor,
-                      minimumSize: Size(150, 50),
-                      maximumSize: Size(200, 70),
+                      minimumSize: const Size(150, 50),
+                      maximumSize: const Size(200, 70),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
+                    ),
+                    child: const Text(
+                      'Annuler',
+                      style: TextStyle(color: Colors.grey),
                     ),
                   ),
                 ]),
@@ -880,7 +897,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                   onPressed: () {
                     Navigator.of(context, rootNavigator: true).pop();
                   },
-                  label: Text("Quitter   ")),
+                  label: const Text("Quitter   ")),
               const SizedBox(
                 width: 20,
               ),
@@ -894,7 +911,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                     deleteRestaurant(context, id);
                     Navigator.pop(con);
                   },
-                  label: Text("Supprimer."))
+                  label: const Text("Supprimer."))
             ],
             content: Container(
               alignment: Alignment.center,
@@ -912,6 +929,56 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
         });
   }
 
+  /* Future<void> creationRestaurant(
+    String nomRestaurant,
+    String villeRestaurant,
+    String adresseRestaurant,
+  ) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var id = prefs.getString('IdUser').toString();
+    var token = prefs.getString('token');
+    // Créer un objet FormData
+    var formData = h.FormData();
+
+    // Ajouter les données du formulaire
+    print(id);
+    formData.append('restaurant_name', nomRestaurant);
+    formData.append('address', adresseRestaurant);
+    formData.append('town', villeRestaurant);
+    formData.append('_creator', id);
+
+    // Ajouter un fichier
+    h.FileUploadInputElement fileInput = h.FileUploadInputElement();
+    fileInput.click();
+    await fileInput.onChange.first;
+    List<h.File> files = fileInput.files!;
+    if (files.isNotEmpty) {
+      formData.appendBlob('file', files.first);
+    }
+    print(files.first);
+    // Envoyer la requête
+    var request = h.HttpRequest();
+
+    request.open(
+      'POST',
+      'http://13.39.81.126:4002/api/restaurant/create',
+    );
+    request.setRequestHeader('authorization', 'Bearer $token');
+    request.setRequestHeader('enctype', "multipart/form-data");
+
+    request.send(formData);
+
+    // Traiter la réponse
+    await request.onLoadEnd.first;
+    print(request.status);
+    if (request.status == 200) {
+      print('Requête réussie !');
+    } else {
+      print('Erreur ${request.status} : ${request.statusText}');
+    }
+    ref.refresh(getDataRsetaurantFuture);
+  }
+}*/
   Future<void> creationRestaurant(
     contextt,
     String nomRestaurant,
@@ -925,9 +992,10 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var id = prefs.getString('IdUser').toString();
     var token = prefs.getString('token');
-
-    var url = Uri.parse(
-        "http://13.39.81.126:5000/api/restaurants/create"); //13.39.81.126
+    String adress_url = prefs.getString('ipport').toString();
+    var url =
+        Uri.parse("http://$adress_url/api/restaurants/create"); //13.39.81.126
+    print(url);
     final request = MultipartRequest(
       'POST',
       url,
@@ -996,7 +1064,8 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
-      String urlDelete = "http://13.39.81.126:5000/api/restaurants/delete/$id";
+      String adress_url = prefs.getString('ipport').toString();
+      String urlDelete = "http://$adress_url/api/restaurants/delete/$id";
 
       final http.Response response = await http.delete(
         Uri.parse(urlDelete),

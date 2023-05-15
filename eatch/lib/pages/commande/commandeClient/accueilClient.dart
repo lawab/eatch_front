@@ -72,7 +72,7 @@ class ClientAccueilState extends State<ClientAccueil> {
                 ),
               ),
               Positioned(
-                top: 400,
+                bottom: 100,
                 left: 100,
                 width: 500,
                 height: 250,
