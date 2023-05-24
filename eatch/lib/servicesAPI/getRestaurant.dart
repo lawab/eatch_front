@@ -20,10 +20,10 @@ class GetDataRsetaurantFuture extends ChangeNotifier {
   Future getData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
-    String adress_url = prefs.getString('ipport').toString();
+    //String adress_url = prefs.getString('ipport').toString();
     try {
       http.Response response = await http.get(
-        Uri.parse('http://$adress_url/api/restaurants/fetch/all'), //4002
+        Uri.parse('http://13.39.81.126:4002/api/restaurants/fetch/all'), //4002
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',

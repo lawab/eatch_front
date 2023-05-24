@@ -56,8 +56,15 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
                         height: MediaQuery.of(context).size.height / 4 - 50,
                         width: MediaQuery.of(context).size.width / 4,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(120.0),
-                          color: Palette.secondaryColor,
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(15.0),
+                          //color: Colors.white,
+
+                          image: DecorationImage(
+                              image: NetworkImage(
+                                  'http://13.39.81.126:4002${viewModel.listRsetaurant[index].info!.logo.toString()}'),
+                              //image: AssetImage('Logo_Eatch_png.png'),
+                              fit: BoxFit.cover),
                         ),
                       ),
                       /*CircleAvatar(

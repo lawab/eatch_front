@@ -645,12 +645,12 @@ class AuthentificationState extends State<Authentification> {
   Future<void> login(BuildContext context, email, pass) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    final String response = await rootBundle.loadString('assets/server.json');
+    /*final String response = await rootBundle.loadString('assets/server.json');
     final data = await json.decode(response);
     String adress_url = data['ip'] + ":" + data['port'];
 
-    prefs.setString('ipport', adress_url);
-    String url = "http://$adress_url/api/users/login"; //13.39.81.126:4001
+    prefs.setString('ipport', adress_url);*/
+    String url = "http://13.39.81.126:4001/api/users/login"; //13.39.81.126:4001
     print(url);
     print(email);
     print(pass);

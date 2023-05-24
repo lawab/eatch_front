@@ -200,7 +200,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                     image: DecorationImage(
                                         opacity: 150,
                                         image: NetworkImage(
-                                            'http://$adress_url${listRsetaurant[index].info!.logo.toString()}'),
+                                            'http://13.39.81.126:4002${listRsetaurant[index].info!.logo.toString()}'),
                                         fit: BoxFit.cover),
                                   ),
                                 ),
@@ -423,7 +423,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                       image: DecorationImage(
                                           opacity: 150,
                                           image: NetworkImage(
-                                              'http://$adress_url${listRsetaurant[index].info!.logo.toString()}'),
+                                              'http://13.39.81.126:4002${listRsetaurant[index].info!.logo.toString()}'),
                                           //image: AssetImage('Logo_Eatch_png.png'),
                                           fit: BoxFit.cover),
                                     ),
@@ -992,9 +992,9 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var id = prefs.getString('IdUser').toString();
     var token = prefs.getString('token');
-    String adress_url = prefs.getString('ipport').toString();
-    var url =
-        Uri.parse("http://$adress_url/api/restaurants/create"); //13.39.81.126
+    //String adress_url = prefs.getString('ipport').toString();
+    var url = Uri.parse(
+        "http://13.39.81.126:4002/api/restaurants/create"); //13.39.81.126
     print(url);
     final request = MultipartRequest(
       'POST',
@@ -1064,8 +1064,8 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
-      String adress_url = prefs.getString('ipport').toString();
-      String urlDelete = "http://$adress_url/api/restaurants/delete/$id";
+      //String adress_url = prefs.getString('ipport').toString();
+      String urlDelete = "http://13.39.81.126:4002/api/restaurants/delete/$id";
 
       final http.Response response = await http.delete(
         Uri.parse(urlDelete),
