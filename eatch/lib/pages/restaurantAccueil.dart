@@ -39,23 +39,6 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width - 20,
         alignment: Alignment.center,
-<<<<<<< HEAD
-        child: Container(
-          child: ListView.builder(
-            itemCount: viewModel.listRsetaurant.length,
-            itemBuilder: ((context, index) {
-              return InkWell(
-                child: Card(
-                  color: Palette.primaryColor,
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height / 3,
-                    child: Row(children: [
-                      Expanded(
-                        child: Text(
-                          viewModel.listRsetaurant[index].restaurantName!,
-                          style: const TextStyle(
-                              fontSize: 40, fontWeight: FontWeight.bold),
-=======
         child: Card(
           color: Palette.primaryColor,
           child: Container(
@@ -66,7 +49,7 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
               itemCount: viewModel.listRsetaurant.length,
               itemBuilder: ((context, index) {
                 return InkWell(
-                  child: Container(
+                  child: SizedBox(
                     height: MediaQuery.of(context).size.height / 4,
                     child: Column(children: [
                       Container(
@@ -79,10 +62,9 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
 
                           image: DecorationImage(
                               image: NetworkImage(
-                                  'http://13.39.81.126:4002${viewModel.listRsetaurant[index].info!.logo.toString()}'),
+                                  'http://192.168.1.17:4002${viewModel.listRsetaurant[index].info!.logo.toString()}'), //192.168.11.110:4002
                               //image: AssetImage('Logo_Eatch_png.png'),
                               fit: BoxFit.cover),
->>>>>>> main
                         ),
                       ),
                       /*CircleAvatar(
@@ -94,7 +76,7 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Container(
+                      SizedBox(
                         height: 40,
                         child: Text(
                           viewModel.listRsetaurant[index].restaurantName!,
@@ -106,22 +88,6 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
                       ),
                     ]),
                   ),
-<<<<<<< HEAD
-                ),
-                onTap: () async {
-                  SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
-
-                  prefs.setString('idRestaurant',
-                      viewModel.listRsetaurant[index].sId.toString());
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const DashboardManager()));
-                },
-              );
-            }),
-=======
                   onTap: () async {
                     SharedPreferences prefs =
                         await SharedPreferences.getInstance();
@@ -130,12 +96,11 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => DashboardManager()));
+                            builder: (context) => const DashboardManager()));
                   },
                 );
               }),
             ),
->>>>>>> main
           ),
         ),
       ),

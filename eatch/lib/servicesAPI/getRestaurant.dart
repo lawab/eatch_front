@@ -22,7 +22,8 @@ class GetDataRsetaurantFuture extends ChangeNotifier {
     var token = prefs.getString('token');
     try {
       http.Response response = await http.get(
-        Uri.parse('http://13.39.81.126:5000/api/restaurants/fetch/all'), //4002
+        Uri.parse(
+            'http:////192.168.11.110:4002/api/restaurants/fetch/all'), //4002 //192.168.11.110:4002
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',

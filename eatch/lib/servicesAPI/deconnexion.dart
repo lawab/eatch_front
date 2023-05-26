@@ -25,7 +25,7 @@ Future<http.Response> deconnexionUser(contextt) async {
     print(response.statusCode);
     if (response.statusCode == 200) {
       showTopSnackBar(
-        Overlay.of(contextt)!,
+        Overlay.of(contextt),
         const CustomSnackBar.info(
           backgroundColor: Colors.green,
           message: "Vous etes déconnecté",
@@ -40,7 +40,7 @@ Future<http.Response> deconnexionUser(contextt) async {
       return response;
     } else {
       showTopSnackBar(
-        Overlay.of(contextt)!,
+        Overlay.of(contextt),
         const CustomSnackBar.info(
           backgroundColor: Colors.red,
           message: "Déconnexion impossible",

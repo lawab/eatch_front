@@ -650,7 +650,8 @@ class AuthentificationState extends State<Authentification> {
     String adress_url = data['ip'] + ":" + data['port'];
 
     prefs.setString('ipport', adress_url);
-    String url = "http://$adress_url/api/users/login"; //13.39.81.126:4001
+    String url =
+        "http://192.168.1.34:4001/api/users/login"; //13.39.81.126:4001 //192.168.11.110:4001 // $adress_url
     print(url);
     print(email);
     print(pass);

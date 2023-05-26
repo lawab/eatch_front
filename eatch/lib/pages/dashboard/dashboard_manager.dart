@@ -228,7 +228,7 @@ class DashboardManagerState extends ConsumerState<DashboardManager> {
                                         : viewModel
                                                 .listCategories[
                                                     selectedIndexCategorie]
-                                                .produits!
+                                                .products!
                                                 .isEmpty
                                             ? const Center(
                                                 child: Text(
@@ -239,7 +239,7 @@ class DashboardManagerState extends ConsumerState<DashboardManager> {
                                                 filterproductsList: viewModel
                                                     .listCategories[
                                                         selectedIndexCategorie]
-                                                    .produits!,
+                                                    .products!,
                                                 crossAxisCount: MediaQuery.of(
                                                                 context)
                                                             .size

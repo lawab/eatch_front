@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 import '../../servicesAPI/multipart.dart';
 import 'package:http/http.dart' as http;
@@ -27,6 +29,14 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
   var nomController = TextEditingController();
   var stockController = TextEditingController();
   var peremptionController = TextEditingController();
+
+  _clear() {
+    setState(() {
+      nomController.clear();
+      stockController.clear();
+      peremptionController.clear();
+    });
+  }
 
   MediaQueryData mediaQueryData(BuildContext context) {
     return MediaQuery.of(context);
@@ -47,6 +57,12 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
   List<int>? _selectedFile = [];
   FilePickerResult? result;
   PlatformFile? file;
+  Uint8List? selectedImageInBytes;
+  bool filee = false;
+
+  bool isLoading = false;
+  bool _selectFile = false;
+  String? matiereImage;
 
   bool checkImagee = false;
   bool checkImage = false;
@@ -74,7 +90,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
   }
 
   DateTime date = DateTime.now();
-  String dateJour = '';
+  //String dateJour = '';
   bool dd = false;
 
   @override
@@ -148,8 +164,8 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                           alignment: Alignment.centerRight,
                           height: 50,
                           color: Palette.secondaryColor,
-                          child: Row(
-                            children: const [
+                          child: const Row(
+                            children: [
                               SizedBox(
                                 width: 50,
                               ),
@@ -325,44 +341,63 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                         // fin --------------------------------------------
                         // Creation du bouton qui reécupere l'image
                         Container(
-                          //width: 350,
-                          child: Row(
+                          color: Palette.secondaryBackgroundColor,
+                          child: GestureDetector(
+                            onTap: () async {
+                              result = await FilePicker.platform.pickFiles(
+                                  type: FileType.custom,
+                                  allowedExtensions: [
+                                    "png",
+                                    "jpg",
+                                    "jpeg",
+                                  ]);
+                              if (result != null) {
+                                setState(() {
+                                  file = result!.files.single;
+
+                                  Uint8List fileBytes =
+                                      result!.files.single.bytes as Uint8List;
+
+                                  _selectedFile = fileBytes;
+
+                                  filee = true;
+
+                                  selectedImageInBytes =
+                                      result!.files.first.bytes;
+                                  _selectFile = true;
+                                });
+                              }
+                            },
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    final result = await FilePicker.platform
-                                        .pickFiles(
-                                            type: FileType.custom,
-                                            allowedExtensions: [
-                                          "png",
-                                          "jpg",
-                                          "jpeg",
-                                        ]);
-
-                                    if (result != null) {
-                                      file = result.files.single;
-                                      Uint8List fileBytes = result
-                                          .files.single.bytes as Uint8List;
-                                      //print(base64Encode (fileBytes))
-                                      //List<int>
-                                      _selectedFile = fileBytes;
-                                      /*setState(() {
-                                  filee = true;
-                                });*/
-                                    }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Palette.primaryColor,
-                                    minimumSize: const Size(150, 40),
-                                    maximumSize: const Size(200, 60),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
+                                Container(
+                                  width: 100,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      width: 4,
+                                      color: Palette.greenColors,
+                                    ),
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
-                                  child: const Text("Image"),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(16),
+                                    child: _selectFile == false
+                                        ? const Icon(
+                                            Icons.camera_alt_outlined,
+                                            color: Palette.greenColors,
+                                            size: 40,
+                                          )
+                                        : Image.memory(
+                                            selectedImageInBytes!,
+                                            fit: BoxFit.fill,
+                                          ),
+                                  ),
                                 ),
-                              ]),
+                              ],
+                            ),
+                          ),
                         ),
 
                         const SizedBox(
@@ -390,6 +425,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                                   );
                                   setState(() {
                                     ajout = false;
+                                    _clear();
                                   });
                                   //setState(() {});
                                 }),
@@ -409,6 +445,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                                 onPressed: (() {
                                   setState(() {
                                     ajout = false;
+                                    _clear();
                                   });
                                 }),
                                 style: ElevatedButton.styleFrom(
@@ -453,7 +490,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                       image: DecorationImage(
                           opacity: 50,
                           image: NetworkImage(
-                              "http://13.39.81.126:5000${matiere[index].image!}"),
+                              "http://192.168.11.110:4008${matiere[index].image!}"), //13.39.81.126:5000
                           fit: BoxFit.cover),
                     ),
                     child: Column(
@@ -506,7 +543,8 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                                       context,
                                       matiere[index].mpName!,
                                       matiere[index].quantity!,
-                                      matiere[index].unity!);
+                                      matiere[index].unity!,
+                                      matiere[index].sId!);
                                 }),
                                 icon: const Icon(Icons.edit),
                                 label: const Text('Modifier'),
@@ -586,8 +624,8 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                         alignment: Alignment.centerRight,
                         height: 50,
                         color: const Color(0xFFFCEBD1),
-                        child: Row(
-                          children: const [
+                        child: const Row(
+                          children: [
                             SizedBox(
                               width: 50,
                             ),
@@ -721,43 +759,63 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                       // fin --------------------------------------------
                       // Creation du bouton qui reécupere l'image
                       Container(
-                        //width: 350,
-                        child: Row(
+                        color: Palette.secondaryBackgroundColor,
+                        child: GestureDetector(
+                          onTap: () async {
+                            result = await FilePicker.platform.pickFiles(
+                                type: FileType.custom,
+                                allowedExtensions: [
+                                  "png",
+                                  "jpg",
+                                  "jpeg",
+                                ]);
+                            if (result != null) {
+                              setState(() {
+                                file = result!.files.single;
+
+                                Uint8List fileBytes =
+                                    result!.files.single.bytes as Uint8List;
+
+                                _selectedFile = fileBytes;
+
+                                filee = true;
+
+                                selectedImageInBytes =
+                                    result!.files.first.bytes;
+                                _selectFile = true;
+                              });
+                            }
+                          },
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              ElevatedButton(
-                                onPressed: () async {
-                                  final result = await FilePicker.platform
-                                      .pickFiles(
-                                          type: FileType.custom,
-                                          allowedExtensions: [
-                                        "png",
-                                        "jpg",
-                                        "jpeg",
-                                      ]);
-
-                                  if (result != null) {
-                                    file = result.files.single;
-                                    Uint8List fileBytes =
-                                        result.files.single.bytes as Uint8List;
-                                    //print(base64Encode (fileBytes))
-                                    //List<int>
-                                    _selectedFile = fileBytes;
-                                    /*setState(() {
-                                  filee = true;
-                                });*/
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Palette.primaryColor,
-                                  minimumSize: const Size(150, 40),
-                                  maximumSize: const Size(200, 60),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
+                              Container(
+                                width: 100,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 4,
+                                    color: Palette.greenColors,
+                                  ),
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
-                                child: const Text("Image"),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: _selectFile == false
+                                      ? const Icon(
+                                          Icons.camera_alt_outlined,
+                                          color: Palette.greenColors,
+                                          size: 40,
+                                        )
+                                      : Image.memory(
+                                          selectedImageInBytes!,
+                                          fit: BoxFit.fill,
+                                        ),
+                                ),
                               ),
-                            ]),
+                            ],
+                          ),
+                        ),
                       ),
 
                       const SizedBox(
@@ -817,7 +875,10 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                             ),
                             ElevatedButton(
                               onPressed: (() {
-                                setState(() {});
+                                setState(() {
+                                  ajout = false;
+                                  _clear();
+                                });
                               }),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Palette.primaryColor,
@@ -835,6 +896,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                               onPressed: (() {
                                 setState(() {
                                   ajout = false;
+                                  _clear();
                                 });
                               }),
                               style: ElevatedButton.styleFrom(
@@ -879,7 +941,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                     image: DecorationImage(
                         opacity: 50,
                         image: NetworkImage(
-                            "http://13.39.81.126:5000${matiere[index].image!}"),
+                            "http://192.168.11.110:4008${matiere[index].image!}"),
                         fit: BoxFit.cover),
                   ),
                   child: Column(
@@ -932,7 +994,8 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                                     context,
                                     matiere[index].mpName!,
                                     matiere[index].quantity!,
-                                    matiere[index].unity!);
+                                    matiere[index].unity!,
+                                    matiere[index].sId!);
                               }),
                               icon: const Icon(Icons.edit),
                               label: const Text('Modifier'),
@@ -1018,13 +1081,13 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
         });
   }
 
-  Future dialogModif(
-      BuildContext contextt, String nom, int init, String mesure) {
+  Future dialogModif(BuildContext contextt, String nom, int init, String mesure,
+      String idMatiere) {
     print('dedans');
     int count = init;
     return showDialog(
         context: contextt,
-        builder: (contextt) {
+        builder: (co) {
           return AlertDialog(
             backgroundColor: Colors.white,
             title: const Center(
@@ -1058,7 +1121,11 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                   ),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Palette.deleteColors),
-                  onPressed: () {},
+                  onPressed: () {
+                    ModificationMatierePremiere(
+                        context, nom, count, mesure, idMatiere);
+                    Navigator.of(co, rootNavigator: true).pop();
+                  },
                   label: const Text("Valider."))
             ],
             content: StatefulBuilder(
@@ -1156,7 +1223,10 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
     var restaurantId = prefs.getString('idRestaurant').toString();
     var token = prefs.getString('token');
 
-    var url = Uri.parse("http://13.39.81.126:5000/api/materials/create");
+    String adressUrl = prefs.getString('ipport').toString();
+
+    var url = Uri.parse(
+        "http://192.168.11.110:4008/api/materials/create"); // 192.168.11.110:4008
     final request = MultipartRequest(
       'POST',
       url,
@@ -1200,8 +1270,22 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
         });
         //stopMessage();
         //finishWorking();
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.info(
+            backgroundColor: Colors.green,
+            message: "La matière première a été crée",
+          ),
+        );
         ref.refresh(getDataMatiereFuture);
       } else {
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.info(
+            backgroundColor: Colors.red,
+            message: "La matière première n'a pas été crée",
+          ),
+        );
         print("Error Create Programme  !!!");
       }
     } catch (e) {
@@ -1217,13 +1301,11 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var id = prefs.getString('IdUser').toString();
 
-      print(id);
-      print(idMatierePremiere);
+      String adressUrl = prefs.getString('ipport').toString();
 
       var token = prefs.getString('token');
       String urlDelete =
-          "http://13.39.81.126:5000/api/materials/delete/$idMatierePremiere";
-
+          "http://192.168.11.110:4008/api/materials/delete/$idMatierePremiere"; // 192.168.11.110:4008 //$adressUrl
       var json = {'_creator': id};
 
       var body = jsonEncode(json);
@@ -1233,7 +1315,6 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
         'Accept': 'application/json',
         'authorization': 'Bearer $token',
-        //'body': body
       }, body: {
         '_creator': id
       });
@@ -1242,13 +1323,115 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
       print(response.body);
 
       if (response.statusCode == 200) {
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.info(
+            backgroundColor: Colors.green,
+            message: "La matière première a été supprimée avec succès",
+          ),
+        );
         ref.refresh(getDataMatiereFuture);
         return response;
       } else {
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.info(
+            backgroundColor: Colors.green,
+            message: "La matière première n'a pas été supprimée succès",
+          ),
+        );
         return Future.error("Server Error");
       }
     } catch (e) {
       return Future.error(e);
+    }
+  }
+
+///// - Modification de matiere premiere
+  Future<void> ModificationMatierePremiere(
+    BuildContext context,
+    String nomMatierePremiere,
+    int quantite,
+    String mesures,
+    String idModifMatiere,
+  ) async {
+    ////////////
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var id = prefs.getString('IdUser').toString();
+    var restaurantId = prefs.getString('idRestaurant').toString();
+    var token = prefs.getString('token');
+
+    String adressUrl = prefs.getString('ipport').toString();
+
+    var url = Uri.parse(
+        "http://192.168.11.110:4008/api/materials/update/$idModifMatiere"); //$adressUrl
+    final request = MultipartRequest(
+      'PUT',
+      url,
+      // ignore: avoid_returning_null_for_void
+      onProgress: (int bytes, int total) {
+        final progress = bytes / total;
+        print('progress: $progress ($bytes/$total)');
+      },
+    );
+
+    var json = {
+      'restaurant': restaurantId,
+      'mp_name': nomMatierePremiere,
+      'quantity': quantite,
+      'unity': mesures,
+      '_creator': id,
+    };
+    var body = jsonEncode(json);
+
+    request.headers.addAll({
+      "body": body,
+    });
+
+    request.fields['form_key'] = 'form_value';
+    request.headers['authorization'] = 'Bearer $token';
+    // request.files.add(await http.MultipartFile.fromBytes('file', selectedFile,
+    //     contentType: MediaType('application', 'octet-stream'),
+    //     filename: result?.files.first.name));
+
+    print("RESPENSE SEND STEAM FILE REQ");
+    //var responseString = await streamedResponse.stream.bytesToString();
+    var response = await request.send();
+    print("Upload Response" + response.toString());
+    print(response.statusCode);
+    print(request.headers);
+
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        await response.stream.bytesToString().then((value) {
+          print(value);
+        });
+
+        //stopMessage();
+        //finishWorking();
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.info(
+            backgroundColor: Colors.green,
+            message: "La matière première a été modifié",
+          ),
+        );
+        setState(() {
+          ref.refresh(getDataMatiereFuture);
+        });
+      } else {
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.info(
+            backgroundColor: Colors.red,
+            message: "La matière première n'a pas été modifié",
+          ),
+        );
+        print("Error Create Programme  !!!");
+      }
+    } catch (e) {
+      throw e;
     }
   }
 }

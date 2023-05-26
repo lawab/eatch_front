@@ -44,6 +44,7 @@ class RestaurantModificationState
   var villeController = TextEditingController();
   var adresseController = TextEditingController();
   var employeController = TextEditingController();
+
   List<int> _selectedFile = [];
   FilePickerResult? result;
   PlatformFile? file;
@@ -82,7 +83,7 @@ class RestaurantModificationState
                     const SizedBox(
                       width: 50,
                     ),
-                    Text('Modification de restaurant'),
+                    const Text('Modification de restaurant'),
                     Expanded(child: Container()),
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
@@ -93,8 +94,8 @@ class RestaurantModificationState
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      icon: Icon(Icons.backspace),
-                      label: Text('Retour'),
+                      icon: const Icon(Icons.backspace),
+                      label: const Text('Retour'),
                     ),
                     const SizedBox(
                       width: 20,
@@ -140,7 +141,7 @@ class RestaurantModificationState
                       // If  you are using latest version of flutter then lable text and hint text shown like this
                       // if you r using flutter less then 1.20.* then maybe this is not working properly
                       floatingLabelBehavior: FloatingLabelBehavior.always,
-                      suffixIcon: Icon(Icons.food_bank)),
+                      suffixIcon: const Icon(Icons.food_bank)),
                 ),
               ),
               const SizedBox(
@@ -181,7 +182,7 @@ class RestaurantModificationState
                       // If  you are using latest version of flutter then lable text and hint text shown like this
                       // if you r using flutter less then 1.20.* then maybe this is not working properly
                       floatingLabelBehavior: FloatingLabelBehavior.always,
-                      suffixIcon: Icon(Icons.location_city)),
+                      suffixIcon: const Icon(Icons.location_city)),
                 ),
               ),
               const SizedBox(
@@ -222,7 +223,7 @@ class RestaurantModificationState
                       // If  you are using latest version of flutter then lable text and hint text shown like this
                       // if you r using flutter less then 1.20.* then maybe this is not working properly
                       floatingLabelBehavior: FloatingLabelBehavior.always,
-                      suffixIcon: Icon(Icons.local_activity)),
+                      suffixIcon: const Icon(Icons.local_activity)),
                 ),
               ),
               const SizedBox(
@@ -263,7 +264,7 @@ class RestaurantModificationState
                       // If  you are using latest version of flutter then lable text and hint text shown like this
                       // if you r using flutter less then 1.20.* then maybe this is not working properly
                       floatingLabelBehavior: FloatingLabelBehavior.always,
-                      suffixIcon: Icon(Icons.person)),
+                      suffixIcon: const Icon(Icons.person)),
                 ),
               ),
               const SizedBox(
@@ -363,8 +364,8 @@ class RestaurantModificationState
                 }),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Palette.primaryColor,
-                  minimumSize: Size(150, 50),
-                  maximumSize: Size(200, 70),
+                  minimumSize: const Size(150, 50),
+                  maximumSize: const Size(200, 70),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                 ),
@@ -436,7 +437,7 @@ class RestaurantModificationState
         //stopMessage();
         //finishWorking();
         showTopSnackBar(
-          Overlay.of(contextt)!,
+          Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.green,
             message: "Restaurant Modifié",
@@ -446,7 +447,7 @@ class RestaurantModificationState
         Navigator.pop(contextt);
       } else {
         showTopSnackBar(
-          Overlay.of(contextt)!,
+          Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.red,
             message: "Erreur de création",

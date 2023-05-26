@@ -12,6 +12,7 @@ import 'package:eatch/servicesAPI/deconnexion.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../pages/dashboard/dashboard_comptable.dart';
 import '../pages/users/presentation/users.dart';
 import 'palettes/palette.dart';
 
@@ -74,15 +75,36 @@ class _NavigationState extends State<Navigation> {
             );
           },
         ),
+        ////////////////////////////////////
         NavigationButton(
           axis: widget.orientation,
           index: index,
-          text: "UTILISATEURS",
+          text: "Dashboard",
           selectedIndex: 1,
           onPress: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             setState(() {
               index = 1;
+              prefs.setInt('index', index);
+            });
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => const DashboardComptable(),
+              ),
+            );
+          },
+        ),
+        //////////////////////////////////////
+        NavigationButton(
+          axis: widget.orientation,
+          index: index,
+          text: "UTILISATEURS",
+          selectedIndex: 2,
+          onPress: () async {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            setState(() {
+              index = 2;
               prefs.setInt('index', index);
             });
             Navigator.push(
@@ -97,11 +119,11 @@ class _NavigationState extends State<Navigation> {
           axis: widget.orientation,
           index: index,
           text: "CATÉGORIES",
-          selectedIndex: 2,
+          selectedIndex: 3,
           onPress: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             setState(() {
-              index = 2;
+              index = 3;
               prefs.setInt('index', index);
             });
             Navigator.push(
@@ -116,11 +138,11 @@ class _NavigationState extends State<Navigation> {
           axis: widget.orientation,
           index: index,
           text: "GESTION DE RESTAURANT",
-          selectedIndex: 3,
+          selectedIndex: 4,
           onPress: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             setState(() {
-              index = 3;
+              index = 4;
               prefs.setInt('index', index);
             });
             Navigator.push(
@@ -135,11 +157,11 @@ class _NavigationState extends State<Navigation> {
           axis: widget.orientation,
           index: index,
           text: "MATIERE PREMIERE",
-          selectedIndex: 4,
+          selectedIndex: 5,
           onPress: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             setState(() {
-              index = 4;
+              index = 5;
               prefs.setInt('index', index);
             });
             Navigator.push(
@@ -154,11 +176,11 @@ class _NavigationState extends State<Navigation> {
           axis: widget.orientation,
           index: index,
           text: "Menu",
-          selectedIndex: 5,
+          selectedIndex: 6,
           onPress: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             setState(() {
-              index = 5;
+              index = 6;
               prefs.setInt('index', index);
             });
             Navigator.push(
@@ -173,11 +195,11 @@ class _NavigationState extends State<Navigation> {
           axis: widget.orientation,
           index: index,
           text: "Promotion",
-          selectedIndex: 6,
+          selectedIndex: 7,
           onPress: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             setState(() {
-              index = 6;
+              index = 7;
               prefs.setInt('index', index);
             });
             Navigator.push(
@@ -192,11 +214,11 @@ class _NavigationState extends State<Navigation> {
           axis: widget.orientation,
           index: index,
           text: "RECETTES",
-          selectedIndex: 7,
+          selectedIndex: 8,
           onPress: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             setState(() {
-              index = 7;
+              index = 8;
               prefs.setInt('index', index);
             });
             Navigator.push(
@@ -211,11 +233,11 @@ class _NavigationState extends State<Navigation> {
           axis: widget.orientation,
           index: index,
           text: "QUITTER L'APPLICATION",
-          selectedIndex: 8,
+          selectedIndex: 9,
           onPress: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             setState(() {
-              index = 7;
+              index = 9;
               prefs.setInt('index', 0);
             });
             deconnexionUser(context);

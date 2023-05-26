@@ -1,8 +1,14 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:eatch/servicesAPI/get_categories.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../../servicesAPI/getProduit.dart';
+import '../../../servicesAPI/multipart.dart';
 import '../../../utils/default_button/default_button.dart';
 import '../../../utils/palettes/palette.dart';
 import '../../../utils/size/size.dart';
@@ -39,7 +45,9 @@ class CreationProduitState extends ConsumerState<CreationProduit> {
   //**********************************/
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+    BuildContext context,
+  ) {
     SizeConfig().init(context);
     final viewModel = ref.watch(getDataCategoriesFuture);
     return Scaffold(
@@ -94,7 +102,16 @@ class CreationProduitState extends ConsumerState<CreationProduit> {
                                 _formKey.currentState!.save();
                                 print("nom is $_produitTitle");
                                 print("prix is $_produitPrice");
-                                print("prix is $_produitCategorie");
+                                //print("prix is $_produitCategorie");
+                                // creationProduct(
+                                //     context,
+                                //     //selectedFile,
+                                //     //result,
+                                //     //quantity,
+                                //     //price,
+                                //     //productName,
+                                //     //category,
+                                //     //materials);
                               } else {
                                 print("Bad");
                               }
@@ -286,6 +303,87 @@ class CreationProduitState extends ConsumerState<CreationProduit> {
       }).toList(),
     );
   }
+
+  ////////////////////
+  ///////////////////////
+  Future<void> creationProduct(
+    context,
+    selectedFile,
+    result,
+    quantity,
+    price,
+    productName,
+    category,
+    materials,
+  ) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var id = prefs.getString('IdUser').toString();
+    var token = prefs.getString('token');
+    var restaurantid = prefs.getString('idRestaurant');
+    print(id);
+    print(token);
+    print("Restaurant id $restaurantid");
+
+    var url = Uri.parse("http://192.168.1.34:4003/api/products/create");
+    final request = MultipartRequest(
+      'POST',
+      url,
+      onProgress: (int bytes, int total) {
+        final progress = bytes / total;
+        print('progress: $progress ($bytes/$total)');
+      },
+    );
+    var json = {
+      "quantity": quantity,
+      "price": price,
+      "productName": productName,
+      "category": category,
+      "materials": materials,
+      "restaurant": restaurantid!.trim(),
+      "_creator": id,
+    };
+    var body = jsonEncode(json);
+
+    request.headers.addAll({
+      "body": body,
+    });
+
+    request.fields['form_key'] = 'form_value';
+    request.headers['authorization'] = 'Bearer $token';
+    request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
+        contentType: MediaType('application', 'octet-stream'),
+        filename: result.files.first.name));
+
+    print("RESPENSE SEND STEAM FILE REQ");
+    var response = await request.send();
+    print("Upload Response$response");
+    print(response.statusCode);
+    print(request.headers);
+
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        await response.stream.bytesToString().then((value) {
+          print(value);
+        });
+        setState(() {
+          ref.refresh(GetDataProduitFuture as Refreshable);
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Utilisateur crée"),
+        ));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Erreur de serveur"),
+        ));
+        print("Error Create Programme  !!!");
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  ///
 }
 
 class CustomSurffixIcon extends StatelessWidget {

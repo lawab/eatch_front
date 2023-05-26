@@ -15,7 +15,7 @@ class ProductsGrid extends ConsumerStatefulWidget {
     this.childAspectRatio = 1 / 1.19,
   }) : super(key: key);
 
-  final List<Produits> filterproductsList;
+  final List<Products> filterproductsList;
   final int crossAxisCount;
   final double mainAxisSpacing;
   final double crossAxisSpacing;
@@ -44,17 +44,17 @@ class ProductsGridState extends ConsumerState<ProductsGrid> {
             childAspectRatio: widget.childAspectRatio,
           ),
           itemBuilder: (context, index) => ProductCard(
-            imageUrl: widget.filterproductsList[index].imageUrl!,
+            imageUrl: widget.filterproductsList[index].image!,
             price: widget.filterproductsList[index].price!,
-            title: widget.filterproductsList[index].title!,
+            title: widget.filterproductsList[index].productName!,
             onTapProduitCard: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (BuildContext context) => Produitpage(
-                    imageUrl: widget.filterproductsList[index].imageUrl!,
+                    imageUrl: widget.filterproductsList[index].image!,
                     price: widget.filterproductsList[index].price!,
-                    title: widget.filterproductsList[index].title!,
+                    title: widget.filterproductsList[index].productName!,
                   ),
                 ),
               );

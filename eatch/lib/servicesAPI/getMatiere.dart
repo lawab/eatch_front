@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,12 +20,14 @@ class GetDataMatiereFuture extends ChangeNotifier {
   Future getData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
+    var restaurantId = prefs.getString('idRestaurant').toString();
 
     listMatiere = [];
 
     try {
       http.Response response = await http.get(
-        Uri.parse('http://13.39.81.126:5000/api/materials/fetch/all'),
+        Uri.parse(
+            'http://192.168.11.110:4008/api/materials/fetch/restaurant/$restaurantId'), //13.39.81.126:5000 //192.168.11.110:4008
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',

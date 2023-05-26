@@ -30,11 +30,13 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
   var villeController = TextEditingController();
   var adresseController = TextEditingController();
   var employeController = TextEditingController();
+
   bool ajout = false;
   List<int> _selectedFile = [];
   FilePickerResult? result;
   PlatformFile? file;
   bool filee = false;
+  Uint8List? selectedImageInBytes;
 
   MediaQueryData mediaQueryData(BuildContext context) {
     return MediaQuery.of(context);
@@ -52,6 +54,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
     return size(buildContext).height;
   }
 
+  bool _selectFile = false;
   bool checkImagee = false;
   bool checkImage = false;
   bool _working = false;
@@ -105,11 +108,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
               ? Container(
                   alignment: Alignment.centerRight,
                   height: 80,
-<<<<<<< HEAD
-                  color: const Color(0xFFFCEBD1),
-=======
                   color: Palette.yellowColor, //Color(0xFFFCEBD1),
->>>>>>> main
                   child: Row(
                     children: [
                       const SizedBox(
@@ -141,14 +140,6 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                   height: 400,
                   child: creation(),
                 ),
-<<<<<<< HEAD
-          const SizedBox(
-            height: 5,
-          ),
-          SizedBox(
-            height: ajout == false ? height - 175 : height - 495,
-            width: width - 20,
-=======
           ajout == true
               ? const Divider(
                   height: 5,
@@ -162,7 +153,6 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
             width: width,
             padding:
                 const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
->>>>>>> main
             child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 470,
@@ -335,208 +325,6 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
   Widget verticalView(
       double height, double width, context, List<Restaurant> listRsetaurant) {
     return AppLayout(
-<<<<<<< HEAD
-        content: Column(
-      children: [
-        ajout == false
-            ? Container(
-                alignment: Alignment.centerRight,
-                height: 80,
-                color: const Color(0xFFFCEBD1),
-                child: Row(
-                  children: [
-                    const SizedBox(
-                      width: 50,
-                    ),
-                    const Text('Gestion de restaurant'),
-                    Expanded(child: Container()),
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Palette.primaryColor,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          ajout = true;
-                        });
-                      },
-                      icon: const Icon(Icons.add),
-                      label: const Text('Créer un restaurant'),
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                  ],
-                ),
-              )
-            : SizedBox(
-                height: 300,
-                child: creation(),
-              ),
-        const SizedBox(
-          height: 5,
-        ),
-        SizedBox(
-            height: ajout == false ? height - 250 : height - 470,
-            width: width - 20,
-            child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 450,
-                    childAspectRatio: 1,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 50,
-                    mainAxisExtent: 300),
-                itemCount: listRsetaurant.length,
-                itemBuilder: (BuildContext ctx, index) {
-                  return GestureDetector(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.green, //Color(0xFF1E9647),
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            width: width / 3,
-                            height: height / 3 - 20,
-                            child: Stack(
-                              fit: StackFit.expand,
-                              children: [
-                                //Logo_Eatch_png.png
-                                Container(
-                                  width: width / 5,
-                                  height: height / 3 - 20,
-                                  decoration: BoxDecoration(
-                                    color: Colors.black,
-                                    borderRadius: BorderRadius.circular(15.0),
-                                    //color: Colors.white,
-
-                                    image: DecorationImage(
-                                        opacity: 150,
-                                        image: NetworkImage(
-                                            'http://13.39.81.126:4002${listRsetaurant[index].info!.logo.toString()}'),
-                                        //image: AssetImage('Logo_Eatch_png.png'),
-                                        fit: BoxFit.cover),
-                                  ),
-                                ),
-                                //Image.asset('eatch.jpg', fit: BoxFit.cover),
-                                /*ClipRRect(
-                                // Clip it cleanly.
-                                child: BackdropFilter(
-                                  filter:
-                                      ImageFilter.blur(sigmaX: 2, sigmaY: 1),
-                                  child: Container(),
-                                ),
-                              ),*/
-                                Positioned(
-                                  top: 5,
-                                  left: 30,
-                                  width: width / 5,
-                                  height: 50,
-                                  child: Text(
-                                    'Nom du restaurant: ${listRsetaurant[index].restaurantName!}',
-                                    style: const TextStyle(
-                                        fontFamily: 'Righteous',
-                                        fontSize: 18,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontStyle: FontStyle.italic),
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 60,
-                                  left: 30,
-                                  width: width / 5,
-                                  height: 30,
-                                  child: Text(
-                                    "Ville: ${listRsetaurant[index].info!.town!}",
-                                    style: const TextStyle(
-                                      fontFamily: 'Righteous',
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 90,
-                                  left: 30,
-                                  width: width / 5,
-                                  height: 30,
-                                  child: Text(
-                                    "Adresse: ${listRsetaurant[index].info!.address!}",
-                                    style: const TextStyle(
-                                      fontFamily: 'Righteous',
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 120,
-                                  left: 30,
-                                  width: width / 5,
-                                  height: 30,
-                                  child: const Text(
-                                    "Nombre d'emplyé: 50",
-                                    style: TextStyle(
-                                      fontFamily: 'Righteous',
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 150,
-                                  left: 30,
-                                  width: width / 5,
-                                  height: 30,
-                                  child: Text(
-                                    "Date de création: ${listRsetaurant[index].createdAt}",
-                                    style: const TextStyle(
-                                      fontFamily: 'Righteous',
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                              width: width / 5,
-                              height: 50,
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: IconButton(
-                                      onPressed: (() {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    RestaurantModification(
-                                                      restaurant:
-                                                          listRsetaurant[index],
-                                                    )));
-                                      }),
-                                      icon: const Icon(
-                                        Icons.edit,
-                                        color: Color(0xFFF09F1B),
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: IconButton(
-                                      onPressed: (() {
-                                        dialogDelete(
-                                            listRsetaurant[index]
-                                                .sId
-                                                .toString(),
-                                            listRsetaurant[index]
-                                                .restaurantName
-                                                .toString());
-                                      }),
-                                      icon: const Icon(
-                                        Icons.delete,
-                                        color: Color(0xFFF09F1B),
-=======
       content: Column(
         children: [
           ajout == false
@@ -650,7 +438,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                     height: 30,
                                     child: Text(
                                       "Ville: ${listRsetaurant[index].info!.town!}",
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontFamily: 'Righteous',
                                         color: Colors.white,
                                       ),
@@ -663,7 +451,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                     height: 30,
                                     child: Text(
                                       "Adresse: ${listRsetaurant[index].info!.address!}",
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontFamily: 'Righteous',
                                         color: Colors.white,
                                       ),
@@ -689,10 +477,9 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                     height: 30,
                                     child: Text(
                                       "Date de création: ${listRsetaurant[index].createdAt}",
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontFamily: 'Righteous',
                                         color: Colors.white,
->>>>>>> main
                                       ),
                                     ),
                                   ),
@@ -717,7 +504,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                                                 index],
                                                       )));
                                         }),
-                                        icon: Icon(
+                                        icon: const Icon(
                                           Icons.edit,
                                           color: Color(0xFFF09F1B),
                                         ),
@@ -734,7 +521,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                                   .restaurantName
                                                   .toString());
                                         }),
-                                        icon: Icon(
+                                        icon: const Icon(
                                           Icons.delete,
                                           color: Palette.deleteColors,
                                         ),
@@ -951,57 +738,58 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
               height: 30,
             ),
             Container(
-              child: Row(children: [
-                Expanded(child: Container()),
-                Container(
-                  height: 50,
-                  width: 200,
-                  child: ElevatedButton.icon(
-                    label: Text('Image restaurant'),
-                    icon: Icon(Icons.download),
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size(150, 50),
-                      maximumSize: Size(200, 70),
-                      backgroundColor: Palette.primaryColor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                    ),
-                    onPressed: () async {
-                      ///////////////////// Prendre l'image
-                      result = await FilePicker.platform
-                          .pickFiles(type: FileType.custom, allowedExtensions: [
-                        "png",
-                        "jpg",
-                        "jpeg",
-                      ]);
-                      if (result != null) {
-                        file = result!.files.single;
+              padding: EdgeInsets.only(right: 70),
+              color: Palette.secondaryBackgroundColor,
+              alignment: Alignment.centerRight,
+              child: GestureDetector(
+                onTap: () async {
+                  result = await FilePicker.platform
+                      .pickFiles(type: FileType.custom, allowedExtensions: [
+                    "png",
+                    "jpg",
+                    "jpeg",
+                  ]);
+                  if (result != null) {
+                    setState(() {
+                      file = result!.files.single;
 
-                        Uint8List fileBytes =
-                            result!.files.single.bytes as Uint8List;
-                        //print(base64Encode(fileBytes));
-                        //List<int>
-                        _selectedFile = fileBytes;
-                        setState(() {
-                          filee = true;
-                        });
-                      }
-                      ////////////////////
-                    },
+                      Uint8List fileBytes =
+                          result!.files.single.bytes as Uint8List;
+
+                      _selectedFile = fileBytes;
+
+                      filee = true;
+
+                      selectedImageInBytes = result!.files.first.bytes;
+                      _selectFile = true;
+                    });
+                  }
+                },
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 1,
+                      color: const Color(0xFFDCE0E0),
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: _selectFile == false
+                        ? const Icon(
+                            Icons.camera_alt_outlined,
+                            color: Color(0xFFDCE0E0),
+                            size: 40,
+                          )
+                        : Image.memory(
+                            selectedImageInBytes!,
+                            fit: BoxFit.fill,
+                          ),
                   ),
                 ),
-                const SizedBox(
-                  width: 10,
-                ),
-                filee == true
-                    ? Container(
-                        child: Text(
-                          file!.name,
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      )
-                    : Container(),
-              ]),
+              ),
             ),
             const SizedBox(
               height: 10,
@@ -1141,10 +929,6 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var id = prefs.getString('IdUser').toString();
     var token = prefs.getString('token');
-<<<<<<< HEAD
-    var nomFile = '';
-=======
->>>>>>> main
 
     var url = Uri.parse(
         "http://13.39.81.126:5000/api/restaurants/create"); //13.39.81.126
@@ -1190,7 +974,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
         //finishWorking();
 
         showTopSnackBar(
-          Overlay.of(contextt)!,
+          Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.green,
             message: "Restaurant Modifié",
@@ -1198,79 +982,14 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
         );
         ref.refresh(getDataRsetaurantFuture);
       } else {
-<<<<<<< HEAD
-        // Speciale web
-
-        print('Speciale web');
-        fileBytes = result.files.single.bytes as Uint8List;
-      }
-
-      List<int> selectedFile = fileBytes;
-
-      var url = Uri.parse("http://13.39.81.126:4002/api/restaurants/create");
-      final request = MultipartRequest(
-        'POST',
-        url,
-        onProgress: (int bytes, int total) {
-          final progress = bytes / total;
-          print('progress: $progress ($bytes/$total)');
-        },
-      );
-      var json = {
-        'restaurant_name': nomRestaurant,
-        'address': adresseRestaurant,
-        'town': villeRestaurant,
-        '_creator': id,
-      };
-      var body = jsonEncode(json);
-
-      request.headers.addAll({
-        "body": body,
-      });
-
-      request.fields['form_key'] = 'form_value';
-      request.headers['authorization'] = 'Bearer $token';
-      request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
-          contentType: MediaType('application', 'octet-stream'),
-          filename: result.files.first.name));
-
-      print("RESPENSE SEND STEAM FILE REQ");
-      //var responseString = await streamedResponse.stream.bytesToString();
-      var response = await request.send();
-      print("Upload Response$response");
-      print(response.statusCode);
-      print(request.headers);
-
-      try {
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          await response.stream.bytesToString().then((value) {
-            print(value);
-          });
-          //stopMessage();
-          //finishWorking();
-
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text("Image Téléchager"),
-          ));
-          ref.refresh(getDataRsetaurantFuture);
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text("Erreur de serveur"),
-          ));
-          print("Error Create Programme  !!!");
-        }
-      } catch (e) {
-        rethrow;
-=======
         showTopSnackBar(
-          Overlay.of(contextt)!,
+          Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.red,
             message: "Erreur de création",
           ),
         );
         print("Error Create Programme  !!!");
->>>>>>> main
       }
     } catch (e) {
       throw e;
@@ -1295,7 +1014,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
       print(response.statusCode);
       if (response.statusCode == 200) {
         showTopSnackBar(
-          Overlay.of(contextt)!,
+          Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.green,
             message: "Restaurant supprimé",
@@ -1305,7 +1024,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
         return response;
       } else {
         showTopSnackBar(
-          Overlay.of(contextt)!,
+          Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.red,
             message: "Erreur de suppression",

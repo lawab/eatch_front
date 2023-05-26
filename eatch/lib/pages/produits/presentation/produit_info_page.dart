@@ -14,7 +14,7 @@ class Produitpage extends StatelessWidget {
   });
   final String imageUrl;
   final String title;
-  final double price;
+  final String price;
 
   @override
   Widget build(BuildContext context) {
@@ -126,55 +126,55 @@ class Produitpage extends StatelessWidget {
 
   Future dialogDelete(BuildContext context, String nomproduit) {
     return showDialog(
-        context: context,
-        builder: (_) {
-          return AlertDialog(
-              backgroundColor: Colors.white,
-              title: const Center(
-                child: Text(
-                  "Confirmez la suppression",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+            backgroundColor: Colors.white,
+            title: const Center(
+              child: Text(
+                "Confirmez la suppression",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              actions: [
-                ElevatedButton.icon(
-                    icon: const Icon(
-                      Icons.close,
-                      size: 14,
-                    ),
-                    style:
-                        ElevatedButton.styleFrom(backgroundColor: Colors.grey),
-                    onPressed: () {
-                      Navigator.of(context, rootNavigator: true).pop();
-                    },
-                    label: const Text("Quitter   ")),
-                const SizedBox(
-                  width: 20,
-                ),
-                ElevatedButton.icon(
+            ),
+            actions: [
+              ElevatedButton.icon(
                   icon: const Icon(
-                    Icons.delete,
+                    Icons.close,
                     size: 14,
                   ),
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Palette.deleteColors),
-                  onPressed: () {},
-                  label: const Text("Supprimer."),
-                )
-              ],
-              content: Container(
-                  alignment: Alignment.center,
-                  color: Colors.white,
-                  height: 150,
-                  child: Text(
-                    "Voulez vous supprimer la catégorie $nomproduit?",
-                    style: const TextStyle(
-                      color: Colors.black,
-                    ),
-                  )));
-        });
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop();
+                  },
+                  label: const Text("Quitter   ")),
+              const SizedBox(
+                width: 20,
+              ),
+              ElevatedButton.icon(
+                icon: const Icon(
+                  Icons.delete,
+                  size: 14,
+                ),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Palette.deleteColors),
+                onPressed: () {},
+                label: const Text("Supprimer."),
+              )
+            ],
+            content: Container(
+                alignment: Alignment.center,
+                color: Colors.white,
+                height: 150,
+                child: Text(
+                  "Voulez vous supprimer la catégorie $nomproduit?",
+                  style: const TextStyle(
+                    color: Colors.black,
+                  ),
+                )));
+      },
+    );
   }
 }

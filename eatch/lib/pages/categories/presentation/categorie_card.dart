@@ -82,7 +82,7 @@ class CategorieCardState extends ConsumerState<CategorieCard> {
                                 : Palette.fourthColor,
                           ),
                           child: SvgPicture.asset(
-                            widget.categorie.imageUrl!,
+                            widget.categorie.image!,
                             width: 18.0,
                             color: (widget.selectedIndex == widget.index)
                                 ? Palette.primaryBackgroundColor
@@ -106,7 +106,7 @@ class CategorieCardState extends ConsumerState<CategorieCard> {
                               ),
                             ),
                             Text(
-                              widget.categorie.produits!.length.toString(),
+                              widget.categorie.products!.length.toString(),
                               style: TextStyle(
                                 fontSize: 08.0,
                                 color: (widget.selectedIndex == widget.index)

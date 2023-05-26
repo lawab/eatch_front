@@ -65,19 +65,19 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
   }
 
   bool searchProduit = false;
-  List<Produits> produitSearch = [];
+  List<Products> produitSearch = [];
   void filterProduitResults(String query) {
     final viewModel = ref.watch(getDataCategoriesFuture);
-    List<Produits> dummySearchList = [];
+    List<Products> dummySearchList = [];
     dummySearchList.addAll(
       search == false
-          ? viewModel.listCategories[selectedIndexCategorie].produits!
-          : categorieSearch[selectedIndexCategorie].produits!,
+          ? viewModel.listCategories[selectedIndexCategorie].products!
+          : categorieSearch[selectedIndexCategorie].products!,
     );
     if (query.isNotEmpty) {
-      List<Produits> dummyListData = [];
+      List<Products> dummyListData = [];
       dummySearchList.forEach((item) {
-        if (item.title!.contains(query)) {
+        if (item.productName!.contains(query)) {
           dummyListData.add(item);
           //print(dummyListData);
         }
@@ -606,7 +606,7 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                                         viewModel
                                                 .listCategories[
                                                     selectedIndexCategorie]
-                                                .produits!
+                                                .products!
                                                 .isEmpty
                                             ? const Center(
                                                 child: Text(
@@ -618,7 +618,7 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                                                     filterproductsList: viewModel
                                                         .listCategories[
                                                             selectedIndexCategorie]
-                                                        .produits!,
+                                                        .products!,
                                                     crossAxisCount: MediaQuery
                                                                     .of(context)
                                                                 .size
@@ -697,7 +697,7 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                                               )
                                             : categorieSearch[
                                                         selectedIndexCategorie]
-                                                    .produits!
+                                                    .products!
                                                     .isEmpty
                                                 ? const Center(
                                                     child: Text(
@@ -712,7 +712,7 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                                                                 ? []
                                                                 : categorieSearch[
                                                                         selectedIndexCategorie]
-                                                                    .produits!,
+                                                                    .products!,
                                                         crossAxisCount: MediaQuery.of(
                                                                         context)
                                                                     .size
@@ -785,7 +785,7 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                                         categorieId: viewModel
                                             .listCategories[
                                                 selectedIndexCategorie]
-                                            .id!,
+                                            .sId!,
                                       );
                                     }),
                                   );
