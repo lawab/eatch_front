@@ -1,10 +1,27 @@
 [
     {
-        "id": "646f6a3c66b7a77572a1b29c",
-        "title": "newcate",
+        "_id": "64709b7e8df4a5afacae5d01",
+        "title": "Nouvelle categorie",
+        "_creator": {
+            "_id": "6433e8a9bd4f93d742bb0ee8",
+            "role": "SUPER_ADMIN",
+            "email": "wablearn@gmail.com",
+            "firstName": "SUPER",
+            "lastName": "ADMIN"
+        },
+        "restaurant": {
+            "_id": "64679d98d4843fd36e085a4c",
+            "restaurant_name": "restaurant 1",
+            "infos": {
+                "town": "agadir",
+                "address": "agadir rue 200 immeuble 20 appt1"
+            }
+        },
+        "deletedAt": "null",
+        "image": "/datas/1685101437988_Image.jpg",
         "products": [
             {
-                "_id": "646fa3370717c8f3ac007732",
+                "_id": "64709c525458be8699521814",
                 "materials": [
                     {
                         "_id": "646f4a77035e10146f1699b1",
@@ -22,20 +39,31 @@
                     }
                 },
                 "category": {
-                    "_id": "646f6a3c66b7a77572a1b29c",
-                    "title": "newcate",
-                    "image": "/datas/1685023291513_Image.jpg"
+                    "_id": "64709b7e8df4a5afacae5d01",
+                    "title": "Nouvelle categorie",
+                    "image": "/datas/1685101437988_Image.jpg",
+                    "_creator": {
+                        "_id": "6433e8a9bd4f93d742bb0ee8",
+                        "role": "SUPER_ADMIN",
+                        "email": "wablearn@gmail.com",
+                        "firstName": "SUPER",
+                        "lastName": "ADMIN"
+                    },
+                    "restaurant": {
+                        "_id": "64679d98d4843fd36e085a4c"
+                    },
+                    "deletedAt": "null"
                 },
-                "price": 33,
+                "price": 12,
                 "_creator": "6433e8a9bd4f93d742bb0ee8",
-                "productName": "ccdjdjdj12",
-                "quantity": 21,
+                "productName": "Nouveau Produit",
+                "quantity": 13,
                 "promotion": false,
                 "devise": "MAD",
                 "image": "/datas/avatar.png",
                 "liked": 0,
                 "likedPersonCount": 0,
-                "deletedAt": null,
+                "deletedAt": "null",
                 "comments": [
                     {
                         "_id": "643ff2d3ae6c202ffbf7fa24",
@@ -44,7 +72,7 @@
                             "fisrtName": "karl",
                             "lastName": "wilfred",
                             "isOnline": true,
-                            "phoneNumber": null
+                            "phoneNumber": "null"
                         },
                         "message": "I like your restaurant,it is very very good,thanks!!",
                         "deletedAt": "2023-04-26T15:39:06.703Z",
@@ -54,8 +82,8 @@
                         "_creator": "6433e8a9bd4f93d742bb0ee8"
                     }
                 ],
-                "createdAt": "2023-05-25T18: 04: 39.838Z",
-                "updatedAt": "2023-05-25T18: 04: 39.838Z",
+                "createdAt": "2023-05-26T11: 47: 30.955Z",
+                "updatedAt": "2023-05-26T11: 47: 30.955Z",
                 "__v": 0
             }
         ]

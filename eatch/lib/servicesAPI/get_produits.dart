@@ -5,16 +5,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-final getDataCategoriesFuture = ChangeNotifierProvider<GetDataCategoriesFuture>(
-    (ref) => GetDataCategoriesFuture());
+final getDataProduitFuture = ChangeNotifierProvider<GetDataProduitFuture>(
+    (ref) => GetDataProduitFuture());
 
-class GetDataCategoriesFuture extends ChangeNotifier {
-  List<Categorie> listCategories = [];
+class GetDataProduitFuture extends ChangeNotifier {
+  List<Produit> listProduit = [];
 
-  GetDataCategoriesFuture() {
+  GetDataProduitFuture() {
     getData();
   }
-  //RÔLE_Manager
 
   Future getData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -24,22 +23,21 @@ class GetDataCategoriesFuture extends ChangeNotifier {
     try {
       http.Response response = await http.get(
         Uri.parse(
-            // 'http://192.168.11.110:4005/api/categories/fetch/restaurant/$restaurantid'), //4002
             'http://192.168.11.110:4003/api/products/fetch/categories/$restaurantid'),
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',
         },
       );
-      print('get Categorie');
+      print('Produit get produit');
       print(response.statusCode);
-      print(response.body);
-
+      print("Liste des produits ${response.body}");
+      print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         for (int i = 0; i < data.length; i++) {
           if (data[i]['deletedAt'] == null) {
-            listCategories.add(Categorie.fromJson(data[i]));
+            listProduit.add(Produit.fromJson(data[i]));
           }
         }
       } else {
@@ -52,138 +50,12 @@ class GetDataCategoriesFuture extends ChangeNotifier {
   }
 }
 
-class Categorie {
+class Produit {
   String? sId;
-  String? title;
-  Creator? cCreator;
-  Restaurant? restaurant;
-  String? deletedAt;
-  String? image;
-  List<Products>? products;
-
-  Categorie(
-      {this.sId,
-      this.title,
-      this.cCreator,
-      this.restaurant,
-      this.deletedAt,
-      this.image,
-      this.products});
-
-  Categorie.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    title = json['title'];
-    cCreator =
-        json['_creator'] != null ? Creator.fromJson(json['_creator']) : null;
-    restaurant = json['restaurant'] != null
-        ? Restaurant.fromJson(json['restaurant'])
-        : null;
-    deletedAt = json['deletedAt'];
-    image = json['image'];
-    if (json['products'] != null) {
-      products = <Products>[];
-      json['products'].forEach((v) {
-        products!.add(Products.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['_id'] = sId;
-    data['title'] = title;
-    if (cCreator != null) {
-      data['_creator'] = cCreator!.toJson();
-    }
-    if (restaurant != null) {
-      data['restaurant'] = restaurant!.toJson();
-    }
-    data['deletedAt'] = deletedAt;
-    data['image'] = image;
-    if (products != null) {
-      data['products'] = products!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class Creator {
-  String? sId;
-  String? role;
-  String? email;
-  String? firstName;
-  String? lastName;
-
-  Creator({this.sId, this.role, this.email, this.firstName, this.lastName});
-
-  Creator.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    role = json['role'];
-    email = json['email'];
-    firstName = json['firstName'];
-    lastName = json['lastName'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['_id'] = sId;
-    data['role'] = role;
-    data['email'] = email;
-    data['firstName'] = firstName;
-    data['lastName'] = lastName;
-    return data;
-  }
-}
-
-class Restaurant {
-  String? sId;
-  String? restaurantName;
-  Infos? infos;
-
-  Restaurant({this.sId, this.restaurantName, this.infos});
-
-  Restaurant.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    restaurantName = json['restaurant_name'];
-    infos = json['infos'] != null ? Infos.fromJson(json['infos']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['_id'] = sId;
-    data['restaurant_name'] = restaurantName;
-    if (infos != null) {
-      data['infos'] = infos!.toJson();
-    }
-    return data;
-  }
-}
-
-class Infos {
-  String? town;
-  String? address;
-
-  Infos({this.town, this.address});
-
-  Infos.fromJson(Map<String, dynamic> json) {
-    town = json['town'];
-    address = json['address'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['town'] = town;
-    data['address'] = address;
-    return data;
-  }
-}
-
-class Products {
-  String? sId;
-  List<Materials>? materials;
   Restaurant? restaurant;
   Category? category;
   int? price;
+  List<String>? idsMP;
   String? sCreator;
   String? productName;
   int? quantity;
@@ -197,13 +69,14 @@ class Products {
   String? createdAt;
   String? updatedAt;
   int? iV;
+  List<Materials>? materials;
 
-  Products(
+  Produit(
       {this.sId,
-      this.materials,
       this.restaurant,
       this.category,
       this.price,
+      this.idsMP,
       this.sCreator,
       this.productName,
       this.quantity,
@@ -216,22 +89,18 @@ class Products {
       this.comments,
       this.createdAt,
       this.updatedAt,
-      this.iV});
+      this.iV,
+      this.materials});
 
-  Products.fromJson(Map<String, dynamic> json) {
+  Produit.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
-    if (json['materials'] != null) {
-      materials = <Materials>[];
-      json['materials'].forEach((v) {
-        materials!.add(Materials.fromJson(v));
-      });
-    }
     restaurant = json['restaurant'] != null
         ? Restaurant.fromJson(json['restaurant'])
         : null;
     category =
         json['category'] != null ? Category.fromJson(json['category']) : null;
     price = json['price'];
+    idsMP = json['ids_MP'].cast<String>();
     sCreator = json['_creator'];
     productName = json['productName'];
     quantity = json['quantity'];
@@ -250,14 +119,17 @@ class Products {
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     iV = json['__v'];
+    if (json['materials'] != null) {
+      materials = <Materials>[];
+      json['materials'].forEach((v) {
+        materials!.add(Materials.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['_id'] = sId;
-    if (materials != null) {
-      data['materials'] = materials!.map((v) => v.toJson()).toList();
-    }
     if (restaurant != null) {
       data['restaurant'] = restaurant!.toJson();
     }
@@ -265,6 +137,7 @@ class Products {
       data['category'] = category!.toJson();
     }
     data['price'] = price;
+    data['ids_MP'] = idsMP;
     data['_creator'] = sCreator;
     data['productName'] = productName;
     data['quantity'] = quantity;
@@ -280,31 +153,58 @@ class Products {
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
     data['__v'] = iV;
+    if (materials != null) {
+      data['materials'] = materials!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
 
-class Materials {
+class Restaurant {
+  Infos? infos;
   String? sId;
-  String? mpName;
-  int? quantity;
-  String? lifetime;
+  String? restaurantName;
 
-  Materials({this.sId, this.mpName, this.quantity, this.lifetime});
+  Restaurant({this.infos, this.sId, this.restaurantName});
 
-  Materials.fromJson(Map<String, dynamic> json) {
+  Restaurant.fromJson(Map<String, dynamic> json) {
+    infos = json['infos'] != null ? Infos.fromJson(json['infos']) : null;
     sId = json['_id'];
-    mpName = json['mp_name'];
-    quantity = json['quantity'];
-    lifetime = json['lifetime'];
+    restaurantName = json['restaurant_name'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    if (infos != null) {
+      data['infos'] = infos!.toJson();
+    }
     data['_id'] = sId;
-    data['mp_name'] = mpName;
-    data['quantity'] = quantity;
-    data['lifetime'] = lifetime;
+    data['restaurant_name'] = restaurantName;
+    return data;
+  }
+}
+
+class Infos {
+  String? town;
+  String? address;
+  String? sId;
+  String? logo;
+
+  Infos({this.town, this.address, this.sId, this.logo});
+
+  Infos.fromJson(Map<String, dynamic> json) {
+    town = json['town'];
+    address = json['address'];
+    sId = json['_id'];
+    logo = json['logo'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['town'] = town;
+    data['address'] = address;
+    data['_id'] = sId;
+    data['logo'] = logo;
     return data;
   }
 }
@@ -312,62 +212,21 @@ class Materials {
 class Category {
   String? sId;
   String? title;
-  String? image;
-  Creator? cCreator;
-  Restaurant? restaurant;
-  String? deletedAt;
 
-  Category(
-      {this.sId,
-      this.title,
-      this.image,
-      this.cCreator,
-      this.restaurant,
-      this.deletedAt});
+  Category({this.sId, this.title});
 
   Category.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     title = json['title'];
-    image = json['image'];
-    cCreator =
-        json['_creator'] != null ? Creator.fromJson(json['_creator']) : null;
-    restaurant = json['restaurant'] != null
-        ? Restaurant.fromJson(json['restaurant'])
-        : null;
-    deletedAt = json['deletedAt'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['_id'] = sId;
     data['title'] = title;
-    data['image'] = image;
-    if (cCreator != null) {
-      data['_creator'] = cCreator!.toJson();
-    }
-    if (restaurant != null) {
-      data['restaurant'] = restaurant!.toJson();
-    }
-    data['deletedAt'] = deletedAt;
     return data;
   }
 }
-
-// class Restaurant {
-//   String? sId;
-
-//   Restaurant({this.sId});
-
-//   Restaurant.fromJson(Map<String, dynamic> json) {
-//     sId = json['_id'];
-//   }
-
-//   Map<String, dynamic> toJson() {
-//     final Map<String, dynamic> data = new Map<String, dynamic>();
-//     data['_id'] = this.sId;
-//     return data;
-//   }
-// }
 
 class Comments {
   String? sId;
@@ -445,6 +304,83 @@ class Client {
     data['lastName'] = lastName;
     data['isOnline'] = isOnline;
     data['phoneNumber'] = phoneNumber;
+    return data;
+  }
+}
+
+class Materials {
+  String? image;
+  int? consumerQuantity;
+  int? currentQuantity;
+  String? unity;
+  String? sId;
+  Restaurant? restaurant;
+  String? sCreator;
+  String? mpName;
+  int? quantity;
+  int? minQuantity;
+  String? deletedAt;
+  String? lifetime;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
+
+  Materials(
+      {this.image,
+      this.consumerQuantity,
+      this.currentQuantity,
+      this.unity,
+      this.sId,
+      this.restaurant,
+      this.sCreator,
+      this.mpName,
+      this.quantity,
+      this.minQuantity,
+      this.deletedAt,
+      this.lifetime,
+      this.createdAt,
+      this.updatedAt,
+      this.iV});
+
+  Materials.fromJson(Map<String, dynamic> json) {
+    image = json['image'];
+    consumerQuantity = json['consumer_quantity'];
+    currentQuantity = json['current_quantity'];
+    unity = json['unity'];
+    sId = json['_id'];
+    restaurant = json['restaurant'] != null
+        ? Restaurant.fromJson(json['restaurant'])
+        : null;
+    sCreator = json['_creator'];
+    mpName = json['mp_name'];
+    quantity = json['quantity'];
+    minQuantity = json['min_quantity'];
+    deletedAt = json['deletedAt'];
+    lifetime = json['lifetime'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+    iV = json['__v'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['image'] = image;
+    data['consumer_quantity'] = consumerQuantity;
+    data['current_quantity'] = currentQuantity;
+    data['unity'] = unity;
+    data['_id'] = sId;
+    if (restaurant != null) {
+      data['restaurant'] = restaurant!.toJson();
+    }
+    data['_creator'] = sCreator;
+    data['mp_name'] = mpName;
+    data['quantity'] = quantity;
+    data['min_quantity'] = minQuantity;
+    data['deletedAt'] = deletedAt;
+    data['lifetime'] = lifetime;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['__v'] = iV;
     return data;
   }
 }

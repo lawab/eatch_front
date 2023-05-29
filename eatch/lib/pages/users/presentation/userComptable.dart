@@ -1,4 +1,4 @@
-import 'package:eatch/servicesAPI/getUser.dart';
+import 'package:eatch/servicesAPI/get_user.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -203,20 +203,25 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                                             MaterialPageRoute(
                                                 builder: (context) {
                                               return ModificationUser(
-                                                userEmail: viewModel
+                                                avatar: viewModel
+                                                    .listComptable[index]
+                                                    .avatar!,
+                                                email: viewModel
                                                     .listComptable[index]
                                                     .email!,
-                                                userNom: viewModel
+                                                firstName: viewModel
+                                                    .listComptable[index]
+                                                    .firstName!,
+                                                lastName: viewModel
                                                     .listComptable[index]
                                                     .lastName!,
-                                                userPrenom: viewModel
-                                                    .listComptable[index]
-                                                    .email!,
-                                                userRole: viewModel
+                                                role: viewModel
                                                     .listComptable[index].role!,
-                                                userUserNom: viewModel
-                                                    .listComptable[index]
-                                                    .username!,
+                                                sId: viewModel
+                                                    .listComptable[index].sId!,
+                                                // username: viewModel
+                                                //     .listComptable[index]
+                                                //     .username!,
                                               );
                                             }),
                                           );
@@ -303,16 +308,17 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                                             MaterialPageRoute(
                                                 builder: (context) {
                                               return ModificationUser(
-                                                userEmail:
-                                                    UserSearch[index].email!,
-                                                userNom:
+                                                avatar:
+                                                    UserSearch[index].avatar!,
+                                                email: UserSearch[index].email!,
+                                                firstName: UserSearch[index]
+                                                    .firstName!,
+                                                lastName:
                                                     UserSearch[index].lastName!,
-                                                userPrenom:
-                                                    UserSearch[index].email!,
-                                                userRole:
-                                                    UserSearch[index].role!,
-                                                userUserNom:
-                                                    UserSearch[index].username!,
+                                                role: UserSearch[index].role!,
+                                                sId: UserSearch[index].sId!,
+                                                // username:
+                                                //     UserSearch[index].username!,
                                               );
                                             }),
                                           );

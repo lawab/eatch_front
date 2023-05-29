@@ -1,42 +1,69 @@
+import 'dart:convert';
+
+import 'package:eatch/servicesAPI/multipart.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../../servicesAPI/get_user.dart';
 import '../../../utils/applayout.dart';
 import '../../../utils/default_button/default_button.dart';
 import '../../../utils/palettes/palette.dart';
 import '../../../utils/size/size.dart';
 
-class ModificationUser extends StatefulWidget {
+import 'package:http/http.dart' as http;
+
+class ModificationUser extends ConsumerStatefulWidget {
   const ModificationUser({
+    required this.sId,
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.role,
+    required this.avatar,
     super.key,
-    required this.userNom,
-    required this.userEmail,
-    required this.userPrenom,
-    required this.userRole,
-    required this.userUserNom,
   });
-  final String userNom;
-  final String userEmail;
-  final String userPrenom;
-  final String userRole;
-  final String userUserNom;
+
+  final String sId;
+  final String firstName;
+  final String lastName;
+  final String email;
+  final String role;
+  final String avatar;
 
   @override
-  State<ModificationUser> createState() => _ModificationUserState();
+  ConsumerState<ModificationUser> createState() => _ModificationUserState();
 }
 
-class _ModificationUserState extends State<ModificationUser> {
+class _ModificationUserState extends ConsumerState<ModificationUser> {
+  // ***** LES VARIABLES ****** //
+  bool _showContent = false;
+  bool isLoading = false;
+  bool _selectFile = false;
+
+  Uint8List? selectedImageInBytes;
+  FilePickerResult? result;
+
+  List<int> _selectedFile = [];
+  bool filee = false;
+  PlatformFile? file;
+
+  String? recetteImage;
   //**********************************/
   final _formKey = GlobalKey<FormState>();
 
   String _nom = "";
   String _prenom = "";
-  String _nomUtilisateur = "";
+  final String _nomUtilisateur = "";
   String _email = "";
   String? _role;
   List<String> listOfRole = [
-    "RÔLE_COMPTABLE",
-    "RÔLE_RH",
-    "RÔLE_MANAGER",
+    "COMPTABLE",
+    "RH",
+    "MANAGER",
   ];
 
   final FocusNode _prenomFocusNode = FocusNode();
@@ -90,7 +117,7 @@ class _ModificationUserState extends State<ModificationUser> {
                       const SizedBox(height: 20),
                       prenomForm(),
                       const SizedBox(height: 20),
-                      nomUtilisateurForm(),
+                      // nomUtilisateurForm(),
                       const SizedBox(height: 20),
                       emailForm(),
                       const SizedBox(height: 20),
@@ -98,7 +125,65 @@ class _ModificationUserState extends State<ModificationUser> {
                       const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
+                          Container(
+                            color: Palette.secondaryBackgroundColor,
+                            child: GestureDetector(
+                              onTap: () async {
+                                recetteImage = null;
+                                result = await FilePicker.platform.pickFiles(
+                                    type: FileType.custom,
+                                    allowedExtensions: [
+                                      "png",
+                                      "jpg",
+                                      "jpeg",
+                                    ]);
+                                if (result != null) {
+                                  setState(() {
+                                    file = result!.files.single;
+
+                                    Uint8List fileBytes =
+                                        result!.files.single.bytes as Uint8List;
+
+                                    _selectedFile = fileBytes;
+
+                                    filee = true;
+
+                                    selectedImageInBytes =
+                                        result!.files.first.bytes;
+                                    _selectFile = true;
+                                  });
+                                }
+                              },
+                              child: Container(
+                                width: SizeConfig.screenWidth * 0.05,
+                                height: SizeConfig.screenWidth * 0.05,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 1,
+                                    color: const Color(0xFFDCE0E0),
+                                  ),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: _selectFile == false
+                                      ? Image.network(
+                                          'http://192.168.11.110:4001${widget.avatar}',
+                                          fit: BoxFit.fill,
+                                        )
+                                      : isLoading
+                                          ? const CircularProgressIndicator()
+                                          : Image.memory(
+                                              selectedImageInBytes!,
+                                              fit: BoxFit.fill,
+                                            ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const Spacer(),
                           SizedBox(
                             width: 200,
                             child: DefaultButton(
@@ -109,11 +194,20 @@ class _ModificationUserState extends State<ModificationUser> {
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
                                   _formKey.currentState!.save();
-                                  print("nom is $_nom");
-                                  print("prenom is $_prenom");
-                                  print("nomuser is $_nomUtilisateur");
-                                  print("Email is $_email");
-                                  print("conf is $_role");
+                                  if (_selectedFile.isEmpty) {}
+                                  edditUser(
+                                    context,
+                                    _selectedFile,
+                                    result,
+                                    _prenom,
+                                    _nom,
+                                    _email,
+                                    _role,
+                                  );
+
+                                  setState(() {
+                                    _showContent = !_showContent;
+                                  });
                                 } else {
                                   print("Bad");
                                 }
@@ -172,9 +266,9 @@ class _ModificationUserState extends State<ModificationUser> {
         ),
         floatingLabelBehavior: FloatingLabelBehavior.always,
       ),
-      value: _role,
+      value: widget.role,
       hint: Text(
-        widget.userRole,
+        widget.role,
         style: const TextStyle(color: Colors.black),
       ),
       isExpanded: true,
@@ -208,7 +302,7 @@ class _ModificationUserState extends State<ModificationUser> {
 
   TextFormField nomForm() {
     return TextFormField(
-      initialValue: widget.userNom,
+      initialValue: widget.firstName,
       textInputAction: TextInputAction.next,
       autocorrect: true,
       textCapitalization: TextCapitalization.characters,
@@ -258,7 +352,7 @@ class _ModificationUserState extends State<ModificationUser> {
 
   TextFormField prenomForm() {
     return TextFormField(
-      initialValue: widget.userPrenom,
+      initialValue: widget.lastName,
       focusNode: _prenomFocusNode,
       textInputAction: TextInputAction.next,
       autocorrect: true,
@@ -307,9 +401,10 @@ class _ModificationUserState extends State<ModificationUser> {
     );
   }
 
+/*
   TextFormField nomUtilisateurForm() {
     return TextFormField(
-      initialValue: widget.userUserNom,
+      initialValue: widget.username,
       focusNode: _nomUtilisateurFocusNode,
       textInputAction: TextInputAction.next,
       autocorrect: true,
@@ -357,10 +452,10 @@ class _ModificationUserState extends State<ModificationUser> {
       },
     );
   }
-
+*/
   TextFormField emailForm() {
     return TextFormField(
-      initialValue: widget.userEmail,
+      initialValue: widget.email,
       focusNode: _emailFocusNode,
       textInputAction: TextInputAction.next,
       autocorrect: false,
@@ -408,6 +503,84 @@ class _ModificationUserState extends State<ModificationUser> {
         _email = value!;
       },
     );
+  }
+
+  Future<void> edditUser(
+    BuildContext context,
+    selectedFile,
+    result,
+    firstName,
+    lastName,
+    email,
+    role,
+  ) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var id = prefs.getString('IdUser').toString();
+    var token = prefs.getString('token');
+    var restaurantid = prefs.getString('idRestaurant');
+    print(id);
+    print(token);
+    print("Restaurant id $restaurantid");
+
+    var url =
+        Uri.parse("http://192.168.11.110:4001/api/users/update/${widget.sId}");
+    final request = MultipartRequest(
+      'PUT',
+      url,
+      onProgress: (int bytes, int total) {
+        final progress = bytes / total;
+        print('progress: $progress ($bytes/$total)');
+      },
+    );
+    var json = {
+      "firstName": firstName,
+      "lastName": lastName,
+      "email": email,
+      "restaurant": restaurantid!.trim(),
+      "role": role,
+      "_creator": id,
+    };
+    var body = jsonEncode(json);
+
+    request.headers.addAll({
+      "body": body,
+    });
+
+    request.fields['form_key'] = 'form_value';
+    request.headers['authorization'] = 'Bearer $token';
+    if (result != null) {
+      request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
+          contentType: MediaType('application', 'octet-stream'),
+          filename: result.files.first.name));
+    }
+
+    print("RESPENSE SEND STEAM FILE REQ");
+    var response = await request.send();
+    print("Upload Response$response");
+    print(response.statusCode);
+    print(request.headers);
+
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        await response.stream.bytesToString().then((value) {
+          print(value);
+        });
+        setState(() {
+          ref.refresh(getDataUserFuture);
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Utilisateur crée"),
+        ));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Erreur de serveur"),
+        ));
+        print("Error Create Programme  !!!");
+      }
+    } catch (e) {
+      rethrow;
+    }
   }
 }
 

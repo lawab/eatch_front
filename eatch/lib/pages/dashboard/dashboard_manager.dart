@@ -108,7 +108,13 @@ class DashboardManagerState extends ConsumerState<DashboardManager> {
                               ),
                               Expanded(
                                 child: viewModel.listCategories.isEmpty
-                                    ? Container()
+                                    ? Center(
+                                        child: Text(
+                                          // 'Aucune Categorie trouvée',
+                                          viewModel.listCategories.length
+                                              .toString(),
+                                        ),
+                                      )
                                     : GridView.builder(
                                         itemCount:
                                             viewModel.listCategories.length,
@@ -143,9 +149,15 @@ class DashboardManagerState extends ConsumerState<DashboardManager> {
                                                 MaterialPageRoute(
                                                     builder: (context) {
                                                   return ModificationCategorie(
-                                                    nomCategorie: viewModel
+                                                    title: viewModel
                                                         .listCategories[index]
                                                         .title!,
+                                                    image: viewModel
+                                                        .listCategories[index]
+                                                        .image!,
+                                                    sId: viewModel
+                                                        .listCategories[index]
+                                                        .sId!,
                                                   );
                                                 }),
                                               );
@@ -228,7 +240,7 @@ class DashboardManagerState extends ConsumerState<DashboardManager> {
                                         : viewModel
                                                 .listCategories[
                                                     selectedIndexCategorie]
-                                                .produits!
+                                                .products!
                                                 .isEmpty
                                             ? const Center(
                                                 child: Text(
@@ -239,7 +251,7 @@ class DashboardManagerState extends ConsumerState<DashboardManager> {
                                                 filterproductsList: viewModel
                                                     .listCategories[
                                                         selectedIndexCategorie]
-                                                    .produits!,
+                                                    .products!,
                                                 crossAxisCount: MediaQuery.of(
                                                                 context)
                                                             .size

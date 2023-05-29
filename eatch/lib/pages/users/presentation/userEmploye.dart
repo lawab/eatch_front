@@ -1,4 +1,4 @@
-import 'package:eatch/servicesAPI/getUser.dart';
+import 'package:eatch/servicesAPI/get_user.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -203,18 +203,23 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
                                             MaterialPageRoute(
                                                 builder: (context) {
                                               return ModificationUser(
-                                                userEmail: viewModel
+                                                avatar: viewModel
+                                                    .listEmploye[index].avatar!,
+                                                email: viewModel
                                                     .listEmploye[index].email!,
-                                                userNom: viewModel
+                                                firstName: viewModel
+                                                    .listEmploye[index]
+                                                    .firstName!,
+                                                lastName: viewModel
                                                     .listEmploye[index]
                                                     .lastName!,
-                                                userPrenom: viewModel
-                                                    .listEmploye[index].email!,
-                                                userRole: viewModel
+                                                role: viewModel
                                                     .listEmploye[index].role!,
-                                                userUserNom: viewModel
-                                                    .listEmploye[index]
-                                                    .username!,
+                                                sId: viewModel
+                                                    .listEmploye[index].sId!,
+                                                // username: viewModel
+                                                //     .listEmploye[index]
+                                                //     .username!,
                                               );
                                             }),
                                           );
@@ -303,16 +308,17 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
                                             MaterialPageRoute(
                                                 builder: (context) {
                                               return ModificationUser(
-                                                userEmail:
-                                                    UserSearch[index].email!,
-                                                userNom:
+                                                avatar:
+                                                    UserSearch[index].avatar!,
+                                                email: UserSearch[index].email!,
+                                                firstName: UserSearch[index]
+                                                    .firstName!,
+                                                lastName:
                                                     UserSearch[index].lastName!,
-                                                userPrenom:
-                                                    UserSearch[index].email!,
-                                                userRole:
-                                                    UserSearch[index].role!,
-                                                userUserNom:
-                                                    UserSearch[index].username!,
+                                                role: UserSearch[index].role!,
+                                                sId: UserSearch[index].sId!,
+                                                // username:
+                                                //     UserSearch[index].username!,
                                               );
                                             }),
                                           );

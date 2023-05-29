@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import '../../../servicesAPI/get_categories.dart';
 import '../../../utils/palettes/palette.dart';
 
@@ -33,7 +32,6 @@ class CategorieCardState extends ConsumerState<CategorieCard> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(getDataCategoriesFuture);
     return Padding(
       padding: const EdgeInsets.only(right: 10),
       child: Row(
@@ -81,12 +79,9 @@ class CategorieCardState extends ConsumerState<CategorieCard> {
                                 ? Palette.secondaryColor
                                 : Palette.fourthColor,
                           ),
-                          child: SvgPicture.asset(
-                            widget.categorie.imageUrl!,
-                            width: 18.0,
-                            color: (widget.selectedIndex == widget.index)
-                                ? Palette.primaryBackgroundColor
-                                : Palette.primaryColor,
+                          child: Image.network(
+                            'http://192.168.11.110:4005${widget.categorie.image}',
+                            height: 18.0,
                           ),
                         ),
                         const SizedBox(width: 05.0),
@@ -106,7 +101,7 @@ class CategorieCardState extends ConsumerState<CategorieCard> {
                               ),
                             ),
                             Text(
-                              widget.categorie.produits!.length.toString(),
+                              widget.categorie.products!.length.toString(),
                               style: TextStyle(
                                 fontSize: 08.0,
                                 color: (widget.selectedIndex == widget.index)

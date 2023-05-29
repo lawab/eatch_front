@@ -39,8 +39,8 @@ class RestaurantModificationState
     setState(() {
       adress_url = prefs.getString('ipport').toString();
       nomController.text = widget.restaurant.restaurantName!;
-      villeController.text = widget.restaurant.info!.town!;
-      adresseController.text = widget.restaurant.info!.address!;
+      villeController.text = widget.restaurant.infos!.town!;
+      adresseController.text = widget.restaurant.infos!.address!;
     });
   }
 
@@ -335,7 +335,7 @@ class RestaurantModificationState
                                 : DecorationImage(
                                     //opacity: 100,
                                     image: NetworkImage(
-                                        'http://$adress_url${widget.restaurant.info!.logo.toString()}'),
+                                        'http://$adress_url${widget.restaurant.infos!.logo.toString()}'),
                                     fit: BoxFit.cover),
                           ),
                           child: const Icon(
@@ -393,10 +393,9 @@ class RestaurantModificationState
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var id = prefs.getString('IdUser').toString();
     var token = prefs.getString('token');
-    //String adress_url = prefs.getString('ipport').toString();
+    String adress_url = prefs.getString('ipport').toString();
 
-    var url =
-        Uri.parse("http://13.39.81.126:4002/api/restaurants/update/$idChoisie");
+    var url = Uri.parse("http://$adress_url/api/restaurants/update/$idChoisie");
     final request = MultipartRequest(
       'PUT',
       url,

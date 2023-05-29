@@ -2,7 +2,8 @@
 
 import 'dart:convert';
 
-import 'package:eatch/servicesAPI/getUser.dart';
+import 'package:eatch/servicesAPI/get_role.dart';
+import 'package:eatch/servicesAPI/get_user.dart';
 import 'package:http_parser/http_parser.dart' show MediaType;
 import 'dart:typed_data';
 import 'package:eatch/pages/users/presentation/allUser.dart';
@@ -61,6 +62,8 @@ class _UsersState extends ConsumerState<Users> {
 
   String? _role;
   String? _restaurant;
+
+  String? _nouveauRole;
   List<String> listOfRole = [
     "COMPTABLE",
     "RH",
@@ -201,7 +204,16 @@ class _UsersState extends ConsumerState<Users> {
                             const SizedBox(height: 20),
                             confirmPasswordForm(),
                             const SizedBox(height: 20),
-                            roleForm(),
+                            Row(
+                              children: [
+                                Expanded(flex: 3, child: roleForm()),
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(),
+                                ),
+                                const SizedBox(width: 20),
+                              ],
+                            ),
                             const SizedBox(height: 20),
                             SizedBox(
                               width: 200,
@@ -359,6 +371,7 @@ class _UsersState extends ConsumerState<Users> {
   }
 
   DropdownButtonFormField<String> roleForm() {
+    final viewModel = ref.watch(getDataRoleFuture);
     return DropdownButtonFormField(
       decoration: InputDecoration(
         hoverColor: Palette.primaryBackgroundColor,
@@ -405,11 +418,11 @@ class _UsersState extends ConsumerState<Users> {
           return null;
         }
       },
-      items: listOfRole.map((String val) {
+      items: viewModel.listRole.map((val) {
         return DropdownMenuItem(
-          value: val,
+          value: val.value,
           child: Text(
-            val,
+            val.value!,
           ),
         );
       }).toList(),
@@ -700,7 +713,7 @@ class _UsersState extends ConsumerState<Users> {
     print(token);
     print("Restaurant id $restaurantid");
 
-    var url = Uri.parse("http://13.39.81.126:4001/api/users/create");
+    var url = Uri.parse("http://192.168.11.110:4001/api/users/create");
     final request = MultipartRequest(
       'POST',
       url,

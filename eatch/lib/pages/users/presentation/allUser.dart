@@ -2,7 +2,7 @@
 
 import 'dart:convert';
 
-import 'package:eatch/servicesAPI/getUser.dart';
+import 'package:eatch/servicesAPI/get_user.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -236,23 +236,42 @@ class AllUsersState extends ConsumerState<AllUsers> {
                                           child: IconButton(
                                         icon: const Icon(Icons.edit),
                                         onPressed: () {
+                                          print("WWWWWWWWWOOOOOOOWWWWWWWWWWWW");
+                                          print(viewModel
+                                              .listAllUsers[index].email);
+                                          print(viewModel
+                                              .listAllUsers[index].firstName);
+                                          print(viewModel
+                                              .listAllUsers[index].lastName);
+                                          print(viewModel
+                                              .listAllUsers[index].role);
+                                          print(viewModel
+                                              .listAllUsers[index].sId);
+                                          print(viewModel
+                                              .listAllUsers[index].username);
+                                          print(viewModel
+                                              .listAllUsers[index].avatar!);
+
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) {
                                               return ModificationUser(
-                                                userEmail: viewModel
+                                                avatar: viewModel
+                                                    .listAllUsers[index]
+                                                    .avatar!,
+                                                email: viewModel
                                                     .listAllUsers[index].email!,
-                                                userNom: viewModel
+                                                firstName: viewModel
+                                                    .listAllUsers[index]
+                                                    .firstName!,
+                                                lastName: viewModel
                                                     .listAllUsers[index]
                                                     .lastName!,
-                                                userPrenom: viewModel
-                                                    .listAllUsers[index].email!,
-                                                userRole: viewModel
+                                                role: viewModel
                                                     .listAllUsers[index].role!,
-                                                userUserNom: viewModel
-                                                    .listAllUsers[index]
-                                                    .username!,
+                                                sId: viewModel
+                                                    .listAllUsers[index].sId!,
                                               );
                                             }),
                                           );
@@ -375,16 +394,17 @@ class AllUsersState extends ConsumerState<AllUsers> {
                                             MaterialPageRoute(
                                                 builder: (context) {
                                               return ModificationUser(
-                                                userEmail:
-                                                    UserSearch[index].email!,
-                                                userNom:
+                                                avatar:
+                                                    UserSearch[index].avatar!,
+                                                email: UserSearch[index].email!,
+                                                firstName: UserSearch[index]
+                                                    .firstName!,
+                                                lastName:
                                                     UserSearch[index].lastName!,
-                                                userPrenom:
-                                                    UserSearch[index].email!,
-                                                userRole:
-                                                    UserSearch[index].role!,
-                                                userUserNom:
-                                                    UserSearch[index].username!,
+                                                role: UserSearch[index].role!,
+                                                sId: UserSearch[index].sId!,
+                                                // username:
+                                                //     UserSearch[index].username!,
                                               );
                                             }),
                                           );
@@ -479,7 +499,7 @@ class AllUsersState extends ConsumerState<AllUsers> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userdelete = prefs.getString('IdUser').toString();
       var token = prefs.getString('token');
-      String urlDelete = "http://13.39.81.126:4001/api/users/delete/$id";
+      String urlDelete = "http://192.168.11.110:4001/api/users/delete/$id";
       var json = {
         '_creator': userdelete,
       };

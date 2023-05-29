@@ -1,10 +1,4 @@
 import 'package:eatch/pages/authentification/authentification.dart';
-import 'package:eatch/pages/commande/commandeClient/accueilClient.dart';
-import 'package:eatch/pages/commande/commandeClient/accueilMenu.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'pages/categories/presentation/categories.dart';
 import 'package:eatch/pages/recettes/recettes.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';

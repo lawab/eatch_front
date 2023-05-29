@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'dart:typed_data';
-import 'dart:ui';
 import 'package:eatch/pages/restaurant/detailRestaurant.dart';
 import 'package:eatch/servicesAPI/multipart.dart';
 import 'package:file_picker/file_picker.dart';
@@ -200,7 +198,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                     image: DecorationImage(
                                         opacity: 150,
                                         image: NetworkImage(
-                                            'http://13.39.81.126:4002${listRsetaurant[index].info!.logo.toString()}'),
+                                            'http://192.168.11.110:4002${listRsetaurant[index].infos!.logo.toString()}'),
                                         fit: BoxFit.cover),
                                   ),
                                 ),
@@ -226,7 +224,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   width: width / 5,
                                   height: 30,
                                   child: Text(
-                                    "Ville: ${listRsetaurant[index].info!.town!}",
+                                    "Ville: ${listRsetaurant[index].infos!.town!}",
                                     style: const TextStyle(
                                       fontFamily: 'Righteous',
                                       color: Colors.white,
@@ -239,7 +237,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   width: width / 5,
                                   height: 30,
                                   child: Text(
-                                    "Adresse: ${listRsetaurant[index].info!.address!}",
+                                    "Adresse: ${listRsetaurant[index].infos!.address!}",
                                     style: const TextStyle(
                                       fontFamily: 'Righteous',
                                       color: Colors.white,
@@ -350,21 +348,21 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                       const SizedBox(
                         width: 50,
                       ),
-                      Text('Gestion de restaurant'),
+                      const Text('Gestion de restaurant'),
                       Expanded(child: Container()),
                       ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Palette.primaryColor,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10)),
-                            minimumSize: Size(180, 50)),
+                            minimumSize: const Size(180, 50)),
                         onPressed: () {
                           setState(() {
                             ajout = true;
                           });
                         },
-                        icon: Icon(Icons.add),
-                        label: Text('Créer un restaurant'),
+                        icon: const Icon(Icons.add),
+                        label: const Text('Créer un restaurant'),
                       ),
                       const SizedBox(
                         width: 20,
@@ -372,7 +370,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                     ],
                   ),
                 )
-              : Container(
+              : SizedBox(
                   height: 300,
                   child: creation(),
                 ),
@@ -423,7 +421,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                       image: DecorationImage(
                                           opacity: 150,
                                           image: NetworkImage(
-                                              'http://13.39.81.126:4002${listRsetaurant[index].info!.logo.toString()}'),
+                                              'http://192.168.11.110:4002${listRsetaurant[index].infos!.logo.toString()}'),
                                           //image: AssetImage('Logo_Eatch_png.png'),
                                           fit: BoxFit.cover),
                                     ),
@@ -436,7 +434,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                     height: 50,
                                     child: Text(
                                       'Nom du restaurant: ${listRsetaurant[index].restaurantName!}',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontFamily: 'Righteous',
                                           fontSize: 18,
                                           color: Colors.white,
@@ -450,8 +448,8 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                     width: width / 5,
                                     height: 30,
                                     child: Text(
-                                      "Ville: ${listRsetaurant[index].info!.town!}",
-                                      style: TextStyle(
+                                      "Ville: ${listRsetaurant[index].infos!.town!}",
+                                      style: const TextStyle(
                                         fontFamily: 'Righteous',
                                         color: Colors.white,
                                       ),
@@ -463,8 +461,8 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                     width: width / 5,
                                     height: 30,
                                     child: Text(
-                                      "Adresse: ${listRsetaurant[index].info!.address!}",
-                                      style: TextStyle(
+                                      "Adresse: ${listRsetaurant[index].infos!.address!}",
+                                      style: const TextStyle(
                                         fontFamily: 'Righteous',
                                         color: Colors.white,
                                       ),
@@ -490,7 +488,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                     height: 30,
                                     child: Text(
                                       "Date de création: ${listRsetaurant[index].createdAt}",
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontFamily: 'Righteous',
                                         color: Colors.white,
                                       ),
@@ -499,7 +497,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                 ],
                               ),
                             ),
-                            Container(
+                            SizedBox(
                                 width: width / 5,
                                 height: 50,
                                 child: Row(
@@ -517,7 +515,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                                                 index],
                                                       )));
                                         }),
-                                        icon: Icon(
+                                        icon: const Icon(
                                           Icons.edit,
                                           color: Color(0xFFF09F1B),
                                         ),
@@ -534,7 +532,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                                   .restaurantName
                                                   .toString());
                                         }),
-                                        icon: Icon(
+                                        icon: const Icon(
                                           Icons.delete,
                                           color: Palette.deleteColors,
                                         ),
@@ -751,7 +749,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
               height: 30,
             ),
             Container(
-              padding: EdgeInsets.only(right: 70),
+              padding: const EdgeInsets.only(right: 70),
               color: Palette.secondaryBackgroundColor,
               alignment: Alignment.centerRight,
               child: GestureDetector(
@@ -979,6 +977,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
     ref.refresh(getDataRsetaurantFuture);
   }
 }*/
+
   Future<void> creationRestaurant(
     contextt,
     String nomRestaurant,
@@ -992,9 +991,9 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var id = prefs.getString('IdUser').toString();
     var token = prefs.getString('token');
-    //String adress_url = prefs.getString('ipport').toString();
+    String adressUrl = prefs.getString('ipport').toString();
     var url = Uri.parse(
-        "http://13.39.81.126:4002/api/restaurants/create"); //13.39.81.126
+        "http://192.168.11.110:4002/api/restaurants/create"); //13.39.81.126
     print(url);
     final request = MultipartRequest(
       'POST',
@@ -1018,14 +1017,14 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
 
     request.fields['form_key'] = 'form_value';
     request.headers['authorization'] = 'Bearer $token';
-    request.files.add(await http.MultipartFile.fromBytes('file', selectedFile,
+    request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
         contentType: MediaType('application', 'octet-stream'),
         filename: result.files.first.name));
 
     print("RESPENSE SEND STEAM FILE REQ");
     //var responseString = await streamedResponse.stream.bytesToString();
     var response = await request.send();
-    print("Upload Response" + response.toString());
+    print("Upload Response$response");
     print(response.statusCode);
     print(request.headers);
 
@@ -1056,7 +1055,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
         print("Error Create Programme  !!!");
       }
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 
@@ -1064,8 +1063,9 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
-      //String adress_url = prefs.getString('ipport').toString();
-      String urlDelete = "http://13.39.81.126:4002/api/restaurants/delete/$id";
+      String adressUrl = prefs.getString('ipport').toString();
+      String urlDelete =
+          "http://192.168.11.110:4002/api/restaurants/delete/$id";
 
       final http.Response response = await http.delete(
         Uri.parse(urlDelete),

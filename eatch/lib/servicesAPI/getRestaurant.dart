@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,10 +19,11 @@ class GetDataRsetaurantFuture extends ChangeNotifier {
   Future getData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
-    //String adress_url = prefs.getString('ipport').toString();
+    String adressUrl = prefs.getString('ipport').toString();
     try {
       http.Response response = await http.get(
-        Uri.parse('http://13.39.81.126:4002/api/restaurants/fetch/all'), //4002
+        Uri.parse(
+            'http://192.168.11.110:4002/api/restaurants/fetch/all'), //4002
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',
@@ -31,6 +31,7 @@ class GetDataRsetaurantFuture extends ChangeNotifier {
       );
       print('get restaurant');
       print(response.statusCode);
+      print(response.body);
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
@@ -53,7 +54,7 @@ class GetDataRsetaurantFuture extends ChangeNotifier {
 }
 
 class Restaurant {
-  Info? info;
+  Info? infos;
   String? sId;
   String? restaurantName;
   String? sCreator;
@@ -63,7 +64,7 @@ class Restaurant {
   int? iV;
 
   Restaurant(
-      {this.info,
+      {this.infos,
       this.sId,
       this.restaurantName,
       this.sCreator,
@@ -73,7 +74,7 @@ class Restaurant {
       this.iV});
 
   Restaurant.fromJson(Map<String, dynamic> json) {
-    info = json['info'] != null ? new Info.fromJson(json['info']) : null;
+    infos = json['infos'] != null ? Info.fromJson(json['infos']) : null;
     sId = json['_id'];
     restaurantName = json['restaurant_name'];
     sCreator = json['_creator'];
@@ -84,17 +85,17 @@ class Restaurant {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.info != null) {
-      data['info'] = this.info!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (infos != null) {
+      data['info'] = infos!.toJson();
     }
-    data['_id'] = this.sId;
-    data['restaurant_name'] = this.restaurantName;
-    data['_creator'] = this.sCreator;
-    data['deletedAt'] = this.deletedAt;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['__v'] = this.iV;
+    data['_id'] = sId;
+    data['restaurant_name'] = restaurantName;
+    data['_creator'] = sCreator;
+    data['deletedAt'] = deletedAt;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['__v'] = iV;
     return data;
   }
 }
@@ -113,10 +114,10 @@ class Info {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['town'] = this.town;
-    data['address'] = this.address;
-    data['logo'] = this.logo;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['town'] = town;
+    data['address'] = address;
+    data['logo'] = logo;
     return data;
   }
 }

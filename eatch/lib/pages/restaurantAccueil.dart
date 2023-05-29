@@ -49,34 +49,27 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
               itemCount: viewModel.listRsetaurant.length,
               itemBuilder: ((context, index) {
                 return InkWell(
-                  child: Container(
+                  child: SizedBox(
                     height: MediaQuery.of(context).size.height / 4,
                     child: Column(children: [
                       Container(
                         height: MediaQuery.of(context).size.height / 4 - 50,
                         width: MediaQuery.of(context).size.width / 4,
                         decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(15.0),
-                          //color: Colors.white,
-
-                          image: DecorationImage(
-                              image: NetworkImage(
-                                  'http://13.39.81.126:4002${viewModel.listRsetaurant[index].info!.logo.toString()}'),
-                              //image: AssetImage('Logo_Eatch_png.png'),
-                              fit: BoxFit.cover),
+                          borderRadius: BorderRadius.circular(120.0),
+                          color: Palette.secondaryColor,
                         ),
                       ),
-                      /*CircleAvatar(
-                          radius: 75,
-                          backgroundImage: NetworkImage(
-                              'http://13.39.81.126:4002${viewModel.listRsetaurant[index].info!.logo.toString()}'),
-                          //image: AssetImage('eatch.jpg'),
-                        ),*/
+                      CircleAvatar(
+                        radius: 75,
+                        backgroundImage: NetworkImage(
+                            'http://192.168.11.110:4002${viewModel.listRsetaurant[index].infos!.logo.toString()}'),
+                        //image: AssetImage('eatch.jpg'),
+                      ),
                       const SizedBox(
                         height: 10,
                       ),
-                      Container(
+                      SizedBox(
                         height: 40,
                         child: Text(
                           viewModel.listRsetaurant[index].restaurantName!,
@@ -96,7 +89,7 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => DashboardManager()));
+                            builder: (context) => const DashboardManager()));
                   },
                 );
               }),

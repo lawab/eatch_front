@@ -1,7 +1,7 @@
-import 'dart:convert';
-import 'dart:html';
+// ignore_for_file: use_build_context_synchronously
 
-import 'package:eatch/pages/dashboard/dashboard_manager.dart';
+import 'dart:convert';
+
 import 'package:eatch/pages/restaurantAccueil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,8 +9,6 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../servicesAPI/get_categories.dart';
 
 class Authentification extends StatefulWidget {
   const Authentification({Key? key}) : super(key: key);
@@ -30,7 +28,6 @@ class AuthentificationState extends State<Authentification> {
   @override
   void initState() {
     _loadSettings();
-    // TODO: implement initState
     super.initState();
   }
 
@@ -271,11 +268,11 @@ class AuthentificationState extends State<Authentification> {
                         ),
                       ),
                       SizedBox(height: height * 0.03),
-                      Container(
+                      SizedBox(
                         width: width,
                         child: Row(
                           children: [
-                            Container(
+                            SizedBox(
                               //height: 20,
                               width:
                                   150, //MediaQuery.of(context).size.width / 6,
@@ -297,7 +294,7 @@ class AuthentificationState extends State<Authentification> {
                               ),
                             ),
                             Expanded(child: Container()),
-                            Container(
+                            SizedBox(
                               width: 150,
                               child: TextButton(
                                 onPressed: () {},
@@ -560,11 +557,11 @@ class AuthentificationState extends State<Authentification> {
                         ),
                       ),
                       SizedBox(height: height * 0.03),
-                      Container(
+                      SizedBox(
                         width: width,
                         child: Row(
                           children: [
-                            Container(
+                            SizedBox(
                               //height: 20,
                               width:
                                   130, //MediaQuery.of(context).size.width / 6,
@@ -586,7 +583,7 @@ class AuthentificationState extends State<Authentification> {
                               ),
                             ),
                             Expanded(child: Container()),
-                            Container(
+                            SizedBox(
                               width: 130,
                               child: TextButton(
                                 onPressed: () {},
@@ -645,12 +642,14 @@ class AuthentificationState extends State<Authentification> {
   Future<void> login(BuildContext context, email, pass) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    /*final String response = await rootBundle.loadString('assets/server.json');
+    final String response = await rootBundle.loadString('assets/server.json');
     final data = await json.decode(response);
-    String adress_url = data['ip'] + ":" + data['port'];
+    String adressUrl = data['ip'] + ":" + data['port'];
 
-    prefs.setString('ipport', adress_url);*/
-    String url = "http://13.39.81.126:4001/api/users/login"; //13.39.81.126:4001
+    prefs.setString('ipport', adressUrl);
+    String url =
+        "http://192.168.11.110:4001/api/users/login"; //13.39.81.126:4001
+
     print(url);
     print(email);
     print(pass);
@@ -673,10 +672,11 @@ class AuthentificationState extends State<Authentification> {
 
         prefs.setString('IdUser', data['user']['_id']);
         prefs.setString('token', data['accessToken']);
+        print(data['accessToken']);
 
         print("Vous êtes connecté");
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => RestaurantAccueil()));
+            MaterialPageRoute(builder: (context) => const RestaurantAccueil()));
 
         /* Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => DashboardManager()),

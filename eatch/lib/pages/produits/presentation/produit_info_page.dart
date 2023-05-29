@@ -14,7 +14,7 @@ class Produitpage extends StatelessWidget {
   });
   final String imageUrl;
   final String title;
-  final double price;
+  final int price;
 
   @override
   Widget build(BuildContext context) {

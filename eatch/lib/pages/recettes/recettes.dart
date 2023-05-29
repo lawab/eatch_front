@@ -1,8 +1,11 @@
 import 'dart:convert';
 
+import 'package:eatch/pages/recettes/eddit_recette.dart';
 import 'package:eatch/pages/recettes/grid.dart';
+import 'package:eatch/servicesAPI/getMatiere.dart';
 import 'package:eatch/servicesAPI/get_categories.dart';
 import 'package:eatch/servicesAPI/get_recettes.dart';
+import 'package:eatch/servicesAPI/multipart.dart';
 import 'package:eatch/utils/applayout.dart';
 import 'package:eatch/utils/default_button/default_button.dart';
 import 'package:eatch/utils/palettes/palette.dart';
@@ -11,8 +14,11 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class RecettesPage extends ConsumerStatefulWidget {
   const RecettesPage({super.key});
@@ -38,9 +44,13 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
     return size(buildContext).height;
   }
 
-  // ***** LES VARIABLES ****** //
+  /* LA VARIABLE QUI AFFICHE LE FORMULAIRE DE CRÉATION DE RECETTE */
   bool _showContent = false;
+
+  /* LE LOADING PENDANT LE TÉLÉCHARGEMENT DE L’IMAGE DE LA RECETTE */
   bool isLoading = false;
+
+  /* LE LOADING PENDANT LE TÉLÉCHARGEMENT DE L’IMAGE DE LA RECETTE */
   bool _selectFile = false;
 
   Uint8List? selectedImageInBytes;
@@ -50,6 +60,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
   bool filee = false;
   PlatformFile? file;
 
+  List ingredientsList = [];
   List<String> listOfUnities = [
     "g",
     "Kg",
@@ -61,29 +72,20 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
     "Sachet",
     "x",
   ];
+  List<String> listOfMatiere = [
+    "Orange",
+    "Mangue",
+    "Tomate",
+  ];
 
   String? recetteImage;
-  final _nomRecetteImage = TextEditingController();
+  final _descriptionRecette = TextEditingController();
   final _titreRecette = TextEditingController();
-  final _tempsPreparation = TextEditingController();
-  final _tempsCuisson = TextEditingController();
-  final _tempsTotal = TextEditingController();
-
-  final FocusNode _tempsPreparationFocusNode = FocusNode();
-  final FocusNode _tempsCuissonFocusNode = FocusNode();
-  final FocusNode _tempsTotalFocusNode = FocusNode();
 
   @override
   void dispose() {
     _titreRecette.dispose();
-    _tempsPreparation.dispose();
-    _tempsCuisson.dispose();
-    _tempsTotal.dispose();
-    _nomRecetteImage.dispose();
-
-    _tempsPreparationFocusNode.dispose();
-    _tempsCuissonFocusNode.dispose();
-    _tempsTotalFocusNode.dispose();
+    _descriptionRecette.dispose();
 
     _controller.dispose();
     super.dispose();
@@ -95,7 +97,6 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
 
   final _formkey = GlobalKey<FormState>();
 
-  // List<dynamic> listingredients = [];
   int ingredientindex = 0;
   bool ingredientbool = false;
 
@@ -130,10 +131,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
       _uniteDeMesure.clear();
 
       _titreRecette.clear();
-      _tempsPreparation.clear();
-      _tempsCuisson.clear();
-      _tempsTotal.clear();
-      _nomRecetteImage.clear();
+      _descriptionRecette.clear();
     });
   }
 
@@ -141,30 +139,51 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
     final isValid = _formkey.currentState!.validate();
     if (!isValid) {
       return;
-    }
-    _formkey.currentState!.save();
+    } else if (_matierePremieres.length == 0) {
+      showTopSnackBar(
+        Overlay.of(context)!,
+        const CustomSnackBar.info(
+          backgroundColor: Colors.red,
+          message: "Les ingrédients sont obligatoires .",
+        ),
+      );
+    } else {
+      _formkey.currentState!.save();
 
-    List<dynamic> ingredientsList = [];
+      for (int i = 0; i < _matierePremieres.length; i++) {
+        ingredientsList.add({
+          "'material': ${_matierePremieres[i].text}",
+          "'grammage': ${_quantite[i].text}",
+        }
+            // uniteDeMesure: _uniteDeMesure[i].text,
 
-    for (int i = 0; i < _matierePremieres.length; i++) {
-      ingredientsList.add({
-        "matiere": _matierePremieres[i].text,
-        "quantite": _quantite[i].text,
-        "unite": _uniteDeMesure[i].text,
+            // Ingredients(
+            //   matierePremiere: _matierePremieres[i].text,
+            //   quantite: _quantite[i].text,
+            // ),
+            );
+      }
+      // print(_titreRecette.text);
+      // print(_descriptionRecette.text);
+      // print(ingredientsList);
+
+      _clear();
+      setState(() {
+        creationRecette(
+          context,
+          _titreRecette.text,
+          _descriptionRecette.text,
+          ingredientsList,
+          _selectedFile,
+          result,
+        );
+        _selectFile = false;
+        recetteImage = null;
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          _addFiel();
+        });
       });
     }
-    print(_titreRecette.text);
-    print(_tempsPreparation.text);
-    print(_tempsCuisson.text);
-    print(_tempsTotal.text);
-    print(_nomRecetteImage.text);
-    print(ingredientsList);
-
-    _clear();
-    setState(() {
-      _selectFile = false;
-      recetteImage = null;
-    });
   }
 
   bool search = false;
@@ -173,11 +192,11 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
   void filterRecetteResults(String query) {
     final viewRecetteModel = ref.watch(getDataRecettesFuture);
     List<Recette> dummySearchList = [];
-    dummySearchList.addAll(viewRecetteModel.listRecettes);
+    dummySearchList.addAll(viewRecetteModel.listRecette);
     if (query.isNotEmpty) {
       List<Recette> dummyListData = [];
       for (var item in dummySearchList) {
-        if (item.titreRecette!.contains(query)) {
+        if (item.title!.contains(query)) {
           dummyListData.add(item);
         }
       }
@@ -225,7 +244,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
   }
 
   Widget horizontalView(double height, double width, context) {
-    final viewModel = ref.watch(getDataCategoriesFuture);
+    final viewModel = ref.watch(getDataMatiereFuture);
     final viewRecetteModel = ref.watch(getDataRecettesFuture);
     return AppLayout(
       content: SingleChildScrollView(
@@ -282,110 +301,15 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            color: Palette.secondaryBackgroundColor,
-                            child: GestureDetector(
-                              onTap: () async {
-                                recetteImage = null;
-                                result = await FilePicker.platform.pickFiles(
-                                    type: FileType.custom,
-                                    allowedExtensions: [
-                                      "png",
-                                      "jpg",
-                                      "jpeg",
-                                    ]);
-                                if (result != null) {
-                                  setState(() {
-                                    file = result!.files.single;
-
-                                    Uint8List fileBytes =
-                                        result!.files.single.bytes as Uint8List;
-
-                                    _selectedFile = fileBytes;
-
-                                    filee = true;
-
-                                    selectedImageInBytes =
-                                        result!.files.first.bytes;
-                                    _selectFile = true;
-                                    _nomRecetteImage.text =
-                                        result!.files.first.name;
-                                  });
-                                }
-                              },
-                              child: Container(
-                                width: SizeConfig.screenWidth * 0.05,
-                                height: SizeConfig.screenWidth * 0.05,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    width: 1,
-                                    color: const Color(0xFFDCE0E0),
-                                  ),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(16),
-                                  child: recetteImage != null
-                                      ? Image.asset(
-                                          recetteImage!,
-                                          fit: BoxFit.fill,
-                                        )
-                                      : _selectFile == false
-                                          ? const Icon(
-                                              Icons.camera_alt_outlined,
-                                              color: Color(0xFFDCE0E0),
-                                              size: 40,
-                                            )
-                                          : isLoading
-                                              ? const CircularProgressIndicator()
-                                              : Image.memory(
-                                                  selectedImageInBytes!,
-                                                  fit: BoxFit.fill,
-                                                ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          TextFormField(
-                            enabled: false,
-                            controller: _nomRecetteImage,
-                            textInputAction: TextInputAction.next,
-                            autocorrect: false,
-                            textCapitalization: TextCapitalization.characters,
-                            enableSuggestions: false,
-                            focusNode: _tempsTotalFocusNode,
-                            keyboardType: TextInputType.number,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "L'image de la recette est obligatoire !";
-                              }
-                              return null;
-                            },
-                            decoration: InputDecoration(
-                              errorStyle: TextStyle(
-                                color: Theme.of(context).colorScheme.error,
-                              ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                                vertical: 00.0,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                gapPadding: 10,
-                              ),
-                              hintText: "Le nom de l'image",
-                            ),
-                          ),
-                          const SizedBox(height: 20),
+                          /* TEXTFORMFIELD DU TITRE DE LA RECETTE*/
                           TextFormField(
                             controller: _titreRecette,
                             textInputAction: TextInputAction.next,
                             autocorrect: true,
                             textCapitalization: TextCapitalization.characters,
                             enableSuggestions: false,
-                            onEditingComplete: (() => FocusScope.of(context)
-                                .requestFocus(_tempsPreparationFocusNode)),
+                            onEditingComplete: (() =>
+                                FocusScope.of(context).requestFocus()),
                             keyboardType: TextInputType.name,
                             validator: (value) {
                               if (value!.isEmpty) {
@@ -408,365 +332,42 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                             ),
                           ),
                           const SizedBox(height: 20),
+
+                          /* TEXTFORMFIELD DE LA DESCRIPTION DE LA RECETTE*/
                           TextFormField(
-                            controller: _tempsPreparation,
+                            controller: _descriptionRecette,
                             textInputAction: TextInputAction.next,
-                            autocorrect: false,
+                            autocorrect: true,
                             textCapitalization: TextCapitalization.characters,
                             enableSuggestions: false,
-                            focusNode: _tempsPreparationFocusNode,
-                            onEditingComplete: (() => FocusScope.of(context)
-                                .requestFocus(_tempsCuissonFocusNode)),
-                            keyboardType: TextInputType.number,
-                            onChanged: (value) {
-                              _tempsPreparation.text = value;
-                              _tempsPreparation.selection =
-                                  TextSelection.fromPosition(TextPosition(
-                                      offset: _tempsPreparation.text.length));
-                              if (_tempsPreparation.text.isEmpty &&
-                                  _tempsCuisson.text.isEmpty) {
-                                setState(() {
-                                  _tempsTotal.text = "0";
-                                });
-                              } else if (_tempsCuisson.text.isEmpty &&
-                                  _tempsPreparation.text.isNotEmpty) {
-                                setState(() {
-                                  _tempsTotal.text =
-                                      int.parse(_tempsPreparation.text)
-                                          .toString();
-                                });
-                              } else if (_tempsCuisson.text.isNotEmpty &&
-                                  _tempsPreparation.text.isEmpty) {
-                                setState(() {
-                                  _tempsTotal.text =
-                                      int.parse(_tempsCuisson.text).toString();
-                                });
-                              } else {
-                                setState(() {
-                                  _tempsTotal.text =
-                                      (int.parse(_tempsCuisson.text) +
-                                              int.parse(_tempsPreparation.text))
-                                          .toString();
-                                });
-                              }
-                            },
+                            onEditingComplete: (() =>
+                                FocusScope.of(context).requestFocus()),
+                            keyboardType: TextInputType.name,
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return "Le temps de préparation est obligatoire !";
-                              } else if (value == "0") {
-                                return "Le temps de préparation doit être supérieur a zéro minute !";
+                                return "Le titre de la recette est obligatoire !";
+                              } else if (value.length < 50) {
+                                return "Entrez au moins 50 caractères !";
                               }
                               return null;
                             },
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r'[0-9]')),
-                            ],
+                            minLines: 3,
+                            maxLines: 6,
                             decoration: InputDecoration(
                               contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 20,
-                                vertical: 00.0,
+                                vertical: 20.0,
                               ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                                 gapPadding: 10,
                               ),
-                              hintText: "Le temps de Préparation",
+                              hintText: "La description de la recette",
                             ),
                           ),
                           const SizedBox(height: 20),
-                          TextFormField(
-                            controller: _tempsCuisson,
-                            textInputAction: TextInputAction.next,
-                            autocorrect: false,
-                            textCapitalization: TextCapitalization.characters,
-                            enableSuggestions: false,
-                            focusNode: _tempsCuissonFocusNode,
-                            keyboardType: TextInputType.number,
-                            onChanged: (value) {
-                              _tempsCuisson.text = value;
-                              _tempsCuisson.selection =
-                                  TextSelection.fromPosition(
-                                TextPosition(offset: _tempsCuisson.text.length),
-                              );
-                              if (_tempsPreparation.text.isEmpty &&
-                                  _tempsCuisson.text.isEmpty) {
-                                setState(() {
-                                  _tempsTotal.text = "0";
-                                });
-                              } else if (_tempsCuisson.text.isEmpty &&
-                                  _tempsPreparation.text.isNotEmpty) {
-                                setState(() {
-                                  _tempsTotal.text =
-                                      int.parse(_tempsPreparation.text)
-                                          .toString();
-                                });
-                              } else if (_tempsCuisson.text.isNotEmpty &&
-                                  _tempsPreparation.text.isEmpty) {
-                                setState(() {
-                                  _tempsTotal.text =
-                                      int.parse(_tempsCuisson.text).toString();
-                                });
-                              } else {
-                                setState(() {
-                                  _tempsTotal.text =
-                                      (int.parse(_tempsCuisson.text) +
-                                              int.parse(_tempsPreparation.text))
-                                          .toString();
-                                });
-                              }
-                            },
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Le temps de cuisson est obligatoire !";
-                              }
-                              return null;
-                            },
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r'[0-9]')),
-                            ],
-                            decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                                vertical: 00.0,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                gapPadding: 10,
-                              ),
-                              hintText: "Le temps de Cuisson",
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          TextFormField(
-                            enabled: false,
-                            controller: _tempsTotal,
-                            textInputAction: TextInputAction.next,
-                            autocorrect: false,
-                            textCapitalization: TextCapitalization.characters,
-                            enableSuggestions: false,
-                            focusNode: _tempsTotalFocusNode,
-                            keyboardType: TextInputType.number,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Le temps total est obligatoire !";
-                              } else if (value == "0") {
-                                return "Le temps total doit être supérieur a zéro minute !";
-                              }
-                              return null;
-                            },
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r'[0-9]')),
-                            ],
-                            decoration: InputDecoration(
-                              errorStyle: TextStyle(
-                                color: Theme.of(context).colorScheme.error,
-                              ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                                vertical: 00.0,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                gapPadding: 10,
-                              ),
-                              hintText: "Le temps total",
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                          //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                          //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                          //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                          //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                          //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                          //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                          //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                          //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                          if (ingredientbool)
-                            Column(
-                              children: [
-                                for (int j = 0;
-                                    j <
-                                        viewRecetteModel
-                                            .listRecettes[ingredientindex]
-                                            .ingredients!
-                                            .length;
-                                    j++)
-                                  Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          InkWell(
-                                            child:
-                                                const Icon(Icons.remove_circle),
-                                            onTap: () {
-                                              _removeItem(j);
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Expanded(
-                                            flex: 3,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(2),
-                                              child: Container(
-                                                color: Palette
-                                                    .secondaryBackgroundColor,
-                                                child: DropdownButtonFormField(
-                                                  hint: Text(
-                                                    viewRecetteModel
-                                                        .listRecettes[
-                                                            ingredientindex]
-                                                        .ingredients![j]
-                                                        .matiere!,
-                                                  ),
-                                                  validator: (value) {
-                                                    if (value == null) {
-                                                      return "Le nom de la matière première est obligatoire.";
-                                                    } else {
-                                                      return null;
-                                                    }
-                                                  },
-                                                  decoration: InputDecoration(
-                                                    border: OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10.0),
-                                                    ),
-                                                  ),
-                                                  onChanged: (value) {
-                                                    setState(() {
-                                                      _matierePremieres[j]
-                                                              .text =
-                                                          value.toString();
-                                                    });
-                                                  },
-                                                  onSaved: (value) {
-                                                    setState(() {
-                                                      _matierePremieres[j]
-                                                              .text =
-                                                          value.toString();
-                                                    });
-                                                  },
-                                                  items: viewModel
-                                                      .listCategories
-                                                      .map((val) {
-                                                    return DropdownMenuItem(
-                                                      value: val.title,
-                                                      child: Text(
-                                                        val.title!,
-                                                      ),
-                                                    );
-                                                  }).toList(),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 20),
-                                          Expanded(
-                                            flex: 1,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(2),
-                                              child: TextFormField(
-                                                // initialValue: viewRecetteModel
-                                                //     .listRecettes[
-                                                //         ingredientindex]
-                                                //     .ingredients![j]
-                                                //     .quantite!,
-                                                keyboardType:
-                                                    TextInputType.number,
-                                                controller: _quantite[j],
-                                                validator: (value) {
-                                                  if (value!.isEmpty) {
-                                                    return "La quantité est obligatoire !";
-                                                  } else if (value == "0") {
-                                                    return "La quantité doit être supérieur a zéro minute !";
-                                                  }
-                                                  return null;
-                                                },
-                                                inputFormatters: <
-                                                    TextInputFormatter>[
-                                                  FilteringTextInputFormatter
-                                                      .allow(RegExp(r'[0-9]')),
-                                                ],
-                                                decoration: InputDecoration(
-                                                  border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.0),
-                                                  ),
-                                                  hintText: "Quantité*",
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 20),
-                                          Expanded(
-                                            flex: 2,
-                                            child: Container(
-                                              color: Palette
-                                                  .secondaryBackgroundColor,
-                                              child: DropdownButtonFormField(
-                                                hint: Text(viewRecetteModel
-                                                    .listRecettes[
-                                                        ingredientindex]
-                                                    .ingredients![j]
-                                                    .unite!),
-                                                validator: (value) {
-                                                  if (value == null) {
-                                                    return "L ' Unité de mésure est obligatoire.";
-                                                  } else {
-                                                    return null;
-                                                  }
-                                                },
-                                                decoration: InputDecoration(
-                                                  border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.0),
-                                                  ),
-                                                ),
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _uniteDeMesure[j].text =
-                                                        value.toString();
-                                                  });
-                                                },
-                                                onSaved: (value) {
-                                                  setState(() {
-                                                    _uniteDeMesure[j].text =
-                                                        value.toString();
-                                                  });
-                                                },
-                                                items: listOfUnities
-                                                    .map((String val) {
-                                                  return DropdownMenuItem(
-                                                    value: val,
-                                                    child: Text(
-                                                      val,
-                                                    ),
-                                                  );
-                                                }).toList(),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 20),
-                                    ],
-                                  ),
-                              ],
-                            ),
+
+                          /* ENSEMBLE DES INGRÉDIENTS */
                           Column(
                             children: [
                               for (int i = 0; i < _matierePremieres.length; i++)
@@ -790,6 +391,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
                                       children: [
+                                        /* MATIÈRE PREMIÈRE */
                                         Expanded(
                                           flex: 3,
                                           child: Padding(
@@ -818,29 +420,40 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                                 onChanged: (value) {
                                                   setState(() {
                                                     _matierePremieres[i].text =
-                                                        value.toString();
+                                                        "'${value.toString()}'";
                                                   });
                                                 },
                                                 onSaved: (value) {
                                                   setState(() {
                                                     _matierePremieres[i].text =
-                                                        value.toString();
+                                                        "'${value.toString()}'";
                                                   });
                                                 },
-                                                items: viewModel.listCategories
+                                                items: viewModel.listMatiere
                                                     .map((val) {
                                                   return DropdownMenuItem(
-                                                    value: val.title,
+                                                    value: val.sId,
                                                     child: Text(
-                                                      val.title!,
+                                                      val.mpName!,
                                                     ),
                                                   );
                                                 }).toList(),
+                                                // items: listOfMatiere
+                                                //     .map((String val) {
+                                                //   return DropdownMenuItem(
+                                                //     value: val,
+                                                //     child: Text(
+                                                //       val,
+                                                //     ),
+                                                //   );
+                                                // }).toList(),
                                               ),
                                             ),
                                           ),
                                         ),
                                         const SizedBox(width: 20),
+
+                                        /* QUANTITÉ */
                                         Expanded(
                                           flex: 1,
                                           child: Padding(
@@ -874,6 +487,8 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                           ),
                                         ),
                                         const SizedBox(width: 20),
+
+                                        /* UNITE DE MESURE */
                                         Expanded(
                                           flex: 2,
                                           child: Container(
@@ -930,14 +545,79 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
+                              Container(
+                                color: Palette.secondaryBackgroundColor,
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    recetteImage = null;
+                                    result = await FilePicker.platform
+                                        .pickFiles(
+                                            type: FileType.custom,
+                                            allowedExtensions: [
+                                          "png",
+                                          "jpg",
+                                          "jpeg",
+                                        ]);
+                                    if (result != null) {
+                                      setState(() {
+                                        file = result!.files.single;
+
+                                        Uint8List fileBytes = result!
+                                            .files.single.bytes as Uint8List;
+
+                                        _selectedFile = fileBytes;
+
+                                        filee = true;
+
+                                        selectedImageInBytes =
+                                            result!.files.first.bytes;
+                                        _selectFile = true;
+                                      });
+                                    }
+                                  },
+                                  child: Container(
+                                    width: 100,
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        width: 1,
+                                        color: const Color(0xFFDCE0E0),
+                                      ),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: recetteImage != null
+                                          ? Image.asset(
+                                              recetteImage!,
+                                              fit: BoxFit.fill,
+                                            )
+                                          : _selectFile == false
+                                              ? const Icon(
+                                                  Icons.camera_alt_outlined,
+                                                  color: Color(0xFFDCE0E0),
+                                                  size: 40,
+                                                )
+                                              : isLoading
+                                                  ? const CircularProgressIndicator()
+                                                  : Image.memory(
+                                                      selectedImageInBytes!,
+                                                      fit: BoxFit.fill,
+                                                    ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const Spacer(),
                               SizedBox(
                                 width: 200,
                                 child: DefaultButton(
-                                  color: Palette.secondaryBackgroundColor,
+                                  color: Palette.yellowColor,
                                   foreground: Colors.transparent,
                                   text: 'AJOUTER INGRÉDIENT',
-                                  textcolor: Palette.textsecondaryColor,
+                                  textcolor: Palette.primaryBackgroundColor,
                                   onPressed: () {
                                     _addFiel();
                                   },
@@ -960,10 +640,10 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                               SizedBox(
                                 width: 200,
                                 child: DefaultButton(
-                                  color: Palette.deleteColors,
+                                  color: Palette.secondaryBackgroundColor,
                                   foreground: Colors.transparent,
                                   text: 'ANNULER',
-                                  textcolor: Palette.primaryBackgroundColor,
+                                  textcolor: Palette.textsecondaryColor,
                                   onPressed: () {
                                     _clear();
                                     setState(() {
@@ -1016,7 +696,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                           ),
                         ),
                       ),
-                      viewRecetteModel.listRecettes.isEmpty
+                      viewRecetteModel.listRecette.isEmpty
                           ? Padding(
                               padding: EdgeInsets.symmetric(
                                 horizontal: getProportionateScreenWidth(50.0),
@@ -1037,10 +717,10 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                               child: search == false
                                   ? ProductsLayoutGrid(
                                       itemCount:
-                                          viewRecetteModel.listRecettes.length,
+                                          viewRecetteModel.listRecette.length,
                                       itemBuilder: (_, index) {
-                                        final recette = viewRecetteModel
-                                            .listRecettes[index];
+                                        final recette =
+                                            viewRecetteModel.listRecette[index];
                                         return Card(
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
@@ -1059,8 +739,8 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                                       topRight:
                                                           Radius.circular(15),
                                                     ),
-                                                    child: Image.asset(
-                                                      recette.imageUrl!,
+                                                    child: Image.network(
+                                                      "http://192.168.10.110:4010${recette.image}",
                                                       height: 180,
                                                       width: double.infinity,
                                                       fit: BoxFit.cover,
@@ -1092,7 +772,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                                           1
                                                         ])),
                                                     child: Text(
-                                                      recette.titreRecette!,
+                                                      recette.title!,
                                                       style: const TextStyle(
                                                         fontSize: 15,
                                                         color: Palette
@@ -1145,51 +825,51 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                                         color:
                                                             Colors.yellow[600],
                                                       ),
-                                                      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                                                      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                                                      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                                                      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                                                      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                                                      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                                                      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                                                      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                                                      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                                                       child: InkWell(
                                                         onTap: () {
-                                                          setState(() {
-                                                            _showContent =
-                                                                !_showContent;
-
-                                                            recetteImage =
-                                                                recette
-                                                                    .imageUrl;
-
-                                                            _nomRecetteImage
-                                                                    .text =
-                                                                recette
-                                                                    .imageName!;
-
-                                                            _titreRecette.text =
-                                                                recette
-                                                                    .titreRecette!;
-
-                                                            _tempsPreparation
-                                                                    .text =
-                                                                recette
-                                                                    .tempsPreparation!;
-
-                                                            _tempsCuisson.text =
-                                                                recette
-                                                                    .tempsCuisson!;
-                                                            _tempsTotal.text =
-                                                                recette
-                                                                    .tempsTotal!;
-                                                            ingredientindex =
-                                                                index;
-
-                                                            ingredientbool =
-                                                                true;
-                                                          });
+                                                          Navigator
+                                                              .pushReplacement(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (BuildContext
+                                                                              context) =>
+                                                                          EdditRecette(
+                                                                            title:
+                                                                                viewRecetteModel.listRecette[index].title!,
+                                                                            image:
+                                                                                viewRecetteModel.listRecette[index].image!,
+                                                                            sId:
+                                                                                viewRecetteModel.listRecette[index].sId!,
+                                                                            ingredients:
+                                                                                viewRecetteModel.listRecette[index].engredients!,
+                                                                            description:
+                                                                                viewRecetteModel.listRecette[index].description!,
+                                                                          )));
+                                                          // Navigator.push(
+                                                          //   context,
+                                                          //   MaterialPageRoute(
+                                                          //       builder:
+                                                          //           (context) {
+                                                          //     return EdditRecette(
+                                                          //       title: viewRecetteModel
+                                                          //           .listRecette[
+                                                          //               index]
+                                                          //           .title!,
+                                                          //       image: viewRecetteModel
+                                                          //           .listRecette[
+                                                          //               index]
+                                                          //           .image!,
+                                                          //       sId: viewRecetteModel
+                                                          //           .listRecette[
+                                                          //               index]
+                                                          //           .sId!,
+                                                          //       ingredients: viewRecetteModel
+                                                          //           .listRecette[
+                                                          //               index]
+                                                          //           .ingredients!,
+                                                          //     );
+                                                          //   }),
+                                                          // );
                                                         },
                                                         child: const Icon(
                                                           Icons.mode_rounded,
@@ -1211,9 +891,10 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                                         onTap: () {
                                                           dialogDelete(
                                                               recetteId:
-                                                                  recette.id!,
-                                                              recetteTitle: recette
-                                                                  .titreRecette!);
+                                                                  recette.sId!,
+                                                              recetteTitle:
+                                                                  recette
+                                                                      .title!);
                                                         },
                                                         child: const Icon(
                                                           Icons.delete,
@@ -1266,8 +947,8 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                                                 Radius.circular(
                                                                     15),
                                                           ),
-                                                          child: Image.asset(
-                                                            recette.imageUrl!,
+                                                          child: Image.network(
+                                                            recette.image!,
                                                             height: 180,
                                                             width:
                                                                 double.infinity,
@@ -1304,8 +985,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                                                 1
                                                               ])),
                                                           child: Text(
-                                                            recette
-                                                                .titreRecette!,
+                                                            recette.title!,
                                                             style:
                                                                 const TextStyle(
                                                               fontSize: 15,
@@ -1331,16 +1011,6 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                                             CrossAxisAlignment
                                                                 .end,
                                                         children: [
-                                                          Text(
-                                                            "${recette.tempsTotal!} Min.",
-                                                            style:
-                                                                const TextStyle(
-                                                              color: Palette
-                                                                  .textPrimaryColor,
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                              width: 4),
                                                           const Icon(
                                                               Icons
                                                                   .access_time_filled_sharp,
@@ -1388,6 +1058,87 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
     return AppLayout(
       content: Container(),
     );
+  }
+
+  Future<void> creationRecette(
+    contextt,
+    String title,
+    String description,
+    List ingredients,
+    selectedFile,
+    result,
+  ) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var id = prefs.getString('IdUser').toString();
+    var token = prefs.getString('token');
+    var restaurantid = prefs.getString('idRestaurant');
+    String adressUrl = prefs.getString('ipport').toString();
+    var url = Uri.parse(
+        "http://192.168.11.110:4010/api/recettes/create"); //13.39.81.126
+    print(url);
+    final request = MultipartRequest(
+      'POST',
+      url,
+      onProgress: (int bytes, int total) {
+        final progress = bytes / total;
+        print('progress: $progress ($bytes/$total)');
+      },
+    );
+    var json = {
+      'title': title,
+      'description': description,
+      'engredients': ingredientsList,
+      '_creator': id,
+      'restaurant': restaurantid!.trim(),
+    };
+    var body = jsonEncode(json);
+
+    request.headers.addAll({
+      "body": body,
+    });
+
+    request.fields['form_key'] = 'form_value';
+    request.headers['authorization'] = 'Bearer $token';
+    request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
+        contentType: MediaType('application', 'octet-stream'),
+        filename: result.files.first.name));
+
+    print("RESPENSE SEND STEAM FILE REQ");
+    //var responseString = await streamedResponse.stream.bytesToString();
+    var response = await request.send();
+    print("Upload Response$response");
+    print(response.statusCode);
+    print(request.headers);
+
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        await response.stream.bytesToString().then((value) {
+          print(value);
+        });
+        //stopMessage();
+        //finishWorking();
+
+        showTopSnackBar(
+          Overlay.of(contextt)!,
+          const CustomSnackBar.info(
+            backgroundColor: Colors.green,
+            message: "Recette Crée",
+          ),
+        );
+        ref.refresh(getDataRecettesFuture);
+      } else {
+        showTopSnackBar(
+          Overlay.of(contextt)!,
+          const CustomSnackBar.info(
+            backgroundColor: Colors.red,
+            message: "Erreur de création",
+          ),
+        );
+        print("Error Create Programme  !!!");
+      }
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future dialogDelete({
@@ -1484,3 +1235,18 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
     }
   }
 }
+
+// class Ingredients {
+//   const Ingredients({
+//     required this.matierePremiere,
+//     required this.quantite,
+//     // required this.uniteDeMesure,
+//   });
+
+//   final String matierePremiere;
+//   final String quantite;
+//   // final String uniteDeMesure;
+
+//   @override
+//   toString() => '{"material": $matierePremiere, "grammage": $quantite}';
+// }

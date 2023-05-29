@@ -15,7 +15,7 @@ class ProductCard extends StatefulWidget {
 
   final String imageUrl;
   final String title;
-  final double price;
+  final int price;
   final VoidCallback onTapProduitCard;
 
   @override
@@ -45,8 +45,8 @@ class _ProductCardState extends State<ProductCard> {
                   topLeft: Radius.circular(10.0),
                   topRight: Radius.circular(10.0),
                 ),
-                child: Image.asset(
-                  widget.imageUrl,
+                child: Image.network(
+                  'http://192.168.11.110:4003${widget.imageUrl}',
                   width: double.infinity,
                   height: 95,
                   fit: BoxFit.cover,

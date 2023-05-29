@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,7 +25,7 @@ class GetDataMatiereFuture extends ChangeNotifier {
 
     try {
       http.Response response = await http.get(
-        Uri.parse('http://13.39.81.126:4008/api/materials/fetch/all'),
+        Uri.parse('http://192.168.11.110:4008/api/materials/fetch/all'),
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',
@@ -64,7 +63,7 @@ class Matiere {
   int? quantity;
   int? consumerQuantity;
   int? currentQuantity;
-  Null? deletedAt;
+  String? deletedAt;
   String? unity;
   String? createdAt;
   String? updatedAt;
@@ -89,7 +88,7 @@ class Matiere {
   Matiere.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     restaurant = json['restaurant'] != null
-        ? new Restaurant.fromJson(json['restaurant'])
+        ? Restaurant.fromJson(json['restaurant'])
         : null;
     sCreator = json['_creator'];
     lifetime = json['lifetime'];
@@ -106,23 +105,23 @@ class Matiere {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    if (this.restaurant != null) {
-      data['restaurant'] = this.restaurant!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
+    if (restaurant != null) {
+      data['restaurant'] = restaurant!.toJson();
     }
-    data['_creator'] = this.sCreator;
-    data['lifetime'] = this.lifetime;
-    data['image'] = this.image;
-    data['mp_name'] = this.mpName;
-    data['quantity'] = this.quantity;
-    data['consumer_quantity'] = this.consumerQuantity;
-    data['current_quantity'] = this.currentQuantity;
-    data['deletedAt'] = this.deletedAt;
-    data['unity'] = this.unity;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['__v'] = this.iV;
+    data['_creator'] = sCreator;
+    data['lifetime'] = lifetime;
+    data['image'] = image;
+    data['mp_name'] = mpName;
+    data['quantity'] = quantity;
+    data['consumer_quantity'] = consumerQuantity;
+    data['current_quantity'] = currentQuantity;
+    data['deletedAt'] = deletedAt;
+    data['unity'] = unity;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['__v'] = iV;
     return data;
   }
 }
@@ -137,8 +136,8 @@ class Restaurant {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
     return data;
   }
 }

@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'dart:ui';
+import 'package:dio/dio.dart';
 import 'package:eatch/servicesAPI/getMatiere.dart';
 import 'package:eatch/utils/applayout.dart';
 import 'package:eatch/utils/palettes/palette.dart';
@@ -161,7 +163,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                         const SizedBox(
                           height: 10,
                         ),
-                        SizedBox(
+                        Container(
                           width: MediaQuery.of(context).size.width - 50,
                           child: TextFormField(
                             controller: nomController,
@@ -203,7 +205,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                         const SizedBox(
                           height: 20,
                         ),
-                        SizedBox(
+                        Container(
                           width: MediaQuery.of(context).size.width - 50,
                           child: TextFormField(
                             controller: stockController,
@@ -246,7 +248,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                           height: 20,
                         ),
                         // début --------------------------------------------
-                        SizedBox(
+                        Container(
                           width: MediaQuery.of(context).size.width - 50,
                           child: Row(
                             children: [
@@ -370,7 +372,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                         // fin de la creation du bouton image
                         Container(
                           alignment: Alignment.centerRight,
-                          child: SizedBox(
+                          child: Container(
                             width: 350,
                             child: Row(children: [
                               const SizedBox(
@@ -432,7 +434,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
           const SizedBox(
             height: 5,
           ),
-          SizedBox(
+          Container(
             height: ajout == false ? height - 175 : height - 400,
             width: width - 20,
             child: GridView.builder(
@@ -451,7 +453,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                       image: DecorationImage(
                           opacity: 50,
                           image: NetworkImage(
-                              "http://192.168.10.110:4008${matiere[index].image!}"),
+                              "http://13.39.81.126:5000${matiere[index].image!}"),
                           fit: BoxFit.cover),
                     ),
                     child: Column(
@@ -490,7 +492,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                               fontWeight: FontWeight.normal),
                         ),
                         Expanded(child: Container()),
-                        SizedBox(
+                        Container(
                           height: 100,
                           child: Column(
                             children: [
@@ -599,7 +601,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                       const SizedBox(
                         height: 10,
                       ),
-                      SizedBox(
+                      Container(
                         width: MediaQuery.of(context).size.width - 50,
                         child: TextFormField(
                           controller: nomController,
@@ -642,7 +644,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                         height: 20,
                       ),
                       // début --------------------------------------------
-                      SizedBox(
+                      Container(
                         width: MediaQuery.of(context).size.width - 50,
                         child: Row(
                           children: [
@@ -763,7 +765,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                       ),
 
                       // fin de la creation du bouton image
-                      SizedBox(
+                      Container(
                         width: MediaQuery.of(context).size.width - 50,
                         child: TextFormField(
                           controller: stockController,
@@ -807,7 +809,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                       ),
                       Container(
                         alignment: Alignment.centerRight,
-                        child: SizedBox(
+                        child: Container(
                           width: 350,
                           child: Row(children: [
                             const SizedBox(
@@ -858,7 +860,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
         const SizedBox(
           height: 5,
         ),
-        SizedBox(
+        Container(
           height: ajout == true ? height - 465 : height - 245, //85,
           width: width - 20,
           child: GridView.builder(
@@ -877,7 +879,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                     image: DecorationImage(
                         opacity: 50,
                         image: NetworkImage(
-                            "http://192.168.10.110:4008${matiere[index].image!}"),
+                            "http://13.39.81.126:5000${matiere[index].image!}"),
                         fit: BoxFit.cover),
                   ),
                   child: Column(
@@ -916,7 +918,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                             fontWeight: FontWeight.normal),
                       ),
                       Expanded(child: Container()),
-                      SizedBox(
+                      Container(
                         height: 100,
                         child: Column(
                           children: [
@@ -1154,7 +1156,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
     var restaurantId = prefs.getString('idRestaurant').toString();
     var token = prefs.getString('token');
 
-    var url = Uri.parse("http://192.168.11.110:4008/api/materials/create");
+    var url = Uri.parse("http://13.39.81.126:5000/api/materials/create");
     final request = MultipartRequest(
       'POST',
       url,
@@ -1180,14 +1182,14 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
 
     request.fields['form_key'] = 'form_value';
     request.headers['authorization'] = 'Bearer $token';
-    request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
+    request.files.add(await http.MultipartFile.fromBytes('file', selectedFile,
         contentType: MediaType('application', 'octet-stream'),
         filename: result?.files.first.name));
 
     print("RESPENSE SEND STEAM FILE REQ");
     //var responseString = await streamedResponse.stream.bytesToString();
     var response = await request.send();
-    print("Upload Response$response");
+    print("Upload Response" + response.toString());
     print(response.statusCode);
     print(request.headers);
 
@@ -1203,7 +1205,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
         print("Error Create Programme  !!!");
       }
     } catch (e) {
-      rethrow;
+      throw e;
     }
   }
 

@@ -25,7 +25,7 @@ class GetDataUserFuture extends ChangeNotifier {
 
     try {
       http.Response response = await http.get(
-        Uri.parse('http://13.39.81.126:4001/api/users/fetch/all'),
+        Uri.parse('http://192.168.11.110:4001/api/users/fetch/all'),
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',
@@ -59,74 +59,6 @@ class GetDataUserFuture extends ChangeNotifier {
     notifyListeners();
   }
 }
-
-// class User {
-//   String? sId;
-//   String? firstName;
-//   String? lastName;
-//   String? email;
-//   String? username;
-//   String? password;
-//   String? role;
-//   String? avatar;
-//   bool? isOnline;
-//   String? deletedAt;
-//   String? createdAt;
-//   String? updatedAt;
-
-//   int? iV;
-
-//   User({
-//     this.sId,
-//     this.firstName,
-//     this.lastName,
-//     this.email,
-//     this.username,
-//     this.password,
-//     this.role,
-//     this.avatar,
-//     this.isOnline,
-//     this.deletedAt,
-//     this.createdAt,
-//     this.updatedAt,
-//     this.iV,
-//   });
-
-//   User.fromJson(Map<String, dynamic> json) {
-//     sId = json['_id'];
-//     firstName = json['firstName'];
-//     lastName = json['lastName'];
-//     email = json['email'];
-//     username = json['username'];
-//     password = json['password'];
-//     role = json['role'];
-//     avatar = json['avatar'];
-//     isOnline = json['isOnline'];
-//     deletedAt = json['deletedAt'];
-//     createdAt = json['createdAt'];
-//     updatedAt = json['updatedAt'];
-
-//     iV = json['__v'];
-//   }
-
-//   Map<String, dynamic> toJson() {
-//     final Map<String, dynamic> data = <String, dynamic>{};
-//     data['_id'] = sId;
-//     data['firstName'] = firstName;
-//     data['lastName'] = lastName;
-//     data['email'] = email;
-//     data['username'] = username;
-//     data['password'] = password;
-//     data['role'] = role;
-//     data['avatar'] = avatar;
-//     data['isOnline'] = isOnline;
-//     data['deletedAt'] = deletedAt;
-//     data['createdAt'] = createdAt;
-//     data['updatedAt'] = updatedAt;
-//     data['__v'] = iV;
-//     return data;
-//   }
-// }
 
 class User {
   String? sId;
@@ -206,17 +138,47 @@ class User {
 }
 
 class Restaurant {
+  Infos? infos;
   String? sId;
+  String? restaurantName;
 
-  Restaurant({this.sId});
+  Restaurant({this.infos, this.sId, this.restaurantName});
 
   Restaurant.fromJson(Map<String, dynamic> json) {
+    infos = json['infos'] != null ? Infos.fromJson(json['infos']) : null;
     sId = json['_id'];
+    restaurantName = json['restaurant_name'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    if (infos != null) {
+      data['infos'] = infos!.toJson();
+    }
     data['_id'] = sId;
+    data['restaurant_name'] = restaurantName;
+    return data;
+  }
+}
+
+class Infos {
+  String? town;
+  String? address;
+  String? logo;
+
+  Infos({this.town, this.address, this.logo});
+
+  Infos.fromJson(Map<String, dynamic> json) {
+    town = json['town'];
+    address = json['address'];
+    logo = json['logo'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['town'] = town;
+    data['address'] = address;
+    data['logo'] = logo;
     return data;
   }
 }
