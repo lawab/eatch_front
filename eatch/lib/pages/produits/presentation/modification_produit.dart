@@ -14,7 +14,7 @@ class ModificationProduit extends StatefulWidget {
   });
   final String imageUrl;
   final String title;
-  final String price;
+  final double price;
   @override
   State<ModificationProduit> createState() => _ModificationProduitState();
 }

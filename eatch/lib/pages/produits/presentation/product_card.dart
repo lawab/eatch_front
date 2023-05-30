@@ -15,7 +15,7 @@ class ProductCard extends StatefulWidget {
 
   final String imageUrl;
   final String title;
-  final String price;
+  final double price;
   final VoidCallback onTapProduitCard;
 
   @override

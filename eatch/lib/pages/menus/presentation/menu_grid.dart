@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
-import '../../categories/infrastructure/categories_repository.dart';
 import '../infrastructure/menus_repository.dart';
 import 'menu_card.dart';
 

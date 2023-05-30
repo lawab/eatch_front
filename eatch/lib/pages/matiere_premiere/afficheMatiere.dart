@@ -341,7 +341,9 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                         // fin --------------------------------------------
                         // Creation du bouton qui reécupere l'image
                         Container(
+                          padding: EdgeInsets.only(right: 70),
                           color: Palette.secondaryBackgroundColor,
+                          alignment: Alignment.centerRight,
                           child: GestureDetector(
                             onTap: () async {
                               result = await FilePicker.platform.pickFiles(
@@ -368,34 +370,29 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                                 });
                               }
                             },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Container(
-                                  width: 100,
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      width: 4,
-                                      color: Palette.greenColors,
-                                    ),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(16),
-                                    child: _selectFile == false
-                                        ? const Icon(
-                                            Icons.camera_alt_outlined,
-                                            color: Palette.greenColors,
-                                            size: 40,
-                                          )
-                                        : Image.memory(
-                                            selectedImageInBytes!,
-                                            fit: BoxFit.fill,
-                                          ),
-                                  ),
+                            child: Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 4,
+                                  color: Palette.greenColors,
                                 ),
-                              ],
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: _selectFile == false
+                                    ? const Icon(
+                                        Icons.camera_alt_outlined,
+                                        color: Palette.greenColors,
+                                        size: 40,
+                                      )
+                                    : Image.memory(
+                                        selectedImageInBytes!,
+                                        fit: BoxFit.fill,
+                                      ),
+                              ),
                             ),
                           ),
                         ),
@@ -759,7 +756,9 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                       // fin --------------------------------------------
                       // Creation du bouton qui reécupere l'image
                       Container(
+                        padding: EdgeInsets.only(right: 70),
                         color: Palette.secondaryBackgroundColor,
+                        alignment: Alignment.centerRight,
                         child: GestureDetector(
                           onTap: () async {
                             result = await FilePicker.platform.pickFiles(
@@ -786,34 +785,29 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                               });
                             }
                           },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Container(
-                                width: 100,
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    width: 4,
-                                    color: Palette.greenColors,
-                                  ),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(16),
-                                  child: _selectFile == false
-                                      ? const Icon(
-                                          Icons.camera_alt_outlined,
-                                          color: Palette.greenColors,
-                                          size: 40,
-                                        )
-                                      : Image.memory(
-                                          selectedImageInBytes!,
-                                          fit: BoxFit.fill,
-                                        ),
-                                ),
+                          child: Container(
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 4,
+                                color: Palette.greenColors,
                               ),
-                            ],
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: _selectFile == false
+                                  ? const Icon(
+                                      Icons.camera_alt_outlined,
+                                      color: Palette.greenColors,
+                                      size: 40,
+                                    )
+                                  : Image.memory(
+                                      selectedImageInBytes!,
+                                      fit: BoxFit.fill,
+                                    ),
+                            ),
                           ),
                         ),
                       ),

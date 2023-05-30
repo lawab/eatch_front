@@ -114,8 +114,8 @@ class _MenuState extends ConsumerState<Menu> {
                               ajout = true;
                             });
                           },
-                          icon: Icon(Icons.add),
-                          label: Text('Ajouter un menu'),
+                          icon: const Icon(Icons.add),
+                          label: const Text('Ajouter un menu'),
                         ),
                         const SizedBox(
                           width: 20,
@@ -341,7 +341,7 @@ class _MenuState extends ConsumerState<Menu> {
                     listProduits
                         .add(categoriee[index].products![i].productName!);
                   }
-                  print(listProduits);
+                  //print(listProduits);
 
                   return Container(
                     height: 50,
@@ -407,7 +407,9 @@ class _MenuState extends ConsumerState<Menu> {
             ),
             /////////// - Ici se trouve le bouton pour l'image
             Container(
+              padding: EdgeInsets.only(right: 70),
               color: Palette.secondaryBackgroundColor,
+              alignment: Alignment.centerRight,
               child: GestureDetector(
                 onTap: () async {
                   result = await FilePicker.platform
@@ -432,34 +434,29 @@ class _MenuState extends ConsumerState<Menu> {
                     });
                   }
                 },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 4,
-                          color: Palette.greenColors,
-                        ),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: _selectFile == false
-                            ? const Icon(
-                                Icons.camera_alt_outlined,
-                                color: Palette.greenColors,
-                                size: 40,
-                              )
-                            : Image.memory(
-                                selectedImageInBytes!,
-                                fit: BoxFit.fill,
-                              ),
-                      ),
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 4,
+                      color: Palette.greenColors,
                     ),
-                  ],
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: _selectFile == false
+                        ? const Icon(
+                            Icons.camera_alt_outlined,
+                            color: Palette.greenColors,
+                            size: 40,
+                          )
+                        : Image.memory(
+                            selectedImageInBytes!,
+                            fit: BoxFit.fill,
+                          ),
+                  ),
                 ),
               ),
             ),
@@ -549,7 +546,7 @@ class _MenuState extends ConsumerState<Menu> {
     String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.1.34:4009/api/menus/create"); // 192.168.11.110:4009
+        "http://192.168.11.110:4009/api/menus/create"); // 192.168.11.110:4009
     final request = MultipartRequest(
       'POST',
       url,

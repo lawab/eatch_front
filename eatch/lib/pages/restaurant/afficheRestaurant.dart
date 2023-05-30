@@ -58,7 +58,9 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
   bool checkImagee = false;
   bool checkImage = false;
   bool _working = false;
+
   String message = "";
+
   void startWorking() async {
     setState(() {
       _working = true;
@@ -423,7 +425,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                     height: 50,
                                     child: Text(
                                       'Nom du restaurant: ${listRsetaurant[index].restaurantName!}',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontFamily: 'Righteous',
                                           fontSize: 18,
                                           color: Colors.white,
@@ -770,8 +772,8 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                   height: 100,
                   decoration: BoxDecoration(
                     border: Border.all(
-                      width: 1,
-                      color: const Color(0xFFDCE0E0),
+                      width: 4,
+                      color: Palette.greenColors,
                     ),
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -780,7 +782,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                     child: _selectFile == false
                         ? const Icon(
                             Icons.camera_alt_outlined,
-                            color: Color(0xFFDCE0E0),
+                            color: Palette.greenColors,
                             size: 40,
                           )
                         : Image.memory(
@@ -792,7 +794,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
               ),
             ),
             const SizedBox(
-              height: 10,
+              height: 30,
             ),
             Container(
               alignment: Alignment.centerRight,

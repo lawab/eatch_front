@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../utils/applayout.dart';
@@ -23,6 +26,44 @@ class _ModificationCategorieState extends State<ModificationCategorie> {
 
   String _nomCategorie = "";
 
+  ////////////////
+  List<int>? _selectedFile = [];
+  FilePickerResult? result;
+  PlatformFile? file;
+  Uint8List? selectedImageInBytes;
+  bool filee = false;
+
+  bool isLoading = false;
+  bool _selectFile = false;
+  String? matiereImage;
+
+  bool checkImagee = false;
+  bool checkImage = false;
+  bool _working = false;
+  String message = "";
+
+  void startWorking() async {
+    setState(() {
+      _working = true;
+      checkImagee = false;
+    });
+  }
+
+  void stopMessage() async {
+    setState(() {
+      checkImagee = true;
+      checkImage = false;
+    });
+  }
+
+  void finishWorking() async {
+    setState(() {
+      _working = false;
+    });
+  }
+
+  ///
+
   @override
   void dispose() {
     super.dispose();
@@ -46,10 +87,10 @@ class _ModificationCategorieState extends State<ModificationCategorie> {
                 !PREMIERE LIGNE 
                                 **/
 
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
+                children: [
                   Text("MODIFIER LES INFORMTIONS"),
                 ],
               ),
@@ -63,6 +104,71 @@ class _ModificationCategorieState extends State<ModificationCategorie> {
                     children: [
                       nomCategorie(),
                       const SizedBox(height: 20),
+
+                      ////////////// - Image(début)
+                      Container(
+                        padding: EdgeInsets.only(right: 70),
+                        color: Palette.secondaryBackgroundColor,
+                        alignment: Alignment.centerRight,
+                        child: GestureDetector(
+                          onTap: () async {
+                            result = await FilePicker.platform.pickFiles(
+                                type: FileType.custom,
+                                allowedExtensions: [
+                                  "png",
+                                  "jpg",
+                                  "jpeg",
+                                ]);
+                            if (result != null) {
+                              setState(() {
+                                file = result!.files.single;
+
+                                Uint8List fileBytes =
+                                    result!.files.single.bytes as Uint8List;
+
+                                _selectedFile = fileBytes;
+
+                                filee = true;
+
+                                selectedImageInBytes =
+                                    result!.files.first.bytes;
+                                _selectFile = true;
+                              });
+                            }
+                          },
+                          child: Container(
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 4,
+                                color: Palette.greenColors,
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: _selectFile == false
+                                  ? const Icon(
+                                      Icons.camera_alt_outlined,
+                                      color: Palette.greenColors,
+                                      size: 40,
+                                    )
+                                  : Image.memory(
+                                      selectedImageInBytes!,
+                                      fit: BoxFit.fill,
+                                    ),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(
+                        height: 30,
+                      ),
+
+                      /// - Image (fin)
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [

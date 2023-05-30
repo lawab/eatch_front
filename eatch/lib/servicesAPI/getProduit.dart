@@ -56,7 +56,7 @@ class Produit {
   String? sId;
   Restaurant? restaurant;
   Category? category;
-  int? price;
+  double? price;
   List<String>? idsMP;
   String? sCreator;
   String? productName;
