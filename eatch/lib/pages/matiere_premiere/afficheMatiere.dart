@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'dart:ui';
-import 'package:dio/dio.dart';
 import 'package:eatch/servicesAPI/getMatiere.dart';
 import 'package:eatch/utils/applayout.dart';
 import 'package:eatch/utils/palettes/palette.dart';
@@ -179,7 +177,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                         const SizedBox(
                           height: 10,
                         ),
-                        Container(
+                        SizedBox(
                           width: MediaQuery.of(context).size.width - 50,
                           child: TextFormField(
                             controller: nomController,
@@ -221,7 +219,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                         const SizedBox(
                           height: 20,
                         ),
-                        Container(
+                        SizedBox(
                           width: MediaQuery.of(context).size.width - 50,
                           child: TextFormField(
                             controller: stockController,
@@ -264,7 +262,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                           height: 20,
                         ),
                         // début --------------------------------------------
-                        Container(
+                        SizedBox(
                           width: MediaQuery.of(context).size.width - 50,
                           child: Row(
                             children: [
@@ -341,7 +339,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                         // fin --------------------------------------------
                         // Creation du bouton qui reécupere l'image
                         Container(
-                          padding: EdgeInsets.only(right: 70),
+                          padding: const EdgeInsets.only(right: 70),
                           color: Palette.secondaryBackgroundColor,
                           alignment: Alignment.centerRight,
                           child: GestureDetector(
@@ -404,7 +402,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                         // fin de la creation du bouton image
                         Container(
                           alignment: Alignment.centerRight,
-                          child: Container(
+                          child: SizedBox(
                             width: 350,
                             child: Row(children: [
                               const SizedBox(
@@ -468,7 +466,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
           const SizedBox(
             height: 5,
           ),
-          Container(
+          SizedBox(
             height: ajout == false ? height - 175 : height - 400,
             width: width - 20,
             child: GridView.builder(
@@ -487,7 +485,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                       image: DecorationImage(
                           opacity: 50,
                           image: NetworkImage(
-                              "http://192.168.11.110:4008${matiere[index].image!}"), //13.39.81.126:5000
+                              "http://192.168.11.110:4008${matiere[index].image!}"), //192.168.11.110
                           fit: BoxFit.cover),
                     ),
                     child: Column(
@@ -526,7 +524,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                               fontWeight: FontWeight.normal),
                         ),
                         Expanded(child: Container()),
-                        Container(
+                        SizedBox(
                           height: 100,
                           child: Column(
                             children: [
@@ -636,7 +634,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Container(
+                      SizedBox(
                         width: MediaQuery.of(context).size.width - 50,
                         child: TextFormField(
                           controller: nomController,
@@ -679,7 +677,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                         height: 20,
                       ),
                       // début --------------------------------------------
-                      Container(
+                      SizedBox(
                         width: MediaQuery.of(context).size.width - 50,
                         child: Row(
                           children: [
@@ -756,7 +754,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                       // fin --------------------------------------------
                       // Creation du bouton qui reécupere l'image
                       Container(
-                        padding: EdgeInsets.only(right: 70),
+                        padding: const EdgeInsets.only(right: 70),
                         color: Palette.secondaryBackgroundColor,
                         alignment: Alignment.centerRight,
                         child: GestureDetector(
@@ -817,7 +815,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                       ),
 
                       // fin de la creation du bouton image
-                      Container(
+                      SizedBox(
                         width: MediaQuery.of(context).size.width - 50,
                         child: TextFormField(
                           controller: stockController,
@@ -861,7 +859,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                       ),
                       Container(
                         alignment: Alignment.centerRight,
-                        child: Container(
+                        child: SizedBox(
                           width: 350,
                           child: Row(children: [
                             const SizedBox(
@@ -916,7 +914,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
         const SizedBox(
           height: 5,
         ),
-        Container(
+        SizedBox(
           height: ajout == true ? height - 465 : height - 245, //85,
           width: width - 20,
           child: GridView.builder(
@@ -974,7 +972,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                             fontWeight: FontWeight.normal),
                       ),
                       Expanded(child: Container()),
-                      Container(
+                      SizedBox(
                         height: 100,
                         child: Column(
                           children: [
@@ -1116,7 +1114,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Palette.deleteColors),
                   onPressed: () {
-                    ModificationMatierePremiere(
+                    modificationMatierePremiere(
                         context, nom, count, mesure, idMatiere);
                     Navigator.of(co, rootNavigator: true).pop();
                   },
@@ -1217,7 +1215,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
     var restaurantId = prefs.getString('idRestaurant').toString();
     var token = prefs.getString('token');
 
-    String adressUrl = prefs.getString('ipport').toString();
+    //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
         "http://192.168.11.110:4008/api/materials/create"); // 192.168.11.110:4008
@@ -1246,14 +1244,14 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
 
     request.fields['form_key'] = 'form_value';
     request.headers['authorization'] = 'Bearer $token';
-    request.files.add(await http.MultipartFile.fromBytes('file', selectedFile,
+    request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
         contentType: MediaType('application', 'octet-stream'),
         filename: result?.files.first.name));
 
     print("RESPENSE SEND STEAM FILE REQ");
     //var responseString = await streamedResponse.stream.bytesToString();
     var response = await request.send();
-    print("Upload Response" + response.toString());
+    print("Upload Response$response");
     print(response.statusCode);
     print(request.headers);
 
@@ -1283,7 +1281,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
         print("Error Create Programme  !!!");
       }
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 
@@ -1295,14 +1293,14 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var id = prefs.getString('IdUser').toString();
 
-      String adressUrl = prefs.getString('ipport').toString();
+      //String adressUrl = prefs.getString('ipport').toString();
 
       var token = prefs.getString('token');
       String urlDelete =
           "http://192.168.11.110:4008/api/materials/delete/$idMatierePremiere"; // 192.168.11.110:4008 //$adressUrl
-      var json = {'_creator': id};
+      //var json = {'_creator': id};
 
-      var body = jsonEncode(json);
+      //var body = jsonEncode(json);
 
       final http.Response response =
           await http.delete(Uri.parse(urlDelete), headers: {
@@ -1342,7 +1340,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
   }
 
 ///// - Modification de matiere premiere
-  Future<void> ModificationMatierePremiere(
+  Future<void> modificationMatierePremiere(
     BuildContext context,
     String nomMatierePremiere,
     int quantite,
@@ -1392,7 +1390,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
     print("RESPENSE SEND STEAM FILE REQ");
     //var responseString = await streamedResponse.stream.bytesToString();
     var response = await request.send();
-    print("Upload Response" + response.toString());
+    print("Upload Response$response");
     print(response.statusCode);
     print(request.headers);
 
@@ -1425,7 +1423,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
         print("Error Create Programme  !!!");
       }
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 }

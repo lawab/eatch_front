@@ -1,6 +1,5 @@
 import 'package:eatch/pages/creation_restaurant.dart';
 import 'package:eatch/pages/dashboard/dashboard_manager.dart';
-import 'package:eatch/pages/restaurant/afficheRestaurant.dart';
 import 'package:eatch/servicesAPI/getRestaurant.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
@@ -35,124 +34,120 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(getDataRsetaurantFuture);
     return Scaffold(
-      backgroundColor: Color(0xFFF4B012),
-      body: Container(
-        child: Column(
-          children: [
-            Container(
-              alignment: Alignment.centerRight,
-              height: 80,
-              child: Row(
-                children: [
-                  const SizedBox(
-                    width: 50,
-                  ),
-                  //Text('Menus'),
-                  Expanded(child: Container()),
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        minimumSize: Size(180, 50)),
-                    onPressed: () async {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const CreationRestaurant(),
-                        ),
-                      );
-                    },
-                    icon: Icon(Icons.add),
-                    label: Text('Ajouter un restaurant'),
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                ],
-              ),
+      backgroundColor: const Color(0xFFF4B012),
+      body: Column(
+        children: [
+          Container(
+            alignment: Alignment.centerRight,
+            height: 80,
+            child: Row(
+              children: [
+                const SizedBox(
+                  width: 50,
+                ),
+                Expanded(child: Container()),
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      minimumSize: const Size(180, 50)),
+                  onPressed: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CreationRestaurant(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.add),
+                  label: const Text('Ajouter un restaurant'),
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+              ],
             ),
+          ),
 
-            //////////////////
-            Container(
-              height: MediaQuery.of(context).size.height - 80,
-              width: MediaQuery.of(context).size.width - 20,
-              alignment: Alignment.center,
-              child: Card(
-                color: Palette.primaryColor,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    height: MediaQuery.of(context).size.height - 100,
-                    width: MediaQuery.of(context).size.width / 2,
-                    alignment: Alignment.center,
-                    child: ListView.builder(
-                      itemCount: viewModel.listRsetaurant.length,
-                      itemBuilder: ((context, index) {
-                        return InkWell(
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.height / 4,
-                            child: Column(children: [
-                              Container(
-                                height:
-                                    MediaQuery.of(context).size.height / 4 - 50,
-                                width: MediaQuery.of(context).size.width / 4,
-                                decoration: BoxDecoration(
-                                  color: Colors.black,
-                                  borderRadius: BorderRadius.circular(15.0),
-                                  //color: Colors.white,
+          //////////////////
+          Container(
+            height: MediaQuery.of(context).size.height - 80,
+            width: MediaQuery.of(context).size.width - 20,
+            alignment: Alignment.center,
+            child: Card(
+              color: Palette.primaryColor,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  height: MediaQuery.of(context).size.height - 100,
+                  width: MediaQuery.of(context).size.width / 2,
+                  alignment: Alignment.center,
+                  child: ListView.builder(
+                    itemCount: viewModel.listRsetaurant.length,
+                    itemBuilder: ((context, index) {
+                      return InkWell(
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height / 4,
+                          child: Column(children: [
+                            Container(
+                              height:
+                                  MediaQuery.of(context).size.height / 4 - 50,
+                              width: MediaQuery.of(context).size.width / 4,
+                              decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(15.0),
+                                //color: Colors.white,
 
-                                  image: DecorationImage(
-                                      image: NetworkImage(
-                                          'http://192.168.11.110:4002${viewModel.listRsetaurant[index].info!.logo.toString()}'), //192.168.11.110:4002 //192.168.11.110
-                                      //image: AssetImage('Logo_Eatch_png.png'),
-                                      fit: BoxFit.cover),
-                                ),
+                                image: DecorationImage(
+                                    image: NetworkImage(
+                                        'http://192.168.11.110:4002${viewModel.listRsetaurant[index].infos!.logo.toString()}'), //192.168.11.110:4002 //192.168.11.110
+                                    //image: AssetImage('Logo_Eatch_png.png'),
+                                    fit: BoxFit.cover),
                               ),
-                              /*CircleAvatar(
-                            radius: 75,
-                            backgroundImage: NetworkImage(
-                                'http://13.39.81.126:4002${viewModel.listRsetaurant[index].info!.logo.toString()}'),
-                            //image: AssetImage('eatch.jpg'),
-                          ),*/
-                              const SizedBox(
-                                height: 10,
+                            ),
+                            /*CircleAvatar(
+                          radius: 75,
+                          backgroundImage: NetworkImage(
+                              'http://13.39.81.126:4002${viewModel.listRsetaurant[index].info!.logo.toString()}'),
+                          //image: AssetImage('eatch.jpg'),
+                        ),*/
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            SizedBox(
+                              height: 40,
+                              child: Text(
+                                viewModel.listRsetaurant[index].restaurantName!,
+                                style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Palette.yellowColor),
                               ),
-                              SizedBox(
-                                height: 40,
-                                child: Text(
-                                  viewModel
-                                      .listRsetaurant[index].restaurantName!,
-                                  style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Palette.yellowColor),
-                                ),
-                              ),
-                            ]),
-                          ),
-                          onTap: () async {
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            prefs.setString('idRestaurant',
-                                viewModel.listRsetaurant[index].sId.toString());
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const DashboardManager(),
-                              ),
-                            );
-                          },
-                        );
-                      }),
-                    ),
+                            ),
+                          ]),
+                        ),
+                        onTap: () async {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          prefs.setString('idRestaurant',
+                              viewModel.listRsetaurant[index].sId.toString());
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const DashboardManager(),
+                            ),
+                          );
+                        },
+                      );
+                    }),
                   ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
     /*

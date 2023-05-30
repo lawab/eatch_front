@@ -44,7 +44,7 @@ class _BubleChartState extends State<BubleChart> {
               xValueMapper: (_ChartData data, _) => data.x,
               yValueMapper: (_ChartData data, _) => data.y,
               //name: 'Gold',
-              color: Color.fromRGBO(8, 142, 255, 1),
+              color: const Color.fromRGBO(8, 142, 255, 1),
               enableTooltip: true,
             ),
           ],

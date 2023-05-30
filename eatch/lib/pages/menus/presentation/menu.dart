@@ -9,12 +9,12 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import '../../../servicesAPI/multipart.dart';
 import '../infrastructure/menus_repository.dart';
+import 'package:http/http.dart' as http;
 import 'menu_card.dart';
 
 class Menu extends ConsumerStatefulWidget {
@@ -45,9 +45,11 @@ class _MenuState extends ConsumerState<Menu> {
 
   var nomcontroller = TextEditingController();
 
-  List<TextEditingController> _controllerInput = [];
-  List<Widget> _textFieldInput = [];
+  final List<TextEditingController> _controllerInput = [];
+  final List<Widget> _textFieldInput = [];
   String? matiere;
+
+  List<String> listProdId = [];
 
   bool ajout = false;
   bool test = false;
@@ -85,7 +87,7 @@ class _MenuState extends ConsumerState<Menu> {
   Widget horizontalView(
       double height, double width, context, List<Categorie> categoriee) {
     return AppLayout(
-      content: Container(
+      content: SizedBox(
         height: height,
         width: width,
         child: Column(
@@ -100,7 +102,7 @@ class _MenuState extends ConsumerState<Menu> {
                         const SizedBox(
                           width: 50,
                         ),
-                        Text('Menus'),
+                        const Text('Menus'),
                         Expanded(child: Container()),
                         ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
@@ -108,7 +110,7 @@ class _MenuState extends ConsumerState<Menu> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              minimumSize: Size(180, 50)),
+                              minimumSize: const Size(180, 50)),
                           onPressed: () {
                             setState(() {
                               ajout = true;
@@ -123,7 +125,7 @@ class _MenuState extends ConsumerState<Menu> {
                       ],
                     ),
                   )
-                : Container(
+                : SizedBox(
                     height: 400,
                     child: Creation(categoriee, height, width),
                   ),
@@ -137,7 +139,7 @@ class _MenuState extends ConsumerState<Menu> {
                   ),
             Container(
               height: ajout == false ? height - 145 : height - 465,
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               child: SingleChildScrollView(
                 child: GridView.builder(
                     physics: const NeverScrollableScrollPhysics(),
@@ -172,7 +174,7 @@ class _MenuState extends ConsumerState<Menu> {
   Widget verticalView(
       double height, double width, context, List<Categorie> categoriee) {
     return AppLayout(
-      content: Container(
+      content: SizedBox(
         height: height,
         width: width,
         child: Column(
@@ -194,14 +196,14 @@ class _MenuState extends ConsumerState<Menu> {
                               backgroundColor: Palette.primaryColor,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
-                              minimumSize: Size(180, 50)),
+                              minimumSize: const Size(180, 50)),
                           onPressed: () {
                             setState(() {
                               ajout = true;
                             });
                           },
-                          icon: Icon(Icons.add),
-                          label: Text('Ajouter un menu'),
+                          icon: const Icon(Icons.add),
+                          label: const Text('Ajouter un menu'),
                         ),
                         const SizedBox(
                           width: 20,
@@ -209,7 +211,7 @@ class _MenuState extends ConsumerState<Menu> {
                       ],
                     ),
                   )
-                : Container(
+                : SizedBox(
                     height: 400,
                     child: Creation(categoriee, height, width),
                   ),
@@ -221,7 +223,7 @@ class _MenuState extends ConsumerState<Menu> {
                 : const SizedBox(
                     height: 5,
                   ),
-            Container(
+            SizedBox(
               height: ajout == false ? height - 216 : height - 536,
               child: SingleChildScrollView(
                 child: GridView.builder(
@@ -264,7 +266,7 @@ class _MenuState extends ConsumerState<Menu> {
             Container(
               alignment: Alignment.centerRight,
               height: 50,
-              color: Color(0xFFFCEBD1),
+              color: const Color(0xFFFCEBD1),
               child: const Row(
                 children: [
                   SizedBox(
@@ -280,7 +282,7 @@ class _MenuState extends ConsumerState<Menu> {
             const SizedBox(
               height: 10,
             ),
-            Container(
+            SizedBox(
               width: width - 50,
               child: TextFormField(
                 controller: nomcontroller,
@@ -315,13 +317,13 @@ class _MenuState extends ConsumerState<Menu> {
                     // If  you are using latest version of flutter then lable text and hint text shown like this
                     // if you r using flutter less then 1.20.* then maybe this is not working properly
                     floatingLabelBehavior: FloatingLabelBehavior.always,
-                    suffixIcon: Icon(Icons.food_bank)),
+                    suffixIcon: const Icon(Icons.food_bank)),
               ),
             ),
             const SizedBox(
               height: 20,
             ),
-            Container(
+            SizedBox(
               width: width - 50,
               height: 200,
               child: GridView.builder(
@@ -334,6 +336,7 @@ class _MenuState extends ConsumerState<Menu> {
                 itemCount: categoriee.length,
                 itemBuilder: (context, index) {
                   List<String> listProduits = [];
+                  //List<String> listProdId = [];
                   String? produit;
                   final inputController = TextEditingController();
                   _controllerInput.add(inputController);
@@ -343,7 +346,7 @@ class _MenuState extends ConsumerState<Menu> {
                   }
                   //print(listProduits);
 
-                  return Container(
+                  return SizedBox(
                     height: 50,
                     child: DropdownButtonFormField(
                       decoration: InputDecoration(
@@ -380,7 +383,23 @@ class _MenuState extends ConsumerState<Menu> {
                       onChanged: (value) {
                         setState(() {
                           produit = value!;
+                          ////////////////////////////
+                          print("Produits:${produit}");
+                          for (int j = 0; j < listProduits.length; j++) {
+                            if (produit == listProduits[j]) {
+                              print("Je suis là");
+                              print(listProduits[j]);
+                              listProdId
+                                  .add(categoriee[index].products![j].sId!);
+                            }
+                          }
+                          /////////////////////////////////
+                          ///
+                          print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ - début");
+                          print(listProdId);
+                          print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ - fin");
 
+                          ///
                           inputController.text = value;
                         });
                       },
@@ -407,7 +426,7 @@ class _MenuState extends ConsumerState<Menu> {
             ),
             /////////// - Ici se trouve le bouton pour l'image
             Container(
-              padding: EdgeInsets.only(right: 70),
+              padding: const EdgeInsets.only(right: 70),
               color: Palette.secondaryBackgroundColor,
               alignment: Alignment.centerRight,
               child: GestureDetector(
@@ -468,7 +487,7 @@ class _MenuState extends ConsumerState<Menu> {
             /// - fin du choix de l'image
             Container(
               alignment: Alignment.centerRight,
-              child: Container(
+              child: SizedBox(
                 width: 350,
                 child: Row(children: [
                   const SizedBox(
@@ -477,19 +496,22 @@ class _MenuState extends ConsumerState<Menu> {
                   ElevatedButton(
                     onPressed: (() {
                       for (int i = 0; i < _controllerInput.length; i++) {
-                        print(i);
+                        //print(i);
                         if (_controllerInput[i].text.isNotEmpty) {
                           print(_controllerInput[i].text);
                         }
                       }
+                      creationMenu(context, nomcontroller.text, _selectedFile!,
+                          result, listProdId);
+
                       setState(() {
                         ajout = false;
                       });
                     }),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Palette.primaryColor,
-                      minimumSize: Size(150, 50),
-                      maximumSize: Size(200, 70),
+                      minimumSize: const Size(150, 50),
+                      maximumSize: const Size(200, 70),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                     ),
@@ -506,8 +528,8 @@ class _MenuState extends ConsumerState<Menu> {
                     }),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Palette.secondaryBackgroundColor,
-                      minimumSize: Size(150, 50),
-                      maximumSize: Size(200, 70),
+                      minimumSize: const Size(150, 50),
+                      maximumSize: const Size(200, 70),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                     ),
@@ -527,7 +549,7 @@ class _MenuState extends ConsumerState<Menu> {
       ),
     );
   }
-/*
+
   /////////Création de Menu
   ///
   Future<void> creationMenu(
@@ -535,6 +557,7 @@ class _MenuState extends ConsumerState<Menu> {
     String nomMenu,
     List<int> selectedFile,
     FilePickerResult? result,
+    List<String> idProduits,
   ) async {
     ////////////
 
@@ -543,7 +566,7 @@ class _MenuState extends ConsumerState<Menu> {
     var restaurantId = prefs.getString('idRestaurant').toString();
     var token = prefs.getString('token');
 
-    String adressUrl = prefs.getString('ipport').toString();
+    //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
         "http://192.168.11.110:4009/api/menus/create"); // 192.168.11.110:4009
@@ -557,11 +580,13 @@ class _MenuState extends ConsumerState<Menu> {
       },
     );
 
+    var dd = jsonEncode(idProduits);
+
     var json = {
       'menu_title': nomMenu,
       'restaurant': restaurantId,
       '_creator': id,
-      'products': [],
+      'products': dd,
     };
     var body = jsonEncode(json);
 
@@ -611,5 +636,4 @@ class _MenuState extends ConsumerState<Menu> {
       throw e;
     }
   }
-  */
 }

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:eatch/pages/restaurant/afficheRestaurant.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
@@ -35,8 +34,8 @@ class RestaurantModificationState
   void donne() {
     setState(() {
       nomController.text = widget.restaurant.restaurantName!;
-      villeController.text = widget.restaurant.info!.town!;
-      adresseController.text = widget.restaurant.info!.address!;
+      villeController.text = widget.restaurant.infos!.town!;
+      adresseController.text = widget.restaurant.infos!.address!;
     });
   }
 
@@ -90,7 +89,7 @@ class RestaurantModificationState
                           backgroundColor: Palette.primaryColor,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
-                          minimumSize: Size(150, 50)),
+                          minimumSize: const Size(150, 50)),
                       onPressed: () {
                         Navigator.pop(context);
                       },
@@ -106,7 +105,7 @@ class RestaurantModificationState
               const SizedBox(
                 height: 20,
               ),
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width - 50,
                 child: TextFormField(
                   controller: nomController,
@@ -147,7 +146,7 @@ class RestaurantModificationState
               const SizedBox(
                 height: 20,
               ),
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width - 50,
                 child: TextFormField(
                   controller: villeController,
@@ -188,7 +187,7 @@ class RestaurantModificationState
               const SizedBox(
                 height: 20,
               ),
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width - 50,
                 child: TextFormField(
                   controller: adresseController,
@@ -229,7 +228,7 @@ class RestaurantModificationState
               const SizedBox(
                 height: 20,
               ),
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width - 50,
                 child: TextFormField(
                   controller: employeController,
@@ -262,7 +261,7 @@ class RestaurantModificationState
                       labelText: "Nombre d'employés",
                       hintText: "Entrer le nombre d'employés du restaurant",
                       // If  you are using latest version of flutter then lable text and hint text shown like this
-                      // if you r using flutter less then 1.20.* then maybe this is not working properly
+                      // if you are using flutter less then 1.20.* then maybe this is not working properly
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                       suffixIcon: const Icon(Icons.person)),
                 ),
@@ -270,7 +269,7 @@ class RestaurantModificationState
               const SizedBox(
                 height: 20,
               ),
-              Container(
+              SizedBox(
                 height: 100,
                 child: Row(children: [
                   const SizedBox(
@@ -319,7 +318,7 @@ class RestaurantModificationState
                           image: DecorationImage(
                               opacity: 100,
                               image: NetworkImage(
-                                  'http://13.39.81.126:4002${widget.restaurant.info!.logo.toString()}'),
+                                  'http://192.168.11.110:4002${widget.restaurant.infos!.logo.toString()}'), //13.39.81.126
                               fit: BoxFit.cover),
                         ),
                         child: const Text(
@@ -342,7 +341,7 @@ class RestaurantModificationState
                           alignment: Alignment.center,
                           child: Text(file!.name),
                         )
-                      : Container(
+                      : const SizedBox(
                           height: 100,
                           width: 100,
                         ),
@@ -392,8 +391,8 @@ class RestaurantModificationState
     var id = prefs.getString('IdUser').toString();
     var token = prefs.getString('token');
 
-    var url =
-        Uri.parse("http://13.39.81.126:4002/api/restaurants/update/$idChoisie");
+    var url = Uri.parse(
+        "http://192.168.11.110:4002/api/restaurants/update/$idChoisie"); //13.39.81.126
     final request = MultipartRequest(
       'PUT',
       url,
@@ -417,7 +416,7 @@ class RestaurantModificationState
     request.fields['form_key'] = 'form_value';
     request.headers['authorization'] = 'Bearer $token';
     if (result != null) {
-      request.files.add(await http.MultipartFile.fromBytes('file', selectedFile,
+      request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
           contentType: MediaType('application', 'octet-stream'),
           filename: result.files.first.name));
     }
@@ -425,7 +424,7 @@ class RestaurantModificationState
     print("RESPENSE SEND STEAM FILE REQ");
     //var responseString = await streamedResponse.stream.bytesToString();
     var response = await request.send();
-    print("Upload Response" + response.toString());
+    print("Upload Response$response");
     print(response.statusCode);
     print(request.headers);
 
@@ -456,7 +455,7 @@ class RestaurantModificationState
         print("Error Create Programme  !!!");
       }
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 }

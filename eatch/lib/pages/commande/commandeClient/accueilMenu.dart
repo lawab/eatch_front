@@ -95,7 +95,7 @@ class MenuAccueilState extends ConsumerState<MenuAccueil> {
                       child: Container(
                         height: 100,
                         width: 100,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             image: DecorationImage(
                                 image: AssetImage('logo_vert.png'))),
                       ),
@@ -125,7 +125,7 @@ class MenuAccueilState extends ConsumerState<MenuAccueil> {
                           children: [
                             ClipRRect(
                                 borderRadius: BorderRadius.circular(05.0),
-                                child: Icon(Icons.person)),
+                                child: const Icon(Icons.person)),
                             const Expanded(
                               child: Padding(
                                 padding: EdgeInsets.only(
@@ -152,8 +152,8 @@ class MenuAccueilState extends ConsumerState<MenuAccueil> {
                         child: Column(
                           children: [
                             InkWell(
-                              child: Row(
-                                children: const [
+                              child: const Row(
+                                children: [
                                   Icon(
                                     Icons.arrow_back_ios,
                                     color: Colors.white,
@@ -172,7 +172,7 @@ class MenuAccueilState extends ConsumerState<MenuAccueil> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => ClientAccueil()));
+                                        builder: (context) => const ClientAccueil()));
                               },
                             ),
                           ],
@@ -182,10 +182,10 @@ class MenuAccueilState extends ConsumerState<MenuAccueil> {
                   ]),
                 ),
                 Container(
-                  child: Column(
+                  child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
+                    children: [
                       Text(
                         'Notre Carte',
                         style: TextStyle(
@@ -215,7 +215,7 @@ class MenuAccueilState extends ConsumerState<MenuAccueil> {
                   height: 500,
                   width: width - 100,
                   color: Colors.green,
-                  padding: EdgeInsets.all(15),
+                  padding: const EdgeInsets.all(15),
                   child: GridView.builder(
                       gridDelegate:
                           const SliverGridDelegateWithMaxCrossAxisExtent(
@@ -262,7 +262,7 @@ class MenuAccueilState extends ConsumerState<MenuAccueil> {
                                     alignment: Alignment.centerLeft,
                                     child: Text(
                                       commande[index].title!,
-                                      style: TextStyle(color: Colors.white),
+                                      style: const TextStyle(color: Colors.white),
                                     ),
                                   ),
                                 ],
@@ -273,7 +273,7 @@ class MenuAccueilState extends ConsumerState<MenuAccueil> {
                 const SizedBox(
                   height: 50,
                 ),
-                Container(
+                SizedBox(
                   height: 200,
                   child: Row(
                     children: [
@@ -340,7 +340,7 @@ class MenuAccueilState extends ConsumerState<MenuAccueil> {
                             ),
                             Text(
                               '$panier produits',
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                             ),
                           ],
                         )
@@ -348,7 +348,7 @@ class MenuAccueilState extends ConsumerState<MenuAccueil> {
                         ),
                     onTap: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Panier()));
+                          MaterialPageRoute(builder: (context) => const Panier()));
                     },
                   ),
                 )

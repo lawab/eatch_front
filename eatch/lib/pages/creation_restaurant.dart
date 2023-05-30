@@ -255,7 +255,7 @@ class CreationRestaurantState extends ConsumerState<CreationRestaurant> {
             height: 30,
           ),
           Container(
-            padding: EdgeInsets.only(right: 70),
+            padding: const EdgeInsets.only(right: 70),
             color: Palette.secondaryBackgroundColor,
             alignment: Alignment.centerRight,
             child: GestureDetector(
@@ -416,14 +416,14 @@ class CreationRestaurantState extends ConsumerState<CreationRestaurant> {
 
     request.fields['form_key'] = 'form_value';
     request.headers['authorization'] = 'Bearer $token';
-    request.files.add(await http.MultipartFile.fromBytes('file', selectedFile,
+    request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
         contentType: MediaType('application', 'octet-stream'),
         filename: result.files.first.name));
 
     print("RESPENSE SEND STEAM FILE REQ");
     //var responseString = await streamedResponse.stream.bytesToString();
     var response = await request.send();
-    print("Upload Response" + response.toString());
+    print("Upload Response$response");
     print(response.statusCode);
     print(request.headers);
 
@@ -460,7 +460,7 @@ class CreationRestaurantState extends ConsumerState<CreationRestaurant> {
         print("Error Create Programme  !!!");
       }
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 }

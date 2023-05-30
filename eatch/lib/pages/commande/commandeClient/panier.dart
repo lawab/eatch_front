@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:eatch/pages/commande/commandeClient/detail.dart';
-import 'package:eatch/pages/commande/commandeClient/menuu.dart';
 import 'package:eatch/pages/commande/commandeClient/recapitulatif.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +46,7 @@ class PanierState extends ConsumerState<Panier> {
           child: Stack(
         alignment: Alignment.center,
         children: [
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             child: Row(
@@ -80,7 +79,7 @@ class PanierState extends ConsumerState<Panier> {
                         int count = listPanier[index].nombre!;
                         return Card(
                           elevation: 5,
-                          child: Container(
+                          child: SizedBox(
                             height: 150,
                             child: Column(
                               children: [
@@ -113,25 +112,25 @@ class PanierState extends ConsumerState<Panier> {
                                           children: [
                                             Text(
                                               listPanier[index].title!,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontFamily: 'Allerta',
                                                   fontSize: 25,
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold),
                                             ),
-                                            SizedBox(
+                                            const SizedBox(
                                               height: 5,
                                             ),
                                             Text(
                                               '${listPanier[index].price} MAD',
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontFamily: 'Allerta',
                                                   fontSize: 15,
                                                   color: Colors.black,
                                                   fontWeight:
                                                       FontWeight.normal),
                                             ),
-                                            SizedBox(
+                                            const SizedBox(
                                               height: 10,
                                             ),
                                             Text(
@@ -147,7 +146,7 @@ class PanierState extends ConsumerState<Panier> {
                         listPanier[index].nombre!, listPanier[index].price!),*/
                                         Container(
                                       width: 100,
-                                      padding: EdgeInsets.all(3),
+                                      padding: const EdgeInsets.all(3),
                                       decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(5),
@@ -185,9 +184,9 @@ class PanierState extends ConsumerState<Panier> {
                                               )),
                                           Expanded(
                                             child: Container(
-                                              margin: EdgeInsets.symmetric(
+                                              margin: const EdgeInsets.symmetric(
                                                   horizontal: 3),
-                                              padding: EdgeInsets.symmetric(
+                                              padding: const EdgeInsets.symmetric(
                                                   horizontal: 3, vertical: 2),
                                               decoration: BoxDecoration(
                                                   borderRadius:
@@ -198,7 +197,7 @@ class PanierState extends ConsumerState<Panier> {
                                                   listPanier[index]
                                                       .nombre!
                                                       .toString(),
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 16),
                                                 ),
@@ -227,7 +226,7 @@ class PanierState extends ConsumerState<Panier> {
                                                   }
                                                 });
                                               },
-                                              child: Icon(
+                                              child: const Icon(
                                                 Icons.add,
                                                 color: Palette.yellowColor,
                                                 size: 16,
@@ -258,8 +257,8 @@ class PanierState extends ConsumerState<Panier> {
               child: Column(
                 children: [
                   InkWell(
-                    child: Row(
-                      children: const [
+                    child: const Row(
+                      children: [
                         Icon(
                           Icons.close,
                           color: Palette.yellowColor,
@@ -306,7 +305,7 @@ class PanierState extends ConsumerState<Panier> {
                     backgroundColor: Palette.primaryColor,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50)),
-                    minimumSize: Size(180, 50)),
+                    minimumSize: const Size(180, 50)),
                 child: Text("Valider le panier pour $prixTotal dh"),
               ),
             ),

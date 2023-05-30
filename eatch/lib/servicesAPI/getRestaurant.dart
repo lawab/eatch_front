@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,7 +22,7 @@ class GetDataRsetaurantFuture extends ChangeNotifier {
     try {
       http.Response response = await http.get(
         Uri.parse(
-            'http:////192.168.11.110:4002/api/restaurants/fetch/all'), //4002 //192.168.11.110:4002
+            'http://192.168.11.110:4002/api/restaurants/fetch/all'), //4002 //192.168.11.110:4002
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',
@@ -31,10 +30,12 @@ class GetDataRsetaurantFuture extends ChangeNotifier {
       );
       print('get restaurant');
       print(response.statusCode);
+      //print(response.body);
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        //print(data);
+        print(data);
+        print(data[0]["infos"]["logo"]);
         for (int i = 0; i < data.length; i++) {
           if (data[i]['deletedAt'] == null) {
             listRsetaurant.add(Restaurant.fromJson(data[i]));
@@ -53,27 +54,28 @@ class GetDataRsetaurantFuture extends ChangeNotifier {
 }
 
 class Restaurant {
-  Info? info;
+  Infos? infos;
   String? sId;
   String? restaurantName;
   String? sCreator;
-  String? deletedAt;
+  Null? deletedAt;
   String? createdAt;
   String? updatedAt;
   int? iV;
 
-  Restaurant(
-      {this.info,
-      this.sId,
-      this.restaurantName,
-      this.sCreator,
-      this.deletedAt,
-      this.createdAt,
-      this.updatedAt,
-      this.iV});
+  Restaurant({
+    this.infos,
+    this.sId,
+    this.restaurantName,
+    this.sCreator,
+    this.deletedAt,
+    this.createdAt,
+    this.updatedAt,
+    this.iV,
+  });
 
   Restaurant.fromJson(Map<String, dynamic> json) {
-    info = json['info'] != null ? new Info.fromJson(json['info']) : null;
+    infos = json['infos'] != null ? new Infos.fromJson(json['infos']) : null;
     sId = json['_id'];
     restaurantName = json['restaurant_name'];
     sCreator = json['_creator'];
@@ -85,8 +87,8 @@ class Restaurant {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.info != null) {
-      data['info'] = this.info!.toJson();
+    if (this.infos != null) {
+      data['infos'] = this.infos!.toJson();
     }
     data['_id'] = this.sId;
     data['restaurant_name'] = this.restaurantName;
@@ -99,14 +101,14 @@ class Restaurant {
   }
 }
 
-class Info {
+class Infos {
   String? town;
   String? address;
   String? logo;
 
-  Info({this.town, this.address, this.logo});
+  Infos({this.town, this.address, this.logo});
 
-  Info.fromJson(Map<String, dynamic> json) {
+  Infos.fromJson(Map<String, dynamic> json) {
     town = json['town'];
     address = json['address'];
     logo = json['logo'];

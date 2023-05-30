@@ -16,7 +16,7 @@ class RestaurantDetailState extends State<RestaurantDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: SizedBox(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: Column(
@@ -30,7 +30,7 @@ class RestaurantDetailState extends State<RestaurantDetail> {
                 image: DecorationImage(
                     opacity: 100,
                     image: NetworkImage(
-                        'http://13.39.81.126:4002${widget.restaurant.info!.logo.toString()}'),
+                        'http://13.39.81.126:4002${widget.restaurant.infos!.logo.toString()}'),
                     //image: AssetImage('eatch.jpg'),
                     fit: BoxFit.cover),
               ),
@@ -51,7 +51,7 @@ class RestaurantDetailState extends State<RestaurantDetail> {
                 ),
               ),
             ),
-            Container(
+            SizedBox(
               height: MediaQuery.of(context).size.height / 2,
               width: MediaQuery.of(context).size.width,
             )

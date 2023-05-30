@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import '../../../servicesAPI/get_categories.dart';
 import '../../../utils/palettes/palette.dart';
 
@@ -81,7 +80,7 @@ class CategorieCardState extends ConsumerState<CategorieCard> {
                                 ? Palette.secondaryColor
                                 : Palette.fourthColor,
                           ),
-                          child: Icon(Icons.ac_unit),
+                          child: const Icon(Icons.ac_unit),
                           // child: SvgPicture.asset(
                           //   widget.categorie.image!,
                           //   width: 18.0,

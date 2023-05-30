@@ -107,7 +107,7 @@ class _ModificationCategorieState extends State<ModificationCategorie> {
 
                       ////////////// - Image(début)
                       Container(
-                        padding: EdgeInsets.only(right: 70),
+                        padding: const EdgeInsets.only(right: 70),
                         color: Palette.secondaryBackgroundColor,
                         alignment: Alignment.centerRight,
                         child: GestureDetector(

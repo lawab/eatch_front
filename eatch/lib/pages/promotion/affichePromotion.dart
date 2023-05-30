@@ -1,10 +1,8 @@
-import 'dart:ui';
 import 'package:eatch/servicesAPI/getMatiere.dart';
 import 'package:eatch/utils/applayout.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class PromotionAffiche extends ConsumerStatefulWidget {
   const PromotionAffiche({Key? key}) : super(key: key);
@@ -70,21 +68,21 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                     const SizedBox(
                       width: 50,
                     ),
-                    Text('Promotions'),
+                    const Text('Promotions'),
                     Expanded(child: Container()),
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Palette.primaryColor,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
-                          minimumSize: Size(180, 50)),
+                          minimumSize: const Size(180, 50)),
                       onPressed: () {
                         setState(() {
                           ajout = true;
                         });
                       },
-                      icon: Icon(Icons.add),
-                      label: Text('Ajouter une promotion'),
+                      icon: const Icon(Icons.add),
+                      label: const Text('Ajouter une promotion'),
                     ),
                     const SizedBox(
                       width: 20,
@@ -101,9 +99,9 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                       Container(
                         alignment: Alignment.centerRight,
                         height: 50,
-                        color: Color(0xFFFCEBD1),
-                        child: Row(
-                          children: const [
+                        color: const Color(0xFFFCEBD1),
+                        child: const Row(
+                          children: [
                             SizedBox(
                               width: 50,
                             ),
@@ -117,7 +115,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Container(
+                      SizedBox(
                         width: MediaQuery.of(context).size.width - 50,
                         child: TextFormField(
                           controller: nomController,
@@ -153,27 +151,27 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                               // if you r using flutter less then 1.20.* then maybe this is not working properly
                               floatingLabelBehavior:
                                   FloatingLabelBehavior.always,
-                              suffixIcon: Icon(Icons.food_bank)),
+                              suffixIcon: const Icon(Icons.food_bank)),
                         ),
                       ),
                       const SizedBox(
                         height: 20,
                       ),
-                      Container(
+                      SizedBox(
                         width: MediaQuery.of(context).size.width - 50,
                         child: const Text('MENU'),
                       ),
                       const SizedBox(
                         height: 20,
                       ),
-                      Container(
+                      SizedBox(
                         width: MediaQuery.of(context).size.width - 50,
                         child: const Text('PRODUITS'),
                       ),
                       const SizedBox(
                         height: 20,
                       ),
-                      Container(
+                      SizedBox(
                         width: MediaQuery.of(context).size.width - 50,
                         child: const Text('MATIERE PREMIERE'),
                       ),
@@ -182,7 +180,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                       ),
                       Container(
                         alignment: Alignment.centerRight,
-                        child: Container(
+                        child: SizedBox(
                           width: 350,
                           child: Row(children: [
                             const SizedBox(
@@ -192,14 +190,14 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                               onPressed: (() {
                                 setState(() {});
                               }),
-                              child: Text('Enregistrer'),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Palette.primaryColor,
-                                minimumSize: Size(150, 50),
-                                maximumSize: Size(200, 70),
+                                minimumSize: const Size(150, 50),
+                                maximumSize: const Size(200, 70),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10)),
                               ),
+                              child: const Text('Enregistrer'),
                             ),
                             const SizedBox(
                               width: 20,
@@ -210,17 +208,17 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                   ajout = false;
                                 });
                               }),
-                              child: Text(
-                                'Annuler',
-                                style: TextStyle(color: Colors.grey),
-                              ),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:
                                     Palette.secondaryBackgroundColor,
-                                minimumSize: Size(150, 50),
-                                maximumSize: Size(200, 70),
+                                minimumSize: const Size(150, 50),
+                                maximumSize: const Size(200, 70),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10)),
+                              ),
+                              child: const Text(
+                                'Annuler',
+                                style: TextStyle(color: Colors.grey),
                               ),
                             ),
                           ]),
@@ -277,8 +275,8 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                     height: 10,
                                   ),
                                   Container(
-                                    child: Row(
-                                      children: const [
+                                    child: const Row(
+                                      children: [
                                         Expanded(
                                           child: Text('Menu Ramadan'),
                                         ),
@@ -300,7 +298,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                       children: [
                                         Container(
                                           child:
-                                              Text('Nombre de Commandes :  '),
+                                              const Text('Nombre de Commandes :  '),
                                         ),
                                         const Expanded(
                                           child: Text('158'),
@@ -311,7 +309,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                   const SizedBox(
                                     height: 10,
                                   ),
-                                  Container(
+                                  SizedBox(
                                     height: 15,
                                     width: 550 / 2,
                                     child: ListView.builder(
@@ -352,8 +350,8 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                         height: 10,
                                       ),
                                       Container(
-                                        child: Row(
-                                          children: const [
+                                        child: const Row(
+                                          children: [
                                             Expanded(
                                               child: Text('Menu Ramadan'),
                                             ),
@@ -375,7 +373,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                         child: Row(
                                           children: [
                                             Container(
-                                              child: Text(
+                                              child: const Text(
                                                   'Nombre de Commandes :  '),
                                             ),
                                             const Expanded(
@@ -387,7 +385,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                       const SizedBox(
                                         height: 10,
                                       ),
-                                      Container(
+                                      SizedBox(
                                         height: 15,
                                         width: 550 / 2,
                                         child: ListView.builder(
@@ -448,21 +446,21 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                     const SizedBox(
                       width: 50,
                     ),
-                    Text('Promotions'),
+                    const Text('Promotions'),
                     Expanded(child: Container()),
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Palette.primaryColor,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
-                          minimumSize: Size(180, 50)),
+                          minimumSize: const Size(180, 50)),
                       onPressed: () {
                         setState(() {
                           ajout = true;
                         });
                       },
-                      icon: Icon(Icons.add),
-                      label: Text('Ajouter un type de matière'),
+                      icon: const Icon(Icons.add),
+                      label: const Text('Ajouter un type de matière'),
                     ),
                     const SizedBox(
                       width: 20,
@@ -479,9 +477,9 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                       Container(
                         alignment: Alignment.centerRight,
                         height: 50,
-                        color: Color(0xFFFCEBD1),
-                        child: Row(
-                          children: const [
+                        color: const Color(0xFFFCEBD1),
+                        child: const Row(
+                          children: [
                             SizedBox(
                               width: 50,
                             ),
@@ -495,7 +493,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Container(
+                      SizedBox(
                         width: MediaQuery.of(context).size.width - 50,
                         child: TextFormField(
                           controller: nomController,
@@ -531,27 +529,27 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                               // if you r using flutter less then 1.20.* then maybe this is not working properly
                               floatingLabelBehavior:
                                   FloatingLabelBehavior.always,
-                              suffixIcon: Icon(Icons.food_bank)),
+                              suffixIcon: const Icon(Icons.food_bank)),
                         ),
                       ),
                       const SizedBox(
                         height: 20,
                       ),
-                      Container(
+                      SizedBox(
                         width: MediaQuery.of(context).size.width - 50,
                         child: const Text('MENU'),
                       ),
                       const SizedBox(
                         height: 20,
                       ),
-                      Container(
+                      SizedBox(
                         width: MediaQuery.of(context).size.width - 50,
                         child: const Text('PRODUITS'),
                       ),
                       const SizedBox(
                         height: 20,
                       ),
-                      Container(
+                      SizedBox(
                         width: MediaQuery.of(context).size.width - 50,
                         child: const Text('MATIERE PREMIERE'),
                       ),
@@ -560,7 +558,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                       ),
                       Container(
                         alignment: Alignment.centerRight,
-                        child: Container(
+                        child: SizedBox(
                           width: 350,
                           child: Row(children: [
                             const SizedBox(
@@ -570,14 +568,14 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                               onPressed: (() {
                                 setState(() {});
                               }),
-                              child: Text('Enregistrer'),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Palette.primaryColor,
-                                minimumSize: Size(150, 50),
-                                maximumSize: Size(200, 70),
+                                minimumSize: const Size(150, 50),
+                                maximumSize: const Size(200, 70),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10)),
                               ),
+                              child: const Text('Enregistrer'),
                             ),
                             const SizedBox(
                               width: 20,
@@ -588,17 +586,17 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                   ajout = false;
                                 });
                               }),
-                              child: Text(
-                                'Annuler',
-                                style: TextStyle(color: Colors.grey),
-                              ),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:
                                     Palette.secondaryBackgroundColor,
-                                minimumSize: Size(150, 50),
-                                maximumSize: Size(200, 70),
+                                minimumSize: const Size(150, 50),
+                                maximumSize: const Size(200, 70),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10)),
+                              ),
+                              child: const Text(
+                                'Annuler',
+                                style: TextStyle(color: Colors.grey),
                               ),
                             ),
                           ]),
@@ -655,8 +653,8 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                   height: 10,
                                 ),
                                 Container(
-                                  child: Row(
-                                    children: const [
+                                  child: const Row(
+                                    children: [
                                       Expanded(
                                         child: Text('Menu Ramadan'),
                                       ),
@@ -677,7 +675,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                   child: Row(
                                     children: [
                                       Container(
-                                        child: Text('Nombre de Commandes :  '),
+                                        child: const Text('Nombre de Commandes :  '),
                                       ),
                                       const Expanded(
                                         child: Text('158'),
@@ -688,7 +686,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                 const SizedBox(
                                   height: 10,
                                 ),
-                                Container(
+                                SizedBox(
                                   height: 15,
                                   width: 550 / 2,
                                   child: ListView.builder(
@@ -729,8 +727,8 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                       height: 10,
                                     ),
                                     Container(
-                                      child: Row(
-                                        children: const [
+                                      child: const Row(
+                                        children: [
                                           Expanded(
                                             child: Text('Menu Ramadan'),
                                           ),
@@ -752,7 +750,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                         children: [
                                           Container(
                                             child:
-                                                Text('Nombre de Commandes :  '),
+                                                const Text('Nombre de Commandes :  '),
                                           ),
                                           const Expanded(
                                             child: Text('158'),
@@ -763,7 +761,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                     const SizedBox(
                                       height: 10,
                                     ),
-                                    Container(
+                                    SizedBox(
                                       height: 15,
                                       width: 550 / 2,
                                       child: ListView.builder(
@@ -836,7 +834,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                   onPressed: () {
                     Navigator.of(context, rootNavigator: true).pop();
                   },
-                  label: Text("Quitter   ")),
+                  label: const Text("Quitter   ")),
               const SizedBox(
                 width: 20,
               ),
@@ -848,7 +846,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Palette.deleteColors),
                   onPressed: () {},
-                  label: Text("Supprimer."))
+                  label: const Text("Supprimer."))
             ],
             content: Container(
               alignment: Alignment.center,
@@ -856,7 +854,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
               height: 150,
               child: Text(
                 "Voulez vous supprimer $nom ?",
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black,
                   fontFamily: 'HelveticaNeue',
                 ),

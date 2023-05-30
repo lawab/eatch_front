@@ -1,6 +1,5 @@
 // ignore_for_file: must_be_immutable, use_build_context_synchronously
 
-import 'package:eatch/pages/authentification/authentification.dart';
 import 'package:eatch/pages/categories/presentation/categories.dart';
 import 'package:eatch/pages/dashboard/dashboard_manager.dart';
 import 'package:eatch/pages/matiere_premiere/afficheMatiere.dart';

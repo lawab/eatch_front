@@ -83,10 +83,10 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
               ),
             ),
           ),
-          Card(
+          const Card(
             child: SizedBox(
               height: 50,
-              child: Row(children: const [
+              child: Row(children: [
                 Expanded(
                     child: Center(
                   child: Text(

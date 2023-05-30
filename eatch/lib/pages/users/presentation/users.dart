@@ -155,8 +155,8 @@ class _UsersState extends ConsumerState<Users> {
                                 Radius.circular(10),
                               ),
                             ),
-                            child: Row(
-                              children: const [
+                            child: const Row(
+                              children: [
                                 Icon(
                                   Icons.add,
                                   color: Palette.primaryBackgroundColor,
@@ -351,8 +351,8 @@ class _UsersState extends ConsumerState<Users> {
       content: SizedBox(
         height: height,
         width: width,
-        child: Column(
-          children: const [],
+        child: const Column(
+          children: [],
         ),
       ),
     );

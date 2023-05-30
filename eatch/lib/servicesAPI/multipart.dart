@@ -14,11 +14,12 @@ class MultipartRequest extends http.MultipartRequest {
 
   /// Freezes all mutable fields and returns a single-subscription [ByteStream]
   /// that will emit the request body.
+  @override
   http.ByteStream finalize() {
     final byteStream = super.finalize();
     if (onProgress == null) return byteStream;
 
-    final total = this.contentLength;
+    final total = contentLength;
     int bytes = 0;
 
     final t = StreamTransformer.fromHandlers(

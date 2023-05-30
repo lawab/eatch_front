@@ -72,7 +72,7 @@ class _DashboardComptableState extends State<DashboardComptable> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Container(
+                child: SizedBox(
                   height: (height / 4) - 8,
                   width: width,
                   child: Column(
@@ -102,7 +102,7 @@ class _DashboardComptableState extends State<DashboardComptable> {
               ),
 
               // - le corps de la page
-              Container(
+              SizedBox(
                 height: height * 3 / 4,
                 child: Row(
                   children: [
@@ -110,7 +110,7 @@ class _DashboardComptableState extends State<DashboardComptable> {
                       flex: 6,
                       child: Column(
                         children: [
-                          Container(
+                          SizedBox(
                             height: height * 2 / 4,
                             child: Row(
                               children: [
@@ -126,7 +126,7 @@ class _DashboardComptableState extends State<DashboardComptable> {
                                             borderRadius:
                                                 BorderRadius.circular(8),
                                           ),
-                                          child: Container(
+                                          child: SizedBox(
                                             height: (height / 4) - 8,
                                             width: width,
                                             child: Column(
@@ -153,9 +153,9 @@ class _DashboardComptableState extends State<DashboardComptable> {
                                                     textAlign: TextAlign.center,
                                                   ),
                                                 ),
-                                                Container(
+                                                SizedBox(
                                                   height: ((height / 4) - 28),
-                                                  child: BubleChart(),
+                                                  child: const BubleChart(),
                                                 ),
                                               ],
                                             ),
@@ -169,7 +169,7 @@ class _DashboardComptableState extends State<DashboardComptable> {
                                             borderRadius:
                                                 BorderRadius.circular(8),
                                           ),
-                                          child: Container(
+                                          child: SizedBox(
                                             height: (height / 4) - 8,
                                             width: width,
                                             child: Column(
@@ -196,9 +196,9 @@ class _DashboardComptableState extends State<DashboardComptable> {
                                                     textAlign: TextAlign.center,
                                                   ),
                                                 ),
-                                                Container(
+                                                SizedBox(
                                                   height: ((height / 4) - 28),
-                                                  child: DiagramChart(),
+                                                  child: const DiagramChart(),
                                                 )
                                               ],
                                             ),
@@ -216,7 +216,7 @@ class _DashboardComptableState extends State<DashboardComptable> {
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
                                       ),
-                                      child: Container(
+                                      child: SizedBox(
                                         height: (height * 2 / 4) - 8,
                                         width: width,
                                         child: Column(
@@ -240,9 +240,9 @@ class _DashboardComptableState extends State<DashboardComptable> {
                                                 textAlign: TextAlign.center,
                                               ),
                                             ),
-                                            Container(
+                                            SizedBox(
                                               height: (height * 2 / 4) - 28,
-                                              child: LineChart(),
+                                              child: const LineChart(),
                                             )
                                           ],
                                         ),
@@ -253,7 +253,7 @@ class _DashboardComptableState extends State<DashboardComptable> {
                               ],
                             ),
                           ),
-                          Container(
+                          SizedBox(
                             height: height / 4,
                             child: Card(
                               elevation: 20,
@@ -261,7 +261,7 @@ class _DashboardComptableState extends State<DashboardComptable> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: Container(
+                              child: SizedBox(
                                 height: (height * 2 / 4) - 8,
                                 width: width,
                                 child: Column(
@@ -284,7 +284,7 @@ class _DashboardComptableState extends State<DashboardComptable> {
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
-                                    Container(
+                                    SizedBox(
                                       height: ((height * 2 / 4) - 215.250),
                                       child: BarChart(),
                                     )
@@ -300,7 +300,7 @@ class _DashboardComptableState extends State<DashboardComptable> {
                       flex: 3,
                       child: Column(
                         children: [
-                          Container(
+                          SizedBox(
                             height: height / 4,
                             child: Card(
                               elevation: 20,
@@ -308,7 +308,7 @@ class _DashboardComptableState extends State<DashboardComptable> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: Container(
+                              child: SizedBox(
                                 height: (height / 4) - 8,
                                 width: width,
                                 child: Column(
@@ -331,16 +331,16 @@ class _DashboardComptableState extends State<DashboardComptable> {
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
-                                    Container(
+                                    SizedBox(
                                       height: ((height / 4) - 28),
-                                      child: PieChart(),
+                                      child: const PieChart(),
                                     )
                                   ],
                                 ),
                               ),
                             ),
                           ),
-                          Container(
+                          SizedBox(
                             height: height * 2 / 4,
                             child: Card(
                               elevation: 20,
@@ -348,7 +348,7 @@ class _DashboardComptableState extends State<DashboardComptable> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: Container(
+                              child: SizedBox(
                                 height: (height * 2 / 4) - 8,
                                 width: width,
                                 child: Column(
@@ -371,9 +371,9 @@ class _DashboardComptableState extends State<DashboardComptable> {
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
-                                    Container(
+                                    SizedBox(
                                       height: (height * 2 / 4) - 28,
-                                      child: CircularChart(),
+                                      child: const CircularChart(),
                                     )
                                   ],
                                 ),
@@ -407,7 +407,7 @@ class _DashboardComptableState extends State<DashboardComptable> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Container(
+                  child: SizedBox(
                     height: (height / 4) - 8,
                     width: width,
                     child: Column(
@@ -453,7 +453,7 @@ class _DashboardComptableState extends State<DashboardComptable> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: Container(
+                              child: SizedBox(
                                 height: (height / 4) - 8,
                                 width: width,
                                 child: Column(
@@ -476,9 +476,9 @@ class _DashboardComptableState extends State<DashboardComptable> {
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
-                                    Container(
+                                    SizedBox(
                                       height: ((height / 4) - 28),
-                                      child: BubleChart(),
+                                      child: const BubleChart(),
                                     ),
                                   ],
                                 ),
@@ -490,7 +490,7 @@ class _DashboardComptableState extends State<DashboardComptable> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: Container(
+                              child: SizedBox(
                                 height: (height / 4) - 8,
                                 width: width,
                                 child: Column(
@@ -513,9 +513,9 @@ class _DashboardComptableState extends State<DashboardComptable> {
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
-                                    Container(
+                                    SizedBox(
                                       height: ((height / 4) - 28),
-                                      child: DiagramChart(),
+                                      child: const DiagramChart(),
                                     )
                                   ],
                                 ),
@@ -533,7 +533,7 @@ class _DashboardComptableState extends State<DashboardComptable> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Container(
+                          child: SizedBox(
                             height: (height * 2 / 4) - 8,
                             width: width,
                             child: Column(
@@ -556,9 +556,9 @@ class _DashboardComptableState extends State<DashboardComptable> {
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
-                                Container(
+                                SizedBox(
                                   height: (height * 2 / 4) - 28,
-                                  child: LineChart(),
+                                  child: const LineChart(),
                                 )
                               ],
                             ),
@@ -582,7 +582,7 @@ class _DashboardComptableState extends State<DashboardComptable> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Container(
+                          child: SizedBox(
                             height: (height * 2 / 4) - 8,
                             width: width,
                             child: Column(
@@ -605,9 +605,9 @@ class _DashboardComptableState extends State<DashboardComptable> {
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
-                                Container(
+                                SizedBox(
                                   height: (height * 2 / 4) - 28,
-                                  child: PieChart(),
+                                  child: const PieChart(),
                                 )
                               ],
                             ),
@@ -623,7 +623,7 @@ class _DashboardComptableState extends State<DashboardComptable> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Container(
+                          child: SizedBox(
                             height: (height * 2 / 4) - 8,
                             width: width,
                             child: Column(
@@ -646,9 +646,9 @@ class _DashboardComptableState extends State<DashboardComptable> {
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
-                                Container(
+                                SizedBox(
                                   height: (height * 2 / 4) - 28,
-                                  child: CircularChart(),
+                                  child: const CircularChart(),
                                 )
                               ],
                             ),
@@ -668,7 +668,7 @@ class _DashboardComptableState extends State<DashboardComptable> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Container(
+                  child: SizedBox(
                     height: (height / 4) - 8,
                     width: width,
                     child: Column(
@@ -691,7 +691,7 @@ class _DashboardComptableState extends State<DashboardComptable> {
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        Container(
+                        SizedBox(
                           height: (height / 4) - 28,
                           child: BarChart(),
                         )
