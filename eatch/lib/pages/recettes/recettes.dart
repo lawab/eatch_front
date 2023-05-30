@@ -60,7 +60,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
   bool filee = false;
   PlatformFile? file;
 
-  List ingredientsList = [];
+  List<Ingredient> ingredientsList = [];
   List<String> listOfUnities = [
     "g",
     "Kg",
@@ -151,32 +151,25 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
       _formkey.currentState!.save();
 
       for (int i = 0; i < _matierePremieres.length; i++) {
-        ingredientsList.add({
-          "'material': ${_matierePremieres[i].text}",
-          "'grammage': ${_quantite[i].text}",
-        }
-            // uniteDeMesure: _uniteDeMesure[i].text,
-
-            // Ingredients(
-            //   matierePremiere: _matierePremieres[i].text,
-            //   quantite: _quantite[i].text,
-            // ),
-            );
+        ingredientsList.add(Ingredient(
+          material: _matierePremieres[i].text,
+          grammage: _quantite[i].text,
+        ));
       }
-      // print(_titreRecette.text);
-      // print(_descriptionRecette.text);
-      // print(ingredientsList);
+      creationRecette(
+        context,
+        _titreRecette.text,
+        _descriptionRecette.text,
+        ingredientsList,
+        _selectedFile,
+        result,
+      );
+      print(_titreRecette.text);
+      print(_descriptionRecette.text);
+      print(ingredientsList);
 
       _clear();
       setState(() {
-        creationRecette(
-          context,
-          _titreRecette.text,
-          _descriptionRecette.text,
-          ingredientsList,
-          _selectedFile,
-          result,
-        );
         _selectFile = false;
         recetteImage = null;
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -420,13 +413,13 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                                 onChanged: (value) {
                                                   setState(() {
                                                     _matierePremieres[i].text =
-                                                        "'${value.toString()}'";
+                                                        value.toString();
                                                   });
                                                 },
                                                 onSaved: (value) {
                                                   setState(() {
                                                     _matierePremieres[i].text =
-                                                        "'${value.toString()}'";
+                                                        value.toString();
                                                   });
                                                 },
                                                 items: viewModel.listMatiere
@@ -1064,7 +1057,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
     contextt,
     String title,
     String description,
-    List ingredients,
+    List<Ingredient> ingredients,
     selectedFile,
     result,
   ) async {
@@ -1084,10 +1077,11 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
         print('progress: $progress ($bytes/$total)');
       },
     );
+    var ingredient = jsonEncode(ingredientsList).toString();
     var json = {
       'title': title,
       'description': description,
-      'engredients': ingredientsList,
+      'engredients': ingredient,
       '_creator': id,
       'restaurant': restaurantid!.trim(),
     };
@@ -1182,10 +1176,10 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Palette.deleteColors),
                   onPressed: () {
-                    // deleteUser(context, viewId);
+                    deleteRecette(context, recetteId);
                     Navigator.pop(con);
                   },
-                  label: const Text("Supprimer."),
+                  label: const Text("SupprimeDDr."),
                 )
               ],
               content: Container(
@@ -1201,12 +1195,12 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
         });
   }
 
-  Future<http.Response> deleteUser(BuildContext context, String id) async {
+  Future<http.Response> deleteRecette(BuildContext context, String id) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userdelete = prefs.getString('IdUser').toString();
       var token = prefs.getString('token');
-      String urlDelete = "http://13.39.81.126:4001/api/users/delete/$id";
+      String urlDelete = "http://192.168.11.110:4010/api/recettes/delete/$id";
       var json = {
         '_creator': userdelete,
       };
@@ -1224,7 +1218,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
 
       print(response.statusCode);
       if (response.statusCode == 200) {
-        // ref.refresh(getDataUserFuture);
+        ref.refresh(getDataRecettesFuture);
 
         return response;
       } else {
@@ -1236,17 +1230,21 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
   }
 }
 
-// class Ingredients {
-//   const Ingredients({
-//     required this.matierePremiere,
-//     required this.quantite,
-//     // required this.uniteDeMesure,
-//   });
+class Ingredient {
+  String? material;
+  String? grammage;
 
-//   final String matierePremiere;
-//   final String quantite;
-//   // final String uniteDeMesure;
+  Ingredient({this.material, this.grammage});
 
-//   @override
-//   toString() => '{"material": $matierePremiere, "grammage": $quantite}';
-// }
+  Ingredient.fromJson(Map<String, dynamic> json) {
+    material = json['material'];
+    grammage = json['grammage'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['material'] = this.material;
+    data['grammage'] = this.grammage;
+    return data;
+  }
+}

@@ -56,7 +56,6 @@ class Recette {
   String? title;
   String? image;
   String? description;
-  Restaurant? restaurant;
   List<Engredients>? engredients;
   String? sCreator;
   String? deletedAt;
@@ -69,7 +68,6 @@ class Recette {
       this.title,
       this.image,
       this.description,
-      this.restaurant,
       this.engredients,
       this.sCreator,
       this.deletedAt,
@@ -82,9 +80,6 @@ class Recette {
     title = json['title'];
     image = json['image'];
     description = json['description'];
-    restaurant = json['restaurant'] != null
-        ? new Restaurant.fromJson(json['restaurant'])
-        : null;
     if (json['engredients'] != null) {
       engredients = <Engredients>[];
       json['engredients'].forEach((v) {
@@ -104,9 +99,6 @@ class Recette {
     data['title'] = this.title;
     data['image'] = this.image;
     data['description'] = this.description;
-    if (this.restaurant != null) {
-      data['restaurant'] = this.restaurant!.toJson();
-    }
     if (this.engredients != null) {
       data['engredients'] = this.engredients!.map((v) => v.toJson()).toList();
     }
@@ -119,63 +111,16 @@ class Recette {
   }
 }
 
-class Restaurant {
-  Infos? infos;
-  String? restaurantName;
-  String? deletedAt;
-  String? sId;
-
-  Restaurant({this.infos, this.restaurantName, this.deletedAt, this.sId});
-
-  Restaurant.fromJson(Map<String, dynamic> json) {
-    infos = json['infos'] != null ? new Infos.fromJson(json['infos']) : null;
-    restaurantName = json['restaurant_name'];
-    deletedAt = json['deletedAt'];
-    sId = json['_id'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.infos != null) {
-      data['infos'] = this.infos!.toJson();
-    }
-    data['restaurant_name'] = this.restaurantName;
-    data['deletedAt'] = this.deletedAt;
-    data['_id'] = this.sId;
-    return data;
-  }
-}
-
-class Infos {
-  String? town;
-  String? address;
-  String? logo;
-
-  Infos({this.town, this.address, this.logo});
-
-  Infos.fromJson(Map<String, dynamic> json) {
-    town = json['town'];
-    address = json['address'];
-    logo = json['logo'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['town'] = this.town;
-    data['address'] = this.address;
-    data['logo'] = this.logo;
-    return data;
-  }
-}
-
 class Engredients {
+  String? unity;
   Material? material;
   int? grammage;
   String? sId;
 
-  Engredients({this.material, this.grammage, this.sId});
+  Engredients({this.unity, this.material, this.grammage, this.sId});
 
   Engredients.fromJson(Map<String, dynamic> json) {
+    unity = json['unity'];
     material = json['material'] != null
         ? new Material.fromJson(json['material'])
         : null;
@@ -185,6 +130,7 @@ class Engredients {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['unity'] = this.unity;
     if (this.material != null) {
       data['material'] = this.material!.toJson();
     }
@@ -235,6 +181,55 @@ class Material {
     data['min_quantity'] = this.minQuantity;
     data['deletedAt'] = this.deletedAt;
     data['_id'] = this.sId;
+    return data;
+  }
+}
+
+class Restaurant {
+  Infos? infos;
+  String? restaurantName;
+  String? deletedAt;
+  String? sId;
+
+  Restaurant({this.infos, this.restaurantName, this.deletedAt, this.sId});
+
+  Restaurant.fromJson(Map<String, dynamic> json) {
+    infos = json['infos'] != null ? new Infos.fromJson(json['infos']) : null;
+    restaurantName = json['restaurant_name'];
+    deletedAt = json['deletedAt'];
+    sId = json['_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.infos != null) {
+      data['infos'] = this.infos!.toJson();
+    }
+    data['restaurant_name'] = this.restaurantName;
+    data['deletedAt'] = this.deletedAt;
+    data['_id'] = this.sId;
+    return data;
+  }
+}
+
+class Infos {
+  String? town;
+  String? address;
+  String? logo;
+
+  Infos({this.town, this.address, this.logo});
+
+  Infos.fromJson(Map<String, dynamic> json) {
+    town = json['town'];
+    address = json['address'];
+    logo = json['logo'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['town'] = this.town;
+    data['address'] = this.address;
+    data['logo'] = this.logo;
     return data;
   }
 }

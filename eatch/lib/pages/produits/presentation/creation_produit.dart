@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:eatch/servicesAPI/getMatiere.dart';
 import 'package:eatch/servicesAPI/get_categories.dart';
 import 'package:eatch/servicesAPI/get_produits.dart';
+import 'package:eatch/servicesAPI/get_recettes.dart';
 import 'package:eatch/servicesAPI/multipart.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +48,7 @@ class CreationProduitState extends ConsumerState<CreationProduit> {
   final _formKey = GlobalKey<FormState>();
 
   String _productName = "";
+  String _recette = "";
   String _produitPrice = "";
   String _produitQuantity = "";
   String? _produitCategorie;
@@ -94,7 +96,8 @@ class CreationProduitState extends ConsumerState<CreationProduit> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    final viewModel = ref.watch(getDataMatiereFuture);
+    final viewModel = ref.watch(getDataRecettesFuture);
+
     return Scaffold(
       backgroundColor: Palette.secondaryBackgroundColor,
       body: SingleChildScrollView(
@@ -134,6 +137,45 @@ class CreationProduitState extends ConsumerState<CreationProduit> {
                     const SizedBox(height: 20),
                     produitquantityForm(),
                     const SizedBox(height: 20),
+                    const SizedBox(height: 10),
+                    Container(
+                      color: Palette.secondaryBackgroundColor,
+                      child: DropdownButtonFormField(
+                        hint: const Text(
+                          'Unité*',
+                        ),
+                        validator: (value) {
+                          if (value == null) {
+                            return "L ' Unité de mésure est obligatoire.";
+                          } else {
+                            return null;
+                          }
+                        },
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            _recette = value.toString();
+                          });
+                        },
+                        onSaved: (value) {
+                          setState(() {
+                            _recette = value.toString();
+                          });
+                        },
+                        items: viewModel.listRecette.map((val) {
+                          return DropdownMenuItem(
+                            value: val.sId,
+                            child: Text(
+                              val.title!,
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
                     Column(
                       children: [
                         for (int i = 0; i < _matierePremieres.length; i++)
@@ -191,11 +233,11 @@ class CreationProduitState extends ConsumerState<CreationProduit> {
                                             });
                                           },
                                           items:
-                                              viewModel.listMatiere.map((val) {
+                                              viewModel.listRecette.map((val) {
                                             return DropdownMenuItem(
                                               value: val.sId,
                                               child: Text(
-                                                val.mpName!,
+                                                val.title!,
                                               ),
                                             );
                                           }).toList(),
@@ -319,7 +361,7 @@ class CreationProduitState extends ConsumerState<CreationProduit> {
                                   _productName,
                                   _produitCategorie,
                                   // "6433e8a9bd4f93d742bb0ee7",
-                                  matierePremieresList,
+                                  _recette,
                                   // [
                                   //   "6436b51165f56ba483198d18",
                                   // ],
@@ -580,7 +622,7 @@ class CreationProduitState extends ConsumerState<CreationProduit> {
     price,
     productName,
     category,
-    materials,
+    recette,
   ) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var id = prefs.getString('IdUser').toString();
@@ -604,7 +646,7 @@ class CreationProduitState extends ConsumerState<CreationProduit> {
       "price": price,
       "productName": productName,
       "category": category,
-      "materials": materials,
+      "recette": recette,
       "restaurant": restaurantid!.trim(),
       "_creator": id,
     };

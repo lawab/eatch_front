@@ -1063,16 +1063,23 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
+      var userdelete = prefs.getString('IdUser').toString();
       String adressUrl = prefs.getString('ipport').toString();
       String urlDelete =
           "http://192.168.11.110:4002/api/restaurants/delete/$id";
 
-      final http.Response response = await http.delete(
+      var json = {
+        '_creator': userdelete,
+      };
+      var body = jsonEncode(json);
+
+      final http.Response response = await http.put(
         Uri.parse(urlDelete),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
           'Accept': 'application/json',
           'authorization': 'Bearer $token',
+          'body': body,
         },
       );
 
