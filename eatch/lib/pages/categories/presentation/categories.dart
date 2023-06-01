@@ -1,19 +1,12 @@
 // ignore_for_file: avoid_function_literals_in_foreach_calls, unused_field, prefer_final_fields
 
-import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:eatch/pages/produits/presentation/creation_produit.dart';
-import 'package:eatch/servicesAPI/get_produits.dart' as products;
-import 'package:eatch/servicesAPI/multipart.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:http_parser/http_parser.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import '../../../servicesAPI/get_categories.dart';
 import '../../../utils/applayout.dart';
 import '../../../utils/default_button/default_button.dart';
@@ -22,7 +15,6 @@ import '../../../utils/size/size.dart';
 import '../../produits/presentation/product_grid.dart';
 import 'categorie_card.dart';
 import 'modification_categorie.dart';
-import 'package:http/http.dart' as http;
 
 class CategoriesPage extends ConsumerStatefulWidget {
   const CategoriesPage({
@@ -34,18 +26,46 @@ class CategoriesPage extends ConsumerStatefulWidget {
 }
 
 class CategoriesPageState extends ConsumerState<CategoriesPage> {
-  // ***** LES VARIABLES ****** //
+  final _controller = TextEditingController();
+
+  ////////////////
+  List<int>? _selectedFile = [];
+  FilePickerResult? result;
+  PlatformFile? file;
+  Uint8List? selectedImageInBytes;
+  bool filee = false;
+
   bool isLoading = false;
   bool _selectFile = false;
+  String? matiereImage;
 
-  Uint8List? selectedImageInBytes;
-  FilePickerResult? result;
+  bool checkImagee = false;
+  bool checkImage = false;
+  bool _working = false;
+  String message = "";
 
-  List<int> _selectedFile = [];
-  bool filee = false;
-  PlatformFile? file;
-  String? recetteImage;
-  final _controller = TextEditingController();
+  void startWorking() async {
+    setState(() {
+      _working = true;
+      checkImagee = false;
+    });
+  }
+
+  void stopMessage() async {
+    setState(() {
+      checkImagee = true;
+      checkImage = false;
+    });
+  }
+
+  void finishWorking() async {
+    setState(() {
+      _working = false;
+    });
+  }
+
+  ///
+
   @override
   void dispose() {
     _controller.dispose();
@@ -82,11 +102,9 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
         _controller.clear();
         searchProduit = false;
       });
-      print("###################");
     }
   }
 
-  int selectedIndexCategorie = 0;
   bool searchProduit = false;
   List<Products> produitSearch = [];
   void filterProduitResults(String query) {
@@ -115,7 +133,6 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
       setState(() {
         searchProduit = false;
       });
-      print("###################");
     }
   }
 
@@ -124,12 +141,12 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
 
   String _nomCategorie = "";
 
+  int selectedIndexCategorie = 0;
   final PageController _pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(getDataCategoriesFuture);
-    final viewModelProduit = ref.watch(products.getDataProduitFuture);
     SizeConfig().init(context);
     return AppLayout(
       content: SingleChildScrollView(
@@ -204,74 +221,74 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                         children: [
                           nomCategorie(),
                           const SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Container(
-                                color: Palette.secondaryBackgroundColor,
-                                child: GestureDetector(
-                                  onTap: () async {
-                                    recetteImage = null;
-                                    result = await FilePicker.platform
-                                        .pickFiles(
-                                            type: FileType.custom,
-                                            allowedExtensions: [
-                                          "png",
-                                          "jpg",
-                                          "jpeg",
-                                        ]);
-                                    if (result != null) {
-                                      setState(() {
-                                        file = result!.files.single;
 
-                                        Uint8List fileBytes = result!
-                                            .files.single.bytes as Uint8List;
+                          ////////////// - Image(début)
+                          Container(
+                            padding: const EdgeInsets.only(right: 70),
+                            color: Palette.secondaryBackgroundColor,
+                            alignment: Alignment.centerRight,
+                            child: GestureDetector(
+                              onTap: () async {
+                                result = await FilePicker.platform.pickFiles(
+                                    type: FileType.custom,
+                                    allowedExtensions: [
+                                      "png",
+                                      "jpg",
+                                      "jpeg",
+                                    ]);
+                                if (result != null) {
+                                  setState(() {
+                                    file = result!.files.single;
 
-                                        _selectedFile = fileBytes;
+                                    Uint8List fileBytes =
+                                        result!.files.single.bytes as Uint8List;
 
-                                        filee = true;
+                                    _selectedFile = fileBytes;
 
-                                        selectedImageInBytes =
-                                            result!.files.first.bytes;
-                                        _selectFile = true;
-                                      });
-                                    }
-                                  },
-                                  child: Container(
-                                    width: 100,
-                                    height: 100,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        width: 1,
-                                        color: const Color(0xFFDCE0E0),
-                                      ),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(16),
-                                      child: recetteImage != null
-                                          ? Image.asset(
-                                              recetteImage!,
-                                              fit: BoxFit.fill,
-                                            )
-                                          : _selectFile == false
-                                              ? const Icon(
-                                                  Icons.camera_alt_outlined,
-                                                  color: Color(0xFFDCE0E0),
-                                                  size: 40,
-                                                )
-                                              : isLoading
-                                                  ? const CircularProgressIndicator()
-                                                  : Image.memory(
-                                                      selectedImageInBytes!,
-                                                      fit: BoxFit.fill,
-                                                    ),
-                                    ),
+                                    filee = true;
+
+                                    selectedImageInBytes =
+                                        result!.files.first.bytes;
+                                    _selectFile = true;
+                                  });
+                                }
+                              },
+                              child: Container(
+                                width: 100,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 4,
+                                    color: Palette.greenColors,
                                   ),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: _selectFile == false
+                                      ? const Icon(
+                                          Icons.camera_alt_outlined,
+                                          color: Palette.greenColors,
+                                          size: 40,
+                                        )
+                                      : Image.memory(
+                                          selectedImageInBytes!,
+                                          fit: BoxFit.fill,
+                                        ),
                                 ),
                               ),
-                              const Spacer(),
+                            ),
+                          ),
+
+                          const SizedBox(
+                            height: 30,
+                          ),
+
+                          /// - Image (fin)
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
                               SizedBox(
                                 width: 200,
                                 child: DefaultButton(
@@ -282,12 +299,7 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
                                       _formKey.currentState!.save();
-                                      creationCategorie(
-                                        context,
-                                        _selectedFile,
-                                        result,
-                                        _nomCategorie,
-                                      );
+                                      print("nom is $_nomCategorie");
                                     } else {
                                       print("Bad");
                                     }
@@ -316,40 +328,41 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                       ),
                     ),
                   )
-                : Padding(
-                    padding: const EdgeInsets.only(
-                      bottom: 20,
-                    ),
-                    child: SizedBox(
-                      width: 300,
-                      child: TextField(
-                        // onChanged: (value) => onSearch(value.toLowerCase()),
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                        ),
-                        onChanged: (value) {
-                          filterCategorieResults(value);
-                        },
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Palette.fourthColor,
-                          contentPadding: const EdgeInsets.all(0),
-                          prefixIcon: const Icon(Icons.search,
-                              color: Palette.primaryColor),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(50),
-                            borderSide: BorderSide.none,
-                          ),
-                          hintStyle: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey.shade500,
-                          ),
-                          hintText: "Rechercher une catégorie ...",
-                        ),
-                      ),
-                    ),
+                : Container(),
+            Padding(
+              padding: const EdgeInsets.only(
+                bottom: 20,
+              ),
+              child: SizedBox(
+                width: 300,
+                child: TextField(
+                  // onChanged: (value) => onSearch(value.toLowerCase()),
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
                   ),
+                  onChanged: (value) {
+                    filterCategorieResults(value);
+                  },
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Palette.fourthColor,
+                    contentPadding: const EdgeInsets.all(0),
+                    prefixIcon:
+                        const Icon(Icons.search, color: Palette.primaryColor),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50),
+                      borderSide: BorderSide.none,
+                    ),
+                    hintStyle: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey.shade500,
+                    ),
+                    hintText: "Rechercher une catégorie ...",
+                  ),
+                ),
+              ),
+            ),
             /**
                 !DEUXIEME LIGNE 
                                **/
@@ -403,64 +416,49 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                             ),
                             Expanded(
                                 child: search == false
-                                    ? viewModel.listCategories.isEmpty
-                                        ? Container()
-                                        : GridView.builder(
-                                            itemCount:
-                                                viewModel.listCategories.length,
-                                            gridDelegate:
-                                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 01,
-                                              mainAxisSpacing: 10,
-                                              childAspectRatio: 4.1,
-                                            ),
-                                            itemBuilder: (context, index) {
-                                              return CategorieCard(
-                                                categorie: viewModel
-                                                    .listCategories[index],
-                                                index: index,
-                                                onPress: () {
-                                                  setState(() {
-                                                    selectedIndexCategorie =
-                                                        index;
-                                                    _pageController
-                                                        .jumpToPage(index);
-                                                  });
-                                                },
-                                                selectedIndex:
-                                                    selectedIndexCategorie,
-                                                onTapDelete: () {
-                                                  dialogDelete(
-                                                    idcategorie: viewModel
-                                                        .listCategories[index]
-                                                        .sId!,
-                                                    nomcategorie: viewModel
+                                    ? GridView.builder(
+                                        itemCount:
+                                            viewModel.listCategories.length,
+                                        gridDelegate:
+                                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 01,
+                                          mainAxisSpacing: 10,
+                                          childAspectRatio: 4.1,
+                                        ),
+                                        itemBuilder: (context, index) {
+                                          return CategorieCard(
+                                            categorie:
+                                                viewModel.listCategories[index],
+                                            index: index,
+                                            onPress: () {
+                                              setState(() {
+                                                selectedIndexCategorie = index;
+                                                _pageController
+                                                    .jumpToPage(index);
+                                              });
+                                            },
+                                            selectedIndex:
+                                                selectedIndexCategorie,
+                                            onTapDelete: () {
+                                              dialogDelete(viewModel
+                                                  .listCategories[index]
+                                                  .title!);
+                                            },
+                                            onTapEdit: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                                  return ModificationCategorie(
+                                                    nomCategorie: viewModel
                                                         .listCategories[index]
                                                         .title!,
                                                   );
-                                                },
-                                                onTapEdit: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) {
-                                                      return ModificationCategorie(
-                                                        title: viewModel
-                                                            .listCategories[
-                                                                index]
-                                                            .title!,
-                                                        image:
-                                                            "http://192.168.11.110:4005${viewModel.listCategories[index].image}",
-                                                        sId: viewModel
-                                                            .listCategories[
-                                                                index]
-                                                            .sId!,
-                                                      );
-                                                    }),
-                                                  );
-                                                },
+                                                }),
                                               );
-                                            })
+                                            },
+                                          );
+                                        })
                                     : categorieSearch.isEmpty
                                         ? const Center(
                                             child: Text(
@@ -476,9 +474,6 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                                               childAspectRatio: 4.1,
                                             ),
                                             itemBuilder: (context, index) {
-                                              print(
-                                                  "##################################################################################################################################################################");
-
                                               return CategorieCard(
                                                 categorie:
                                                     categorieSearch[index],
@@ -495,13 +490,8 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                                                     selectedIndexCategorie,
                                                 onTapDelete: () {
                                                   dialogDelete(
-                                                    idcategorie:
-                                                        categorieSearch[index]
-                                                            .sId!,
-                                                    nomcategorie:
-                                                        categorieSearch[index]
-                                                            .title!,
-                                                  );
+                                                      categorieSearch[index]
+                                                          .title!);
                                                 },
                                                 onTapEdit: () {
                                                   Navigator.push(
@@ -509,14 +499,10 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                                                     MaterialPageRoute(
                                                         builder: (context) {
                                                       return ModificationCategorie(
-                                                        title: categorieSearch[
-                                                                index]
-                                                            .title!,
-                                                        image:
-                                                            "http://192.168.11.110:4005${categorieSearch[index].image}",
-                                                        sId: categorieSearch[
-                                                                index]
-                                                            .sId!,
+                                                        nomCategorie:
+                                                            categorieSearch[
+                                                                    index]
+                                                                .title!,
                                                       );
                                                     }),
                                                   );
@@ -886,14 +872,7 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                               alignment: Alignment.bottomRight,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  setState(() {
-                                    print(viewModel
-                                        .listCategories[selectedIndexCategorie]
-                                        .title!);
-                                    print(viewModel
-                                        .listCategories[selectedIndexCategorie]
-                                        .sId!);
-                                  });
+                                  setState(() {});
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(builder: (context) {
@@ -905,7 +884,7 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                                         categorieId: viewModel
                                             .listCategories[
                                                 selectedIndexCategorie]
-                                            .sId!,
+                                            .id!,
                                       );
                                     }),
                                   );
@@ -935,13 +914,10 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
     );
   }
 
-  Future dialogDelete({
-    required String idcategorie,
-    required String nomcategorie,
-  }) {
+  Future dialogDelete(String nomcategorie) {
     return showDialog(
         context: context,
-        builder: (con) {
+        builder: (_) {
           return AlertDialog(
               backgroundColor: Colors.white,
               title: const Center(
@@ -974,10 +950,7 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                     size: 14,
                   ),
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                  onPressed: () {
-                    deleteCategorie(context, idcategorie);
-                    Navigator.pop(con);
-                  },
+                  onPressed: () {},
                   label: const Text("Supprimer."),
                 )
               ],
@@ -992,42 +965,6 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                     ),
                   )));
         });
-  }
-
-  Future<http.Response> deleteCategorie(BuildContext context, String id) async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      var userdelete = prefs.getString('IdUser').toString();
-      var restaurantid = prefs.getString('idRestaurant');
-      var token = prefs.getString('token');
-      String urlDelete = "http://192.168.11.110:4005/api/categories/delete/$id";
-      var json = {
-        '_creator': userdelete,
-        "restaurant_id": restaurantid!,
-      };
-      var body = jsonEncode(json);
-
-      final http.Response response = await http.patch(
-        Uri.parse(urlDelete),
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-          'Accept': 'application/json',
-          'authorization': 'Bearer $token',
-          'body': body,
-        },
-      );
-
-      print(response.statusCode);
-      if (response.statusCode == 200) {
-        ref.refresh(getDataCategoriesFuture);
-
-        return response;
-      } else {
-        return Future.error("Server Error");
-      }
-    } catch (e) {
-      return Future.error(e);
-    }
   }
 
   TextFormField nomCategorie() {
@@ -1076,83 +1013,6 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
         _nomCategorie = value!;
       },
     );
-  }
-
-  Future<void> creationCategorie(
-    contextt,
-    selectedFile,
-    result,
-    String nomCategorie,
-  ) async {
-    ////////////
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var id = prefs.getString('IdUser').toString();
-    var token = prefs.getString('token');
-    String adressUrl = prefs.getString('ipport').toString();
-    var restaurantid = prefs.getString('idRestaurant');
-    print("categorie id resto  : $restaurantid");
-    var url = Uri.parse(
-        "http://192.168.11.110:4005/api/categories/create"); //13.39.81.126
-    print(url);
-    final request = MultipartRequest(
-      'POST',
-      url,
-      onProgress: (int bytes, int total) {
-        final progress = bytes / total;
-        print('progress: $progress ($bytes/$total)');
-      },
-    );
-    var json = {
-      'title': nomCategorie,
-      'products': [],
-      'user_id': id,
-      "restaurant_id": restaurantid,
-    };
-    var body = jsonEncode(json);
-
-    request.headers.addAll({
-      "body": body,
-    });
-
-    request.fields['form_key'] = 'form_value';
-    request.headers['authorization'] = 'Bearer $token';
-    request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
-        contentType: MediaType('application', 'octet-stream'),
-        filename: result.files.first.name));
-
-    print("RESPENSE SEND STEAM FILE REQ");
-    var response = await request.send();
-    print("Upload Response$response");
-    print(response.statusCode);
-    print(request.headers);
-
-    try {
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        await response.stream.bytesToString().then((value) {
-          print(value);
-        });
-        showTopSnackBar(
-          Overlay.of(contextt)!,
-          const CustomSnackBar.info(
-            backgroundColor: Colors.green,
-            message: "Catégorie Crée",
-          ),
-        );
-        ref.refresh(getDataCategoriesFuture);
-      } else {
-        showTopSnackBar(
-          Overlay.of(contextt)!,
-          const CustomSnackBar.info(
-            backgroundColor: Colors.red,
-            message: "Erreur de création",
-          ),
-        );
-        print("Error Create Programme  !!!");
-      }
-    } catch (e) {
-      rethrow;
-    }
   }
 }
 

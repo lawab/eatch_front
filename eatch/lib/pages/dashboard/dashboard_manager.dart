@@ -108,13 +108,7 @@ class DashboardManagerState extends ConsumerState<DashboardManager> {
                               ),
                               Expanded(
                                 child: viewModel.listCategories.isEmpty
-                                    ? Center(
-                                        child: Text(
-                                          // 'Aucune Categorie trouvée',
-                                          viewModel.listCategories.length
-                                              .toString(),
-                                        ),
-                                      )
+                                    ? Container()
                                     : GridView.builder(
                                         itemCount:
                                             viewModel.listCategories.length,
@@ -149,15 +143,9 @@ class DashboardManagerState extends ConsumerState<DashboardManager> {
                                                 MaterialPageRoute(
                                                     builder: (context) {
                                                   return ModificationCategorie(
-                                                    title: viewModel
+                                                    nomCategorie: viewModel
                                                         .listCategories[index]
                                                         .title!,
-                                                    image: viewModel
-                                                        .listCategories[index]
-                                                        .image!,
-                                                    sId: viewModel
-                                                        .listCategories[index]
-                                                        .sId!,
                                                   );
                                                 }),
                                               );

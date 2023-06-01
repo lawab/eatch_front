@@ -1,10 +1,20 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:eatch/servicesAPI/get_categories.dart';
 import 'package:eatch/utils/applayout.dart';
 import 'package:eatch/utils/palettes/palette.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
+import '../../../servicesAPI/multipart.dart';
 import '../infrastructure/menus_repository.dart';
+import 'package:http/http.dart' as http;
 import 'menu_card.dart';
 
 class Menu extends ConsumerStatefulWidget {
@@ -39,8 +49,21 @@ class _MenuState extends ConsumerState<Menu> {
   final List<Widget> _textFieldInput = [];
   String? matiere;
 
+  List<String> listProdId = [];
+
   bool ajout = false;
   bool test = false;
+
+  List<int>? _selectedFile = [];
+  FilePickerResult? result;
+  PlatformFile? file;
+  Uint8List? selectedImageInBytes;
+  bool filee = false;
+
+  bool isLoading = false;
+  bool _selectFile = false;
+  String? menuImage;
+
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(getDataCategoriesFuture);
@@ -85,7 +108,8 @@ class _MenuState extends ConsumerState<Menu> {
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Palette.primaryColor,
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                               minimumSize: const Size(180, 50)),
                           onPressed: () {
                             setState(() {
@@ -312,6 +336,7 @@ class _MenuState extends ConsumerState<Menu> {
                 itemCount: categoriee.length,
                 itemBuilder: (context, index) {
                   List<String> listProduits = [];
+                  //List<String> listProdId = [];
                   String? produit;
                   final inputController = TextEditingController();
                   _controllerInput.add(inputController);
@@ -319,6 +344,7 @@ class _MenuState extends ConsumerState<Menu> {
                     listProduits
                         .add(categoriee[index].products![i].productName!);
                   }
+                  //print(listProduits);
 
                   return SizedBox(
                     height: 50,
@@ -357,7 +383,23 @@ class _MenuState extends ConsumerState<Menu> {
                       onChanged: (value) {
                         setState(() {
                           produit = value!;
+                          ////////////////////////////
+                          print("Produits:${produit}");
+                          for (int j = 0; j < listProduits.length; j++) {
+                            if (produit == listProduits[j]) {
+                              print("Je suis là");
+                              print(listProduits[j]);
+                              listProdId
+                                  .add(categoriee[index].products![j].sId!);
+                            }
+                          }
+                          /////////////////////////////////
+                          ///
+                          print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ - début");
+                          print(listProdId);
+                          print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ - fin");
 
+                          ///
                           inputController.text = value;
                         });
                       },
@@ -382,6 +424,67 @@ class _MenuState extends ConsumerState<Menu> {
             const SizedBox(
               height: 40,
             ),
+            /////////// - Ici se trouve le bouton pour l'image
+            Container(
+              padding: const EdgeInsets.only(right: 70),
+              color: Palette.secondaryBackgroundColor,
+              alignment: Alignment.centerRight,
+              child: GestureDetector(
+                onTap: () async {
+                  result = await FilePicker.platform
+                      .pickFiles(type: FileType.custom, allowedExtensions: [
+                    "png",
+                    "jpg",
+                    "jpeg",
+                  ]);
+                  if (result != null) {
+                    setState(() {
+                      file = result!.files.single;
+
+                      Uint8List fileBytes =
+                          result!.files.single.bytes as Uint8List;
+
+                      _selectedFile = fileBytes;
+
+                      filee = true;
+
+                      selectedImageInBytes = result!.files.first.bytes;
+                      _selectFile = true;
+                    });
+                  }
+                },
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 4,
+                      color: Palette.greenColors,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: _selectFile == false
+                        ? const Icon(
+                            Icons.camera_alt_outlined,
+                            color: Palette.greenColors,
+                            size: 40,
+                          )
+                        : Image.memory(
+                            selectedImageInBytes!,
+                            fit: BoxFit.fill,
+                          ),
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(
+              height: 30,
+            ),
+
+            /// - fin du choix de l'image
             Container(
               alignment: Alignment.centerRight,
               child: SizedBox(
@@ -393,11 +496,14 @@ class _MenuState extends ConsumerState<Menu> {
                   ElevatedButton(
                     onPressed: (() {
                       for (int i = 0; i < _controllerInput.length; i++) {
-                        print(i);
+                        //print(i);
                         if (_controllerInput[i].text.isNotEmpty) {
                           print(_controllerInput[i].text);
                         }
                       }
+                      creationMenu(context, nomcontroller.text, _selectedFile!,
+                          result, listProdId);
+
                       setState(() {
                         ajout = false;
                       });
@@ -442,5 +548,92 @@ class _MenuState extends ConsumerState<Menu> {
         ),
       ),
     );
+  }
+
+  /////////Création de Menu
+  ///
+  Future<void> creationMenu(
+    BuildContext context,
+    String nomMenu,
+    List<int> selectedFile,
+    FilePickerResult? result,
+    List<String> idProduits,
+  ) async {
+    ////////////
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var id = prefs.getString('IdUser').toString();
+    var restaurantId = prefs.getString('idRestaurant').toString();
+    var token = prefs.getString('token');
+
+    //String adressUrl = prefs.getString('ipport').toString();
+
+    var url = Uri.parse(
+        "http://192.168.11.110:4009/api/menus/create"); // 192.168.11.110:4009
+    final request = MultipartRequest(
+      'POST',
+      url,
+      // ignore: avoid_returning_null_for_void
+      onProgress: (int bytes, int total) {
+        final progress = bytes / total;
+        print('progress: $progress ($bytes/$total)');
+      },
+    );
+
+    var dd = jsonEncode(idProduits);
+
+    var json = {
+      'menu_title': nomMenu,
+      'restaurant': restaurantId,
+      '_creator': id,
+      'products': dd,
+    };
+    var body = jsonEncode(json);
+
+    request.headers.addAll({
+      "body": body,
+    });
+
+    request.fields['form_key'] = 'form_value';
+    request.headers['authorization'] = 'Bearer $token';
+    request.files.add(await http.MultipartFile.fromBytes('file', selectedFile,
+        contentType: MediaType('application', 'octet-stream'),
+        filename: result?.files.first.name));
+
+    print("RESPENSE SEND STEAM FILE REQ");
+    //var responseString = await streamedResponse.stream.bytesToString();
+    var response = await request.send();
+    print("Upload Response" + response.toString());
+    print(response.statusCode);
+    print(request.headers);
+
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        await response.stream.bytesToString().then((value) {
+          print(value);
+        });
+        //stopMessage();
+        //finishWorking();
+        showTopSnackBar(
+          Overlay.of(context)!,
+          const CustomSnackBar.info(
+            backgroundColor: Colors.green,
+            message: "Le menu a été crée",
+          ),
+        );
+        //ref.refresh(getDataMenuFuture);
+      } else {
+        showTopSnackBar(
+          Overlay.of(context)!,
+          const CustomSnackBar.info(
+            backgroundColor: Colors.red,
+            message: "Le menu n'a pas été crée",
+          ),
+        );
+        print("Error Create Programme  !!!");
+      }
+    } catch (e) {
+      throw e;
+    }
   }
 }

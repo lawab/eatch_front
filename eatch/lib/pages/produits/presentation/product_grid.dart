@@ -1,9 +1,8 @@
 import 'package:eatch/pages/produits/presentation/produit_info_page.dart';
-import 'package:eatch/servicesAPI/get_categories.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../servicesAPI/get_categories.dart';
 import 'product_card.dart';
 
 class ProductsGrid extends ConsumerStatefulWidget {
@@ -56,10 +55,6 @@ class ProductsGridState extends ConsumerState<ProductsGrid> {
                     imageUrl: widget.filterproductsList[index].image!,
                     price: widget.filterproductsList[index].price!,
                     title: widget.filterproductsList[index].productName!,
-                    sId: widget.filterproductsList[index].sId!,
-                    category: widget.filterproductsList[index].category!,
-                    quantity: widget.filterproductsList[index].quantity!,
-                    // recette: widget.filterproductsList[index].recette!,
                   ),
                 ),
               );

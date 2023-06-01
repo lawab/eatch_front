@@ -1,7 +1,4 @@
-import 'dart:html';
-
 import 'package:eatch/pages/commande/commandeClient/detail.dart';
-import 'package:eatch/pages/commande/commandeClient/menuu.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class Recapitulatif extends ConsumerStatefulWidget {
   final List<ProduitsCommande> listRecap;
   final double prix;
-  Recapitulatif({Key? key, required this.listRecap, required this.prix})
+  const Recapitulatif({Key? key, required this.listRecap, required this.prix})
       : super(key: key);
 
   @override
@@ -25,7 +22,7 @@ class RecapitulatifState extends ConsumerState<Recapitulatif> {
       backgroundColor: Palette.yellowColor,
       body: Center(
         child: Container(
-          padding: EdgeInsets.all(50),
+          padding: const EdgeInsets.all(50),
           alignment: Alignment.center,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(25),
@@ -46,7 +43,7 @@ class RecapitulatifState extends ConsumerState<Recapitulatif> {
                 const SizedBox(
                   height: 20,
                 ),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height - 100 - 420,
                   child: ListView.builder(
@@ -60,7 +57,7 @@ class RecapitulatifState extends ConsumerState<Recapitulatif> {
                         )),
                         child: Row(
                           children: [
-                            Container(
+                            SizedBox(
                               height: 30,
                               child: RichText(
                                 text: TextSpan(children: [
@@ -83,7 +80,7 @@ class RecapitulatifState extends ConsumerState<Recapitulatif> {
                             Expanded(
                               child: Container(),
                             ),
-                            Container(
+                            SizedBox(
                               height: 30,
                               child: Text(
                                 '${widget.listRecap[index].price.toString()} MAD',
@@ -111,7 +108,7 @@ class RecapitulatifState extends ConsumerState<Recapitulatif> {
                 const SizedBox(
                   height: 20,
                 ),
-                Container(
+                SizedBox(
                   height: 50,
                   child: Row(
                     children: [
@@ -123,7 +120,7 @@ class RecapitulatifState extends ConsumerState<Recapitulatif> {
                             color: espace == true
                                 ? Palette.yellowColor
                                 : Colors.grey,
-                            child: Text('En Espece'),
+                            child: const Text('En Espece'),
                           ),
                           onTap: () {
                             setState(() {
@@ -141,7 +138,7 @@ class RecapitulatifState extends ConsumerState<Recapitulatif> {
                             color: carte == true
                                 ? Palette.yellowColor
                                 : Colors.grey,
-                            child: Text('Par carte'),
+                            child: const Text('Par carte'),
                           ),
                           onTap: () {
                             setState(() {
@@ -202,8 +199,8 @@ class RecapitulatifState extends ConsumerState<Recapitulatif> {
                               backgroundColor: Palette.primaryColor,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(50)),
-                              minimumSize: Size(180, 50)),
-                          child: Text("Commander"),
+                              minimumSize: const Size(180, 50)),
+                          child: const Text("Commander"),
                         ),
                       ),
                       const SizedBox(

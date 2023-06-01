@@ -47,14 +47,14 @@ class MenuClientState extends ConsumerState<MenuClient> {
         appBar: AppBar(
           backgroundColor: Palette.marronColor,
           centerTitle: true,
-          title: Text('EATCH'),
+          title: const Text('EATCH'),
           automaticallyImplyLeading: false,
           leading: IconButton(
               onPressed: (() {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => MenuAccueil()));
+                    MaterialPageRoute(builder: (context) => const MenuAccueil()));
               }),
-              icon: Icon(Icons.arrow_back_ios)),
+              icon: const Icon(Icons.arrow_back_ios)),
         ),
         body: Stack(
           children: [
@@ -67,7 +67,7 @@ class MenuClientState extends ConsumerState<MenuClient> {
                     child: TabBar(
                       indicatorColor: Colors.white,
                       labelColor: Colors.white,
-                      unselectedLabelColor: Color.fromARGB(255, 219, 220, 224),
+                      unselectedLabelColor: const Color.fromARGB(255, 219, 220, 224),
                       tabs: [
                         Tab(
                           text: widget.commande[0].title,
@@ -81,7 +81,7 @@ class MenuClientState extends ConsumerState<MenuClient> {
                       ],
                     ),
                   ),
-                  Container(
+                  SizedBox(
                     height: MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width,
                     child: TabBarView(
@@ -132,7 +132,7 @@ class MenuClientState extends ConsumerState<MenuClient> {
                   children: [
                     ClipRRect(
                         borderRadius: BorderRadius.circular(05.0),
-                        child: Icon(Icons.person)),
+                        child: const Icon(Icons.person)),
                     const Expanded(
                       child: Padding(
                         padding: EdgeInsets.only(
@@ -180,7 +180,7 @@ class MenuClientState extends ConsumerState<MenuClient> {
                               ),
                               Text(
                                 '$panier produits',
-                                style: TextStyle(color: Colors.white),
+                                style: const TextStyle(color: Colors.white),
                               ),
                             ],
                           )
@@ -188,7 +188,7 @@ class MenuClientState extends ConsumerState<MenuClient> {
                           ),
                       onTap: () {
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => Panier()));
+                            MaterialPageRoute(builder: (context) => const Panier()));
                       },
                     ),
                   ),

@@ -79,10 +79,14 @@ class CategorieCardState extends ConsumerState<CategorieCard> {
                                 ? Palette.secondaryColor
                                 : Palette.fourthColor,
                           ),
-                          child: Image.network(
-                            'http://192.168.11.110:4005${widget.categorie.image}',
-                            height: 18.0,
-                          ),
+                          child: const Icon(Icons.ac_unit),
+                          // child: SvgPicture.asset(
+                          //   widget.categorie.image!,
+                          //   width: 18.0,
+                          //   color: (widget.selectedIndex == widget.index)
+                          //       ? Palette.primaryBackgroundColor
+                          //       : Palette.primaryColor,
+                          // ),
                         ),
                         const SizedBox(width: 05.0),
                         Expanded(

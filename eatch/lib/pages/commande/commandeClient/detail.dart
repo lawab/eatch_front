@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:eatch/pages/commande/commandeClient/menuu.dart';
 import 'package:eatch/pages/commande/commandeClient/panier.dart';
-import 'package:eatch/pages/commande/commandeClient/recapitulatif.dart';
 import 'package:eatch/servicesAPI/getCommande.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +56,7 @@ class DetailsState extends ConsumerState<Details> {
       body: SingleChildScrollView(
           child: Stack(
         children: [
-          Container(
+          SizedBox(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             child: Row(
@@ -165,8 +164,10 @@ class DetailsState extends ConsumerState<Details> {
                         /**/
                         ),
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Panier()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Panier()));
                     },
                   ),
                 ),
@@ -176,7 +177,7 @@ class DetailsState extends ConsumerState<Details> {
   }
 
   Widget recapitulatif() {
-    return Container(
+    return SizedBox(
       height: MediaQuery.of(context).size.height,
       child: Stack(alignment: Alignment.center, children: [
         /////////////////// Boutton de validation de la commande
@@ -229,14 +230,14 @@ class DetailsState extends ConsumerState<Details> {
               prefs.setInt('panier', article);
               print('list');
               print(prefs.getString('panierCommande').toString());
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Panier()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Panier()));
             }),
             style: ElevatedButton.styleFrom(
                 backgroundColor: Palette.primaryColor,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50)),
-                minimumSize: Size(180, 50)),
+                minimumSize: const Size(180, 50)),
             child: Text("Ajouter au panier $count pour $prix dh"),
           )),
         ),
@@ -249,7 +250,7 @@ class DetailsState extends ConsumerState<Details> {
         ),
         ///////////////// Détails du produit
         Container(
-          padding: EdgeInsets.all(50),
+          padding: const EdgeInsets.all(50),
           height: MediaQuery.of(context).size.height,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -419,7 +420,7 @@ class DetailsState extends ConsumerState<Details> {
   Widget ajout() {
     return Container(
       width: 100,
-      padding: EdgeInsets.all(3),
+      padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5), color: Palette.greenColors),
       child: Row(
@@ -433,21 +434,21 @@ class DetailsState extends ConsumerState<Details> {
                   }
                 });
               },
-              child: Icon(
+              child: const Icon(
                 Icons.remove,
                 color: Colors.white,
                 size: 16,
               )),
           Expanded(
             child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 3),
-              padding: EdgeInsets.symmetric(horizontal: 3, vertical: 2),
+              margin: const EdgeInsets.symmetric(horizontal: 3),
+              padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(3), color: Colors.white),
               child: Center(
                 child: Text(
                   count.toString(),
-                  style: TextStyle(color: Colors.black, fontSize: 16),
+                  style: const TextStyle(color: Colors.black, fontSize: 16),
                 ),
               ),
             ),
@@ -459,7 +460,7 @@ class DetailsState extends ConsumerState<Details> {
                   prix = 100 * count;
                 });
               },
-              child: Icon(
+              child: const Icon(
                 Icons.add,
                 color: Colors.white,
                 size: 16,
@@ -643,14 +644,14 @@ class ProduitsCommande {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['imageUrl'] = this.imageUrl;
-    data['title'] = this.title;
-    data['price'] = this.price;
-    data['nombre'] = this.nombre;
-    data['boisson'] = this.boisson;
-    data['personnalisation'] = this.personnalisation;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['imageUrl'] = imageUrl;
+    data['title'] = title;
+    data['price'] = price;
+    data['nombre'] = nombre;
+    data['boisson'] = boisson;
+    data['personnalisation'] = personnalisation;
     return data;
   }
 }

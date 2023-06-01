@@ -1,55 +1,68 @@
-import 'dart:convert';
+import 'dart:typed_data';
 
-import 'package:eatch/servicesAPI/get_categories.dart';
-import 'package:eatch/servicesAPI/multipart.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:http_parser/http_parser.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../utils/applayout.dart';
 import '../../../utils/default_button/default_button.dart';
 import '../../../utils/palettes/palette.dart';
 import '../../../utils/size/size.dart';
-import 'package:http/http.dart' as http;
 
-class ModificationCategorie extends ConsumerStatefulWidget {
+class ModificationCategorie extends StatefulWidget {
   const ModificationCategorie({
     super.key,
-    required this.title,
-    required this.image,
-    required this.sId,
+    required this.nomCategorie,
   });
 
-  final String title;
-  final String image;
-  final String sId;
+  final String nomCategorie;
 
   @override
-  ConsumerState<ModificationCategorie> createState() =>
-      _ModificationCategorieState();
+  State<ModificationCategorie> createState() => _ModificationCategorieState();
 }
 
-class _ModificationCategorieState extends ConsumerState<ModificationCategorie> {
-  // ***** LES VARIABLES ****** //
-  final bool _showContent = false;
-  bool isLoading = false;
-  bool _selectFile = false;
-
-  Uint8List? selectedImageInBytes;
-  FilePickerResult? result;
-
-  List<int> _selectedFile = [];
-  bool filee = false;
-  PlatformFile? file;
-
-  String? categorieImage;
+class _ModificationCategorieState extends State<ModificationCategorie> {
   //**********************************/
   final _formKey = GlobalKey<FormState>();
 
   String _nomCategorie = "";
+
+  ////////////////
+  List<int>? _selectedFile = [];
+  FilePickerResult? result;
+  PlatformFile? file;
+  Uint8List? selectedImageInBytes;
+  bool filee = false;
+
+  bool isLoading = false;
+  bool _selectFile = false;
+  String? matiereImage;
+
+  bool checkImagee = false;
+  bool checkImage = false;
+  bool _working = false;
+  String message = "";
+
+  void startWorking() async {
+    setState(() {
+      _working = true;
+      checkImagee = false;
+    });
+  }
+
+  void stopMessage() async {
+    setState(() {
+      checkImagee = true;
+      checkImage = false;
+    });
+  }
+
+  void finishWorking() async {
+    setState(() {
+      _working = false;
+    });
+  }
+
+  ///
 
   @override
   void dispose() {
@@ -91,64 +104,74 @@ class _ModificationCategorieState extends ConsumerState<ModificationCategorie> {
                     children: [
                       nomCategorie(),
                       const SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          GestureDetector(
-                            onTap: () async {
-                              categorieImage = null;
-                              result = await FilePicker.platform.pickFiles(
-                                  type: FileType.custom,
-                                  allowedExtensions: [
-                                    "png",
-                                    "jpg",
-                                    "jpeg",
-                                  ]);
-                              if (result != null) {
-                                setState(() {
-                                  file = result!.files.single;
 
-                                  Uint8List fileBytes =
-                                      result!.files.single.bytes as Uint8List;
+                      ////////////// - Image(début)
+                      Container(
+                        padding: const EdgeInsets.only(right: 70),
+                        color: Palette.secondaryBackgroundColor,
+                        alignment: Alignment.centerRight,
+                        child: GestureDetector(
+                          onTap: () async {
+                            result = await FilePicker.platform.pickFiles(
+                                type: FileType.custom,
+                                allowedExtensions: [
+                                  "png",
+                                  "jpg",
+                                  "jpeg",
+                                ]);
+                            if (result != null) {
+                              setState(() {
+                                file = result!.files.single;
 
-                                  _selectedFile = fileBytes;
+                                Uint8List fileBytes =
+                                    result!.files.single.bytes as Uint8List;
 
-                                  filee = true;
+                                _selectedFile = fileBytes;
 
-                                  selectedImageInBytes =
-                                      result!.files.first.bytes;
-                                  _selectFile = true;
-                                });
-                              }
-                            },
-                            child: Container(
-                              width: SizeConfig.screenWidth * 0.05,
-                              height: SizeConfig.screenWidth * 0.05,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  width: 1,
-                                  color: const Color(0xFFDCE0E0),
-                                ),
-                                borderRadius: BorderRadius.circular(20),
+                                filee = true;
+
+                                selectedImageInBytes =
+                                    result!.files.first.bytes;
+                                _selectFile = true;
+                              });
+                            }
+                          },
+                          child: Container(
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 4,
+                                color: Palette.greenColors,
                               ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(16),
-                                child: _selectFile == false
-                                    ? Image.network(
-                                        'http://192.168.11.110:4005${widget.image}',
-                                        fit: BoxFit.fill,
-                                      )
-                                    : isLoading
-                                        ? const CircularProgressIndicator()
-                                        : Image.memory(
-                                            selectedImageInBytes!,
-                                            fit: BoxFit.fill,
-                                          ),
-                              ),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: _selectFile == false
+                                  ? const Icon(
+                                      Icons.camera_alt_outlined,
+                                      color: Palette.greenColors,
+                                      size: 40,
+                                    )
+                                  : Image.memory(
+                                      selectedImageInBytes!,
+                                      fit: BoxFit.fill,
+                                    ),
                             ),
                           ),
-                          const Spacer(),
+                        ),
+                      ),
+
+                      const SizedBox(
+                        height: 30,
+                      ),
+
+                      /// - Image (fin)
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
                           SizedBox(
                             width: 200,
                             child: DefaultButton(
@@ -159,12 +182,7 @@ class _ModificationCategorieState extends ConsumerState<ModificationCategorie> {
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
                                   _formKey.currentState!.save();
-                                  edditCategorie(
-                                    context,
-                                    _selectedFile,
-                                    result,
-                                    _nomCategorie,
-                                  );
+                                  print("nom is $_nomCategorie");
                                 } else {
                                   print("Bad");
                                 }
@@ -200,7 +218,7 @@ class _ModificationCategorieState extends ConsumerState<ModificationCategorie> {
 
   TextFormField nomCategorie() {
     return TextFormField(
-      initialValue: widget.title,
+      initialValue: widget.nomCategorie,
       textInputAction: TextInputAction.next,
       autocorrect: true,
       textCapitalization: TextCapitalization.characters,
@@ -245,79 +263,6 @@ class _ModificationCategorieState extends ConsumerState<ModificationCategorie> {
         _nomCategorie = value!;
       },
     );
-  }
-
-  Future<void> edditCategorie(
-    BuildContext context,
-    selectedFile,
-    result,
-    String nomCategorie,
-  ) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var id = prefs.getString('IdUser').toString();
-    var token = prefs.getString('token');
-    var restaurantid = prefs.getString('idRestaurant');
-    print(id);
-    print(token);
-    print("Restaurant id $restaurantid");
-
-    var url = Uri.parse(
-        "http://192.168.11.110:4005/api/categories/update/${widget.sId}");
-    final request = MultipartRequest(
-      'PATCH',
-      url,
-      onProgress: (int bytes, int total) {
-        final progress = bytes / total;
-        print('progress: $progress ($bytes/$total)');
-      },
-    );
-    var json = {
-      'title': nomCategorie,
-      'products': [],
-      'user_id': id,
-      "restaurant_id": restaurantid,
-    };
-    var body = jsonEncode(json);
-
-    request.headers.addAll({
-      "body": body,
-    });
-
-    request.fields['form_key'] = 'form_value';
-    request.headers['authorization'] = 'Bearer $token';
-    if (result != null) {
-      request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
-          contentType: MediaType('application', 'octet-stream'),
-          filename: result.files.first.name));
-    }
-
-    print("RESPENSE SEND STEAM FILE REQ");
-    var response = await request.send();
-    print("Upload Response$response");
-    print(response.statusCode);
-    print(request.headers);
-
-    try {
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        await response.stream.bytesToString().then((value) {
-          print(value);
-        });
-        setState(() {
-          ref.refresh(getDataCategoriesFuture);
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Utilisateur crée"),
-        ));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Erreur de serveur"),
-        ));
-        print("Error Create Programme  !!!");
-      }
-    } catch (e) {
-      rethrow;
-    }
   }
 }
 

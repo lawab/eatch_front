@@ -26,7 +26,8 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const Authentification() //Authentification(),ClientAccueil()
+        home:
+            const Authentification() //const DashboardComptable() //const Authentification() //Authentification(),ClientAccueil()
         );
   }
 }

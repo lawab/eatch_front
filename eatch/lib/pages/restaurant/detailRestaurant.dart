@@ -16,7 +16,7 @@ class RestaurantDetailState extends State<RestaurantDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: SizedBox(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: Column(
@@ -51,7 +51,7 @@ class RestaurantDetailState extends State<RestaurantDetail> {
                 ),
               ),
             ),
-            Container(
+            SizedBox(
               height: MediaQuery.of(context).size.height / 2,
               width: MediaQuery.of(context).size.width,
             )

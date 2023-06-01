@@ -33,7 +33,7 @@ class BoissonState extends State<Boisson> {
     return Scaffold(
       backgroundColor: Palette.yellowColor,
       body: Container(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: GridView.builder(
             gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 200,
@@ -80,12 +80,12 @@ class BoissonState extends State<Boisson> {
                             children: [
                               Text(
                                 widget.produits[index].title!,
-                                style: TextStyle(color: Colors.white),
+                                style: const TextStyle(color: Colors.white),
                               ),
                               Expanded(child: Container()),
                               Text(
                                 widget.produits[index].price.toString(),
-                                style: TextStyle(color: Colors.white),
+                                style: const TextStyle(color: Colors.white),
                               ),
                             ],
                           )),

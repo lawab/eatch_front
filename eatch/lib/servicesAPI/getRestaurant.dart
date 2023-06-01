@@ -31,11 +31,12 @@ class GetDataRsetaurantFuture extends ChangeNotifier {
       );
       print('get restaurant');
       print(response.statusCode);
-      print(response.body);
+      //print(response.body);
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        //print(data);
+        print(data);
+        print(data[0]["infos"]["logo"]);
         for (int i = 0; i < data.length; i++) {
           if (data[i]['deletedAt'] == null) {
             listRsetaurant.add(Restaurant.fromJson(data[i]));
@@ -54,27 +55,28 @@ class GetDataRsetaurantFuture extends ChangeNotifier {
 }
 
 class Restaurant {
-  Info? infos;
+  Infos? infos;
   String? sId;
   String? restaurantName;
   String? sCreator;
-  String? deletedAt;
+  Null? deletedAt;
   String? createdAt;
   String? updatedAt;
   int? iV;
 
-  Restaurant(
-      {this.infos,
-      this.sId,
-      this.restaurantName,
-      this.sCreator,
-      this.deletedAt,
-      this.createdAt,
-      this.updatedAt,
-      this.iV});
+  Restaurant({
+    this.infos,
+    this.sId,
+    this.restaurantName,
+    this.sCreator,
+    this.deletedAt,
+    this.createdAt,
+    this.updatedAt,
+    this.iV,
+  });
 
   Restaurant.fromJson(Map<String, dynamic> json) {
-    infos = json['infos'] != null ? Info.fromJson(json['infos']) : null;
+    infos = json['infos'] != null ? new Infos.fromJson(json['infos']) : null;
     sId = json['_id'];
     restaurantName = json['restaurant_name'];
     sCreator = json['_creator'];
@@ -85,9 +87,9 @@ class Restaurant {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if (infos != null) {
-      data['info'] = infos!.toJson();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.infos != null) {
+      data['infos'] = this.infos!.toJson();
     }
     data['_id'] = sId;
     data['restaurant_name'] = restaurantName;
@@ -100,14 +102,14 @@ class Restaurant {
   }
 }
 
-class Info {
+class Infos {
   String? town;
   String? address;
   String? logo;
 
-  Info({this.town, this.address, this.logo});
+  Infos({this.town, this.address, this.logo});
 
-  Info.fromJson(Map<String, dynamic> json) {
+  Infos.fromJson(Map<String, dynamic> json) {
     town = json['town'];
     address = json['address'];
     logo = json['logo'];

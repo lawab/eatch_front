@@ -2,10 +2,10 @@ import '../domain/menu.dart';
 
 const menusData = [
   Menu(
-    id: '1',
-    imageUrl: 'assets/menus/menu.jpg',
-    title: 'Mon Menu 01',
-    description: 'Lorem ipsum',
+    id: "1",
+    imageUrl: "assets/menus/menu.jpg",
+    title: "Mon Menu 01",
+    description: "Lorem ipsum",
     price: 15,
   ),
   Menu(

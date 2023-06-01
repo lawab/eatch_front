@@ -1,5 +1,4 @@
 import 'package:eatch/pages/commande/commandeClient/accueilMenu.dart';
-import 'package:eatch/pages/commande/commandeClient/menuu.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -66,7 +65,7 @@ class ClientAccueilState extends State<ClientAccueil> {
                 child: Container(
                   height: 100,
                   width: 100,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       image:
                           DecorationImage(image: AssetImage('logo_vert.png'))),
                 ),
@@ -81,7 +80,7 @@ class ClientAccueilState extends State<ClientAccueil> {
                     children: [
                       Container(
                         child: RichText(
-                          text: TextSpan(
+                          text: const TextSpan(
                             children: [
                               TextSpan(
                                 text: "Eatch",
@@ -108,7 +107,7 @@ class ClientAccueilState extends State<ClientAccueil> {
                         height: 20,
                       ),
                       Container(
-                        child: Text(
+                        child: const Text(
                           'ainsi que des salades fraîches et savoureuses le tout agrémenté de sauces élaborées avec soin',
                           style: TextStyle(
                               fontFamily: 'Allerta',
@@ -120,12 +119,16 @@ class ClientAccueilState extends State<ClientAccueil> {
                       const SizedBox(
                         height: 20,
                       ),
-                      Container(
+                      SizedBox(
                         width: 500,
                         child: Row(children: [
                           Expanded(
                             child: ElevatedButton(
-                              child: Text(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Palette.yellowColor,
+                                  minimumSize: const Size(180, 50)),
+                              onPressed: () {},
+                              child: const Text(
                                 'Qui sommes nous',
                                 style: TextStyle(
                                     fontFamily: 'Boogaloo',
@@ -133,10 +136,6 @@ class ClientAccueilState extends State<ClientAccueil> {
                                     color: Palette.greenColors,
                                     fontWeight: FontWeight.normal),
                               ),
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Palette.yellowColor,
-                                  minimumSize: Size(180, 50)),
-                              onPressed: () {},
                             ),
                           ),
                           const SizedBox(
@@ -144,17 +143,9 @@ class ClientAccueilState extends State<ClientAccueil> {
                           ),
                           Expanded(
                             child: ElevatedButton(
-                              child: Text(
-                                'Voir notre carte',
-                                style: TextStyle(
-                                    fontFamily: 'Boogaloo',
-                                    fontSize: 20,
-                                    color: Palette.yellowColor,
-                                    fontWeight: FontWeight.normal),
-                              ),
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: Palette.greenColors,
-                                  minimumSize: Size(180, 50)),
+                                  minimumSize: const Size(180, 50)),
                               onPressed: () async {
                                 SharedPreferences prefs =
                                     await SharedPreferences.getInstance();
@@ -163,8 +154,16 @@ class ClientAccueilState extends State<ClientAccueil> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => MenuAccueil()));
+                                        builder: (context) => const MenuAccueil()));
                               },
+                              child: const Text(
+                                'Voir notre carte',
+                                style: TextStyle(
+                                    fontFamily: 'Boogaloo',
+                                    fontSize: 20,
+                                    color: Palette.yellowColor,
+                                    fontWeight: FontWeight.normal),
+                              ),
                             ),
                           ),
                         ]),
