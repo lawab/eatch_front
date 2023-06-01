@@ -1,9 +1,11 @@
+// ignore_for_file: prefer_is_empty
+
 import 'dart:convert';
 
 import 'package:eatch/pages/recettes/eddit_recette.dart';
 import 'package:eatch/pages/recettes/grid.dart';
 import 'package:eatch/servicesAPI/getMatiere.dart';
-import 'package:eatch/servicesAPI/get_categories.dart' as categorie;
+import 'package:eatch/servicesAPI/get_categories.dart';
 import 'package:eatch/servicesAPI/get_recettes.dart';
 import 'package:eatch/servicesAPI/multipart.dart';
 import 'package:eatch/utils/applayout.dart';
@@ -44,23 +46,26 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
     return size(buildContext).height;
   }
 
-  /* LA VARIABLE QUI AFFICHE LE FORMULAIRE DE CRÉATION DE RECETTE */
+/* LA VARIABLE QUI AFFICHE LE FORMULAIRE DE CRÉATION DE RECETTE */
   bool _showContent = false;
 
-  /* LE LOADING PENDANT LE TÉLÉCHARGEMENT DE L’IMAGE DE LA RECETTE */
+/* LE LOADING PENDANT LE TÉLÉCHARGEMENT DE L’IMAGE DE LA RECETTE */
   bool isLoading = false;
 
-  /* LE LOADING PENDANT LE TÉLÉCHARGEMENT DE L’IMAGE DE LA RECETTE */
+/* SI UNE IMAGE EST SÉLECTIONNÉE SEL DEVIENT TRUE */
   bool _selectFile = false;
 
+/* LE FICHIER IMAGE TELECHARGER DEPUIS LE PC */
   Uint8List? selectedImageInBytes;
+  List<int> _selectedFile = [];
+
+/* LE FICHIER IMAGE TELECHARGER DEPUIS LE PC A ENVOYER SUR INTERNET */
   FilePickerResult? result;
 
-  List<int> _selectedFile = [];
-  bool filee = false;
-  PlatformFile? file;
-
+/* LA LISTE DE TOUS LES INGRÉDIENTS QUI SERONT CRÉÉS */
   List<Ingredient> ingredientsList = [];
+
+/* LA LISTE DES UNITÉS DE MESURE */
   List<String> listOfUnities = [
     "g",
     "Kg",
@@ -72,42 +77,31 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
     "Sachet",
     "x",
   ];
-  List<String> listOfMatiere = [
-    "Orange",
-    "Mangue",
-    "Tomate",
-  ];
 
-  String? recetteImage;
-  final _descriptionRecette = TextEditingController();
+/* LE TITRE DE LA RECETTE */
   final _titreRecette = TextEditingController();
 
-  @override
-  void dispose() {
-    _titreRecette.dispose();
-    _descriptionRecette.dispose();
+/* LA DESCRIPTION DE LA RECETTE */
+  final _descriptionRecette = TextEditingController();
 
-    _controller.dispose();
-    super.dispose();
-  }
+/* LE CONTROLLER DE RECHERCHE */
+  final _controller = TextEditingController();
 
+/* CETTE VARIABLE DEVIENT TRUE QUAND UNE RECHERCHE EST EN COURS  */
+  bool search = false;
+
+/* LA LISTE DES MATIERES PREMIERES, DES QUANTITES, DES UNITES DE MESURE*/
   final List<TextEditingController> _matierePremieres = [];
   final List<TextEditingController> _quantite = [];
   final List<TextEditingController> _uniteDeMesure = [];
 
+/*LA CLE DU FORMULAIRE*/
   final _formkey = GlobalKey<FormState>();
 
-  int ingredientindex = 0;
-  bool ingredientbool = false;
+/*LA LISTE QUI CONTIENT LE CONTENU DE LA RECHERCHE*/
+  List<Recette> recetteSearch = [];
 
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _addFiel();
-    });
-    super.initState();
-  }
-
+/*LA METHODE QUI PERMET D'AJOUTER UN INGREDIENT */
   _addFiel() {
     setState(() {
       _matierePremieres.add(TextEditingController());
@@ -116,6 +110,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
     });
   }
 
+/*LA METHODE QUI PERMET DE SUPPRIMER UN INGREDIENT */
   _removeItem(i) {
     setState(() {
       _matierePremieres.removeAt(i);
@@ -124,6 +119,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
     });
   }
 
+/*LA METHODE QUI PERMET D' EFFACER LES TEXTFORMFIELDS ET LES INGREDIENTS*/
   _clear() {
     setState(() {
       _matierePremieres.clear();
@@ -135,6 +131,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
     });
   }
 
+/*LA METHODE QUI PERMET DE SOUMETTRE LE CONTENU DU FORMULAIRE */
   void _submit() {
     final isValid = _formkey.currentState!.validate();
     if (!isValid) {
@@ -171,7 +168,6 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
       _clear();
       setState(() {
         _selectFile = false;
-        recetteImage = null;
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
           _addFiel();
         });
@@ -179,9 +175,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
     }
   }
 
-  bool search = false;
-  final _controller = TextEditingController();
-  List<Recette> recetteSearch = [];
+/*LA METHODE QUI PERMET DE FAIRE LA RECHERCHE*/
   void filterRecetteResults(String query) {
     final viewRecetteModel = ref.watch(getDataRecettesFuture);
     List<Recette> dummySearchList = [];
@@ -209,7 +203,14 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
     }
   }
 
-  // ************************** //
+/*EFFACER CES VARIABLES DE LA MEMOIRE SI ELLES NE SONT PAS UTILISEES */
+  @override
+  void dispose() {
+    _titreRecette.dispose();
+    _descriptionRecette.dispose();
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -244,351 +245,383 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
         child: Column(
           children: [
             if (!_showContent)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 10.0,
+              /*LA BARRE JAUNE HAUTE*/
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                alignment: Alignment.center,
+                height: 80,
+                color: Palette.yellowColor,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Gestion des Recettes',
                     ),
-                    height: 50.0,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        setState(() {
-                          _showContent = !_showContent;
-                          ingredientbool = false;
-                        });
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Palette.primaryColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 10.0,
+                      ),
+                      height: 50.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          setState(() {
+                            _showContent = !_showContent;
+                            WidgetsBinding.instance
+                                .addPostFrameCallback((timeStamp) {
+                              _addFiel();
+                            });
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Palette.primaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
                         ),
-                      ),
-                      icon: const Icon(
-                        Icons.add,
-                        color: Palette.primaryBackgroundColor,
-                      ),
-                      label: const Text(
-                        " AJOUTER UNE RECETTE",
-                        style: TextStyle(
-                          fontSize: 12,
+                        icon: const Icon(
+                          Icons.add,
                           color: Palette.primaryBackgroundColor,
                         ),
+                        label: const Text(
+                          " AJOUTER UNE RECETTE",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Palette.primaryBackgroundColor,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            const SizedBox(height: 20),
             _showContent
-                ? Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: getProportionateScreenWidth(50.0),
-                    ),
-                    child: Form(
-                      key: _formkey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          /* TEXTFORMFIELD DU TITRE DE LA RECETTE*/
-                          TextFormField(
-                            controller: _titreRecette,
-                            textInputAction: TextInputAction.next,
-                            autocorrect: true,
-                            textCapitalization: TextCapitalization.characters,
-                            enableSuggestions: false,
-                            onEditingComplete: (() =>
-                                FocusScope.of(context).requestFocus()),
-                            keyboardType: TextInputType.name,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Le titre de la recette est obligatoire !";
-                              } else if (value.length < 2) {
-                                return "Entrez au moins 2 caractères !";
-                              }
-                              return null;
-                            },
-                            decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                                vertical: 00.0,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                gapPadding: 10,
-                              ),
-                              hintText: "Le titre de la recette",
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-
-                          /* TEXTFORMFIELD DE LA DESCRIPTION DE LA RECETTE*/
-                          TextFormField(
-                            controller: _descriptionRecette,
-                            textInputAction: TextInputAction.next,
-                            autocorrect: true,
-                            textCapitalization: TextCapitalization.characters,
-                            enableSuggestions: false,
-                            onEditingComplete: (() =>
-                                FocusScope.of(context).requestFocus()),
-                            keyboardType: TextInputType.name,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Le titre de la recette est obligatoire !";
-                              } else if (value.length < 50) {
-                                return "Entrez au moins 50 caractères !";
-                              }
-                              return null;
-                            },
-                            minLines: 3,
-                            maxLines: 6,
-                            decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                                vertical: 20.0,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                gapPadding: 10,
-                              ),
-                              hintText: "La description de la recette",
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-
-                          /* ENSEMBLE DES INGRÉDIENTS */
-
-                          Column(
+                /*LE FORMULAIRE DE CREATION DE RECETTE*/
+                ? Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        alignment: Alignment.centerLeft,
+                        height: 80,
+                        color: Palette.yellowColor,
+                        child: const Text(
+                          'Créer une Recette',
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: getProportionateScreenWidth(50.0),
+                        ),
+                        child: Form(
+                          key: _formkey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              for (int i = 0; i < _matierePremieres.length; i++)
-                                Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        InkWell(
-                                          child:
-                                              const Icon(Icons.remove_circle),
-                                          onTap: () {
-                                            _removeItem(i);
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        /* MATIÈRE PREMIÈRE */
-                                        Expanded(
-                                          flex: 3,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(2),
-                                            child: Container(
-                                              color: Palette
-                                                  .secondaryBackgroundColor,
-                                              child: DropdownButtonFormField(
-                                                hint: const Text(
-                                                  'Matière Première*',
-                                                ),
-                                                validator: (value) {
-                                                  if (value == null) {
-                                                    return "Le nom de la matière première est obligatoire.";
-                                                  } else {
-                                                    return null;
-                                                  }
-                                                },
-                                                decoration: InputDecoration(
-                                                  border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.0),
-                                                  ),
-                                                ),
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _matierePremieres[i].text =
-                                                        value.toString();
-                                                  });
-                                                },
-                                                onSaved: (value) {
-                                                  setState(() {
-                                                    _matierePremieres[i].text =
-                                                        value.toString();
-                                                  });
-                                                },
-                                                items: viewModel.listMatiere
-                                                    .map((val) {
-                                                  return DropdownMenuItem(
-                                                    value: val.sId,
-                                                    child: Text(
-                                                      val.mpName!,
-                                                    ),
-                                                  );
-                                                }).toList(),
-                                                // items: listOfMatiere
-                                                //     .map((String val) {
-                                                //   return DropdownMenuItem(
-                                                //     value: val,
-                                                //     child: Text(
-                                                //       val,
-                                                //     ),
-                                                //   );
-                                                // }).toList(),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 20),
-
-                                        /* QUANTITÉ */
-                                        Expanded(
-                                          flex: 1,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(2),
-                                            child: TextFormField(
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              controller: _quantite[i],
-                                              validator: (value) {
-                                                if (value!.isEmpty) {
-                                                  return "La quantité est obligatoire !";
-                                                } else if (value == "0") {
-                                                  return "La quantité doit être supérieur a zéro minute !";
-                                                }
-                                                return null;
-                                              },
-                                              inputFormatters: <
-                                                  TextInputFormatter>[
-                                                FilteringTextInputFormatter
-                                                    .allow(RegExp(r'[0-9]')),
-                                              ],
-                                              decoration: InputDecoration(
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10.0),
-                                                ),
-                                                hintText: "Quantité*",
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 20),
-
-                                        /* UNITE DE MESURE */
-                                        Expanded(
-                                          flex: 2,
-                                          child: Container(
-                                            color: Palette
-                                                .secondaryBackgroundColor,
-                                            child: DropdownButtonFormField(
-                                              hint: const Text(
-                                                'Unité*',
-                                              ),
-                                              validator: (value) {
-                                                if (value == null) {
-                                                  return "L ' Unité de mésure est obligatoire.";
-                                                } else {
-                                                  return null;
-                                                }
-                                              },
-                                              decoration: InputDecoration(
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10.0),
-                                                ),
-                                              ),
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  _uniteDeMesure[i].text =
-                                                      value.toString();
-                                                });
-                                              },
-                                              onSaved: (value) {
-                                                setState(() {
-                                                  _uniteDeMesure[i].text =
-                                                      value.toString();
-                                                });
-                                              },
-                                              items: listOfUnities
-                                                  .map((String val) {
-                                                return DropdownMenuItem(
-                                                  value: val,
-                                                  child: Text(
-                                                    val,
-                                                  ),
-                                                );
-                                              }).toList(),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 20),
-                                  ],
+                              /* TEXTFORMFIELD DU TITRE DE LA RECETTE*/
+                              TextFormField(
+                                controller: _titreRecette,
+                                textInputAction: TextInputAction.next,
+                                autocorrect: true,
+                                textCapitalization:
+                                    TextCapitalization.characters,
+                                enableSuggestions: false,
+                                onEditingComplete: (() =>
+                                    FocusScope.of(context).requestFocus()),
+                                keyboardType: TextInputType.name,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "Le titre de la recette est obligatoire !";
+                                  } else if (value.length < 2) {
+                                    return "Entrez au moins 2 caractères !";
+                                  }
+                                  return null;
+                                },
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                    vertical: 00.0,
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    gapPadding: 10,
+                                  ),
+                                  hintText: "Le titre de la recette",
                                 ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Container(
-                                color: Palette.secondaryBackgroundColor,
-                                child: GestureDetector(
-                                  onTap: () async {
-                                    recetteImage = null;
-                                    result = await FilePicker.platform
-                                        .pickFiles(
-                                            type: FileType.custom,
-                                            allowedExtensions: [
-                                          "png",
-                                          "jpg",
-                                          "jpeg",
-                                        ]);
-                                    if (result != null) {
-                                      setState(() {
-                                        file = result!.files.single;
+                              ),
+                              const SizedBox(height: 20),
 
-                                        Uint8List fileBytes = result!
-                                            .files.single.bytes as Uint8List;
+                              /* TEXTFORMFIELD DE LA DESCRIPTION DE LA RECETTE*/
+                              TextFormField(
+                                controller: _descriptionRecette,
+                                textInputAction: TextInputAction.next,
+                                autocorrect: true,
+                                textCapitalization:
+                                    TextCapitalization.characters,
+                                enableSuggestions: false,
+                                onEditingComplete: (() =>
+                                    FocusScope.of(context).requestFocus()),
+                                keyboardType: TextInputType.name,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "Le titre de la recette est obligatoire !";
+                                  } else if (value.length < 50) {
+                                    return "Entrez au moins 50 caractères !";
+                                  }
+                                  return null;
+                                },
+                                minLines: 3,
+                                maxLines: 6,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                    vertical: 20.0,
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    gapPadding: 10,
+                                  ),
+                                  hintText: "La description de la recette",
+                                ),
+                              ),
+                              const SizedBox(height: 20),
 
-                                        _selectedFile = fileBytes;
+                              /* ENSEMBLE DES INGRÉDIENTS */
 
-                                        filee = true;
+                              Column(
+                                children: [
+                                  for (int i = 0;
+                                      i < _matierePremieres.length;
+                                      i++)
+                                    Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            InkWell(
+                                              child: const Icon(
+                                                  Icons.remove_circle),
+                                              onTap: () {
+                                                _removeItem(i);
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            /* MATIÈRE PREMIÈRE */
+                                            Expanded(
+                                              flex: 3,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(2),
+                                                child: Container(
+                                                  color: Palette
+                                                      .secondaryBackgroundColor,
+                                                  child:
+                                                      DropdownButtonFormField(
+                                                    hint: const Text(
+                                                      'Matière Première*',
+                                                    ),
+                                                    validator: (value) {
+                                                      if (value == null) {
+                                                        return "Le nom de la matière première est obligatoire.";
+                                                      } else {
+                                                        return null;
+                                                      }
+                                                    },
+                                                    decoration: InputDecoration(
+                                                      border:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.0),
+                                                      ),
+                                                    ),
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        _matierePremieres[i]
+                                                                .text =
+                                                            value.toString();
+                                                      });
+                                                    },
+                                                    onSaved: (value) {
+                                                      setState(() {
+                                                        _matierePremieres[i]
+                                                                .text =
+                                                            value.toString();
+                                                      });
+                                                    },
+                                                    items: viewModel.listMatiere
+                                                        .map((val) {
+                                                      return DropdownMenuItem(
+                                                        value: val.sId,
+                                                        child: Text(
+                                                          val.mpName!,
+                                                        ),
+                                                      );
+                                                    }).toList(),
+                                                    // items: listOfMatiere
+                                                    //     .map((String val) {
+                                                    //   return DropdownMenuItem(
+                                                    //     value: val,
+                                                    //     child: Text(
+                                                    //       val,
+                                                    //     ),
+                                                    //   );
+                                                    // }).toList(),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 20),
 
-                                        selectedImageInBytes =
-                                            result!.files.first.bytes;
-                                        _selectFile = true;
-                                      });
-                                    }
-                                  },
-                                  child: Container(
-                                    width: 100,
-                                    height: 100,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        width: 1,
-                                        color: const Color(0xFFDCE0E0),
-                                      ),
-                                      borderRadius: BorderRadius.circular(20),
+                                            /* QUANTITÉ */
+                                            Expanded(
+                                              flex: 1,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(2),
+                                                child: TextFormField(
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  controller: _quantite[i],
+                                                  validator: (value) {
+                                                    if (value!.isEmpty) {
+                                                      return "La quantité est obligatoire !";
+                                                    } else if (value == "0") {
+                                                      return "La quantité doit être supérieur a zéro minute !";
+                                                    }
+                                                    return null;
+                                                  },
+                                                  inputFormatters: <
+                                                      TextInputFormatter>[
+                                                    FilteringTextInputFormatter
+                                                        .allow(
+                                                            RegExp(r'[0-9]')),
+                                                  ],
+                                                  decoration: InputDecoration(
+                                                    border: OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10.0),
+                                                    ),
+                                                    hintText: "Quantité*",
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 20),
+
+                                            /* UNITE DE MESURE */
+                                            Expanded(
+                                              flex: 2,
+                                              child: Container(
+                                                color: Palette
+                                                    .secondaryBackgroundColor,
+                                                child: DropdownButtonFormField(
+                                                  hint: const Text(
+                                                    'Unité*',
+                                                  ),
+                                                  validator: (value) {
+                                                    if (value == null) {
+                                                      return "L ' Unité de mésure est obligatoire.";
+                                                    } else {
+                                                      return null;
+                                                    }
+                                                  },
+                                                  decoration: InputDecoration(
+                                                    border: OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10.0),
+                                                    ),
+                                                  ),
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      _uniteDeMesure[i].text =
+                                                          value.toString();
+                                                    });
+                                                  },
+                                                  onSaved: (value) {
+                                                    setState(() {
+                                                      _uniteDeMesure[i].text =
+                                                          value.toString();
+                                                    });
+                                                  },
+                                                  items: listOfUnities
+                                                      .map((String val) {
+                                                    return DropdownMenuItem(
+                                                      value: val,
+                                                      child: Text(
+                                                        val,
+                                                      ),
+                                                    );
+                                                  }).toList(),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 20),
+                                      ],
                                     ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(16),
-                                      child: recetteImage != null
-                                          ? Image.asset(
-                                              recetteImage!,
-                                              fit: BoxFit.fill,
-                                            )
-                                          : _selectFile == false
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Container(
+                                    color: Palette.secondaryBackgroundColor,
+                                    child: GestureDetector(
+                                      onTap: () async {
+                                        result = await FilePicker.platform
+                                            .pickFiles(
+                                                type: FileType.custom,
+                                                allowedExtensions: [
+                                              "png",
+                                              "jpg",
+                                              "jpeg",
+                                            ]);
+                                        if (result != null) {
+                                          setState(() {
+                                            // file = result!.files.single;
+
+                                            Uint8List fileBytes = result!.files
+                                                .single.bytes as Uint8List;
+
+                                            _selectedFile = fileBytes;
+
+                                            // filee = true;
+
+                                            selectedImageInBytes =
+                                                result!.files.first.bytes;
+                                            _selectFile = true;
+                                          });
+                                        }
+                                      },
+                                      child: Container(
+                                        width: 100,
+                                        height: 100,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            width: 1,
+                                            color: const Color(0xFFDCE0E0),
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                          child: _selectFile == false
                                               ? const Icon(
                                                   Icons.camera_alt_outlined,
                                                   color: Color(0xFFDCE0E0),
@@ -600,63 +633,68 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                                       selectedImageInBytes!,
                                                       fit: BoxFit.fill,
                                                     ),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
+                                  const Spacer(),
+                                  SizedBox(
+                                    width: 200,
+                                    child: DefaultButton(
+                                      color: Palette.yellowColor,
+                                      foreground: Colors.transparent,
+                                      text: 'AJOUTER INGRÉDIENT',
+                                      textcolor: Palette.primaryBackgroundColor,
+                                      onPressed: () {
+                                        _addFiel();
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  SizedBox(
+                                    width: 200,
+                                    child: DefaultButton(
+                                      color: Palette.primaryColor,
+                                      foreground: Colors.transparent,
+                                      text: 'ENREGISTRER',
+                                      textcolor: Palette.primaryBackgroundColor,
+                                      onPressed: () {
+                                        _submit();
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  SizedBox(
+                                    width: 200,
+                                    child: DefaultButton(
+                                      color: Palette.secondaryBackgroundColor,
+                                      foreground: Colors.transparent,
+                                      text: 'ANNULER',
+                                      textcolor: Palette.textsecondaryColor,
+                                      onPressed: () {
+                                        setState(() {
+                                          _selectFile = false;
+                                          _showContent = !_showContent;
+                                          _clear();
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
-                              const Spacer(),
-                              SizedBox(
-                                width: 200,
-                                child: DefaultButton(
-                                  color: Palette.yellowColor,
-                                  foreground: Colors.transparent,
-                                  text: 'AJOUTER INGRÉDIENT',
-                                  textcolor: Palette.primaryBackgroundColor,
-                                  onPressed: () {
-                                    _addFiel();
-                                  },
-                                ),
-                              ),
-                              const SizedBox(width: 20),
-                              SizedBox(
-                                width: 200,
-                                child: DefaultButton(
-                                  color: Palette.primaryColor,
-                                  foreground: Colors.transparent,
-                                  text: 'ENREGISTRER',
-                                  textcolor: Palette.primaryBackgroundColor,
-                                  onPressed: () {
-                                    _submit();
-                                  },
-                                ),
-                              ),
-                              const SizedBox(width: 20),
-                              SizedBox(
-                                width: 200,
-                                child: DefaultButton(
-                                  color: Palette.secondaryBackgroundColor,
-                                  foreground: Colors.transparent,
-                                  text: 'ANNULER',
-                                  textcolor: Palette.textsecondaryColor,
-                                  onPressed: () {
-                                    _clear();
-                                    setState(() {
-                                      _selectFile = false;
-                                      recetteImage = null;
-                                      _showContent = !_showContent;
-                                    });
-                                  },
-                                ),
-                              ),
+                              const SizedBox(height: 20),
                             ],
                           ),
-                          const SizedBox(height: 20),
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
                   )
+
+                /*LA BARRE DE RECHERCHE ET LES RECETTES*/
                 : Column(
                     children: [
+                      const SizedBox(height: 20),
+                      /*LA BARRE DE RECHERCHE*/
                       Padding(
                         padding: const EdgeInsets.only(
                           bottom: 20,
@@ -690,6 +728,8 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                           ),
                         ),
                       ),
+
+                      /*SI LA LISTE DES RECETTES EST VIDE AFFICHER AUCUNE RECETTE TROUVEE*/
                       viewRecetteModel.listRecette.isEmpty
                           ? Padding(
                               padding: EdgeInsets.symmetric(
@@ -697,17 +737,19 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                               ),
                               child: Center(
                                 child: Text(
-                                  'No products found',
+                                  'Aucune recette trouvée',
                                   style: Theme.of(context)
                                       .textTheme
                                       .headlineMedium,
                                 ),
                               ),
                             )
+                          /*SI NOUS AVONS DES RECETTES*/
                           : Padding(
                               padding: EdgeInsets.symmetric(
                                 horizontal: getProportionateScreenWidth(50.0),
                               ),
+                              /*SI NOUS FAISONS UNE RECHERCHE DE RECETTE*/
                               child: search == false
                                   ? ProductsLayoutGrid(
                                       itemCount:
@@ -734,7 +776,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                                           Radius.circular(15),
                                                     ),
                                                     child: Image.network(
-                                                      "http://192.168.10.110:4010${recette.image}",
+                                                      'http://192.168.11.110:4010${recette.image}',
                                                       height: 180,
                                                       width: double.infinity,
                                                       fit: BoxFit.cover,
@@ -1047,7 +1089,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
   }
 
   Widget verticalView(double height, double width, context) {
-    final viewModel = ref.watch(categorie.getDataCategoriesFuture);
+    final viewModel = ref.watch(getDataCategoriesFuture);
     final viewRecetteModel = ref.watch(getDataRecettesFuture);
     return AppLayout(
       content: Container(),
@@ -1180,7 +1222,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                     deleteRecette(context, recetteId);
                     Navigator.pop(con);
                   },
-                  label: const Text("SupprimeDDr."),
+                  label: const Text("Supprimer."),
                 )
               ],
               content: Container(
