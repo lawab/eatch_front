@@ -39,14 +39,16 @@ class _NavigationState extends State<Navigation> {
   Future ind() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //if(prefs.getInt('index').toInt().is)
-    setState(() {
-      if (prefs.getInt('index') != null) {
-        int aa = prefs.getInt('index')!.toInt();
-        index = aa;
-      } else {
-        index = 0;
-      }
-    });
+    setState(
+      () {
+        if (prefs.getInt('index') != null) {
+          int aa = prefs.getInt('index')!.toInt();
+          index = aa;
+        } else {
+          index = 0;
+        }
+      },
+    );
   }
 
   @override
@@ -62,10 +64,12 @@ class _NavigationState extends State<Navigation> {
           onPress: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
 
-            setState(() {
-              index = 0;
-              prefs.setInt('index', index);
-            });
+            setState(
+              () {
+                index = 0;
+                prefs.setInt('index', index);
+              },
+            );
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -82,10 +86,12 @@ class _NavigationState extends State<Navigation> {
           selectedIndex: 1,
           onPress: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
-            setState(() {
-              index = 1;
-              prefs.setInt('index', index);
-            });
+            setState(
+              () {
+                index = 1;
+                prefs.setInt('index', index);
+              },
+            );
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -102,10 +108,12 @@ class _NavigationState extends State<Navigation> {
           selectedIndex: 2,
           onPress: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
-            setState(() {
-              index = 2;
-              prefs.setInt('index', index);
-            });
+            setState(
+              () {
+                index = 2;
+                prefs.setInt('index', index);
+              },
+            );
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -121,10 +129,12 @@ class _NavigationState extends State<Navigation> {
           selectedIndex: 3,
           onPress: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
-            setState(() {
-              index = 3;
-              prefs.setInt('index', index);
-            });
+            setState(
+              () {
+                index = 3;
+                prefs.setInt('index', index);
+              },
+            );
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -140,10 +150,12 @@ class _NavigationState extends State<Navigation> {
           selectedIndex: 4,
           onPress: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
-            setState(() {
-              index = 4;
-              prefs.setInt('index', index);
-            });
+            setState(
+              () {
+                index = 4;
+                prefs.setInt('index', index);
+              },
+            );
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -159,10 +171,12 @@ class _NavigationState extends State<Navigation> {
           selectedIndex: 5,
           onPress: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
-            setState(() {
-              index = 5;
-              prefs.setInt('index', index);
-            });
+            setState(
+              () {
+                index = 5;
+                prefs.setInt('index', index);
+              },
+            );
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -178,10 +192,12 @@ class _NavigationState extends State<Navigation> {
           selectedIndex: 6,
           onPress: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
-            setState(() {
-              index = 6;
-              prefs.setInt('index', index);
-            });
+            setState(
+              () {
+                index = 6;
+                prefs.setInt('index', index);
+              },
+            );
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -197,10 +213,12 @@ class _NavigationState extends State<Navigation> {
           selectedIndex: 7,
           onPress: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
-            setState(() {
-              index = 7;
-              prefs.setInt('index', index);
-            });
+            setState(
+              () {
+                index = 7;
+                prefs.setInt('index', index);
+              },
+            );
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -216,10 +234,12 @@ class _NavigationState extends State<Navigation> {
           selectedIndex: 8,
           onPress: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
-            setState(() {
-              index = 8;
-              prefs.setInt('index', index);
-            });
+            setState(
+              () {
+                index = 8;
+                prefs.setInt('index', index);
+              },
+            );
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -235,10 +255,12 @@ class _NavigationState extends State<Navigation> {
           selectedIndex: 9,
           onPress: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
-            setState(() {
-              index = 9;
-              prefs.setInt('index', 0);
-            });
+            setState(
+              () {
+                index = 9;
+                prefs.setInt('index', 0);
+              },
+            );
             deconnexionUser(context);
           },
         ),

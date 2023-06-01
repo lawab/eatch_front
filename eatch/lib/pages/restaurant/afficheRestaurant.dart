@@ -188,7 +188,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   image: DecorationImage(
                                       opacity: 150,
                                       image: NetworkImage(
-                                          'http://13.39.81.126:4002${listRsetaurant[index].infos!.logo.toString()}'),
+                                          'http://192.168.11.110:4002${listRsetaurant[index].infos!.logo.toString()}'), //13.39.81.126:4002
                                       fit: BoxFit.cover),
                                 ),
                               ),
@@ -412,7 +412,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   image: DecorationImage(
                                       opacity: 150,
                                       image: NetworkImage(
-                                          'http://13.39.81.126:4002${listRsetaurant[index].infos!.logo.toString()}'),
+                                          'http://192.168.11.110:4002${listRsetaurant[index].infos!.logo.toString()}'),
                                       //image: AssetImage('Logo_Eatch_png.png'),
                                       fit: BoxFit.cover),
                                 ),

@@ -120,7 +120,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
               ? Container(
                   alignment: Alignment.centerRight,
                   height: 80,
-                  color: const Color(0xFFFCEBD1),
+                  color: Palette.yellowColor,
                   child: Row(
                     children: [
                       const SizedBox(
@@ -464,7 +464,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                   ),
                 ),
           const SizedBox(
-            height: 5,
+            height: 30,
           ),
           SizedBox(
             height: ajout == false ? height - 175 : height - 400,
@@ -552,8 +552,9 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                                 icon: const Icon(Icons.delete),
                                 label: const Text('Supprimer'),
                                 style: ElevatedButton.styleFrom(
-                                    backgroundColor: Palette.deleteColors,
-                                    minimumSize: Size(width, 50)),
+                                  backgroundColor: Palette.deleteColors,
+                                  minimumSize: Size(width, 50),
+                                ),
                               )
                             ],
                           ),
@@ -918,98 +919,99 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
           height: ajout == true ? height - 465 : height - 245, //85,
           width: width - 20,
           child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 200,
-                  childAspectRatio: 3 / 2,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 50,
-                  mainAxisExtent: 300),
-              itemCount: matiere.length,
-              itemBuilder: (BuildContext ctx, index) {
-                return Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(15.0),
-                    image: DecorationImage(
-                        opacity: 50,
-                        image: NetworkImage(
-                            "http://192.168.11.110:4008${matiere[index].image!}"),
-                        fit: BoxFit.cover),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        matiere[index].mpName!,
-                        style: GoogleFonts.raleway().copyWith(
-                            fontSize: 30,
-                            color: Colors.white,
-                            fontWeight: FontWeight.normal),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'Initiale: ${matiere[index].quantity.toString()} ${matiere[index].unity!}',
-                        style: GoogleFonts.raleway().copyWith(
-                            fontSize: 15,
-                            color: Colors.white,
-                            fontWeight: FontWeight.normal),
-                      ),
-                      Text(
-                        'Consommation: ${matiere[index].consumerQuantity.toString()} ${matiere[index].unity!}',
-                        style: GoogleFonts.raleway().copyWith(
-                            fontSize: 15,
-                            color: Colors.white,
-                            fontWeight: FontWeight.normal),
-                      ),
-                      Text(
-                        'Reste: ${(matiere[index].quantity! - matiere[index].consumerQuantity!).toString()} ${matiere[index].unity!}',
-                        style: GoogleFonts.raleway().copyWith(
-                            fontSize: 15,
-                            color: Colors.white,
-                            fontWeight: FontWeight.normal),
-                      ),
-                      Expanded(child: Container()),
-                      SizedBox(
-                        height: 100,
-                        child: Column(
-                          children: [
-                            ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: Size(width, 50),
-                                backgroundColor: Palette.secondaryColor,
-                              ),
-                              onPressed: (() {
-                                dialogModif(
-                                    context,
-                                    matiere[index].mpName!,
-                                    matiere[index].quantity!,
-                                    matiere[index].unity!,
-                                    matiere[index].sId!);
-                              }),
-                              icon: const Icon(Icons.edit),
-                              label: const Text('Modifier'),
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 200,
+                childAspectRatio: 3 / 2,
+                crossAxisSpacing: 20,
+                mainAxisSpacing: 50,
+                mainAxisExtent: 300),
+            itemCount: matiere.length,
+            itemBuilder: (BuildContext ctx, index) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(15.0),
+                  image: DecorationImage(
+                      opacity: 50,
+                      image: NetworkImage(
+                          "http://192.168.11.110:4008${matiere[index].image!}"),
+                      fit: BoxFit.cover),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      matiere[index].mpName!,
+                      style: GoogleFonts.raleway().copyWith(
+                          fontSize: 30,
+                          color: Colors.white,
+                          fontWeight: FontWeight.normal),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Initiale: ${matiere[index].quantity.toString()} ${matiere[index].unity!}',
+                      style: GoogleFonts.raleway().copyWith(
+                          fontSize: 15,
+                          color: Colors.white,
+                          fontWeight: FontWeight.normal),
+                    ),
+                    Text(
+                      'Consommation: ${matiere[index].consumerQuantity.toString()} ${matiere[index].unity!}',
+                      style: GoogleFonts.raleway().copyWith(
+                          fontSize: 15,
+                          color: Colors.white,
+                          fontWeight: FontWeight.normal),
+                    ),
+                    Text(
+                      'Reste: ${(matiere[index].quantity! - matiere[index].consumerQuantity!).toString()} ${matiere[index].unity!}',
+                      style: GoogleFonts.raleway().copyWith(
+                          fontSize: 15,
+                          color: Colors.white,
+                          fontWeight: FontWeight.normal),
+                    ),
+                    Expanded(child: Container()),
+                    SizedBox(
+                      height: 100,
+                      child: Column(
+                        children: [
+                          ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: Size(width, 50),
+                              backgroundColor: Palette.secondaryColor,
                             ),
-                            ElevatedButton.icon(
-                              onPressed: (() {
-                                dialogDelete(matiere[index].mpName!,
-                                    matiere[index].sId!);
-                              }),
-                              icon: const Icon(Icons.delete),
-                              label: const Text('Supprimer'),
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Palette.deleteColors,
-                                  minimumSize: Size(width, 50)),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              }),
+                            onPressed: (() {
+                              dialogModif(
+                                  context,
+                                  matiere[index].mpName!,
+                                  matiere[index].quantity!,
+                                  matiere[index].unity!,
+                                  matiere[index].sId!);
+                            }),
+                            icon: const Icon(Icons.edit),
+                            label: const Text('Modifier'),
+                          ),
+                          ElevatedButton.icon(
+                            onPressed: (() {
+                              dialogDelete(
+                                  matiere[index].mpName!, matiere[index].sId!);
+                            }),
+                            icon: const Icon(Icons.delete),
+                            label: const Text('Supprimer'),
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Palette.deleteColors,
+                                minimumSize: Size(width, 50)),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ],
     ));
@@ -1017,74 +1019,13 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
 
   Future dialogDelete(String nom, String idMatiere) {
     return showDialog(
-        context: context,
-        builder: (con) {
-          return AlertDialog(
-              backgroundColor: Colors.white,
-              title: const Center(
-                child: Text(
-                  "Confirmez la suppression",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'HelveticaNeue',
-                  ),
-                ),
-              ),
-              actions: [
-                ElevatedButton.icon(
-                    icon: const Icon(
-                      Icons.close,
-                      size: 14,
-                    ),
-                    style:
-                        ElevatedButton.styleFrom(backgroundColor: Colors.grey),
-                    onPressed: () {
-                      Navigator.of(con, rootNavigator: true).pop();
-                    },
-                    label: const Text("Quitter   ")),
-                const SizedBox(
-                  width: 20,
-                ),
-                ElevatedButton.icon(
-                    icon: const Icon(
-                      Icons.delete,
-                      size: 14,
-                    ),
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Palette.deleteColors),
-                    onPressed: () {
-                      deleteMatierePremiere(context, idMatiere);
-                      Navigator.of(con, rootNavigator: true).pop();
-                    },
-                    label: const Text("Supprimer."))
-              ],
-              content: Container(
-                  alignment: Alignment.center,
-                  color: Colors.white,
-                  height: 150,
-                  child: Text(
-                    "Voulez vous supprimer $nom ?",
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontFamily: 'HelveticaNeue',
-                    ),
-                  )));
-        });
-  }
-
-  Future dialogModif(BuildContext contextt, String nom, int init, String mesure,
-      String idMatiere) {
-    print('dedans');
-    int count = init;
-    return showDialog(
-        context: contextt,
-        builder: (co) {
-          return AlertDialog(
+      context: context,
+      builder: (con) {
+        return AlertDialog(
             backgroundColor: Colors.white,
             title: const Center(
               child: Text(
-                "Modification",
+                "Confirmez la suppression",
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
@@ -1100,7 +1041,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                   ),
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
                   onPressed: () {
-                    Navigator.of(context, rootNavigator: true).pop();
+                    Navigator.of(con, rootNavigator: true).pop();
                   },
                   label: const Text("Quitter   ")),
               const SizedBox(
@@ -1114,91 +1055,153 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Palette.deleteColors),
                   onPressed: () {
-                    modificationMatierePremiere(
-                        context, nom, count, mesure, idMatiere);
-                    Navigator.of(co, rootNavigator: true).pop();
+                    deleteMatierePremiere(context, idMatiere);
+                    Navigator.of(con, rootNavigator: true).pop();
                   },
-                  label: const Text("Valider."))
+                  label: const Text("Supprimer."))
             ],
-            content: StatefulBuilder(
-                builder: (BuildContext context, StateSetter setState) {
-              return Container(
+            content: Container(
                 alignment: Alignment.center,
                 color: Colors.white,
                 height: 150,
-                child: Column(
-                  children: [
-                    Text(
-                      'Type : $nom',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Text('Stock Initial : $init $mesure'),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      width: 100,
-                      padding: const EdgeInsets.all(3),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: Palette.greenColors),
-                      child: Row(
-                        children: [
-                          InkWell(
-                              onTap: () {
-                                setState(() {
-                                  count--;
-                                });
-                                print(count);
-                              },
-                              child: const Icon(
-                                Icons.remove,
-                                color: Colors.white,
-                                size: 16,
-                              )),
-                          Expanded(
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 3),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 3, vertical: 2),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(3),
-                                  color: Colors.white),
-                              child: Center(
-                                child: Text(
-                                  count.toString(),
-                                  style: const TextStyle(
-                                      color: Colors.black, fontSize: 16),
-                                ),
+                child: Text(
+                  "Voulez vous supprimer $nom ?",
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontFamily: 'HelveticaNeue',
+                  ),
+                )));
+      },
+    );
+  }
+
+  Future dialogModif(BuildContext contextt, String nom, int init, String mesure,
+      String idMatiere) {
+    print('dedans');
+    int count = init;
+    return showDialog(
+      context: contextt,
+      builder: (co) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: const Center(
+            child: Text(
+              "Modification",
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'HelveticaNeue',
+              ),
+            ),
+          ),
+          actions: [
+            ElevatedButton.icon(
+                icon: const Icon(
+                  Icons.close,
+                  size: 14,
+                ),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+                label: const Text("Quitter   ")),
+            const SizedBox(
+              width: 20,
+            ),
+            ElevatedButton.icon(
+                icon: const Icon(
+                  Icons.check,
+                  size: 14,
+                ),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Palette.greenColors),
+                onPressed: () {
+                  modificationMatierePremiere(
+                      context, nom, count, mesure, idMatiere);
+                  Navigator.of(co, rootNavigator: true).pop();
+                },
+                label: const Text("Valider."))
+          ],
+          content: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              alignment: Alignment.center,
+              color: Colors.white,
+              height: 150,
+              child: Column(
+                children: [
+                  Text(
+                    'Type : $nom',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Text('Stock Initial : $init $mesure'),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: 100,
+                    padding: const EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Palette.greenColors),
+                    child: Row(
+                      children: [
+                        InkWell(
+                            onTap: () {
+                              setState(() {
+                                count--;
+                              });
+                              print(count);
+                            },
+                            child: const Icon(
+                              Icons.remove,
+                              color: Colors.white,
+                              size: 16,
+                            )),
+                        Expanded(
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 3),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 3, vertical: 2),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(3),
+                                color: Colors.white),
+                            child: Center(
+                              child: Text(
+                                count.toString(),
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 16),
                               ),
                             ),
                           ),
-                          InkWell(
-                              onTap: () {
-                                setState(() {
-                                  count++;
-                                });
-                              },
-                              child: const Icon(
-                                Icons.add,
-                                color: Colors.white,
-                                size: 16,
-                              )),
-                        ],
-                      ),
+                        ),
+                        InkWell(
+                            onTap: () {
+                              setState(() {
+                                count++;
+                              });
+                            },
+                            child: const Icon(
+                              Icons.add,
+                              color: Colors.white,
+                              size: 16,
+                            )),
+                      ],
                     ),
-                  ],
-                ),
-              );
-            }),
-          );
-        });
+                  ),
+                ],
+              ),
+            );
+          }),
+        );
+      },
+    );
   }
 
-/////////Création de matière premiere
+  /////////Création de matière premiere
   ///
   Future<void> creationMatierePremiere(
     BuildContext context,
@@ -1285,7 +1288,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
     }
   }
 
-  //////////Suppression de produit
+  //////////Suppression de matiere première
   ///
   Future<http.Response> deleteMatierePremiere(
       BuildContext context, String idMatierePremiere) async {
@@ -1339,7 +1342,8 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
     }
   }
 
-///// - Modification de matiere premiere
+  ///// - Modification de matiere premiere
+  ///
   Future<void> modificationMatierePremiere(
     BuildContext context,
     String nomMatierePremiere,

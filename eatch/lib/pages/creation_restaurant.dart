@@ -64,7 +64,6 @@ class CreationRestaurantState extends ConsumerState<CreationRestaurant> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(getDataRsetaurantFuture);
     return Scaffold(
         body: Container(
       color: Palette.secondaryBackgroundColor,
@@ -73,7 +72,7 @@ class CreationRestaurantState extends ConsumerState<CreationRestaurant> {
           Container(
             alignment: Alignment.centerRight,
             height: 50,
-            color: const Color(0xFFFCEBD1),
+            color: Palette.yellowColor,
             child: Row(
               children: [
                 const SizedBox(
