@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:eatch/pages/recettes/eddit_recette.dart';
 import 'package:eatch/pages/recettes/grid.dart';
 import 'package:eatch/servicesAPI/getMatiere.dart';
-import 'package:eatch/servicesAPI/get_categories.dart';
+import 'package:eatch/servicesAPI/get_categories.dart' as categorie;
 import 'package:eatch/servicesAPI/get_recettes.dart';
 import 'package:eatch/servicesAPI/multipart.dart';
 import 'package:eatch/utils/applayout.dart';
@@ -361,6 +361,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                           const SizedBox(height: 20),
 
                           /* ENSEMBLE DES INGRÉDIENTS */
+
                           Column(
                             children: [
                               for (int i = 0; i < _matierePremieres.length; i++)
@@ -1046,7 +1047,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
   }
 
   Widget verticalView(double height, double width, context) {
-    final viewModel = ref.watch(getDataCategoriesFuture);
+    final viewModel = ref.watch(categorie.getDataCategoriesFuture);
     final viewRecetteModel = ref.watch(getDataRecettesFuture);
     return AppLayout(
       content: Container(),

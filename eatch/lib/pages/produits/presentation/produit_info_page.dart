@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:eatch/pages/produits/presentation/modification_produit.dart';
+import 'package:eatch/servicesAPI/get_categories.dart' as Category;
 import 'package:eatch/servicesAPI/get_produits.dart';
 import 'package:eatch/utils/default_button/default_button.dart';
 import 'package:eatch/utils/palettes/palette.dart';
@@ -18,11 +19,17 @@ class Produitpage extends ConsumerStatefulWidget {
     required this.title,
     required this.price,
     required this.sId,
+    required this.category,
+    required this.quantity,
+    // required this.recette,
   });
   final String imageUrl;
   final String title;
+  // final Category.Recette recette;
   final String sId;
   final int price;
+  final int quantity;
+  final Category.Category category;
 
   @override
   ConsumerState<Produitpage> createState() => _ProduitpageState();
@@ -123,6 +130,9 @@ class _ProduitpageState extends ConsumerState<Produitpage> {
                                 imageUrl: widget.imageUrl,
                                 price: widget.price,
                                 title: widget.title,
+                                category: widget.category,
+                                quantity: widget.quantity,
+                                // recette: widget.recette.title!,
                               );
                             }),
                           );

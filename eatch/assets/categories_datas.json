@@ -84,7 +84,51 @@
                 ],
                 "createdAt": "2023-05-26T11: 47: 30.955Z",
                 "updatedAt": "2023-05-26T11: 47: 30.955Z",
-                "__v": 0
+                "__v": 0,
+                "recette":
+                    {
+                        "_id":"6474ac6645a52e481fac4932",
+                        "title":"recette 1",
+                        "image":"/datas/avatar.png",
+                        "description":"description 1",
+                        "engredients":
+                            [
+                                {
+                                    "unity":"g",
+                                    "material":
+                                        {
+                                            "restaurant":
+                                                {
+                                                    "infos":
+                                                        {
+                                                            "town":"casablanca",
+                                                            "address":"casablanca roudani immeuble 20 appt 2",
+                                                            "logo":"/datas/avatar.png"
+                                                        },
+                                                    "restaurant_name":"mon restaurant",
+                                                    "deletedAt":"null",
+                                                    "_id":"6436b51165f56ba483198d19"
+                                                },
+                                            "lifetime":"2023-04-12T13:52:40.266Z",
+                                            "mp_name":"viande",
+                                            "quantity":4,
+                                            "min_quantity":0,
+                                            "deletedAt":"null",
+                                            "_id":"6436b7a8756195df72d0fdfc"
+                                        },
+                                    "grammage":100,
+                                    "_id":"6474ac6645a52e481fac4933"
+                                }
+                            ],
+                        "_creator":"6433e8a9bd4f93d742bb0ee8",
+                        "deletedAt":"null",
+                        "createdAt":"2023-05-29T13:45:10.951Z",
+                        "updatedAt":"2023-05-29T13:45:10.951Z",
+                        "__v":0
+                    }
+                
+                
+
             }
         ]
     }

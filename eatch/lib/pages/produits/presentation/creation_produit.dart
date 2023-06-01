@@ -137,7 +137,6 @@ class CreationProduitState extends ConsumerState<CreationProduit> {
                     const SizedBox(height: 20),
                     produitquantityForm(),
                     const SizedBox(height: 20),
-                    const SizedBox(height: 10),
                     Container(
                       color: Palette.secondaryBackgroundColor,
                       child: DropdownButtonFormField(
@@ -176,6 +175,7 @@ class CreationProduitState extends ConsumerState<CreationProduit> {
                         }).toList(),
                       ),
                     ),
+                    /*
                     Column(
                       children: [
                         for (int i = 0; i < _matierePremieres.length; i++)
@@ -193,6 +193,7 @@ class CreationProduitState extends ConsumerState<CreationProduit> {
                                 ],
                               ),
                               const SizedBox(height: 10),
+                            
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
@@ -248,10 +249,12 @@ class CreationProduitState extends ConsumerState<CreationProduit> {
                                 ],
                               ),
                               const SizedBox(height: 20),
+                            
                             ],
                           ),
                       ],
                     ),
+                      */
                     const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -322,19 +325,19 @@ class CreationProduitState extends ConsumerState<CreationProduit> {
                           ),
                         ),
                         const Spacer(),
-                        SizedBox(
-                          width: 200,
-                          child: DefaultButton(
-                            color: Palette.yellowColor,
-                            foreground: Colors.transparent,
-                            text: 'AJOUTER INGRÉDIENT',
-                            textcolor: Palette.primaryBackgroundColor,
-                            onPressed: () {
-                              _addFiel();
-                            },
-                          ),
-                        ),
-                        const SizedBox(width: 20),
+                        // SizedBox(
+                        //   width: 200,
+                        //   child: DefaultButton(
+                        //     color: Palette.yellowColor,
+                        //     foreground: Colors.transparent,
+                        //     text: 'AJOUTER INGRÉDIENT',
+                        //     textcolor: Palette.primaryBackgroundColor,
+                        //     onPressed: () {
+                        //       _addFiel();
+                        //     },
+                        //   ),
+                        // ),
+                        // const SizedBox(width: 20),
                         SizedBox(
                           width: 200,
                           child: DefaultButton(
@@ -360,11 +363,7 @@ class CreationProduitState extends ConsumerState<CreationProduit> {
                                   _produitPrice,
                                   _productName,
                                   _produitCategorie,
-                                  // "6433e8a9bd4f93d742bb0ee7",
                                   _recette,
-                                  // [
-                                  //   "6436b51165f56ba483198d18",
-                                  // ],
                                 );
                                 // print("nom is $_productName");
                                 // print("Quantity is $_produitQuantity");

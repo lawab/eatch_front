@@ -3,7 +3,7 @@
 import 'dart:convert';
 
 import 'package:eatch/pages/produits/presentation/creation_produit.dart';
-import 'package:eatch/servicesAPI/get_produits.dart';
+import 'package:eatch/servicesAPI/get_produits.dart' as products;
 import 'package:eatch/servicesAPI/multipart.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -129,7 +129,7 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(getDataCategoriesFuture);
-    final viewModelProduit = ref.watch(getDataProduitFuture);
+    final viewModelProduit = ref.watch(products.getDataProduitFuture);
     SizeConfig().init(context);
     return AppLayout(
       content: SingleChildScrollView(
@@ -998,10 +998,12 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userdelete = prefs.getString('IdUser').toString();
+      var restaurantid = prefs.getString('idRestaurant');
       var token = prefs.getString('token');
       String urlDelete = "http://192.168.11.110:4005/api/categories/delete/$id";
       var json = {
         '_creator': userdelete,
+        "restaurant_id": restaurantid!,
       };
       var body = jsonEncode(json);
 

@@ -1,15 +1,15 @@
-import '../domain/produit.dart';
-import 'produits_data.dart';
+// import '../domain/produit.dart';
+// import 'produits_data.dart';
 
-class ProductsRepository {
-  ProductsRepository._();
-  static ProductsRepository instance = ProductsRepository._();
+// class ProductsRepository {
+//   ProductsRepository._();
+//   static ProductsRepository instance = ProductsRepository._();
 
-  final List<Product> _products = productsData;
+//   final List<Product> _products = productsData;
 
-  List<Product> getProductsList() {
-    return _products;
-  }
-}
+//   List<Product> getProductsList() {
+//     return _products;
+//   }
+// }
 
-final productsList = ProductsRepository.instance.getProductsList();
+// final productsList = ProductsRepository.instance.getProductsList();
