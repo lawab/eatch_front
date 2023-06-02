@@ -202,7 +202,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   image: DecorationImage(
                                       opacity: 150,
                                       image: NetworkImage(
-                                          'http://192.168.1.34:4002${listRsetaurant[index].infos!.logo.toString()}'), //13.39.81.126:4002
+                                          'http://192.168.1.26:4002${listRsetaurant[index].infos!.logo.toString()}'), //13.39.81.126:4002
                                       fit: BoxFit.cover),
                                 ),
                               ),
@@ -427,7 +427,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   image: DecorationImage(
                                       opacity: 150,
                                       image: NetworkImage(
-                                          'http://192.168.1.34:4002${listRsetaurant[index].infos!.logo.toString()}'),
+                                          'http://192.168.1.26:4002${listRsetaurant[index].infos!.logo.toString()}'),
                                       //image: AssetImage('Logo_Eatch_png.png'),
                                       fit: BoxFit.cover),
                                 ),
@@ -950,7 +950,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
     var token = prefs.getString('token');
 
     var url = Uri.parse(
-        "http://192.168.1.34:4002/api/restaurants/create"); //13.39.81.126
+        "http://192.168.1.26:4002/api/restaurants/create"); //13.39.81.126
     final request = MultipartRequest(
       'POST',
       url,
@@ -1020,7 +1020,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
-      String urlDelete = "http://192.168.1.34:4002/api/restaurants/delete/$id";
+      String urlDelete = "http://192.168.1.26:4002/api/restaurants/delete/$id";
       //13.39.81.126
 
       final http.Response response =

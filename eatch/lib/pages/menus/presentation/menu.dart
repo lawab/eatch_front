@@ -684,7 +684,7 @@ class _MenuState extends ConsumerState<Menu> {
     //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.1.34:4009/api/menus/create"); // 192.168.1.34:4009
+        "http://192.168.1.26:4009/api/menus/create"); // 192.168.1.26:4009
     final request = MultipartRequest(
       'POST',
       url,

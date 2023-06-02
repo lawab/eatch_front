@@ -12,13 +12,15 @@ Future<http.Response> deconnexionUser(contextt) async {
     var id = prefs.getString('IdUser').toString();
 
     String adressUrl = prefs.getString('ipport').toString();
-    String urlDelete = "http://192.168.1.34:4001/api/users/disconnect/$id";
+    String urlDelete = "http://192.168.1.26:4001/api/users/disconnect/$id";
 
     final http.Response response = await http.put(
       Uri.parse(urlDelete),
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
         'Accept': 'application/json',
+        //'Context-Type': 'application/json;charSet=UTF-8',
+        'Authorization': 'Bearer $token ',
       },
     );
 

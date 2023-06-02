@@ -23,7 +23,7 @@ class GetDataProduitFuture extends ChangeNotifier {
     try {
       http.Response response = await http.get(
         Uri.parse(
-            'http://192.168.1.34:4003/api/products/fetch/categories/$restaurantid'),
+            'http://192.168.1.26:4003/api/products/fetch/categories/$restaurantid'),
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',

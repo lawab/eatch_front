@@ -500,8 +500,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                                     }
                                                     return null;
                                                   },
-                                                  inputFormatters: <
-                                                      TextInputFormatter>[
+                                                  inputFormatters: <TextInputFormatter>[
                                                     FilteringTextInputFormatter
                                                         .allow(
                                                             RegExp(r'[0-9]')),
@@ -776,7 +775,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                                           Radius.circular(15),
                                                     ),
                                                     child: Image.network(
-                                                      'http://192.168.1.34:4010${recette.image}',
+                                                      'http://192.168.1.26:4010${recette.image}',
                                                       height: 180,
                                                       width: double.infinity,
                                                       fit: BoxFit.cover,
@@ -1110,7 +1109,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
     var restaurantid = prefs.getString('idRestaurant');
     String adressUrl = prefs.getString('ipport').toString();
     var url = Uri.parse(
-        "http://192.168.1.34:4010/api/recettes/create"); //13.39.81.126
+        "http://192.168.1.26:4010/api/recettes/create"); //13.39.81.126
     print(url);
     final request = MultipartRequest(
       'POST',
@@ -1243,7 +1242,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userdelete = prefs.getString('IdUser').toString();
       var token = prefs.getString('token');
-      String urlDelete = "http://192.168.1.34:4010/api/recettes/delete/$id";
+      String urlDelete = "http://192.168.1.26:4010/api/recettes/delete/$id";
       var json = {
         '_creator': userdelete,
       };
