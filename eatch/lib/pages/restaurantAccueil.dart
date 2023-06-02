@@ -102,7 +102,7 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
 
                                 image: DecorationImage(
                                     image: NetworkImage(
-                                        'http://192.168.11.110:4002${viewModel.listRsetaurant[index].infos!.logo.toString()}'), //192.168.11.110:4002 //192.168.11.110
+                                        'http://192.168.1.34:4002${viewModel.listRsetaurant[index].infos!.logo.toString()}'), //192.168.1.34:4002 //192.168.1.34
                                     //image: AssetImage('Logo_Eatch_png.png'),
                                     fit: BoxFit.cover),
                               ),
@@ -180,7 +180,7 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
 
                           image: DecorationImage(
                               image: NetworkImage(
-                                  'http://192.168.11.110:4002${viewModel.listRsetaurant[index].info!.logo.toString()}'), //192.168.11.110:4002
+                                  'http://192.168.1.34:4002${viewModel.listRsetaurant[index].info!.logo.toString()}'), //192.168.1.34:4002
                               //image: AssetImage('Logo_Eatch_png.png'),
                               fit: BoxFit.cover),
                         ),

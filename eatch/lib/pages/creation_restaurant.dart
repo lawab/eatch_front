@@ -72,7 +72,7 @@ class CreationRestaurantState extends ConsumerState<CreationRestaurant> {
           Container(
             alignment: Alignment.centerRight,
             height: 50,
-            color: Palette.yellowColor,
+            color: const Color(0xFFFCEBD1),
             child: Row(
               children: [
                 const SizedBox(
@@ -392,7 +392,7 @@ class CreationRestaurantState extends ConsumerState<CreationRestaurant> {
     var token = prefs.getString('token');
 
     var url = Uri.parse(
-        "http://192.168.11.110:4002/api/restaurants/create"); //13.39.81.126 // 192.168.11.110 //192.168.11.110
+        "http://192.168.1.34:4002/api/restaurants/create"); //13.39.81.126 // 192.168.1.34 //192.168.1.34
     final request = MultipartRequest(
       'POST',
       url,

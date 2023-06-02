@@ -8,7 +8,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class Authentification extends StatefulWidget {
   const Authentification({Key? key}) : super(key: key);
 
@@ -648,7 +647,7 @@ class AuthentificationState extends State<Authentification> {
 
     prefs.setString('ipport', adressUrl);
     String url =
-        "http://192.168.11.110:4001/api/users/login"; //13.39.81.126:4001 //192.168.11.110:4001 // $adress_url
+        "http://192.168.1.34:4001/api/users/login"; //13.39.81.126:4001 //192.168.1.34:4001 // $adress_url
     print(url);
     print(email);
     print(pass);

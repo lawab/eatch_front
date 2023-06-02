@@ -30,7 +30,7 @@ class RestaurantDetailState extends State<RestaurantDetail> {
                 image: DecorationImage(
                     opacity: 100,
                     image: NetworkImage(
-                        'http://192.168.11.110:4002${widget.restaurant.infos!.logo.toString()}'),
+                        'http://192.168.1.34:4002${widget.restaurant.infos!.logo.toString()}'),
                     //image: AssetImage('eatch.jpg'),
                     fit: BoxFit.cover),
               ),
@@ -44,9 +44,11 @@ class RestaurantDetailState extends State<RestaurantDetail> {
                   ),
                   onPressed: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const RestaurantAffiche()));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const RestaurantAffiche(),
+                      ),
+                    );
                   },
                 ),
               ),

@@ -485,7 +485,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                       image: DecorationImage(
                           opacity: 50,
                           image: NetworkImage(
-                              "http://192.168.11.110:4008${matiere[index].image!}"), //192.168.11.110
+                              "http://192.168.1.34:4008${matiere[index].image!}"), //192.168.1.34
                           fit: BoxFit.cover),
                     ),
                     child: Column(
@@ -934,7 +934,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                   image: DecorationImage(
                       opacity: 50,
                       image: NetworkImage(
-                          "http://192.168.11.110:4008${matiere[index].image!}"),
+                          "http://192.168.1.34:4008${matiere[index].image!}"),
                       fit: BoxFit.cover),
                 ),
                 child: Column(
@@ -1077,7 +1077,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
 
   Future dialogModif(BuildContext contextt, String nom, int init, String mesure,
       String idMatiere) {
-    print('dedans');
+    //print('dedans');
     int count = init;
     return showDialog(
       context: contextt,
@@ -1221,7 +1221,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
     //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.11.110:4008/api/materials/create"); // 192.168.11.110:4008
+        "http://192.168.1.34:4008/api/materials/create"); // 192.168.1.34:4008
     final request = MultipartRequest(
       'POST',
       url,
@@ -1268,7 +1268,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
         showTopSnackBar(
           Overlay.of(context),
           const CustomSnackBar.info(
-            backgroundColor: Colors.green,
+            backgroundColor: Palette.greenColors,
             message: "La matière première a été crée",
           ),
         );
@@ -1277,7 +1277,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
         showTopSnackBar(
           Overlay.of(context),
           const CustomSnackBar.info(
-            backgroundColor: Colors.red,
+            backgroundColor: Palette.deleteColors,
             message: "La matière première n'a pas été crée",
           ),
         );
@@ -1300,7 +1300,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
 
       var token = prefs.getString('token');
       String urlDelete =
-          "http://192.168.11.110:4008/api/materials/delete/$idMatierePremiere"; // 192.168.11.110:4008 //$adressUrl
+          "http://192.168.1.34:4008/api/materials/delete/$idMatierePremiere"; // 192.168.1.34:4008 //$adressUrl
       //var json = {'_creator': id};
 
       //var body = jsonEncode(json);
@@ -1321,7 +1321,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
         showTopSnackBar(
           Overlay.of(context),
           const CustomSnackBar.info(
-            backgroundColor: Colors.green,
+            backgroundColor: Palette.greenColors,
             message: "La matière première a été supprimée avec succès",
           ),
         );
@@ -1331,7 +1331,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
         showTopSnackBar(
           Overlay.of(context),
           const CustomSnackBar.info(
-            backgroundColor: Colors.green,
+            backgroundColor: Palette.deleteColors,
             message: "La matière première n'a pas été supprimée succès",
           ),
         );
@@ -1358,10 +1358,10 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
     var restaurantId = prefs.getString('idRestaurant').toString();
     var token = prefs.getString('token');
 
-    String adressUrl = prefs.getString('ipport').toString();
+    //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.11.110:4008/api/materials/update/$idModifMatiere"); //$adressUrl
+        "http://192.168.1.34:4008/api/materials/update/$idModifMatiere"); //$adressUrl
     final request = MultipartRequest(
       'PUT',
       url,
