@@ -25,8 +25,8 @@ class GetDataCategoriesFuture extends ChangeNotifier {
     try {
       http.Response response = await http.get(
         Uri.parse(
-            // 'http://192.168.11.110:4005/api/categories/fetch/restaurant/$restaurantid'), //4002
-            'http://192.168.11.110:4003/api/products/fetch/categories/$restaurantid'),
+            // 'http://192.168.1.34:4005/api/categories/fetch/restaurant/$restaurantid'), //4002
+            'http://192.168.1.34:4003/api/products/fetch/categories/$restaurantid'),
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',
@@ -167,7 +167,7 @@ class GetDataCategoriesFuture extends ChangeNotifier {
     try {
       http.Response response = await http.get(
         Uri.parse(
-            'http://192.168.11.110:4005/api/categories/fetch/restaurant/$restaurantId'), //192.168.11.110 //192.168.11.110:4008 //restaurant/$restaurantId
+            'http://192.168.1.34:4005/api/categories/fetch/restaurant/$restaurantId'), //192.168.1.34 //192.168.1.34:4008 //restaurant/$restaurantId
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',
@@ -284,7 +284,7 @@ class GetDataCategoriesFuture extends ChangeNotifier {
     try {
       http.Response response = await http.get(
         Uri.parse(
-            'http://192.168.11.110:4003/api/products/fetch/categories/$restaurantId'), //4002 //products/fetch/categories/$restaurantId
+            'http://192.168.1.34:4003/api/products/fetch/categories/$restaurantId'), //4002 //products/fetch/categories/$restaurantId
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',
@@ -292,6 +292,7 @@ class GetDataCategoriesFuture extends ChangeNotifier {
       );
 
       print(response.statusCode);
+      print('Produit get produit');
       print(response.body);
 
       if (response.statusCode == 200) {

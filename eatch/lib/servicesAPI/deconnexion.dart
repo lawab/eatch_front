@@ -12,7 +12,7 @@ Future<http.Response> deconnexionUser(contextt) async {
     var id = prefs.getString('IdUser').toString();
 
     String adressUrl = prefs.getString('ipport').toString();
-    String urlDelete = "http://192.168.11.110:4001/api/users/disconnect/$id";
+    String urlDelete = "http://192.168.1.34:4001/api/users/disconnect/$id";
 
     final http.Response response = await http.put(
       Uri.parse(urlDelete),

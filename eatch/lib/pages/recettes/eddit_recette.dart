@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:eatch/pages/recettes/recettes.dart';
 import 'package:eatch/servicesAPI/getMatiere.dart';
 import 'package:eatch/servicesAPI/get_recettes.dart';
+import 'package:eatch/servicesAPI/getMatiere.dart' as material;
 import 'package:eatch/servicesAPI/multipart.dart';
 import 'package:eatch/utils/applayout.dart';
 import 'package:eatch/utils/default_button/default_button.dart';
@@ -23,7 +24,7 @@ class EdditRecette extends ConsumerStatefulWidget {
   final String description;
   final String image;
   final String sId;
-  final List<Engredients> ingredients;
+  final List/*<Engredients>*/ ingredients;
   const EdditRecette({
     super.key,
     required this.title,
@@ -54,6 +55,9 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
     return size(buildContext).height;
   }
 
+/* LA LISTE QUI VA CONTENIR LES INGREDIENTS */
+  List<material.Matiere> listmatiere = [];
+
 /* LE LOADING PENDANT LE TÉLÉCHARGEMENT DE L’IMAGE DE LA RECETTE */
   bool isLoading = false;
 
@@ -68,7 +72,8 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
   FilePickerResult? result;
 
 /* LA LISTE DE TOUS LES INGRÉDIENTS QUI SERONT CRÉÉS */
-  List<Ingredient> ingredientsList = [];
+  List/*<Ingredient>*/ ingredientsList = [];
+  List ingredientsListold = [];
 
 /* LA LISTE DES UNITÉS DE MESURE */
   List<String> listOfUnities = [
@@ -94,6 +99,11 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
   final List<TextEditingController> _matierePremieres = [];
   final List<TextEditingController> _quantite = [];
   final List<TextEditingController> _uniteDeMesure = [];
+
+/* LA LISTE DES MATIERES PREMIERES, DES QUANTITES, DES UNITES DE MESURE OLD*/
+  final List<TextEditingController> _matierePremieresold = [];
+  // final List<TextEditingController> _quantite = [];
+  // final List<TextEditingController> _uniteDeMesure = [];
 
 /*LA CLE DU FORMULAIRE*/
   final _formkey = GlobalKey<FormState>();
@@ -130,10 +140,14 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
 
 /*LA METHODE QUI PERMET DE SOUMETTRE LE CONTENU DU FORMULAIRE */
   void _submit() {
+    setState(() {
+      ingredientsListold.addAll(widget.ingredients);
+      ingredientsList.addAll(ingredientsListold);
+    });
     final isValid = _formkey.currentState!.validate();
     if (!isValid) {
       return;
-    } else if (_matierePremieres.length == 0) {
+    } else if (ingredientsList.isEmpty) {
       showTopSnackBar(
         Overlay.of(context)!,
         const CustomSnackBar.info(
@@ -144,13 +158,15 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
     } else {
       _formkey.currentState!.save();
 
+      // ingredientsList.addAll();
+
       for (int i = 0; i < _matierePremieres.length; i++) {
         ingredientsList.add(Ingredient(
           material: _matierePremieres[i].text,
           grammage: _quantite[i].text,
         ));
       }
-      creationRecette(
+      updateRecette(
         context,
         _titreRecette.text,
         _descriptionRecette.text,
@@ -180,19 +196,23 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
     super.dispose();
   }
 
+  /*LA LISTE QUI VA CONTENIR LES ID DES INGREDIENTS*/
+  // List<String> engredientsId = [];
+  // List<String?> idValues = [];
+  bool ingre = false;
+
   @override
   Widget build(BuildContext context) {
+    final viewModel = ref.watch(getDataMatiereFuture);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: LayoutBuilder(
         builder: (context, constraints) {
           if (constraints.maxWidth >= 900) {
             SizeConfig().init(context);
-            return horizontalView(
-              height(context),
-              width(context),
-              context,
-            );
+            return horizontalView(height(context), width(context), context,
+                viewModel.listMatiere);
           } else {
             return verticalView(
               height(context),
@@ -205,9 +225,11 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
     );
   }
 
-  Widget horizontalView(double height, double width, context) {
-    final viewModel = ref.watch(getDataMatiereFuture);
-    final viewRecetteModel = ref.watch(getDataRecettesFuture);
+  Widget horizontalView(
+      double height, double width, context, List<Matiere> listMatieres) {
+    listmatiere.addAll(listMatieres);
+
+    // final viewRecetteModel = ref.watch(getDataRecettesFuture);
     return AppLayout(
       content: SingleChildScrollView(
         /*LE FORMULAIRE DE CREATION DE RECETTE*/
@@ -298,6 +320,330 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
                     ),
                     const SizedBox(height: 20),
 
+                    /* ENSEMBLE DES ANCIENS INGRÉDIENTS */
+                    Column(
+                      children: [
+                        for (int j = 0; j < widget.ingredients.length; j++)
+                          Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  InkWell(
+                                    child: const Icon(Icons.remove_circle),
+                                    onTap: () {
+                                      setState(() {
+                                        widget.ingredients.remove(
+                                          widget.ingredients[j],
+                                        );
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  /* MATIÈRE PREMIÈRE */
+                                  Expanded(
+                                    flex: 3,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(2),
+                                      child: Container(
+                                        color: Palette.secondaryBackgroundColor,
+                                        child: DropdownButtonFormField(
+                                          hint: Text(widget.ingredients[j]
+                                              .material!.mpName!),
+                                          decoration: InputDecoration(
+                                            enabled: false,
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                          ),
+                                          onChanged: null,
+                                          items: listmatiere.map((val) {
+                                            return DropdownMenuItem(
+                                              value: val.sId,
+                                              child: Text(
+                                                val.mpName!,
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+
+                                  /* QUANTITÉ */
+                                  Expanded(
+                                    flex: 1,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(2),
+                                      child: TextFormField(
+                                        initialValue: widget
+                                            .ingredients[j].grammage
+                                            .toString(),
+                                        enabled: false,
+                                        keyboardType: TextInputType.number,
+                                        // validator: (value) {
+                                        //   if (value!.isEmpty) {
+                                        //     return "La quantité est obligatoire !";
+                                        //   } else if (value == "0") {
+                                        //     return "La quantité doit être supérieur a zéro minute !";
+                                        //   }
+                                        //   return null;
+                                        // },
+                                        inputFormatters: <TextInputFormatter>[
+                                          FilteringTextInputFormatter.allow(
+                                              RegExp(r'[0-9]')),
+                                        ],
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                          ),
+                                          hintText: "Quantité*",
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+
+                                  /* UNITE DE MESURE */
+                                  Expanded(
+                                    flex: 2,
+                                    child: Container(
+                                      color: Palette.secondaryBackgroundColor,
+                                      child: DropdownButtonFormField(
+                                        hint: Text(
+                                          widget.ingredients[j].unity!,
+                                        ),
+                                        // validator: (value) {
+                                        //   if (value == null) {
+                                        //     return "L ' Unité de mésure est obligatoire.";
+                                        //   } else {
+                                        //     return null;
+                                        //   }
+                                        // },
+                                        decoration: InputDecoration(
+                                          enabled: false,
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                          ),
+                                        ),
+                                        onChanged: null,
+                                        items: listOfUnities.map((String val) {
+                                          return DropdownMenuItem(
+                                            value: val,
+                                            child: Text(
+                                              val,
+                                            ),
+                                          );
+                                        }).toList(),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 20),
+                            ],
+                          ),
+                      ],
+                    ),
+
+                    /* ENSEMBLE DES ANCIENS INGRÉDIENTS */
+                    /*
+                    Container(
+                      height: 50.0 * widget.ingredients.length.toInt(),
+                      child: ListView.builder(
+                          itemCount: widget.ingredients.length,
+                          itemBuilder: ((context, index) {
+                            print('widget.ingredients.length');
+                            print(widget.ingredients.length);
+                            var vall = '';
+
+                            for (var i = 0; i < listmatiere.length; i++) {
+                              if (widget.ingredients[index].material!.mpName ==
+                                  listmatiere[i].mpName) {
+                                print(
+                                    "ioiooooooooooooooooooooooooooooooooooooooo");
+                                vall = listmatiere[i].mpName!;
+                                // listmatiere.add(viewModel.listMatiere[i]);
+                                ingre = true;
+                              }
+                            }
+
+                            return Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    InkWell(
+                                      child: const Icon(Icons.remove_circle),
+                                      onTap: () {
+                                        setState(() {
+                                          widget.ingredients.remove(
+                                              widget.ingredients[index]);
+                                          // listmatiere.remove();
+                                        });
+                                        print(widget.ingredients.length);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    /* MATIÈRE PREMIÈRE */
+                                    Expanded(
+                                      flex: 3,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(2),
+                                        child: Container(
+                                          color:
+                                              Palette.secondaryBackgroundColor,
+                                          child: DropdownButtonFormField(
+                                            value: vall,
+                                            items: listmatiere.map((val) {
+                                              return DropdownMenuItem(
+                                                value: val.mpName,
+                                                child: Text(
+                                                  val.mpName!,
+                                                ),
+                                              );
+                                            }).toList(),
+                                            // hint: Text(
+                                            //   widget.ingredients[j].material!
+                                            //       .mpName!,
+                                            // ),
+                                            validator: (value) {
+                                              if (value == null) {
+                                                return "Le nom de la matière première est obligatoire.";
+                                              } else {
+                                                return null;
+                                              }
+                                            },
+                                            decoration: InputDecoration(
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                              ),
+                                            ),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                listmatiere[index].mpName =
+                                                    value;
+                                                // _matierePremieresold[index]
+                                                //     .text = value!;
+                                              });
+                                            },
+                                            onSaved: (value) {
+                                              setState(() {
+                                                _matierePremieresold[index]
+                                                    .text = value!;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 20),
+                                    /*
+                                  /* QUANTITÉ */
+                                  Expanded(
+                                    flex: 1,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(2),
+                                      child: TextFormField(
+                                        keyboardType: TextInputType.number,
+                                        controller: _quantite[i],
+                                        validator: (value) {
+                                          if (value!.isEmpty) {
+                                            return "La quantité est obligatoire !";
+                                          } else if (value == "0") {
+                                            return "La quantité doit être supérieur a zéro minute !";
+                                          }
+                                          return null;
+                                        },
+                                        inputFormatters: <TextInputFormatter>[
+                                          FilteringTextInputFormatter.allow(
+                                              RegExp(r'[0-9]')),
+                                        ],
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                          ),
+                                          hintText: "Quantité*",
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+
+                                  /* UNITE DE MESURE */
+                                  Expanded(
+                                    flex: 2,
+                                    child: Container(
+                                      color: Palette.secondaryBackgroundColor,
+                                      child: DropdownButtonFormField(
+                                        hint: const Text(
+                                          'Unité*',
+                                        ),
+                                        validator: (value) {
+                                          if (value == null) {
+                                            return "L ' Unité de mésure est obligatoire.";
+                                          } else {
+                                            return null;
+                                          }
+                                        },
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                          ),
+                                        ),
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _uniteDeMesure[i].text =
+                                                value.toString();
+                                          });
+                                        },
+                                        onSaved: (value) {
+                                          setState(() {
+                                            _uniteDeMesure[i].text =
+                                                value.toString();
+                                          });
+                                        },
+                                        items: listOfUnities.map((String val) {
+                                          return DropdownMenuItem(
+                                            value: val,
+                                            child: Text(
+                                              val,
+                                            ),
+                                          );
+                                        }).toList(),
+                                      ),
+                                    ),
+                                  ),
+                                */
+                                  ],
+                                ),
+                                const SizedBox(height: 20),
+                              ],
+                            );
+                          })),
+                    ),
+                    */
+                    const SizedBox(height: 20),
+
                     /* ENSEMBLE DES INGRÉDIENTS */
                     Column(
                       children: [
@@ -356,8 +702,7 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
                                                   value.toString();
                                             });
                                           },
-                                          items:
-                                              viewModel.listMatiere.map((val) {
+                                          items: listmatiere.map((val) {
                                             return DropdownMenuItem(
                                               value: val.sId,
                                               child: Text(
@@ -455,6 +800,8 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
                           ),
                       ],
                     ),
+
+                    /* LE CADRE POUR L'IMAGE ET LES BOUTONS*/
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -472,15 +819,10 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
                                   ]);
                               if (result != null) {
                                 setState(() {
-                                  // file = result!.files.single;
-
                                   Uint8List fileBytes =
                                       result!.files.single.bytes as Uint8List;
 
                                   _selectedFile = fileBytes;
-
-                                  // filee = true;
-
                                   selectedImageInBytes =
                                       result!.files.first.bytes;
                                   _selectFile = true;
@@ -501,7 +843,7 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
                                 borderRadius: BorderRadius.circular(16),
                                 child: _selectFile == false
                                     ? Image.network(
-                                        'http://192.168.11.110:4010${widget.image}',
+                                        'http://192.168.1.34:4010${widget.image}',
                                         fit: BoxFit.fill,
                                       )
                                     : isLoading
@@ -582,11 +924,11 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
     );
   }
 
-  Future<void> creationRecette(
+  Future<void> updateRecette(
     contextt,
     String title,
     String description,
-    List<Ingredient> ingredients,
+    List/*<Ingredient>*/ ingredients,
     selectedFile,
     result,
   ) async {
@@ -596,7 +938,7 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
     var restaurantid = prefs.getString('idRestaurant');
     String adressUrl = prefs.getString('ipport').toString();
     var url = Uri.parse(
-        "http://192.168.11.110:4010/api/recettes/create"); //13.39.81.126
+        "http://192.168.1.34:4010/api/recettes/update/${widget.sId}"); //13.39.81.126
     print(url);
     final request = MultipartRequest(
       'POST',
@@ -622,9 +964,11 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
 
     request.fields['form_key'] = 'form_value';
     request.headers['authorization'] = 'Bearer $token';
-    request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
-        contentType: MediaType('application', 'octet-stream'),
-        filename: result.files.first.name));
+    if (result != null) {
+      request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
+          contentType: MediaType('application', 'octet-stream'),
+          filename: result.files.first.name));
+    }
 
     print("RESPENSE SEND STEAM FILE REQ");
     //var responseString = await streamedResponse.stream.bytesToString();
@@ -668,18 +1012,21 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
 class Ingredient {
   String? material;
   String? grammage;
+  String? unity;
 
   Ingredient({this.material, this.grammage});
 
   Ingredient.fromJson(Map<String, dynamic> json) {
     material = json['material'];
     grammage = json['grammage'];
+    unity = json['unity'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['material'] = this.material;
     data['grammage'] = this.grammage;
+    data['unity'] = this.unity;
     return data;
   }
 }
