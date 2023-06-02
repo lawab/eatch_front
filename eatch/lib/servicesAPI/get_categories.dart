@@ -269,6 +269,7 @@ final getDataCategoriesFuture = ChangeNotifierProvider<GetDataCategoriesFuture>(
 
 class GetDataCategoriesFuture extends ChangeNotifier {
   List<Categorie> listCategories = [];
+  List<Categorie> listValides = [];
 
   GetDataCategoriesFuture() {
     getData();
@@ -279,7 +280,7 @@ class GetDataCategoriesFuture extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     var restaurantId = prefs.getString('idRestaurant').toString();
-    String adressUrl = prefs.getString('ipport').toString();
+    //String adressUrl = prefs.getString('ipport').toString();
 
     try {
       http.Response response = await http.get(
@@ -298,6 +299,9 @@ class GetDataCategoriesFuture extends ChangeNotifier {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         for (int i = 0; i < data.length; i++) {
+          if (data[i]['deletedAt'] == null && data[i]['title'] != "menus") {
+            listValides.add(Categorie.fromJson(data[i]));
+          }
           if (data[i]['deletedAt'] == null) {
             listCategories.add(Categorie.fromJson(data[i]));
           }

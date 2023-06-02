@@ -941,7 +941,7 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
         "http://192.168.1.34:4010/api/recettes/update/${widget.sId}"); //13.39.81.126
     print(url);
     final request = MultipartRequest(
-      'POST',
+      'PUT',
       url,
       onProgress: (int bytes, int total) {
         final progress = bytes / total;

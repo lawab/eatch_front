@@ -91,9 +91,10 @@ class RestaurantModificationState
                     Expanded(child: Container()),
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Palette.primaryColor,
+                          backgroundColor: Palette.textsecondaryColor,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           minimumSize: const Size(150, 50)),
                       onPressed: () {
                         Navigator.pop(context);
@@ -158,35 +159,36 @@ class RestaurantModificationState
                   keyboardType: TextInputType.emailAddress,
                   onChanged: (value) {},
                   decoration: InputDecoration(
-                      hoverColor: Palette.primaryBackgroundColor,
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 42, vertical: 20),
-                      filled: true,
-                      fillColor: Palette.primaryBackgroundColor,
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Palette.secondaryBackgroundColor),
-                        gapPadding: 10,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Palette.secondaryBackgroundColor),
-                        gapPadding: 10,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Palette.secondaryBackgroundColor),
-                        gapPadding: 10,
-                      ),
-                      labelText: "Ville",
-                      hintText: "Entrer la ville ou se trouve le restaurant",
-                      // If  you are using latest version of flutter then lable text and hint text shown like this
-                      // if you r using flutter less then 1.20.* then maybe this is not working properly
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      suffixIcon: const Icon(Icons.location_city)),
+                    hoverColor: Palette.primaryBackgroundColor,
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 42, vertical: 20),
+                    filled: true,
+                    fillColor: Palette.primaryBackgroundColor,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(
+                          color: Palette.secondaryBackgroundColor),
+                      gapPadding: 10,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(
+                          color: Palette.secondaryBackgroundColor),
+                      gapPadding: 10,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(
+                          color: Palette.secondaryBackgroundColor),
+                      gapPadding: 10,
+                    ),
+                    labelText: "Ville",
+                    hintText: "Entrer la ville ou se trouve le restaurant",
+                    // If  you are using latest version of flutter then lable text and hint text shown like this
+                    // if you r using flutter less then 1.20.* then maybe this is not working properly
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    suffixIcon: const Icon(Icons.location_city),
+                  ),
                 ),
               ),
               const SizedBox(
@@ -199,35 +201,36 @@ class RestaurantModificationState
                   keyboardType: TextInputType.emailAddress,
                   onChanged: (value) {},
                   decoration: InputDecoration(
-                      hoverColor: Palette.primaryBackgroundColor,
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 42, vertical: 20),
-                      filled: true,
-                      fillColor: Palette.primaryBackgroundColor,
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Palette.secondaryBackgroundColor),
-                        gapPadding: 10,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Palette.secondaryBackgroundColor),
-                        gapPadding: 10,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Palette.secondaryBackgroundColor),
-                        gapPadding: 10,
-                      ),
-                      labelText: "Adresse",
-                      hintText: "Entrer l'adresse du restaurant",
-                      // If  you are using latest version of flutter then lable text and hint text shown like this
-                      // if you r using flutter less then 1.20.* then maybe this is not working properly
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      suffixIcon: const Icon(Icons.local_activity)),
+                    hoverColor: Palette.primaryBackgroundColor,
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 42, vertical: 20),
+                    filled: true,
+                    fillColor: Palette.primaryBackgroundColor,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(
+                          color: Palette.secondaryBackgroundColor),
+                      gapPadding: 10,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(
+                          color: Palette.secondaryBackgroundColor),
+                      gapPadding: 10,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(
+                          color: Palette.secondaryBackgroundColor),
+                      gapPadding: 10,
+                    ),
+                    labelText: "Adresse",
+                    hintText: "Entrer l'adresse du restaurant",
+                    // If  you are using latest version of flutter then lable text and hint text shown like this
+                    // if you r using flutter less then 1.20.* then maybe this is not working properly
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    suffixIcon: const Icon(Icons.local_activity),
+                  ),
                 ),
               ),
               const SizedBox(
@@ -240,35 +243,36 @@ class RestaurantModificationState
                   keyboardType: TextInputType.emailAddress,
                   onChanged: (value) {},
                   decoration: InputDecoration(
-                      hoverColor: Palette.primaryBackgroundColor,
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 42, vertical: 20),
-                      filled: true,
-                      fillColor: Palette.primaryBackgroundColor,
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Palette.secondaryBackgroundColor),
-                        gapPadding: 10,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Palette.secondaryBackgroundColor),
-                        gapPadding: 10,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Palette.secondaryBackgroundColor),
-                        gapPadding: 10,
-                      ),
-                      labelText: "Nombre d'employés",
-                      hintText: "Entrer le nombre d'employés du restaurant",
-                      // If  you are using latest version of flutter then lable text and hint text shown like this
-                      // if you are using flutter less then 1.20.* then maybe this is not working properly
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      suffixIcon: const Icon(Icons.person)),
+                    hoverColor: Palette.primaryBackgroundColor,
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 42, vertical: 20),
+                    filled: true,
+                    fillColor: Palette.primaryBackgroundColor,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(
+                          color: Palette.secondaryBackgroundColor),
+                      gapPadding: 10,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(
+                          color: Palette.secondaryBackgroundColor),
+                      gapPadding: 10,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(
+                          color: Palette.secondaryBackgroundColor),
+                      gapPadding: 10,
+                    ),
+                    labelText: "Nombre d'employés",
+                    hintText: "Entrer le nombre d'employés du restaurant",
+                    // If  you are using latest version of flutter then lable text and hint text shown like this
+                    // if you are using flutter less then 1.20.* then maybe this is not working properly
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    suffixIcon: const Icon(Icons.person),
+                  ),
                 ),
               ),
               const SizedBox(
@@ -372,7 +376,8 @@ class RestaurantModificationState
                   minimumSize: const Size(150, 50),
                   maximumSize: const Size(200, 70),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
                 child: const Text('Modifier'),
               )

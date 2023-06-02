@@ -1,7 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../infrastructure/menus_repository.dart';
+import '../../../servicesAPI/getMenu.dart';
 import 'menu_card.dart';
 
 // class MenuGrid extends StatefulWidget {
@@ -49,7 +50,7 @@ import 'menu_card.dart';
 //   }
 // }
 
-class MenuGrid extends StatelessWidget {
+class MenuGrid extends ConsumerStatefulWidget {
   const MenuGrid({
     super.key,
     this.crossAxisCount = 1,
@@ -63,24 +64,32 @@ class MenuGrid extends StatelessWidget {
   final double childAspectRatio;
 
   @override
+  ConsumerState<MenuGrid> createState() => _MenuGridState();
+}
+
+class _MenuGridState extends ConsumerState<MenuGrid> {
+  @override
   Widget build(BuildContext context) {
+    final viewModel1 = ref.watch(getDataMenuFuture);
+
     return Expanded(
       child: SingleChildScrollView(
         child: GridView.builder(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          itemCount: menusList.length,
+          itemCount: viewModel1.listMenus.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount,
-            mainAxisSpacing: mainAxisSpacing,
-            crossAxisSpacing: crossAxisSpacing,
-            childAspectRatio: childAspectRatio,
+            crossAxisCount: widget.crossAxisCount,
+            mainAxisSpacing: widget.mainAxisSpacing,
+            crossAxisSpacing: widget.crossAxisSpacing,
+            childAspectRatio: widget.childAspectRatio,
           ),
           itemBuilder: (context, index) => MenuCard(
-            description: menusList[index].description,
-            imageUrl: menusList[index].imageUrl,
-            price: menusList[index].price,
-            title: menusList[index].title,
+            description: viewModel1.listMenus[index].description!,
+            imageUrl: viewModel1.listMenus[index].image!,
+            price: viewModel1.listMenus[index].price!,
+            title: viewModel1.listMenus[index].menuTitle!,
+            sId: viewModel1.listMenus[index].sId!,
             index: index,
           ),
         ),

@@ -202,7 +202,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   image: DecorationImage(
                                       opacity: 150,
                                       image: NetworkImage(
-                                          'http://13.39.81.126:4002${listRsetaurant[index].infos!.logo.toString()}'),
+                                          'http://192.168.1.34:4002${listRsetaurant[index].infos!.logo.toString()}'), //13.39.81.126:4002
                                       fit: BoxFit.cover),
                                 ),
                               ),
@@ -286,13 +286,14 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                 child: IconButton(
                                   onPressed: (() {
                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                RestaurantModification(
-                                                  restaurant:
-                                                      listRsetaurant[index],
-                                                )));
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            RestaurantModification(
+                                          restaurant: listRsetaurant[index],
+                                        ),
+                                      ),
+                                    );
                                   }),
                                   icon: const Icon(
                                     Icons.edit,
@@ -426,7 +427,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   image: DecorationImage(
                                       opacity: 150,
                                       image: NetworkImage(
-                                          'http://13.39.81.126:4002${listRsetaurant[index].infos!.logo.toString()}'),
+                                          'http://192.168.1.34:4002${listRsetaurant[index].infos!.logo.toString()}'),
                                       //image: AssetImage('Logo_Eatch_png.png'),
                                       fit: BoxFit.cover),
                                 ),

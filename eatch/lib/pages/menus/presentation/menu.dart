@@ -12,8 +12,8 @@ import 'package:http_parser/http_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
+import '../../../servicesAPI/getMenu.dart';
 import '../../../servicesAPI/multipart.dart';
-import '../infrastructure/menus_repository.dart';
 import 'package:http/http.dart' as http;
 import 'menu_card.dart';
 
@@ -44,9 +44,11 @@ class _MenuState extends ConsumerState<Menu> {
   }
 
   var nomcontroller = TextEditingController();
+  var prixcontroller = TextEditingController();
+  var descriptioncontroller = TextEditingController();
 
   final List<TextEditingController> _controllerInput = [];
-  final List<Widget> _textFieldInput = [];
+  //final List<Widget> _textFieldInput = [];
   String? matiere;
 
   List<String> listProdId = [];
@@ -67,6 +69,7 @@ class _MenuState extends ConsumerState<Menu> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(getDataCategoriesFuture);
+    final viewModel1 = ref.watch(getDataMenuFuture);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -74,18 +77,18 @@ class _MenuState extends ConsumerState<Menu> {
         builder: (context, constraints) {
           if (constraints.maxWidth >= 900) {
             return horizontalView(height(context), width(context), context,
-                viewModel.listCategories);
+                viewModel.listValides, viewModel1.listMenus);
           } else {
             return verticalView(height(context), width(context), context,
-                viewModel.listCategories);
+                viewModel.listValides, viewModel1.listMenus);
           }
         },
       ),
     );
   }
 
-  Widget horizontalView(
-      double height, double width, context, List<Categorie> categoriee) {
+  Widget horizontalView(double height, double width, context,
+      List<Categorie> categoriee, List<Menus> menus) {
     return AppLayout(
       content: SizedBox(
         height: height,
@@ -126,7 +129,7 @@ class _MenuState extends ConsumerState<Menu> {
                     ),
                   )
                 : SizedBox(
-                    height: 400,
+                    height: height - 65,
                     child: Creation(categoriee, height, width),
                   ),
             ajout == true
@@ -137,42 +140,46 @@ class _MenuState extends ConsumerState<Menu> {
                 : const SizedBox(
                     height: 5,
                   ),
-            Container(
-              height: ajout == false ? height - 145 : height - 465,
-              padding: const EdgeInsets.all(10),
-              child: SingleChildScrollView(
-                child: GridView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: 5,
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 500,
-                            childAspectRatio: 3 / 2,
-                            crossAxisSpacing: 20,
-                            mainAxisSpacing: 30,
-                            mainAxisExtent: 200),
-                    itemBuilder: (context, index) {
-                      return Container(
-                        child: MenuCard(
-                          description: menusList[index].description,
-                          imageUrl: menusList[index].imageUrl,
-                          price: menusList[index].price,
-                          title: menusList[index].title,
-                          index: index,
-                        ),
-                      );
-                    }),
-              ),
-            ),
+            ajout == true
+                ? Container()
+                : Container(
+                    height: height - 145,
+                    padding: const EdgeInsets.all(10),
+                    child: SingleChildScrollView(
+                      child: GridView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: menus.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                                maxCrossAxisExtent: 500,
+                                childAspectRatio: 3 / 2,
+                                crossAxisSpacing: 20,
+                                mainAxisSpacing: 30,
+                                mainAxisExtent: 200),
+                        itemBuilder: (context, index) {
+                          return Container(
+                            child: MenuCard(
+                              description: menus[index].description!,
+                              imageUrl: menus[index].image!,
+                              price: menus[index].price!,
+                              title: menus[index].menuTitle!,
+                              sId: menus[index].sId!,
+                              index: index,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
           ],
         ),
       ),
     );
   }
 
-  Widget verticalView(
-      double height, double width, context, List<Categorie> categoriee) {
+  Widget verticalView(double height, double width, context,
+      List<Categorie> categoriee, List<Menus> menus) {
     return AppLayout(
       content: SizedBox(
         height: height,
@@ -212,7 +219,7 @@ class _MenuState extends ConsumerState<Menu> {
                     ),
                   )
                 : SizedBox(
-                    height: 400,
+                    height: height,
                     child: Creation(categoriee, height, width),
                   ),
             ajout == true
@@ -229,7 +236,7 @@ class _MenuState extends ConsumerState<Menu> {
                 child: GridView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: 5,
+                    itemCount: menus.length,
                     gridDelegate:
                         const SliverGridDelegateWithMaxCrossAxisExtent(
                             maxCrossAxisExtent: 500,
@@ -240,10 +247,11 @@ class _MenuState extends ConsumerState<Menu> {
                     itemBuilder: (context, index) {
                       return Container(
                         child: MenuCard(
-                          description: menusList[index].description,
-                          imageUrl: menusList[index].imageUrl,
-                          price: menusList[index].price,
-                          title: menusList[index].title,
+                          description: menus[index].description!,
+                          imageUrl: menus[index].image!,
+                          price: menus[index].price!,
+                          title: menus[index].menuTitle!,
+                          sId: menus[index].sId!,
                           index: index,
                         ),
                       );
@@ -258,7 +266,7 @@ class _MenuState extends ConsumerState<Menu> {
 
   Widget Creation(List<Categorie> categoriee, heigth, width) {
     return Container(
-      height: 300,
+      height: heigth,
       color: Palette.secondaryBackgroundColor,
       child: SingleChildScrollView(
         child: Column(
@@ -289,43 +297,144 @@ class _MenuState extends ConsumerState<Menu> {
                 keyboardType: TextInputType.emailAddress,
                 onChanged: (value) {},
                 decoration: InputDecoration(
-                    hoverColor: Palette.primaryBackgroundColor,
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 42, vertical: 20),
-                    filled: true,
-                    fillColor: Palette.primaryBackgroundColor,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: const BorderSide(
-                          color: Palette.secondaryBackgroundColor),
-                      gapPadding: 10,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: const BorderSide(
-                          color: Palette.secondaryBackgroundColor),
-                      gapPadding: 10,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: const BorderSide(
-                          color: Palette.secondaryBackgroundColor),
-                      gapPadding: 10,
-                    ),
-                    labelText: "Nom",
-                    hintText: "Entrer le nom du menu",
-                    // If  you are using latest version of flutter then lable text and hint text shown like this
-                    // if you r using flutter less then 1.20.* then maybe this is not working properly
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    suffixIcon: const Icon(Icons.food_bank)),
+                  hoverColor: Palette.primaryBackgroundColor,
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
+                  filled: true,
+                  fillColor: Palette.primaryBackgroundColor,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: const BorderSide(
+                        color: Palette.secondaryBackgroundColor),
+                    gapPadding: 10,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: const BorderSide(
+                        color: Palette.secondaryBackgroundColor),
+                    gapPadding: 10,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: const BorderSide(
+                        color: Palette.secondaryBackgroundColor),
+                    gapPadding: 10,
+                  ),
+                  labelText: "Nom",
+                  hintText: "Entrer le nom du menu",
+                  // If  you are using latest version of flutter then lable text and hint text shown like this
+                  // if you r using flutter less then 1.20.* then maybe this is not working properly
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                  suffixIcon: const Icon(Icons.food_bank),
+                ),
               ),
             ),
+            /////////////////////////////////////////// - début du champ prix
+            const SizedBox(
+              height: 20,
+            ),
+
+            ///
+            SizedBox(
+              width: width - 50,
+              child: TextFormField(
+                controller: prixcontroller,
+                keyboardType: TextInputType.number,
+                onChanged: (value) {},
+                decoration: InputDecoration(
+                  hoverColor: Palette.primaryBackgroundColor,
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
+                  filled: true,
+                  fillColor: Palette.primaryBackgroundColor,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: const BorderSide(
+                        color: Palette.secondaryBackgroundColor),
+                    gapPadding: 10,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: const BorderSide(
+                        color: Palette.secondaryBackgroundColor),
+                    gapPadding: 10,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: const BorderSide(
+                        color: Palette.secondaryBackgroundColor),
+                    gapPadding: 10,
+                  ),
+                  labelText: "Prix",
+                  hintText: "Entrer le prix du menu",
+                  // If  you are using latest version of flutter then lable text and hint text shown like this
+                  // if you r using flutter less then 1.20.* then maybe this is not working properly
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                  suffixIcon: const Icon(Icons.monetization_on_outlined),
+                ),
+              ),
+            ),
+
+            ////////////////////////////////////////////////////////////// - fin du champ prix
+            ///
+
+            const SizedBox(
+              height: 20,
+            ),
+
+            ///
+            //////////////////////////////// - debut du champ description
+            ///
+            SizedBox(
+              width: width - 50,
+              child: TextFormField(
+                maxLength: 500,
+                maxLines: 5,
+                controller: descriptioncontroller,
+                keyboardType: TextInputType.text,
+                onChanged: (value) {},
+                decoration: InputDecoration(
+                  hoverColor: Palette.primaryBackgroundColor,
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
+                  filled: true,
+                  fillColor: Palette.primaryBackgroundColor,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: const BorderSide(
+                        color: Palette.secondaryBackgroundColor),
+                    gapPadding: 10,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: const BorderSide(
+                        color: Palette.secondaryBackgroundColor),
+                    gapPadding: 10,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: const BorderSide(
+                        color: Palette.secondaryBackgroundColor),
+                    gapPadding: 10,
+                  ),
+                  labelText: "Description",
+                  hintText: "Entrer une description pour ce menu",
+                  // If  you are using latest version of flutter then lable text and hint text shown like this
+                  // if you r using flutter less then 1.20.* then maybe this is not working properly
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                  //suffixIcon: const Icon(Icons.monetization_on_outlined),
+                ),
+              ),
+            ),
+
+            ///
+            //////////////////////////////// - fin du champ description
             const SizedBox(
               height: 20,
             ),
             SizedBox(
               width: width - 50,
-              height: 200,
+              height: 150,
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 500,
@@ -336,7 +445,6 @@ class _MenuState extends ConsumerState<Menu> {
                 itemCount: categoriee.length,
                 itemBuilder: (context, index) {
                   List<String> listProduits = [];
-                  //List<String> listProdId = [];
                   String? produit;
                   final inputController = TextEditingController();
                   _controllerInput.add(inputController);
@@ -344,7 +452,8 @@ class _MenuState extends ConsumerState<Menu> {
                     listProduits
                         .add(categoriee[index].products![i].productName!);
                   }
-                  //print(listProduits);
+
+                  // print(listProduits);
 
                   return SizedBox(
                     height: 50,
@@ -381,27 +490,24 @@ class _MenuState extends ConsumerState<Menu> {
                       ),
                       isExpanded: true,
                       onChanged: (value) {
-                        setState(() {
-                          produit = value!;
-                          ////////////////////////////
-                          print("Produits:${produit}");
-                          for (int j = 0; j < listProduits.length; j++) {
-                            if (produit == listProduits[j]) {
-                              print("Je suis là");
-                              print(listProduits[j]);
-                              listProdId
-                                  .add(categoriee[index].products![j].sId!);
-                            }
-                          }
-                          /////////////////////////////////
-                          ///
-                          print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ - début");
-                          print(listProdId);
-                          print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ - fin");
+                        setState(
+                          () {
+                            produit = value!;
+                            print('Valeur : ${produit}');
+                            ////////////////////////////
 
-                          ///
-                          inputController.text = value;
-                        });
+                            for (int j = 0; j < listProduits.length; j++) {
+                              if (produit == listProduits[j]) {
+                                listProdId
+                                    .add(categoriee[index].products![j].sId!);
+                              }
+                            }
+                            print(listProdId);
+                            /////////////////////////////////
+
+                            inputController.text = value;
+                          },
+                        );
                       },
                       onSaved: (value) {
                         setState(() {
@@ -501,8 +607,15 @@ class _MenuState extends ConsumerState<Menu> {
                           print(_controllerInput[i].text);
                         }
                       }
-                      creationMenu(context, nomcontroller.text, _selectedFile!,
-                          result, listProdId);
+                      creationMenu(
+                        context,
+                        nomcontroller.text,
+                        prixcontroller.text,
+                        descriptioncontroller.text,
+                        _selectedFile!,
+                        result,
+                        listProdId,
+                      );
 
                       setState(() {
                         ajout = false;
@@ -550,11 +663,13 @@ class _MenuState extends ConsumerState<Menu> {
     );
   }
 
-  /////////Création de Menu
+  ///////// - Création de Menu
   ///
   Future<void> creationMenu(
     BuildContext context,
     String nomMenu,
+    String prix,
+    String description,
     List<int> selectedFile,
     FilePickerResult? result,
     List<String> idProduits,
@@ -585,6 +700,8 @@ class _MenuState extends ConsumerState<Menu> {
     var json = {
       'menu_title': nomMenu,
       'restaurant': restaurantId,
+      'description': description,
+      'price': prix,
       '_creator': id,
       'products': dd,
     };
@@ -621,7 +738,7 @@ class _MenuState extends ConsumerState<Menu> {
             message: "Le menu a été crée",
           ),
         );
-        //ref.refresh(getDataMenuFuture);
+        ref.refresh(getDataMenuFuture);
       } else {
         showTopSnackBar(
           Overlay.of(context)!,
