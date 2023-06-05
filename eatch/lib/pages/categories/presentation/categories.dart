@@ -982,6 +982,7 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                   ),
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                   onPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop();
                     deleteCategorie(context, categorieId);
                   },
                   label: const Text("Supprimer."),

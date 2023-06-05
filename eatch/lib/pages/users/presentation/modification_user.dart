@@ -98,10 +98,10 @@ class _ModificationUserState extends ConsumerState<ModificationUser> {
                 !PREMIERE LIGNE 
                                 **/
 
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
+                children: [
                   Text("MODIFIER LES INFORMTIONS"),
                 ],
               ),

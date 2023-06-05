@@ -151,6 +151,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
         ingredientsList.add(Ingredient(
           material: _matierePremieres[i].text,
           grammage: _quantite[i].text,
+          unity: _uniteDeMesure[i].text,
         ));
       }
       creationRecette(
@@ -1275,18 +1276,25 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
 class Ingredient {
   String? material;
   String? grammage;
+  String? unity;
 
-  Ingredient({this.material, this.grammage});
+  Ingredient({
+    this.material,
+    this.grammage,
+    this.unity,
+  });
 
   Ingredient.fromJson(Map<String, dynamic> json) {
     material = json['material'];
     grammage = json['grammage'];
+    unity = json['unity'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['material'] = material;
     data['grammage'] = grammage;
+    data['unity'] = unity;
     return data;
   }
 }

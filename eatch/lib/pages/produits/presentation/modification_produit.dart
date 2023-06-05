@@ -1,30 +1,67 @@
+import 'dart:convert';
+import 'package:eatch/servicesAPI/get_recettes.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:http/http.dart' as http;
+import 'package:eatch/servicesAPI/get_categories.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
+import '../../../servicesAPI/getProduit.dart';
+import '../../../servicesAPI/multipart.dart';
 import '../../../utils/default_button/default_button.dart';
 import '../../../utils/palettes/palette.dart';
 import '../../../utils/size/size.dart';
 
-class ModificationProduit extends StatefulWidget {
+class ModificationProduit extends ConsumerStatefulWidget {
   const ModificationProduit({
     super.key,
-    required this.imageUrl,
     required this.title,
     required this.price,
+    required this.quantity,
+    required this.sId,
+    required this.imageUrl,
+    required this.recette,
+    required this.category,
   });
-  final String imageUrl;
+
   final String title;
+  final String recette;
+  final String category;
+  final String imageUrl;
+  final String sId;
   final int price;
+  final int quantity;
+
   @override
-  State<ModificationProduit> createState() => _ModificationProduitState();
+  ModificationProduitState createState() => ModificationProduitState();
 }
 
-class _ModificationProduitState extends State<ModificationProduit> {
+class ModificationProduitState extends ConsumerState<ModificationProduit> {
   //**********************************/
+  /* LE LOADING PENDANT LE TÉLÉCHARGEMENT DE L’IMAGE DE LA RECETTE */
+  bool isLoading = false;
+
+/* SI UNE IMAGE EST SÉLECTIONNÉE SEL DEVIENT TRUE */
+  bool _selectFile = false;
+
+/* LE FICHIER IMAGE TELECHARGER DEPUIS LE PC */
+  Uint8List? selectedImageInBytes;
+  List<int> _selectedFile = [];
+
+/* LE FICHIER IMAGE TELECHARGER DEPUIS LE PC A ENVOYER SUR INTERNET */
+  FilePickerResult? result;
   final _formKey = GlobalKey<FormState>();
 
   String _produitTitle = "";
   String _produitPrice = "";
+  String _produitQuantity = "";
+  String? _produitCategorie;
+  String? _produitRecette;
 
   final FocusNode _produitPriceFocusNode = FocusNode();
 
@@ -37,9 +74,13 @@ class _ModificationProduitState extends State<ModificationProduit> {
   //**********************************/
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+    BuildContext context,
+  ) {
     SizeConfig().init(context);
+    final viewModel = ref.watch(getDataCategoriesFuture);
     return Scaffold(
+      backgroundColor: Palette.secondaryBackgroundColor,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,13 +107,76 @@ class _ModificationProduitState extends State<ModificationProduit> {
                 key: _formKey,
                 child: Column(
                   children: [
+                    Container(
+                      color: Palette.secondaryBackgroundColor,
+                      child: produitcategorieForm(),
+                    ),
+                    const SizedBox(height: 20),
                     produittitleForm(),
                     const SizedBox(height: 20),
                     produitpriceForm(),
                     const SizedBox(height: 20),
+                    produitquantityForm(),
+                    const SizedBox(height: 20),
+                    Container(
+                      color: Palette.secondaryBackgroundColor,
+                      child: produitRecetteForm(),
+                    ),
+                    const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
+                        Container(
+                          color: Palette.secondaryBackgroundColor,
+                          child: GestureDetector(
+                            onTap: () async {
+                              result = await FilePicker.platform.pickFiles(
+                                  type: FileType.custom,
+                                  allowedExtensions: [
+                                    "png",
+                                    "jpg",
+                                    "jpeg",
+                                  ]);
+                              if (result != null) {
+                                setState(() {
+                                  Uint8List fileBytes =
+                                      result!.files.single.bytes as Uint8List;
+
+                                  _selectedFile = fileBytes;
+                                  selectedImageInBytes =
+                                      result!.files.first.bytes;
+                                  _selectFile = true;
+                                });
+                              }
+                            },
+                            child: Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 1,
+                                  color: const Color(0xFFDCE0E0),
+                                ),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: _selectFile == false
+                                    ? Image.network(
+                                        'http://192.168.11.110:4003${widget.imageUrl}',
+                                        fit: BoxFit.fill,
+                                      )
+                                    : isLoading
+                                        ? const CircularProgressIndicator()
+                                        : Image.memory(
+                                            selectedImageInBytes!,
+                                            fit: BoxFit.fill,
+                                          ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const Spacer(),
                         SizedBox(
                           width: 150,
                           child: DefaultButton(
@@ -83,8 +187,15 @@ class _ModificationProduitState extends State<ModificationProduit> {
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
-                                print("nom is $_produitTitle");
-                                print("prix is $_produitPrice");
+                                edditProduct(
+                                    context,
+                                    _selectedFile,
+                                    result,
+                                    _produitQuantity,
+                                    _produitPrice,
+                                    _produitTitle,
+                                    _produitCategorie,
+                                    _produitRecette);
                               } else {
                                 print("Bad");
                               }
@@ -169,8 +280,8 @@ class _ModificationProduitState extends State<ModificationProduit> {
 
   TextFormField produitpriceForm() {
     return TextFormField(
-      initialValue: widget.price.toString(),
       focusNode: _produitPriceFocusNode,
+      initialValue: widget.price.toString(),
       textInputAction: TextInputAction.next,
       autocorrect: true,
       textCapitalization: TextCapitalization.words,
@@ -218,6 +329,265 @@ class _ModificationProduitState extends State<ModificationProduit> {
       },
     );
   }
+
+  TextFormField produitquantityForm() {
+    return TextFormField(
+      initialValue: widget.quantity.toString(),
+      textInputAction: TextInputAction.next,
+      autocorrect: true,
+      textCapitalization: TextCapitalization.words,
+      enableSuggestions: false,
+      onEditingComplete: (() => FocusScope.of(context).requestFocus()),
+      keyboardType: TextInputType.number,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "S'il vous plaît entrez la quantité du produit.";
+        }
+        return null;
+      },
+      inputFormatters: <TextInputFormatter>[
+        FilteringTextInputFormatter.digitsOnly
+      ],
+      decoration: InputDecoration(
+        hoverColor: Palette.primaryBackgroundColor,
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
+        filled: true,
+        fillColor: Palette.primaryBackgroundColor,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
+          gapPadding: 10,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
+          gapPadding: 10,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
+          gapPadding: 10,
+        ),
+        prefix: const Padding(padding: EdgeInsets.only(left: 0.0)),
+        hintText: "Quantité du produit*",
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        suffixIcon: const CustomSurffixIcon(svgIcon: "assets/icons/coins.svg"),
+      ),
+      onSaved: (value) {
+        _produitQuantity = value!;
+      },
+    );
+  }
+
+  DropdownButtonFormField<String> produitRecetteForm() {
+    final viewModel = ref.watch(getDataRecettesFuture);
+    return DropdownButtonFormField(
+      decoration: InputDecoration(
+        hoverColor: Palette.primaryBackgroundColor,
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
+        filled: true,
+        fillColor: Palette.primaryBackgroundColor,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
+          gapPadding: 10,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
+          gapPadding: 10,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
+          gapPadding: 10,
+        ),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+      ),
+      value: widget.recette,
+      hint: const Text(
+        "Recette*",
+        style: TextStyle(color: Colors.black),
+      ),
+      isExpanded: true,
+      onChanged: (value) {
+        setState(() {
+          _produitRecette = value;
+        });
+      },
+      onSaved: (value) {
+        setState(() {
+          _produitRecette = value;
+        });
+      },
+      validator: (String? value) {
+        if (value == null) {
+          return "La catégorie est obligatoire.";
+        } else {
+          return null;
+        }
+      },
+      items: viewModel.listRecette.map((val) {
+        return DropdownMenuItem(
+          value: val.sId,
+          child: Text(
+            val.title!,
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  DropdownButtonFormField<String> produitcategorieForm() {
+    final viewModel = ref.watch(getDataCategoriesFuture);
+    return DropdownButtonFormField(
+      decoration: InputDecoration(
+        hoverColor: Palette.primaryBackgroundColor,
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
+        filled: true,
+        fillColor: Palette.primaryBackgroundColor,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
+          gapPadding: 10,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
+          gapPadding: 10,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
+          gapPadding: 10,
+        ),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+      ),
+      value: widget.category,
+      // hint: Text(
+      //   widget.category,
+      //   style: const TextStyle(color: Colors.black),
+      // ),
+      isExpanded: true,
+      onChanged: (value) {
+        setState(() {
+          _produitCategorie = value;
+        });
+      },
+      onSaved: (value) {
+        setState(() {
+          _produitCategorie = value;
+        });
+      },
+      validator: (String? value) {
+        if (value == null) {
+          return "La recette est obligatoire.";
+        } else {
+          return null;
+        }
+      },
+      items: viewModel.listCategories.map((val) {
+        return DropdownMenuItem(
+          value: val.sId,
+          child: Text(
+            val.title!,
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  ////////////////////
+  ///////////////////////
+  Future<void> edditProduct(
+    context,
+    selectedFile,
+    result,
+    quantity,
+    price,
+    productName,
+    category,
+    recette,
+  ) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var id = prefs.getString('IdUser').toString();
+    var token = prefs.getString('token');
+    var restaurantid = prefs.getString('idRestaurant');
+    print(id);
+    print(token);
+    print("Restaurant id $restaurantid");
+
+    var url = Uri.parse(
+        "http://192.168.11.110:4003/api/products/update/${widget.sId}");
+    final request = MultipartRequest(
+      'PUT',
+      url,
+      onProgress: (int bytes, int total) {
+        final progress = bytes / total;
+        print('progress: $progress ($bytes/$total)');
+      },
+    );
+    var json = {
+      "quantity": quantity,
+      "price": price,
+      "productName": productName,
+      "category": category,
+      "recette": recette,
+      "restaurant": restaurantid!.trim(),
+      "_creator": id,
+    };
+    var body = jsonEncode(json);
+
+    request.headers.addAll({
+      "body": body,
+    });
+
+    request.fields['form_key'] = 'form_value';
+    request.headers['authorization'] = 'Bearer $token';
+    if (result != null) {
+      request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
+          contentType: MediaType('application', 'octet-stream'),
+          filename: result.files.first.name));
+    }
+
+    print("RESPENSE SEND STEAM FILE REQ");
+    var response = await request.send();
+    print("Upload Response$response");
+    print(response.statusCode);
+    print(request.headers);
+
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        await response.stream.bytesToString().then((value) {
+          print(value);
+        });
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.info(
+            backgroundColor: Colors.green,
+            message: "Produit ;ias ",
+          ),
+        );
+
+        setState(() {
+          ref.refresh(getDataCategoriesFuture);
+          ref.refresh(GetDataProduitFuture as Refreshable);
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Erreur de serveur"),
+        ));
+        print("Error Create Programme  !!!");
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  ///
 }
 
 class CustomSurffixIcon extends StatelessWidget {
