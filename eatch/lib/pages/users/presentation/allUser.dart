@@ -499,7 +499,7 @@ class AllUsersState extends ConsumerState<AllUsers> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userdelete = prefs.getString('IdUser').toString();
       var token = prefs.getString('token');
-      String urlDelete = "http://192.168.1.26:4001/api/users/delete/$id";
+      String urlDelete = "http://192.168.11.110:4001/api/users/delete/$id";
       var json = {
         '_creator': userdelete,
       };

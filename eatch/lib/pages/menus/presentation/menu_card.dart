@@ -92,7 +92,7 @@ class _MenuCardState extends ConsumerState<MenuCard> {
                       Radius.circular(10.0),
                     ),
                     child: Image.network(
-                      "http://192.168.1.26:4009${widget.imageUrl}",
+                      "http://192.168.11.110:4009${widget.imageUrl}",
                     ),
                   ),
                 ),
@@ -226,7 +226,7 @@ class _MenuCardState extends ConsumerState<MenuCard> {
 
       var token = prefs.getString('token');
       String urlDelete =
-          "http://192.168.1.26:4009/api/menus/delete/$idMenu"; // 192.168.1.26:4008 //$adressUrl
+          "http://192.168.11.110:4009/api/menus/delete/$idMenu"; // 192.168.11.110:4008 //$adressUrl
       //var json = {'_creator': id};
 
       //var body = jsonEncode(json);
@@ -335,7 +335,7 @@ class _MenuCardState extends State<MenuCard> {
                     Radius.circular(10.0),
                   ),
                   child: Image.network(
-                    "http://192.168.1.26:4009${widget.imageUrl}",
+                    "http://192.168.11.110:4009${widget.imageUrl}",
                   ),
                 ),
               ),

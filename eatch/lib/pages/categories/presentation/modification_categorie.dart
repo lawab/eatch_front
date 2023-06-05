@@ -1,26 +1,40 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:eatch/servicesAPI/get_categories.dart';
+import 'package:eatch/servicesAPI/multipart.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import '../../../utils/applayout.dart';
 import '../../../utils/default_button/default_button.dart';
 import '../../../utils/palettes/palette.dart';
 import '../../../utils/size/size.dart';
+import 'package:http/http.dart' as http;
 
-class ModificationCategorie extends StatefulWidget {
+class ModificationCategorie extends ConsumerStatefulWidget {
   const ModificationCategorie({
     super.key,
     required this.nomCategorie,
+    required this.imageUrl,
+    required this.sId,
   });
 
   final String nomCategorie;
+  final String imageUrl;
+  final String sId;
 
   @override
-  State<ModificationCategorie> createState() => _ModificationCategorieState();
+  ConsumerState<ModificationCategorie> createState() =>
+      _ModificationCategorieState();
 }
 
-class _ModificationCategorieState extends State<ModificationCategorie> {
+class _ModificationCategorieState extends ConsumerState<ModificationCategorie> {
   //**********************************/
   final _formKey = GlobalKey<FormState>();
 
@@ -87,10 +101,10 @@ class _ModificationCategorieState extends State<ModificationCategorie> {
                 !PREMIERE LIGNE 
                                 **/
 
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
+                children: [
                   Text("MODIFIER LES INFORMTIONS"),
                 ],
               ),
@@ -105,11 +119,8 @@ class _ModificationCategorieState extends State<ModificationCategorie> {
                       nomCategorie(),
                       const SizedBox(height: 20),
 
-                      ////////////// - Image(début)
                       Container(
-                        padding: const EdgeInsets.only(right: 70),
                         color: Palette.secondaryBackgroundColor,
-                        alignment: Alignment.centerRight,
                         child: GestureDetector(
                           onTap: () async {
                             result = await FilePicker.platform.pickFiles(
@@ -121,15 +132,10 @@ class _ModificationCategorieState extends State<ModificationCategorie> {
                                 ]);
                             if (result != null) {
                               setState(() {
-                                file = result!.files.single;
-
                                 Uint8List fileBytes =
                                     result!.files.single.bytes as Uint8List;
 
                                 _selectedFile = fileBytes;
-
-                                filee = true;
-
                                 selectedImageInBytes =
                                     result!.files.first.bytes;
                                 _selectFile = true;
@@ -141,23 +147,24 @@ class _ModificationCategorieState extends State<ModificationCategorie> {
                             height: 100,
                             decoration: BoxDecoration(
                               border: Border.all(
-                                width: 4,
-                                color: Palette.greenColors,
+                                width: 1,
+                                color: const Color(0xFFDCE0E0),
                               ),
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(16),
                               child: _selectFile == false
-                                  ? const Icon(
-                                      Icons.camera_alt_outlined,
-                                      color: Palette.greenColors,
-                                      size: 40,
-                                    )
-                                  : Image.memory(
-                                      selectedImageInBytes!,
+                                  ? Image.network(
+                                      'http://192.168.11.110:4005${widget.imageUrl}',
                                       fit: BoxFit.fill,
-                                    ),
+                                    )
+                                  : isLoading
+                                      ? const CircularProgressIndicator()
+                                      : Image.memory(
+                                          selectedImageInBytes!,
+                                          fit: BoxFit.fill,
+                                        ),
                             ),
                           ),
                         ),
@@ -182,7 +189,12 @@ class _ModificationCategorieState extends State<ModificationCategorie> {
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
                                   _formKey.currentState!.save();
-                                  print("nom is $_nomCategorie");
+                                  modificationCategorie(
+                                    context,
+                                    _nomCategorie,
+                                    _selectedFile,
+                                    result,
+                                  );
                                 } else {
                                   print("Bad");
                                 }
@@ -214,6 +226,86 @@ class _ModificationCategorieState extends State<ModificationCategorie> {
         ),
       ),
     );
+  }
+
+  Future<void> modificationCategorie(
+    contextt,
+    title,
+    selectedFile,
+    result,
+  ) async {
+    ////////////
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var id = prefs.getString('IdUser').toString();
+    var restaurantId = prefs.getString('idRestaurant').toString();
+    var token = prefs.getString('token');
+
+    var url = Uri.parse(
+        "http://192.168.11.110:4005/api/categories/update/${widget.sId}");
+    final request = MultipartRequest(
+      'PATCH',
+      url,
+      onProgress: (int bytes, int total) {
+        final progress = bytes / total;
+        print('progress: $progress ($bytes/$total)');
+      },
+    );
+    var json = {
+      'title': title,
+      'restaurant_id': restaurantId,
+      'user_id': id,
+    };
+    var body = jsonEncode(json);
+
+    request.headers.addAll({
+      "body": body,
+    });
+
+    request.fields['form_key'] = 'form_value';
+    request.headers['authorization'] = 'Bearer $token';
+    if (result != null) {
+      request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
+          contentType: MediaType('application', 'octet-stream'),
+          filename: result.files.first.name));
+    }
+
+    print("RESPENSE SEND STEAM FILE REQ");
+    //var responseString = await streamedResponse.stream.bytesToString();
+    var response = await request.send();
+    print("Upload Response$response");
+    print(response.statusCode);
+    print(request.headers);
+
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        await response.stream.bytesToString().then((value) {
+          print(value);
+        });
+        //stopMessage();
+        //finishWorking();
+
+        showTopSnackBar(
+          Overlay.of(contextt),
+          const CustomSnackBar.info(
+            backgroundColor: Colors.green,
+            message: "Restaurant Modifié",
+          ),
+        );
+        ref.refresh(getDataCategoriesFuture);
+      } else {
+        showTopSnackBar(
+          Overlay.of(contextt),
+          const CustomSnackBar.info(
+            backgroundColor: Colors.red,
+            message: "Erreur de création",
+          ),
+        );
+        print("Error Create Programme  !!!");
+      }
+    } catch (e) {
+      rethrow;
+    }
   }
 
   TextFormField nomCategorie() {

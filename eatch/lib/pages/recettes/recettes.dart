@@ -6,7 +6,7 @@ import 'package:eatch/pages/recettes/eddit_recette.dart';
 import 'package:eatch/pages/recettes/grid.dart';
 import 'package:eatch/servicesAPI/getMatiere.dart';
 import 'package:eatch/servicesAPI/get_categories.dart';
-import 'package:eatch/servicesAPI/get_recettes.dart';
+import 'package:eatch/servicesAPI/get_recettes.dart' as recette;
 import 'package:eatch/servicesAPI/multipart.dart';
 import 'package:eatch/utils/applayout.dart';
 import 'package:eatch/utils/default_button/default_button.dart';
@@ -99,7 +99,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
   final _formkey = GlobalKey<FormState>();
 
 /*LA LISTE QUI CONTIENT LE CONTENU DE LA RECHERCHE*/
-  List<Recette> recetteSearch = [];
+  List<recette.Recette> recetteSearch = [];
 
 /*LA METHODE QUI PERMET D'AJOUTER UN INGREDIENT */
   _addFiel() {
@@ -138,7 +138,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
       return;
     } else if (_matierePremieres.length == 0) {
       showTopSnackBar(
-        Overlay.of(context)!,
+        Overlay.of(context),
         const CustomSnackBar.info(
           backgroundColor: Colors.red,
           message: "Les ingrédients sont obligatoires .",
@@ -177,11 +177,11 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
 
 /*LA METHODE QUI PERMET DE FAIRE LA RECHERCHE*/
   void filterRecetteResults(String query) {
-    final viewRecetteModel = ref.watch(getDataRecettesFuture);
-    List<Recette> dummySearchList = [];
+    final viewRecetteModel = ref.watch(recette.getDataRecettesFuture);
+    List<recette.Recette> dummySearchList = [];
     dummySearchList.addAll(viewRecetteModel.listRecette);
     if (query.isNotEmpty) {
-      List<Recette> dummyListData = [];
+      List<recette.Recette> dummyListData = [];
       for (var item in dummySearchList) {
         if (item.title!.contains(query)) {
           dummyListData.add(item);
@@ -239,7 +239,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
 
   Widget horizontalView(double height, double width, context) {
     final viewModel = ref.watch(getDataMatiereFuture);
-    final viewRecetteModel = ref.watch(getDataRecettesFuture);
+    final viewRecetteModel = ref.watch(recette.getDataRecettesFuture);
     return AppLayout(
       content: SingleChildScrollView(
         child: Column(
@@ -775,7 +775,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                                           Radius.circular(15),
                                                     ),
                                                     child: Image.network(
-                                                      'http://192.168.1.26:4010${recette.image}',
+                                                      'http://192.168.11.110:4010${recette.image}',
                                                       height: 180,
                                                       width: double.infinity,
                                                       fit: BoxFit.cover,
@@ -1089,7 +1089,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
 
   Widget verticalView(double height, double width, context) {
     final viewModel = ref.watch(getDataCategoriesFuture);
-    final viewRecetteModel = ref.watch(getDataRecettesFuture);
+    final viewRecetteModel = ref.watch(recette.getDataRecettesFuture);
     return AppLayout(
       content: Container(),
     );
@@ -1109,7 +1109,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
     var restaurantid = prefs.getString('idRestaurant');
     String adressUrl = prefs.getString('ipport').toString();
     var url = Uri.parse(
-        "http://192.168.1.26:4010/api/recettes/create"); //13.39.81.126
+        "http://192.168.11.110:4010/api/recettes/create"); //13.39.81.126
     print(url);
     final request = MultipartRequest(
       'POST',
@@ -1155,16 +1155,16 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
         //finishWorking();
 
         showTopSnackBar(
-          Overlay.of(contextt)!,
+          Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.green,
             message: "Recette Crée",
           ),
         );
-        ref.refresh(getDataRecettesFuture);
+        ref.refresh(recette.getDataRecettesFuture);
       } else {
         showTopSnackBar(
-          Overlay.of(contextt)!,
+          Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.red,
             message: "Erreur de création",
@@ -1242,7 +1242,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userdelete = prefs.getString('IdUser').toString();
       var token = prefs.getString('token');
-      String urlDelete = "http://192.168.1.26:4010/api/recettes/delete/$id";
+      String urlDelete = "http://192.168.11.110:4010/api/recettes/delete/$id";
       var json = {
         '_creator': userdelete,
       };
@@ -1260,7 +1260,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
 
       print(response.statusCode);
       if (response.statusCode == 200) {
-        ref.refresh(getDataRecettesFuture);
+        ref.refresh(recette.getDataRecettesFuture);
 
         return response;
       } else {
@@ -1284,9 +1284,9 @@ class Ingredient {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['material'] = this.material;
-    data['grammage'] = this.grammage;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['material'] = material;
+    data['grammage'] = grammage;
     return data;
   }
 }

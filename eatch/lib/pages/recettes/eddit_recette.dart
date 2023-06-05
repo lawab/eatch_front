@@ -149,7 +149,7 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
       return;
     } else if (ingredientsList.isEmpty) {
       showTopSnackBar(
-        Overlay.of(context)!,
+        Overlay.of(context),
         const CustomSnackBar.info(
           backgroundColor: Colors.red,
           message: "Les ingrédients sont obligatoires .",
@@ -843,7 +843,7 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
                                 borderRadius: BorderRadius.circular(16),
                                 child: _selectFile == false
                                     ? Image.network(
-                                        'http://192.168.1.26:4010${widget.image}',
+                                        'http://192.168.11.110:4010${widget.image}',
                                         fit: BoxFit.fill,
                                       )
                                     : isLoading
@@ -938,7 +938,7 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
     var restaurantid = prefs.getString('idRestaurant');
     String adressUrl = prefs.getString('ipport').toString();
     var url = Uri.parse(
-        "http://192.168.1.26:4010/api/recettes/update/${widget.sId}"); //13.39.81.126
+        "http://192.168.11.110:4010/api/recettes/update/${widget.sId}"); //13.39.81.126
     print(url);
     final request = MultipartRequest(
       'PUT',
@@ -986,7 +986,7 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
         //finishWorking();
 
         showTopSnackBar(
-          Overlay.of(contextt)!,
+          Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.green,
             message: "Recette Crée",
@@ -995,7 +995,7 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
         ref.refresh(getDataRecettesFuture);
       } else {
         showTopSnackBar(
-          Overlay.of(contextt)!,
+          Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.red,
             message: "Erreur de création",
@@ -1023,10 +1023,10 @@ class Ingredient {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['material'] = this.material;
-    data['grammage'] = this.grammage;
-    data['unity'] = this.unity;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['material'] = material;
+    data['grammage'] = grammage;
+    data['unity'] = unity;
     return data;
   }
 }
