@@ -275,8 +275,8 @@ class _MenuState extends ConsumerState<Menu> {
               alignment: Alignment.centerRight,
               height: 50,
               color: const Color(0xFFFCEBD1),
-              child: Row(
-                children: const [
+              child: const Row(
+                children: [
                   SizedBox(
                     width: 50,
                   ),
@@ -493,7 +493,7 @@ class _MenuState extends ConsumerState<Menu> {
                         setState(
                           () {
                             produit = value!;
-                            print('Valeur : ${produit}');
+                            print('Valeur : $produit');
                             ////////////////////////////
 
                             for (int j = 0; j < listProduits.length; j++) {
@@ -713,14 +713,14 @@ class _MenuState extends ConsumerState<Menu> {
 
     request.fields['form_key'] = 'form_value';
     request.headers['authorization'] = 'Bearer $token';
-    request.files.add(await http.MultipartFile.fromBytes('file', selectedFile,
+    request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
         contentType: MediaType('application', 'octet-stream'),
         filename: result?.files.first.name));
 
     print("RESPENSE SEND STEAM FILE REQ");
     //var responseString = await streamedResponse.stream.bytesToString();
     var response = await request.send();
-    print("Upload Response" + response.toString());
+    print("Upload Response$response");
     print(response.statusCode);
     print(request.headers);
 
@@ -732,7 +732,7 @@ class _MenuState extends ConsumerState<Menu> {
         //stopMessage();
         //finishWorking();
         showTopSnackBar(
-          Overlay.of(context)!,
+          Overlay.of(context),
           const CustomSnackBar.info(
             backgroundColor: Colors.green,
             message: "Le menu a été crée",
@@ -741,7 +741,7 @@ class _MenuState extends ConsumerState<Menu> {
         ref.refresh(getDataMenuFuture);
       } else {
         showTopSnackBar(
-          Overlay.of(context)!,
+          Overlay.of(context),
           const CustomSnackBar.info(
             backgroundColor: Colors.red,
             message: "Le menu n'a pas été crée",
@@ -750,7 +750,7 @@ class _MenuState extends ConsumerState<Menu> {
         print("Error Create Programme  !!!");
       }
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 }

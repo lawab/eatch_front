@@ -48,6 +48,9 @@ class GetDataUserFuture extends ChangeNotifier {
             } else if (data[i]['role'] == 'COMPTABLE') {
               listComptable.add(User.fromJson(data[i]));
             }
+            // else if (data[i]['role'] == data['role']) {
+            //    listComptable.add(User.fromJson(data[i]));
+            // }
           }
         }
       } else {

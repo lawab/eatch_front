@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:eatch/pages/recettes/recettes.dart';
 import 'package:eatch/servicesAPI/getMatiere.dart';
 import 'package:eatch/servicesAPI/get_recettes.dart';
-import 'package:eatch/servicesAPI/getMatiere.dart' as material;
 import 'package:eatch/servicesAPI/multipart.dart';
 import 'package:eatch/utils/applayout.dart';
 import 'package:eatch/utils/default_button/default_button.dart';
@@ -56,7 +55,7 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
   }
 
 /* LA LISTE QUI VA CONTENIR LES INGREDIENTS */
-  List<material.Matiere> listmatiere = [];
+  List<Matiere> listmatiere = [];
 
   // ***** LES VARIABLES ****** //
   bool isLoading = false;
@@ -162,47 +161,51 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
           message: "Les ingrédients sont obligatoires .",
         ),
       );
-    } else {
-      _formkey.currentState!.save();
-
-      // for (int i = 0; i < widget.ingredients.length; i++) {
-      //   ingredientsList.add(Ingredient(
-      //     material: widget.ingredients[i].material!.sId!,
-      //     grammage: widget.ingredients[i].grammage.toString(),
-      //     unity: widget.ingredients[i].unity.toString(),
-      //   ));
-      // }
-
-      for (int i = 0; i < _matierePremieres.length; i++) {
-        ingredientsList.add(Ingredient(
-          material: _matierePremieres[i].text,
-          grammage: _quantite[i].text,
-          unity: _uniteDeMesure[i].text,
-        ));
-      }
-      updateRecette(
-        context,
-        _selectedFile,
-        result,
-        _titreRecette.text,
-        _descriptionRecette.text,
-        ingredientsList,
-        // _selectedFile,
-        // result,
-      );
-
-      // _clear();
-      setState(() {
-        // _selectFile = false;
-        // result = null;
-        // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        //   _addFiel();
-        // });
-      });
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const RecettesPage()),
-          (Route<dynamic> route) => false);
     }
+    _formkey.currentState!.save();
+
+    // for (int i = 0; i < widget.ingredients.length; i++) {
+    //   ingredientsList.add(Ingredient(
+    //     material: widget.ingredients[i].material!.sId!,
+    //     grammage: widget.ingredients[i].grammage.toString(),
+    //     unity: widget.ingredients[i].unity.toString(),
+    //   ));
+    // }
+
+    for (int i = 0; i < _matierePremieres.length; i++) {
+      ingredientsList.add(Ingredient(
+        material: _matierePremieres[i].text,
+        grammage: _quantite[i].text,
+        unity: _uniteDeMesure[i].text,
+      ));
+    }
+
+    print("IMMMMMAGGAGAGAGAGAGAGAGAGAGA");
+    print(_selectedFile);
+    print(result);
+    print(_titreRecette.text);
+    print(_descriptionRecette.text);
+    print(ingredientsList);
+    updateRecette(
+      context,
+      _selectedFile,
+      result,
+      _titreRecette.text,
+      _descriptionRecette.text,
+      ingredientsList,
+    );
+
+    // _clear();
+    setState(() {
+      // _selectFile = false;
+      // result = null;
+      // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      //   _addFiel();
+      // });
+    });
+    // Navigator.of(context).pushAndRemoveUntil(
+    //     MaterialPageRoute(builder: (context) => const RecettesPage()),
+    //     (Route<dynamic> route) => false);
   }
 
 /*EFFACER CES VARIABLES DE LA MEMOIRE SI ELLES NE SONT PAS UTILISEES */
@@ -247,6 +250,8 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
     listmatiere.addAll(listMatieres);
 
     // final viewRecetteModel = ref.watch(getDataRecettesFuture);
+
+    final viewModel = ref.watch(getDataMatiereFuture);
     return AppLayout(
       content: SingleChildScrollView(
         /*LE FORMULAIRE DE CREATION DE RECETTE*/
@@ -381,7 +386,8 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
                                             ),
                                           ),
                                           onChanged: null,
-                                          items: listmatiere.map((val) {
+                                          items:
+                                              viewModel.listMatiere.map((val) {
                                             return DropdownMenuItem(
                                               value: val.sId,
                                               child: Text(
@@ -719,7 +725,8 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
                                                   value.toString();
                                             });
                                           },
-                                          items: listmatiere.map((val) {
+                                          items:
+                                              viewModel.listMatiere.map((val) {
                                             return DropdownMenuItem(
                                               value: val.sId,
                                               child: Text(
@@ -980,7 +987,7 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
       'description': description,
       'engredients': ingredient,
       '_creator': id,
-      'restaurant': restaurantid!.trim(),
+      'restaurant': restaurantid!,
     };
     var body = jsonEncode(json);
 
@@ -991,9 +998,11 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
     request.fields['form_key'] = 'form_value';
     request.headers['authorization'] = 'Bearer $token';
     if (result != null) {
-      request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
-          contentType: MediaType('application', 'octet-stream'),
-          filename: result.files.first.name));
+      request.files.add(
+        http.MultipartFile.fromBytes('file', selectedFile,
+            contentType: MediaType('application', 'octet-stream'),
+            filename: result.files.first.name),
+      );
     }
 
     print("RESPENSE SEND STEAM FILE REQ");
@@ -1011,13 +1020,21 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
           ref.refresh(getDataRecettesFuture);
         });
 
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Utilisateur crée"),
-        ));
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.info(
+            backgroundColor: Colors.green,
+            message: "Recette modifiée avec succès",
+          ),
+        );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Erreur de serveur"),
-        ));
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.error(
+            backgroundColor: Colors.red,
+            message: "Erreur du Serveur",
+          ),
+        );
         print("Error Create Programme  !!!");
       }
     } catch (e) {

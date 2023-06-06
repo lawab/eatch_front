@@ -83,7 +83,7 @@ class Recette {
     if (json['engredients'] != null) {
       engredients = <Engredients>[];
       json['engredients'].forEach((v) {
-        engredients!.add(new Engredients.fromJson(v));
+        engredients!.add(Engredients.fromJson(v));
       });
     }
     sCreator = json['_creator'];
@@ -94,19 +94,19 @@ class Recette {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['title'] = this.title;
-    data['image'] = this.image;
-    data['description'] = this.description;
-    if (this.engredients != null) {
-      data['engredients'] = this.engredients!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
+    data['title'] = title;
+    data['image'] = image;
+    data['description'] = description;
+    if (engredients != null) {
+      data['engredients'] = engredients!.map((v) => v.toJson()).toList();
     }
-    data['_creator'] = this.sCreator;
-    data['deletedAt'] = this.deletedAt;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['__v'] = this.iV;
+    data['_creator'] = sCreator;
+    data['deletedAt'] = deletedAt;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['__v'] = iV;
     return data;
   }
 }
@@ -121,21 +121,20 @@ class Engredients {
 
   Engredients.fromJson(Map<String, dynamic> json) {
     unity = json['unity'];
-    material = json['material'] != null
-        ? new Material.fromJson(json['material'])
-        : null;
+    material =
+        json['material'] != null ? Material.fromJson(json['material']) : null;
     grammage = json['grammage'];
     sId = json['_id'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['unity'] = this.unity;
-    if (this.material != null) {
-      data['material'] = this.material!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['unity'] = unity;
+    if (material != null) {
+      data['material'] = material!.toJson();
     }
-    data['grammage'] = this.grammage;
-    data['_id'] = this.sId;
+    data['grammage'] = grammage;
+    data['_id'] = sId;
     return data;
   }
 }
@@ -160,7 +159,7 @@ class Material {
 
   Material.fromJson(Map<String, dynamic> json) {
     restaurant = json['restaurant'] != null
-        ? new Restaurant.fromJson(json['restaurant'])
+        ? Restaurant.fromJson(json['restaurant'])
         : null;
     lifetime = json['lifetime'];
     mpName = json['mp_name'];
@@ -171,16 +170,16 @@ class Material {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.restaurant != null) {
-      data['restaurant'] = this.restaurant!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (restaurant != null) {
+      data['restaurant'] = restaurant!.toJson();
     }
-    data['lifetime'] = this.lifetime;
-    data['mp_name'] = this.mpName;
-    data['quantity'] = this.quantity;
-    data['min_quantity'] = this.minQuantity;
-    data['deletedAt'] = this.deletedAt;
-    data['_id'] = this.sId;
+    data['lifetime'] = lifetime;
+    data['mp_name'] = mpName;
+    data['quantity'] = quantity;
+    data['min_quantity'] = minQuantity;
+    data['deletedAt'] = deletedAt;
+    data['_id'] = sId;
     return data;
   }
 }
@@ -194,20 +193,20 @@ class Restaurant {
   Restaurant({this.infos, this.restaurantName, this.deletedAt, this.sId});
 
   Restaurant.fromJson(Map<String, dynamic> json) {
-    infos = json['infos'] != null ? new Infos.fromJson(json['infos']) : null;
+    infos = json['infos'] != null ? Infos.fromJson(json['infos']) : null;
     restaurantName = json['restaurant_name'];
     deletedAt = json['deletedAt'];
     sId = json['_id'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.infos != null) {
-      data['infos'] = this.infos!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (infos != null) {
+      data['infos'] = infos!.toJson();
     }
-    data['restaurant_name'] = this.restaurantName;
-    data['deletedAt'] = this.deletedAt;
-    data['_id'] = this.sId;
+    data['restaurant_name'] = restaurantName;
+    data['deletedAt'] = deletedAt;
+    data['_id'] = sId;
     return data;
   }
 }
@@ -226,10 +225,10 @@ class Infos {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['town'] = this.town;
-    data['address'] = this.address;
-    data['logo'] = this.logo;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['town'] = town;
+    data['address'] = address;
+    data['logo'] = logo;
     return data;
   }
 }

@@ -50,20 +50,42 @@ class GetDataRoleFuture extends ChangeNotifier {
 }
 
 class Role {
+  String? sId;
   String? value;
   String? sCreator;
+  String? deletedAt;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
 
-  Role({this.value, this.sCreator});
+  Role(
+      {this.sId,
+      this.value,
+      this.sCreator,
+      this.deletedAt,
+      this.createdAt,
+      this.updatedAt,
+      this.iV});
 
   Role.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
     value = json['value'];
     sCreator = json['_creator'];
+    deletedAt = json['deletedAt'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+    iV = json['__v'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
     data['value'] = value;
     data['_creator'] = sCreator;
+    data['deletedAt'] = deletedAt;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['__v'] = iV;
     return data;
   }
 }

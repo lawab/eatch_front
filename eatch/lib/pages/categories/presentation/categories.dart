@@ -230,6 +230,7 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                           const SizedBox(height: 20),
 
                           ////////////// - Image(début)
+
                           Container(
                             padding: const EdgeInsets.only(right: 70),
                             color: Palette.secondaryBackgroundColor,

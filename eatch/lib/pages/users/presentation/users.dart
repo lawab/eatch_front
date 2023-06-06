@@ -84,12 +84,23 @@ class _UsersState extends ConsumerState<Users> {
     super.dispose();
   }
 
+  // text controller
+  final _roleController = TextEditingController();
+
   //**********************************/
 
+  /* LE LOADING PENDANT LE TÉLÉCHARGEMENT DE L’IMAGE DE LA RECETTE */
+  bool isLoading = false;
+
+/* SI UNE IMAGE EST SÉLECTIONNÉE SEL DEVIENT TRUE */
+  bool _selectFile = false;
+
+/* LE FICHIER IMAGE TELECHARGER DEPUIS LE PC */
+  Uint8List? selectedImageInBytes;
   List<int> _selectedFile = [];
+
+/* LE FICHIER IMAGE TELECHARGER DEPUIS LE PC A ENVOYER SUR INTERNET */
   FilePickerResult? result;
-  PlatformFile? file;
-  bool filee = false;
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -158,8 +169,8 @@ class _UsersState extends ConsumerState<Users> {
                                 Radius.circular(10),
                               ),
                             ),
-                            child: Row(
-                              children: const [
+                            child: const Row(
+                              children: [
                                 Icon(
                                   Icons.add,
                                   color: Palette.primaryBackgroundColor,
@@ -207,48 +218,108 @@ class _UsersState extends ConsumerState<Users> {
                             Row(
                               children: [
                                 Expanded(flex: 3, child: roleForm()),
+                                const SizedBox(width: 20),
                                 Expanded(
                                   flex: 1,
-                                  child: Container(),
+                                  child: Container(
+                                    margin: const EdgeInsets.symmetric(
+                                      vertical: 10.0,
+                                    ),
+                                    height: 50.0,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                    ),
+                                    child: ElevatedButton.icon(
+                                      onPressed: () {
+                                        addRole();
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Palette.yellowColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(15.0),
+                                        ),
+                                      ),
+                                      icon: const Icon(
+                                        Icons.add,
+                                        color: Palette.primaryBackgroundColor,
+                                      ),
+                                      label: const Text(
+                                        " AJOUTER UN RÔLE",
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Palette.primaryBackgroundColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 const SizedBox(width: 20),
                               ],
                             ),
                             const SizedBox(height: 20),
-                            SizedBox(
-                              width: 200,
-                              child: DefaultButton(
-                                color: Palette.primaryColor,
-                                foreground: Colors.red,
-                                text: 'USER IMAGE',
-                                textcolor: Palette.primaryBackgroundColor,
-                                onPressed: () async {
-                                  result = await FilePicker.platform.pickFiles(
-                                      type: FileType.custom,
-                                      allowedExtensions: [
-                                        "png",
-                                        "jpg",
-                                        "jpeg",
-                                      ]);
-                                  if (result != null) {
-                                    file = result!.files.single;
-
-                                    Uint8List fileBytes =
-                                        result!.files.single.bytes as Uint8List;
-                                    //print(base64Encode(fileBytes));
-                                    //List<int>
-                                    _selectedFile = fileBytes;
-                                    setState(() {
-                                      filee = true;
-                                    });
-                                  }
-                                },
-                              ),
-                            ),
-                            const SizedBox(height: 20),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
+                                Container(
+                                  padding: const EdgeInsets.only(right: 70),
+                                  color: Palette.secondaryBackgroundColor,
+                                  alignment: Alignment.centerRight,
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      result = await FilePicker.platform
+                                          .pickFiles(
+                                              type: FileType.custom,
+                                              allowedExtensions: [
+                                            "png",
+                                            "jpg",
+                                            "jpeg",
+                                          ]);
+                                      if (result != null) {
+                                        setState(() {
+                                          // file = result!.files.single;
+
+                                          Uint8List fileBytes = result!
+                                              .files.single.bytes as Uint8List;
+
+                                          _selectedFile = fileBytes;
+
+                                          // filee = true;
+
+                                          selectedImageInBytes =
+                                              result!.files.first.bytes;
+                                          _selectFile = true;
+                                        });
+                                      }
+                                    },
+                                    child: Container(
+                                      width: 100,
+                                      height: 100,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          width: 4,
+                                          color: Palette.greenColors,
+                                        ),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(16),
+                                        child: _selectFile == false
+                                            ? const Icon(
+                                                Icons.camera_alt_outlined,
+                                                color: Palette.greenColors,
+                                                size: 40,
+                                              )
+                                            : Image.memory(
+                                                selectedImageInBytes!,
+                                                fit: BoxFit.fill,
+                                              ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const Spacer(),
                                 SizedBox(
                                   width: 200,
                                   child: DefaultButton(
@@ -301,48 +372,47 @@ class _UsersState extends ConsumerState<Users> {
                         ),
                       ),
                     )
-                  : Container(),
-              DefaultTabController(
-                length: 4,
-                child: Column(
-                  children: [
-                    const TabBar(
-                      indicatorColor: Palette.primaryColor,
-                      labelColor: Palette.primaryColor,
-                      unselectedLabelColor: Palette.textsecondaryColor,
-                      tabs: [
-                        Tab(
-                          text: "Tous les utilisateurs",
-                          icon: Icon(Icons.people_rounded),
-                        ),
-                        Tab(
-                          text: "Managers",
-                          icon: Icon(Icons.handshake),
-                        ),
-                        Tab(
-                          text: "Employés",
-                          icon: Icon(Icons.manage_accounts),
-                        ),
-                        Tab(
-                          text: "Comptables",
-                          icon: Icon(Icons.monetization_on_sharp),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: getProportionateScreenHeight(850),
-                      child: const TabBarView(
+                  : DefaultTabController(
+                      length: 4,
+                      child: Column(
                         children: [
-                          AllUsers(),
-                          ManagerUsers(),
-                          EmployerUsers(),
-                          ComptableUsers(),
+                          const TabBar(
+                            indicatorColor: Palette.primaryColor,
+                            labelColor: Palette.primaryColor,
+                            unselectedLabelColor: Palette.textsecondaryColor,
+                            tabs: [
+                              Tab(
+                                text: "Tous les utilisateurs",
+                                icon: Icon(Icons.people_rounded),
+                              ),
+                              Tab(
+                                text: "Managers",
+                                icon: Icon(Icons.handshake),
+                              ),
+                              Tab(
+                                text: "Employés",
+                                icon: Icon(Icons.manage_accounts),
+                              ),
+                              Tab(
+                                text: "Comptables",
+                                icon: Icon(Icons.monetization_on_sharp),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: getProportionateScreenHeight(850),
+                            child: const TabBarView(
+                              children: [
+                                AllUsers(),
+                                ManagerUsers(),
+                                EmployerUsers(),
+                                ComptableUsers(),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ),
 
               /**
                 !DEUXIEME LIGNE 
@@ -363,8 +433,8 @@ class _UsersState extends ConsumerState<Users> {
       content: SizedBox(
         height: height,
         width: width,
-        child: Column(
-          children: const [],
+        child: const Column(
+          children: [],
         ),
       ),
     );
@@ -420,7 +490,7 @@ class _UsersState extends ConsumerState<Users> {
       },
       items: viewModel.listRole.map((val) {
         return DropdownMenuItem(
-          value: val.value,
+          value: val.sId,
           child: Text(
             val.value!,
           ),
@@ -770,6 +840,198 @@ class _UsersState extends ConsumerState<Users> {
     } catch (e) {
       rethrow;
     }
+  }
+
+  void saveNewRole() {
+    setState(() {
+      _roleController.clear();
+    });
+    Navigator.of(context).pop();
+  }
+
+  void addRole() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return DialogBox(
+          roleController: _roleController,
+          onSave: () {
+            setState(() {
+              creationRole(context, _roleController.text);
+              _roleController.clear();
+            });
+            Navigator.of(context).pop();
+          },
+          onCancel: () => Navigator.of(context).pop(),
+        );
+      },
+    );
+  }
+
+  Future<void> creationRole(
+    BuildContext context,
+    value,
+  ) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var id = prefs.getString('IdUser').toString();
+    var token = prefs.getString('token');
+    var restaurantid = prefs.getString('idRestaurant');
+    print(id);
+    print(token);
+    print("Restaurant id $restaurantid");
+
+    var url = Uri.parse("http://192.168.11.110:4001/api/users/create/role");
+    final request = MultipartRequest(
+      'POST',
+      url,
+      onProgress: (int bytes, int total) {
+        final progress = bytes / total;
+        print('progress: $progress ($bytes/$total)');
+      },
+    );
+    var json = {
+      "restaurant": restaurantid,
+      "value": value,
+      "_creator": id,
+    };
+    var body = jsonEncode(json);
+
+    request.headers.addAll({
+      "body": body,
+    });
+
+    request.fields['form_key'] = 'form_value';
+    request.headers['authorization'] = 'Bearer $token';
+    print("RESPENSE SEND STEAM FILE REQ");
+    var response = await request.send();
+    print("Upload Response$response");
+    print(response.statusCode);
+    print(request.headers);
+
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        await response.stream.bytesToString().then((value) {
+          print(value);
+        });
+        setState(() {
+          ref.refresh(getDataRoleFuture);
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Rôle crée"),
+        ));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Erreur de serveur"),
+        ));
+        print("Error Create Programme  !!!");
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+}
+
+class DialogBox extends StatelessWidget {
+  final roleController;
+  VoidCallback onSave;
+  VoidCallback onCancel;
+
+  DialogBox({
+    super.key,
+    required this.roleController,
+    required this.onSave,
+    required this.onCancel,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Palette.primaryBackgroundColor,
+      content: SizedBox(
+        height: 120,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TextFormField(
+              controller: roleController,
+              textInputAction: TextInputAction.next,
+              autocorrect: true,
+              textCapitalization: TextCapitalization.characters,
+              enableSuggestions: false,
+              onEditingComplete: (() => FocusScope.of(context).requestFocus()),
+              keyboardType: TextInputType.name,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return "Le role est obligatoire !";
+                } else if (value.length < 2) {
+                  return "Entrez au moins 2 caractères !";
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 00.0,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  gapPadding: 10,
+                ),
+                hintText: "Nouveau rôle*",
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // buttons -> save + cancel
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                // save button
+                MyButton(
+                  text: "Ajouter",
+                  onPressed: onSave,
+                  color: Palette.primaryColor,
+                ),
+
+                const SizedBox(width: 8),
+
+                // cancel button
+                MyButton(
+                  text: "Annuler",
+                  onPressed: onCancel,
+                  color: Palette.deleteColors,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MyButton extends StatelessWidget {
+  final String text;
+  VoidCallback onPressed;
+  Color color;
+  MyButton({
+    super.key,
+    required this.text,
+    required this.color,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+      onPressed: onPressed,
+      color: color,
+      child: Text(
+        text,
+        style: const TextStyle(color: Palette.primaryBackgroundColor),
+      ),
+    );
   }
 }
 

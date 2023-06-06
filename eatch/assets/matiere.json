@@ -1,36 +1,37 @@
-
 [
     {
-        "type":"Viande",
-        "initial":20 ,
-        "consommation":10 ,
-        "image":"viande.png",
-        "mesure":"kg"
-    },{
-        "type":"Boisson",
-        "initial":100 ,
-        "consommation":45 ,
-        "image":"boisson.png",
-        "mesure":"Canettes"
-    },{
-        "type":"Frite",
-        "initial":50 ,
-        "consommation":5 ,
-        "image":"frite.png",
-        "mesure":"kg"
-    },{
-        "type":"Sauce",
-        "initial":25 ,
-        "consommation":20 ,
-        "image":"sauce.png",
-        "mesure":"bouteille"
-    },{
-        "type":"Emballage",
-        "initial":200 ,
-        "consommation":50 ,
-        "image":"emballage.jpeg",
-        "mesure":"Embal"
+        "type": "Viande",
+        "initial": 20,
+        "consommation": 10,
+        "image": "viande.png",
+        "mesure": "kg"
+    },
+    {
+        "type": "Boisson",
+        "initial": 100,
+        "consommation": 45,
+        "image": "boisson.png",
+        "mesure": "Canettes"
+    },
+    {
+        "type": "Frite",
+        "initial": 50,
+        "consommation": 5,
+        "image": "frite.png",
+        "mesure": "kg"
+    },
+    {
+        "type": "Sauce",
+        "initial": 25,
+        "consommation": 20,
+        "image": "sauce.png",
+        "mesure": "bouteille"
+    },
+    {
+        "type": "Emballage",
+        "initial": 200,
+        "consommation": 50,
+        "image": "emballage.jpeg",
+        "mesure": "Embal"
     }
 ]
-
-

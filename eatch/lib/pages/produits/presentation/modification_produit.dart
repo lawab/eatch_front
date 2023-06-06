@@ -407,10 +407,10 @@ class ModificationProduitState extends ConsumerState<ModificationProduit> {
         floatingLabelBehavior: FloatingLabelBehavior.always,
       ),
       value: widget.recette,
-      hint: const Text(
-        "Recette*",
-        style: TextStyle(color: Colors.black),
-      ),
+      // hint: const Text(
+      //   "Recette*",
+      //   style: TextStyle(color: Colors.black),
+      // ),
       isExpanded: true,
       onChanged: (value) {
         setState(() {
@@ -424,7 +424,7 @@ class ModificationProduitState extends ConsumerState<ModificationProduit> {
       },
       validator: (String? value) {
         if (value == null) {
-          return "La catégorie est obligatoire.";
+          return "La recette est obligatoire.";
         } else {
           return null;
         }
