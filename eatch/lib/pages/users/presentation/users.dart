@@ -713,7 +713,7 @@ class _UsersState extends ConsumerState<Users> {
     print(token);
     print("Restaurant id $restaurantid");
 
-    var url = Uri.parse("http://192.168.1.26:4001/api/users/create");
+    var url = Uri.parse("http://13.39.81.126:4001/api/users/create");
     final request = MultipartRequest(
       'POST',
       url,

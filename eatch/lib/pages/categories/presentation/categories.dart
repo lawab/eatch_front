@@ -147,6 +147,7 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(getDataCategoriesFuture);
+    print('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
     SizeConfig().init(context);
     return AppLayout(
       content: SingleChildScrollView(
@@ -416,49 +417,56 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                             ),
                             Expanded(
                                 child: search == false
-                                    ? GridView.builder(
-                                        itemCount:
-                                            viewModel.listCategories.length,
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 01,
-                                          mainAxisSpacing: 10,
-                                          childAspectRatio: 4.1,
-                                        ),
-                                        itemBuilder: (context, index) {
-                                          return CategorieCard(
-                                            categorie:
-                                                viewModel.listCategories[index],
-                                            index: index,
-                                            onPress: () {
-                                              setState(() {
-                                                selectedIndexCategorie = index;
-                                                _pageController
-                                                    .jumpToPage(index);
-                                              });
-                                            },
-                                            selectedIndex:
-                                                selectedIndexCategorie,
-                                            onTapDelete: () {
-                                              dialogDelete(viewModel
-                                                  .listCategories[index]
-                                                  .title!);
-                                            },
-                                            onTapEdit: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) {
-                                                  return ModificationCategorie(
-                                                    nomCategorie: viewModel
-                                                        .listCategories[index]
-                                                        .title!,
+                                    ? viewModel.listCategories.isEmpty
+                                        ? Center(
+                                            child: Text('Aucune Catégorie'),
+                                          )
+                                        : GridView.builder(
+                                            itemCount:
+                                                viewModel.listCategories.length,
+                                            gridDelegate:
+                                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 01,
+                                              mainAxisSpacing: 10,
+                                              childAspectRatio: 4.1,
+                                            ),
+                                            itemBuilder: (context, index) {
+                                              print('***********************');
+                                              return CategorieCard(
+                                                categorie: viewModel
+                                                    .listCategories[index],
+                                                index: index,
+                                                onPress: () {
+                                                  setState(() {
+                                                    selectedIndexCategorie =
+                                                        index;
+                                                    _pageController
+                                                        .jumpToPage(index);
+                                                  });
+                                                },
+                                                selectedIndex:
+                                                    selectedIndexCategorie,
+                                                onTapDelete: () {
+                                                  dialogDelete(viewModel
+                                                      .listCategories[index]
+                                                      .title!);
+                                                },
+                                                onTapEdit: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                      return ModificationCategorie(
+                                                        nomCategorie: viewModel
+                                                            .listCategories[
+                                                                index]
+                                                            .title!,
+                                                      );
+                                                    }),
                                                   );
-                                                }),
+                                                },
                                               );
-                                            },
-                                          );
-                                        })
+                                            })
                                     : categorieSearch.isEmpty
                                         ? const Center(
                                             child: Text(
@@ -560,9 +568,12 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                                           child: Text(
                                             search == false
                                                 ? viewModel
-                                                    .listCategories[
-                                                        selectedIndexCategorie]
-                                                    .title!
+                                                        .listCategories.isEmpty
+                                                    ? ''
+                                                    : viewModel
+                                                        .listCategories[
+                                                            selectedIndexCategorie]
+                                                        .title!
                                                 : categorieSearch.isNotEmpty
                                                     ? categorieSearch[
                                                             selectedIndexCategorie]
@@ -635,9 +646,12 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                                           child: Text(
                                             search == false
                                                 ? viewModel
-                                                    .listCategories[
-                                                        selectedIndexCategorie]
-                                                    .title!
+                                                        .listCategories.isEmpty
+                                                    ? ''
+                                                    : viewModel
+                                                        .listCategories[
+                                                            selectedIndexCategorie]
+                                                        .title!
                                                 : categorieSearch.isNotEmpty
                                                     ? categorieSearch[
                                                             selectedIndexCategorie]
@@ -705,48 +719,50 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                                           const NeverScrollableScrollPhysics(),
                                       controller: _pageController,
                                       children: [
-                                        viewModel
-                                                .listCategories[
-                                                    selectedIndexCategorie]
-                                                .products!
-                                                .isEmpty
+                                        viewModel.listCategories.isEmpty
                                             ? const Center(
                                                 child: Text(
-                                                  'Aucun Produit trouvé',
+                                                  'Aucun Produit',
                                                 ),
                                               )
-                                            : searchProduit == false
-                                                ? ProductsGrid(
-                                                    filterproductsList: viewModel
-                                                        .listCategories[
-                                                            selectedIndexCategorie]
-                                                        .products!,
-                                                    crossAxisCount: MediaQuery
-                                                                    .of(context)
-                                                                .size
-                                                                .width <
-                                                            485
-                                                        ? 1
-                                                        : MediaQuery.of(context)
+                                            : viewModel
+                                                    .listCategories[
+                                                        selectedIndexCategorie]
+                                                    .products!
+                                                    .isEmpty
+                                                ? const Center(
+                                                    child: Text(
+                                                      'Aucun Produit trouvé',
+                                                    ),
+                                                  )
+                                                : searchProduit == false
+                                                    ? ProductsGrid(
+                                                        filterproductsList:
+                                                            viewModel
+                                                                .listCategories[
+                                                                    selectedIndexCategorie]
+                                                                .products!,
+                                                        crossAxisCount: MediaQuery.of(
+                                                                        context)
                                                                     .size
                                                                     .width <
-                                                                605
-                                                            ? 02
+                                                                485
+                                                            ? 1
                                                             : MediaQuery.of(context)
                                                                         .size
                                                                         .width <
-                                                                    750
-                                                                ? 03
-                                                                : 04,
-                                                    mainAxisSpacing: 10,
-                                                    crossAxisSpacing: 10,
-                                                    childAspectRatio: 1 / 1.19,
-                                                  )
-                                                : produitSearch.isEmpty
-                                                    ? const Center(
-                                                        child: Text(
-                                                          'Aucun Produit trouvé',
-                                                        ),
+                                                                    605
+                                                                ? 02
+                                                                : MediaQuery.of(context)
+                                                                            .size
+                                                                            .width <
+                                                                        750
+                                                                    ? 03
+                                                                    : 04,
+                                                        mainAxisSpacing: 10,
+                                                        crossAxisSpacing: 10,
+                                                        childAspectRatio:
+                                                            1 / 1.19,
                                                       )
                                                     : produitSearch.isEmpty
                                                         ? const Center(
@@ -754,33 +770,37 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                                                               'Aucun Produit trouvé',
                                                             ),
                                                           )
-                                                        : ProductsGrid(
-                                                            filterproductsList:
-                                                                produitSearch
-                                                                        .isEmpty
-                                                                    ? []
-                                                                    : produitSearch,
-                                                            crossAxisCount: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width <
-                                                                    485
-                                                                ? 1
-                                                                : MediaQuery.of(context)
+                                                        : produitSearch.isEmpty
+                                                            ? const Center(
+                                                                child: Text(
+                                                                  'Aucun Produit trouvé',
+                                                                ),
+                                                              )
+                                                            : ProductsGrid(
+                                                                filterproductsList:
+                                                                    produitSearch
+                                                                            .isEmpty
+                                                                        ? []
+                                                                        : produitSearch,
+                                                                crossAxisCount: MediaQuery.of(context)
                                                                             .size
                                                                             .width <
-                                                                        605
-                                                                    ? 02
+                                                                        485
+                                                                    ? 1
                                                                     : MediaQuery.of(context).size.width <
-                                                                            750
-                                                                        ? 03
-                                                                        : 04,
-                                                            mainAxisSpacing: 10,
-                                                            crossAxisSpacing:
-                                                                10,
-                                                            childAspectRatio:
-                                                                1 / 1.19,
-                                                          ),
+                                                                            605
+                                                                        ? 02
+                                                                        : MediaQuery.of(context).size.width <
+                                                                                750
+                                                                            ? 03
+                                                                            : 04,
+                                                                mainAxisSpacing:
+                                                                    10,
+                                                                crossAxisSpacing:
+                                                                    10,
+                                                                childAspectRatio:
+                                                                    1 / 1.19,
+                                                              ),
                                       ],
                                     ),
                                   )

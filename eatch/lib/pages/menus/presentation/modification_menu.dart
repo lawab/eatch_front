@@ -908,7 +908,7 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
     //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.1.26:4009/api/menus/update/$idMenu"); //$adressUrl
+        "http://13.39.81.126:4009/api/menus/update/$idMenu"); //$adressUrl
     final request = MultipartRequest(
       'PUT',
       url,

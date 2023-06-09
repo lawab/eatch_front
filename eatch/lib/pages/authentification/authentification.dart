@@ -1,8 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'dart:convert';
-
-import 'package:eatch/pages/restaurantAccueil.dart';
+import 'package:eatch/pages/accueil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -648,7 +646,7 @@ class AuthentificationState extends State<Authentification> {
 
     prefs.setString('ipport', adressUrl);
     String url =
-        "http://192.168.1.26:4001/api/users/login"; //13.39.81.126:4001 //192.168.1.26:4001 // $adress_url
+        "http://192.168.1.105:4001/api/users/login"; //13.39.81.126:4001 //13.39.81.126:4001 // $adress_url
     print(url);
     print(email);
     print(pass);
@@ -671,13 +669,19 @@ class AuthentificationState extends State<Authentification> {
 
         prefs.setString('IdUser', data['user']['_id']);
         prefs.setString('token', data['accessToken']);
-        print(data['accessToken']);
+        //prefs.setString('Idrole', data['role']);
+        print(data['user']['role']);
+        if (data['user']['role'] == 'SUPER_ADMIN') {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const Accueil()));
+        } else if (data['role'] == 'LABORATIN') {
+        } else {}
 
         print("Vous êtes connecté");
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const RestaurantAccueil()));
+        /*Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const Accueil()));*/
 
-        /* Navigator.of(context).pushAndRemoveUntil(
+        /*Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => DashboardManager()),
             (Route<dynamic> route) => false);*/
       } else {

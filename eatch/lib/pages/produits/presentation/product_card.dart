@@ -46,7 +46,7 @@ class _ProductCardState extends State<ProductCard> {
                   topRight: Radius.circular(10.0),
                 ),
                 child: Image.network(
-                  'http://192.168.1.26:4003${widget.imageUrl}',
+                  'http://13.39.81.126:4003${widget.imageUrl}',
                   width: double.infinity,
                   height: 95,
                   fit: BoxFit.cover,

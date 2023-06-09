@@ -1,4 +1,7 @@
+import 'package:eatch/pages/accueil.dart';
 import 'package:eatch/pages/authentification/authentification.dart';
+import 'package:eatch/pages/dashboard/dashboard_comptable.dart';
+import 'package:eatch/pages/laboratoire/accuielLabo.dart';
 import 'package:eatch/pages/recettes/recettes.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';

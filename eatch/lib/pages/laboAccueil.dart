@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:eatch/pages/dashboard/dashboard_manager.dart';
+import 'package:eatch/pages/laboratoire/accuielLabo.dart';
+import 'package:eatch/servicesAPI/getLabo.dart';
 import 'package:eatch/servicesAPI/getRestaurant.dart';
 import 'package:eatch/servicesAPI/multipart.dart';
 import 'package:eatch/utils/palettes/palette.dart';
@@ -13,16 +15,16 @@ import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:http/http.dart' as http;
 
-class RestaurantAccueil extends ConsumerStatefulWidget {
-  const RestaurantAccueil({Key? key}) : super(key: key);
+class LaboAccueil extends ConsumerStatefulWidget {
+  const LaboAccueil({Key? key}) : super(key: key);
 
   @override
-  RestaurantAccueilState createState() => RestaurantAccueilState();
+  LaboAccueilState createState() => LaboAccueilState();
 }
 
-class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
+class LaboAccueilState extends ConsumerState<LaboAccueil> {
   var nomController = TextEditingController();
-  var villeController = TextEditingController();
+  var emailController = TextEditingController();
   var adresseController = TextEditingController();
   var employeController = TextEditingController();
   List<int> _selectedFile = [];
@@ -47,10 +49,11 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
     return size(buildContext).height;
   }
 
+  List<String> listLaboratoire = [];
   bool create = false;
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(getDataRsetaurantFuture);
+    final viewModel = ref.watch(getDataLaboratoriesFuture);
     return Scaffold(
       backgroundColor: const Color(0xFFF4B012),
       body: Column(
@@ -92,7 +95,7 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
                           });
                         },
                         icon: const Icon(Icons.add),
-                        label: const Text('Ajouter un restaurant'),
+                        label: const Text('Ajouter un Laboratoire'),
                       ),
                 const SizedBox(
                   width: 20,
@@ -121,12 +124,12 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
                         height: MediaQuery.of(context).size.height - 100,
                         width: MediaQuery.of(context).size.width / 2,
                         alignment: Alignment.center,
-                        child: viewModel.listRsetaurant.isEmpty
+                        child: viewModel.listLabo.isEmpty
                             ? Center(
-                                child: Text('PAS DE RESTAURANT'),
+                                child: Text('PAS DE LABORATOIRE'),
                               )
                             : ListView.builder(
-                                itemCount: viewModel.listRsetaurant.length,
+                                itemCount: viewModel.listLabo.length,
                                 itemBuilder: ((context, index) {
                                   return InkWell(
                                     child: SizedBox(
@@ -152,9 +155,9 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
 
                                             image: DecorationImage(
                                                 image: NetworkImage(
-                                                    'http://13.39.81.126:4002${viewModel.listRsetaurant[index].infos!.logo.toString()}'), //13.39.81.126:4002 //13.39.81.126
+                                                    'http://192.168.1.105:4015${viewModel.listLabo[index].image.toString()}'), //13.39.81.126:4002 //13.39.81.126
                                                 //image: AssetImage('Logo_Eatch_png.png'),
-                                                fit: BoxFit.cover),
+                                                fit: BoxFit.fill),
                                           ),
                                         ),
                                         const SizedBox(
@@ -163,8 +166,7 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
                                         SizedBox(
                                           height: 40,
                                           child: Text(
-                                            viewModel.listRsetaurant[index]
-                                                .restaurantName!,
+                                            viewModel.listLabo[index].laboName!,
                                             style: const TextStyle(
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.bold,
@@ -177,15 +179,16 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
                                       SharedPreferences prefs =
                                           await SharedPreferences.getInstance();
                                       prefs.setString(
-                                          'idRestaurant',
-                                          viewModel.listRsetaurant[index].sId
+                                          'idLabo',
+                                          viewModel.listLabo[index].sId
                                               .toString());
-                                      prefs.setBool('lab', false);
+                                      prefs.setBool('lab', true);
+                                      prefs.setInt('index', 9);
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              const DashboardManager(),
+                                              const AccuilLabo(),
                                         ),
                                       );
                                     },
@@ -213,7 +216,7 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
               const SizedBox(
                 width: 50,
               ),
-              const Text('Création de restaurant'),
+              const Text('Création de laboratoire'),
               Expanded(child: Container()),
               const SizedBox(
                 width: 20,
@@ -255,11 +258,11 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
                   gapPadding: 10,
                 ),
                 labelText: "Nom",
-                hintText: "Entrer le nom du restaurant",
+                hintText: "Entrer le nom du laboratoire",
                 // If  you are using latest version of flutter then lable text and hint text shown like this
                 // if you r using flutter less then 1.20.* then maybe this is not working properly
                 floatingLabelBehavior: FloatingLabelBehavior.always,
-                suffixIcon: const Icon(Icons.food_bank)),
+                suffixIcon: const Icon(Icons.all_out)),
           ),
         ),
         const SizedBox(
@@ -268,7 +271,7 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
         SizedBox(
           width: MediaQuery.of(context).size.width - 50,
           child: TextFormField(
-            controller: villeController,
+            controller: emailController,
             keyboardType: TextInputType.emailAddress,
             onChanged: (value) {},
             decoration: InputDecoration(
@@ -295,12 +298,12 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
                       const BorderSide(color: Palette.secondaryBackgroundColor),
                   gapPadding: 10,
                 ),
-                labelText: "Ville",
-                hintText: "Entrer la ville ou se trouve le restaurant",
+                labelText: "Email",
+                hintText: "Entrer l'email du laboratoire",
                 // If  you are using latest version of flutter then lable text and hint text shown like this
                 // if you r using flutter less then 1.20.* then maybe this is not working properly
                 floatingLabelBehavior: FloatingLabelBehavior.always,
-                suffixIcon: const Icon(Icons.location_city)),
+                suffixIcon: const Icon(Icons.email)),
           ),
         ),
         const SizedBox(
@@ -337,11 +340,11 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
                   gapPadding: 10,
                 ),
                 labelText: "Adresse",
-                hintText: "Entrer l'adresse du restaurant",
+                hintText: "Entrer l'adresse du laboratoire",
                 // If  you are using latest version of flutter then lable text and hint text shown like this
                 // if you r using flutter less then 1.20.* then maybe this is not working properly
                 floatingLabelBehavior: FloatingLabelBehavior.always,
-                suffixIcon: const Icon(Icons.local_activity)),
+                suffixIcon: const Icon(Icons.location_city)),
           ),
         ),
         const SizedBox(
@@ -378,7 +381,7 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
                   gapPadding: 10,
                 ),
                 labelText: "Nombre d'employés",
-                hintText: "Entrer le nombre d'employés du restaurant",
+                hintText: "Entrer le nombre d'employés du laboratoire",
                 // If  you are using latest version of flutter then lable text and hint text shown like this
                 // if you r using flutter less then 1.20.* then maybe this is not working properly
                 floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -454,10 +457,10 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
               ),
               ElevatedButton(
                 onPressed: (() {
-                  creationRestaurant(
+                  creationLabo(
                     context,
                     nomController.text,
-                    villeController.text,
+                    emailController.text,
                     adresseController.text,
                     _selectedFile,
                     result,
@@ -503,10 +506,10 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
     );
   }
 
-  Future<void> creationRestaurant(
+  Future<void> creationLabo(
     contextt,
     String nomRestaurant,
-    String villeRestaurant,
+    String emailController,
     String adresseRestaurant,
     selectedFile,
     result,
@@ -518,7 +521,7 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
     var token = prefs.getString('token');
 
     var url = Uri.parse(
-        "http://13.39.81.126:4002/api/restaurants/create"); //13.39.81.126 // 13.39.81.126 //13.39.81.126
+        "http://192.168.1.105:4015/api/laboratories/create"); //13.39.81.126 // 13.39.81.126 //13.39.81.126
     final request = MultipartRequest(
       'POST',
       url,
@@ -528,9 +531,9 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
       },
     );
     var json = {
-      'restaurant_name': nomRestaurant,
-      'address': adresseRestaurant,
-      'town': villeRestaurant,
+      'labo_name': nomRestaurant,
+      'adress': adresseRestaurant,
+      'email': emailController,
       '_creator': id,
     };
     var body = jsonEncode(json);
@@ -549,8 +552,11 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
     //var responseString = await streamedResponse.stream.bytesToString();
     var response = await request.send();
     print("Upload Response$response");
+
     print(response.statusCode);
     print(request.headers);
+    print('llllllllllllllllllllllllllllllllaaaaaaaaaaaaaaaaaaaaaaaaa');
+    print(response.request!.headers);
 
     try {
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -567,16 +573,16 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
           Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.green,
-            message: "Le restaurant a été crée",
+            message: "Le laboratoire a été créé",
           ),
         );
-        ref.refresh(getDataRsetaurantFuture);
+        ref.refresh(getDataLaboratoriesFuture);
       } else {
         showTopSnackBar(
           Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.red,
-            message: "Le restaurant n'a pas été crée",
+            message: "Le laboratoire n'a pas été créé",
           ),
         );
         print("Error Create Programme  !!!");

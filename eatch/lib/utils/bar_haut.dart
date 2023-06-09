@@ -1,12 +1,26 @@
+import 'package:eatch/pages/accueil.dart';
+import 'package:eatch/pages/laboAccueil.dart';
+import 'package:eatch/pages/restaurantAccueil.dart';
 import 'package:flutter/material.dart';
 
 import 'palettes/palette.dart';
 
-class BarreHaute extends StatelessWidget {
+enum SampleItem {
+  itemOne,
+  itemTwo,
+  itemThree,
+}
+
+class BarreHaute extends StatefulWidget {
   const BarreHaute({
     Key? key,
   }) : super(key: key);
+  @override
+  State<BarreHaute> createState() => BarreHauteState();
+}
 
+class BarreHauteState extends State<BarreHaute> {
+  SampleItem? selectedMenu;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -54,6 +68,50 @@ class BarreHaute extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+          Container(
+            child: PopupMenuButton(
+              tooltip: 'Menu',
+              initialValue: selectedMenu,
+              onSelected: (SampleItem item) async {
+                setState(() {
+                  selectedMenu = item;
+                });
+
+                if (item == SampleItem.itemOne) {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Accueil()));
+                } else if (item == SampleItem.itemTwo) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => RestaurantAccueil()));
+                } else {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => LaboAccueil()));
+                }
+              },
+              child: Image.asset(
+                'change.png',
+                height: 40,
+              ),
+              itemBuilder: (BuildContext context) =>
+                  <PopupMenuEntry<SampleItem>>[
+                const PopupMenuItem<SampleItem>(
+                  value: SampleItem.itemOne,
+                  child: Text('Accueil'),
+                ),
+                const PopupMenuItem<SampleItem>(
+                  value: SampleItem.itemTwo,
+                  child: Text('Accueil Restaurant '),
+                ),
+                const PopupMenuItem<SampleItem>(
+                  value: SampleItem.itemThree,
+                  child: Text('Accueil Laboratoire'),
+                ),
+              ],
+            ),
+            //Image.asset('change.png'),
           ),
         ],
       ),
