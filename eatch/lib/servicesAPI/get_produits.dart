@@ -23,16 +23,16 @@ class GetDataProduitFuture extends ChangeNotifier {
     try {
       http.Response response = await http.get(
         Uri.parse(
-            'http://192.168.1.26:4003/api/products/fetch/categories/$restaurantid'),
+            'http://192.168.1.34:4003/api/products/fetch/restaurant/$restaurantid'),
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',
         },
       );
-      print('Produit get produit');
+
       print(response.statusCode);
       print("Liste des produits ${response.body}");
-      print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         for (int i = 0; i < data.length; i++) {

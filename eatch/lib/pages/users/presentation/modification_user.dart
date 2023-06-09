@@ -170,7 +170,7 @@ class _ModificationUserState extends ConsumerState<ModificationUser> {
                                   borderRadius: BorderRadius.circular(16),
                                   child: _selectFile == false
                                       ? Image.network(
-                                          'http://192.168.1.26:4001${widget.avatar}',
+                                          'http://192.168.1.34:4001${widget.avatar}',
                                           fit: BoxFit.fill,
                                         )
                                       : isLoading
@@ -523,7 +523,7 @@ class _ModificationUserState extends ConsumerState<ModificationUser> {
     print("Restaurant id $restaurantid");
 
     var url =
-        Uri.parse("http://192.168.1.26:4001/api/users/update/${widget.sId}");
+        Uri.parse("http://192.168.1.34:4001/api/users/update/${widget.sId}");
     final request = MultipartRequest(
       'PUT',
       url,

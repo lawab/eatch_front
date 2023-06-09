@@ -90,6 +90,7 @@ class _MenuGridState extends ConsumerState<MenuGrid> {
             price: viewModel1.listMenus[index].price!,
             title: viewModel1.listMenus[index].menuTitle!,
             sId: viewModel1.listMenus[index].sId!,
+            prod: viewModel1.listMenus[index].products!,
             index: index,
           ),
         ),

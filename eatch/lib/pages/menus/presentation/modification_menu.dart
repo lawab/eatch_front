@@ -20,13 +20,14 @@ import '../../../servicesAPI/multipart.dart';
 import 'menu.dart';
 
 class ModificationMenu extends ConsumerStatefulWidget {
-  ModificationMenu({
+  const ModificationMenu({
     Key? key,
     required this.imageUrl,
     required this.sId,
     required this.title,
     required this.description,
     required this.price,
+    required this.products,
   }) : super(key: key);
 
   final String imageUrl;
@@ -34,12 +35,13 @@ class ModificationMenu extends ConsumerStatefulWidget {
   final String title;
   final String description;
   final double price;
+  final List products;
 
   @override
-  ConsumerState<ModificationMenu> createState() => _ModificationMenuState();
+  ConsumerState<ModificationMenu> createState() => ModificationMenuState();
 }
 
-class _ModificationMenuState extends ConsumerState<ModificationMenu> {
+class ModificationMenuState extends ConsumerState<ModificationMenu> {
   MediaQueryData mediaQueryData(BuildContext context) {
     return MediaQuery.of(context);
   }
@@ -65,6 +67,7 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
   final List<TextEditingController> _controllerInput = [];
   //final List<Widget> _textFieldInput = [];
 
+  List<String> listProduitsAffiche = [];
   List<String> listProdId = [];
 
   bool ajout = false;
@@ -83,30 +86,9 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(getDataCategoriesFuture);
-    final viewModel1 = ref.watch(getDataMenuFuture);
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: LayoutBuilder(
-        builder: (context, constraints) {
-          if (constraints.maxWidth >= 900) {
-            return horizontalView(height(context), width(context), context,
-                viewModel.listValides, viewModel1.listMenus);
-          } else {
-            return verticalView(height(context), width(context), context,
-                viewModel.listValides, viewModel1.listMenus);
-          }
-        },
-      ),
-    );
-  }
-
-  Widget horizontalView(double height, double width, context,
-      List<Categorie> categoriee, List<Menus> menus) {
     return AppLayout(
       content: SizedBox(
-        height: height,
-        width: width,
         child: Container(
           //height: heigth,
           color: Palette.secondaryBackgroundColor,
@@ -131,10 +113,13 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
                                 borderRadius: BorderRadius.circular(10)),
                             minimumSize: const Size(150, 50)),
                         onPressed: () {
+                          setState(() {
+                            ref.refresh(getDataMenuFuture);
+                          });
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Menu(),
+                              builder: (context) => const Menu(),
                             ),
                           );
                         },
@@ -151,7 +136,6 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
                   height: 10,
                 ),
                 SizedBox(
-                  width: width - 50,
                   child: TextFormField(
                     controller: nomcontroller,
                     keyboardType: TextInputType.emailAddress,
@@ -196,7 +180,6 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
 
                 ///
                 SizedBox(
-                  width: width - 50,
                   child: TextFormField(
                     controller: prixcontroller,
                     keyboardType: TextInputType.number,
@@ -246,7 +229,6 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
                 //////////////////////////////// - debut du champ description
                 ///
                 SizedBox(
-                  width: width - 50,
                   child: TextFormField(
                     maxLength: 500,
                     maxLines: 5,
@@ -290,10 +272,89 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
                 ///
                 //////////////////////////////// - fin du champ description
                 const SizedBox(
+                  height: 10,
+                ),
+                ////////////////////////////// - Affichage des produits qui constitu le menu
+                ///
+                Column(
+                  children: [
+                    for (int j = 0; j < widget.products.length; j++)
+                      Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              InkWell(
+                                child: const Icon(Icons.remove_circle),
+                                onTap: () {
+                                  setState(() {
+                                    widget.products.remove(
+                                      widget.products[j],
+                                    );
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(2),
+                                  child: Container(
+                                    color: Palette.secondaryBackgroundColor,
+                                    child: DropdownButtonFormField(
+                                      hint:
+                                          Text(widget.products[j].productName),
+                                      decoration: InputDecoration(
+                                        enabled: false,
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                      ),
+                                      onChanged: null,
+                                      items:
+                                          viewModel.listCategories.map((val) {
+                                        for (int i = 0;
+                                            i <
+                                                viewModel.listCategories[j]
+                                                    .products!.length;
+                                            i++) {
+                                          listProduitsAffiche.add(viewModel
+                                              .listCategories[j]
+                                              .products![i]
+                                              .productName!);
+                                        }
+                                        return DropdownMenuItem(
+                                          value: val,
+                                          child: Text(
+                                            val.title!,
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      )
+                  ],
+                ),
+
+                ///
+                const SizedBox(
                   height: 20,
                 ),
+
+                ///
                 SizedBox(
-                  width: width - 50,
                   height: 150,
                   child: GridView.builder(
                     gridDelegate:
@@ -303,20 +364,18 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
                             crossAxisSpacing: 20,
                             mainAxisSpacing: 20,
                             mainAxisExtent: 50),
-                    itemCount: categoriee.length,
+                    itemCount: viewModel.listCategories.length,
                     itemBuilder: (context, index) {
                       List<String> listProduits = [];
                       String? produit;
                       final inputController = TextEditingController();
                       _controllerInput.add(inputController);
                       for (int i = 0;
-                          i < categoriee[index].products!.length;
+                          i < viewModel.listCategories[index].products!.length;
                           i++) {
-                        listProduits
-                            .add(categoriee[index].products![i].productName!);
+                        listProduits.add(viewModel
+                            .listCategories[index].products![i].productName!);
                       }
-
-                      // print(listProduits);
 
                       return SizedBox(
                         height: 50,
@@ -348,9 +407,7 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                           value: produit,
-                          hint: Text(
-                            categoriee[index].title!,
-                          ),
+                          hint: Text(viewModel.listCategories[index].title!),
                           isExpanded: true,
                           onChanged: (value) {
                             setState(
@@ -361,8 +418,10 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
 
                                 for (int j = 0; j < listProduits.length; j++) {
                                   if (produit == listProduits[j]) {
-                                    listProdId.add(
-                                        categoriee[index].products![j].sId!);
+                                    listProdId.add(viewModel
+                                        .listCategories[index]
+                                        .products![j]
+                                        .sId!);
                                   }
                                 }
                                 print(listProdId);
@@ -395,11 +454,14 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
                 ),
                 /////////// - Ici se trouve le bouton pour l'image
                 Container(
-                  padding: const EdgeInsets.only(right: 70),
-                  color: Palette.secondaryBackgroundColor,
-                  alignment: Alignment.centerRight,
-                  child: GestureDetector(
+                  height: 100,
+                  width: 100,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: InkWell(
                     onTap: () async {
+                      /////////////////////
                       result = await FilePicker.platform
                           .pickFiles(type: FileType.custom, allowedExtensions: [
                         "png",
@@ -407,43 +469,42 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
                         "jpeg",
                       ]);
                       if (result != null) {
+                        file = result!.files.single;
+
+                        Uint8List fileBytes =
+                            result!.files.single.bytes as Uint8List;
+                        //print(base64Encode(fileBytes));
+                        //List<int>
+                        _selectedFile = fileBytes;
                         setState(() {
-                          file = result!.files.single;
-
-                          Uint8List fileBytes =
-                              result!.files.single.bytes as Uint8List;
-
-                          _selectedFile = fileBytes;
-
                           filee = true;
-
                           selectedImageInBytes = result!.files.first.bytes;
-                          _selectFile = true;
+                        });
+                      } else {
+                        setState(() {
+                          filee = false;
                         });
                       }
+                      ////////////////////
                     },
+                    //splashColor: Colors.brown.withOpacity(0.5),
                     child: Container(
-                      width: 100,
-                      height: 100,
+                      alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 4,
-                          color: Palette.greenColors,
-                        ),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(15.0),
+                        color: Palette.greenColors,
+                        image: DecorationImage(
+                            opacity: 100,
+                            image: NetworkImage(
+                                'http://192.168.1.34:4009${widget.imageUrl}'), //13.39.81.126
+                            fit: BoxFit.cover),
                       ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: _selectFile == false
-                            ? const Icon(
-                                Icons.camera_alt_outlined,
-                                color: Palette.greenColors,
-                                size: 40,
-                              )
-                            : Image.memory(
-                                selectedImageInBytes!,
-                                fit: BoxFit.fill,
-                              ),
+                      child: const Text(
+                        "Modifier",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Colors.white),
                       ),
                     ),
                   ),
@@ -463,11 +524,16 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
                         print(_controllerInput[i].text);
                       }
                     }
-                    Navigator.push(
+                    print("Je suis là");
+                    modificationMenu(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => Menu(),
-                      ),
+                      nomcontroller.text,
+                      descriptioncontroller.text,
+                      prixcontroller.text,
+                      listProdId,
+                      _selectedFile!,
+                      result,
+                      widget.sId,
                     );
                   }),
                   style: ElevatedButton.styleFrom(
@@ -487,416 +553,17 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
     );
   }
 
-  Widget verticalView(double height, double width, context,
-      List<Categorie> categoriee, List<Menus> menus) {
-    return AppLayout(
-      content: SizedBox(
-        height: height,
-        width: width,
-        child: Container(
-          //height: heigth,
-          color: Palette.secondaryBackgroundColor,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  alignment: Alignment.centerRight,
-                  height: 50,
-                  color: const Color(0xFFFCEBD1),
-                  child: Row(
-                    children: [
-                      const SizedBox(
-                        width: 50,
-                      ),
-                      const Text('Modification de menu'),
-                      Expanded(child: Container()),
-                      ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Palette.textsecondaryColor,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          minimumSize: const Size(150, 50),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(Icons.backspace),
-                        label: const Text('Retour'),
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                  width: width - 50,
-                  child: TextFormField(
-                    controller: nomcontroller,
-                    keyboardType: TextInputType.emailAddress,
-                    onChanged: (value) {},
-                    decoration: InputDecoration(
-                      hoverColor: Palette.primaryBackgroundColor,
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 42, vertical: 20),
-                      filled: true,
-                      fillColor: Palette.primaryBackgroundColor,
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Palette.secondaryBackgroundColor),
-                        gapPadding: 10,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Palette.secondaryBackgroundColor),
-                        gapPadding: 10,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Palette.secondaryBackgroundColor),
-                        gapPadding: 10,
-                      ),
-                      labelText: "Nom",
-                      hintText: "Entrer le nom du menu",
-                      // If  you are using latest version of flutter then lable text and hint text shown like this
-                      // if you r using flutter less then 1.20.* then maybe this is not working properly
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      suffixIcon: const Icon(Icons.food_bank),
-                    ),
-                  ),
-                ),
-                /////////////////////////////////////////// - début du champ prix
-                const SizedBox(
-                  height: 20,
-                ),
-
-                ///
-                SizedBox(
-                  width: width - 50,
-                  child: TextFormField(
-                    controller: prixcontroller,
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) {},
-                    decoration: InputDecoration(
-                      hoverColor: Palette.primaryBackgroundColor,
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 42, vertical: 20),
-                      filled: true,
-                      fillColor: Palette.primaryBackgroundColor,
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Palette.secondaryBackgroundColor),
-                        gapPadding: 10,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Palette.secondaryBackgroundColor),
-                        gapPadding: 10,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Palette.secondaryBackgroundColor),
-                        gapPadding: 10,
-                      ),
-                      labelText: "Prix",
-                      hintText: "Entrer le prix du menu",
-                      // If  you are using latest version of flutter then lable text and hint text shown like this
-                      // if you r using flutter less then 1.20.* then maybe this is not working properly
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      suffixIcon: const Icon(Icons.monetization_on_outlined),
-                    ),
-                  ),
-                ),
-
-                ////////////////////////////////////////////////////////////// - fin du champ prix
-                ///
-
-                const SizedBox(
-                  height: 20,
-                ),
-
-                ///
-                //////////////////////////////// - debut du champ description
-                ///
-                SizedBox(
-                  width: width - 50,
-                  child: TextFormField(
-                    maxLength: 500,
-                    maxLines: 5,
-                    controller: descriptioncontroller,
-                    keyboardType: TextInputType.text,
-                    onChanged: (value) {},
-                    decoration: InputDecoration(
-                      hoverColor: Palette.primaryBackgroundColor,
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 42, vertical: 20),
-                      filled: true,
-                      fillColor: Palette.primaryBackgroundColor,
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Palette.secondaryBackgroundColor),
-                        gapPadding: 10,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Palette.secondaryBackgroundColor),
-                        gapPadding: 10,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Palette.secondaryBackgroundColor),
-                        gapPadding: 10,
-                      ),
-                      labelText: "Description",
-                      hintText: "Entrer une description pour ce menu",
-                      // If  you are using latest version of flutter then lable text and hint text shown like this
-                      // if you r using flutter less then 1.20.* then maybe this is not working properly
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      //suffixIcon: const Icon(Icons.monetization_on_outlined),
-                    ),
-                  ),
-                ),
-
-                ///
-                //////////////////////////////// - fin du champ description
-                const SizedBox(
-                  height: 20,
-                ),
-                SizedBox(
-                  width: width - 50,
-                  height: 100,
-                  child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 500,
-                            childAspectRatio: 3 / 2,
-                            crossAxisSpacing: 20,
-                            mainAxisSpacing: 20,
-                            mainAxisExtent: 50),
-                    itemCount: categoriee.length,
-                    itemBuilder: (context, index) {
-                      List<String> listProduits = [];
-                      String? produit;
-                      final inputController = TextEditingController();
-                      _controllerInput.add(inputController);
-                      for (int i = 0;
-                          i < categoriee[index].products!.length;
-                          i++) {
-                        listProduits
-                            .add(categoriee[index].products![i].productName!);
-                      }
-
-                      // print(listProduits);
-
-                      return SizedBox(
-                        height: 50,
-                        child: DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            hoverColor: Palette.primaryBackgroundColor,
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 42, vertical: 20),
-                            filled: true,
-                            fillColor: Palette.primaryBackgroundColor,
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(
-                                  color: Palette.secondaryBackgroundColor),
-                              gapPadding: 10,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(
-                                  color: Palette.secondaryBackgroundColor),
-                              gapPadding: 10,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(
-                                  color: Palette.secondaryBackgroundColor),
-                              gapPadding: 10,
-                            ),
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                          value: produit,
-                          hint: Text(
-                            categoriee[index].title!,
-                          ),
-                          isExpanded: true,
-                          onChanged: (value) {
-                            setState(
-                              () {
-                                produit = value!;
-                                print('Valeur : ${produit}');
-                                ////////////////////////////
-
-                                for (int j = 0; j < listProduits.length; j++) {
-                                  if (produit == listProduits[j]) {
-                                    listProdId.add(
-                                        categoriee[index].products![j].sId!);
-                                  }
-                                }
-                                print(listProdId);
-                                /////////////////////////////////
-
-                                inputController.text = value;
-                              },
-                            );
-                          },
-                          onSaved: (value) {
-                            setState(() {
-                              produit = value;
-                            });
-                          },
-                          items: listProduits.map((String val) {
-                            return DropdownMenuItem(
-                              value: val,
-                              child: Text(
-                                val,
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(
-                  height: 40,
-                ),
-                /////////// - Ici se trouve le bouton pour l'image
-                Container(
-                  padding: const EdgeInsets.only(right: 70),
-                  color: Palette.secondaryBackgroundColor,
-                  alignment: Alignment.centerRight,
-                  child: GestureDetector(
-                    onTap: () async {
-                      result = await FilePicker.platform
-                          .pickFiles(type: FileType.custom, allowedExtensions: [
-                        "png",
-                        "jpg",
-                        "jpeg",
-                      ]);
-                      if (result != null) {
-                        setState(() {
-                          file = result!.files.single;
-
-                          Uint8List fileBytes =
-                              result!.files.single.bytes as Uint8List;
-
-                          _selectedFile = fileBytes;
-
-                          filee = true;
-
-                          selectedImageInBytes = result!.files.first.bytes;
-                          _selectFile = true;
-                        });
-                      }
-                    },
-                    child: Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 4,
-                          color: Palette.greenColors,
-                        ),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: _selectFile == false
-                            ? const Icon(
-                                Icons.camera_alt_outlined,
-                                color: Palette.greenColors,
-                                size: 40,
-                              )
-                            : Image.memory(
-                                selectedImageInBytes!,
-                                fit: BoxFit.fill,
-                              ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(
-                  height: 30,
-                ),
-
-                /// - fin du choix de l'image
-                Container(
-                  alignment: Alignment.centerRight,
-                  child: SizedBox(
-                    width: 350,
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        ElevatedButton(
-                          onPressed: (() {
-                            for (int i = 0; i < _controllerInput.length; i++) {
-                              //print(i);
-                              if (_controllerInput[i].text.isNotEmpty) {
-                                print(_controllerInput[i].text);
-                              }
-                            }
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Menu(),
-                              ),
-                            );
-                          }),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Palette.primaryColor,
-                            minimumSize: const Size(150, 50),
-                            maximumSize: const Size(200, 70),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                          ),
-                          child: const Text('Modifier'),
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   ///// - Modification de menu
   ///
-  Future<void> ModificationMenu(
+  Future<void> modificationMenu(
     BuildContext context,
     String nomMenu,
     String descriptionMenu,
-    double prixMenu,
-    List<String> idMenu,
-    selectedFile,
-    result,
+    String prixMenu,
+    List<String> idProduits,
+    List<int> selectedFile,
+    FilePickerResult? result,
+    String idMenu,
   ) async {
     ////////////
 
@@ -906,9 +573,10 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
     var token = prefs.getString('token');
 
     //String adressUrl = prefs.getString('ipport').toString();
+    //print(idMenu);
 
     var url = Uri.parse(
-        "http://192.168.1.26:4009/api/menus/update/$idMenu"); //$adressUrl
+        "http://192.168.1.34:4009/api/menus/update/$idMenu"); //$adressUrl
     final request = MultipartRequest(
       'PUT',
       url,
@@ -919,12 +587,16 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
       },
     );
 
+    //print('la liste : ${listProdId}');
+    var dd = jsonEncode(idProduits);
+
     var json = {
       'restaurant': restaurantId,
-      'menutitle': nomMenu,
+      'menu_title': nomMenu,
       'description': descriptionMenu,
-      'prix': prixMenu,
+      'price': prixMenu,
       '_creator': id,
+      'products': dd,
     };
     var body = jsonEncode(json);
 
@@ -948,6 +620,7 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
     print(response.statusCode);
     print(request.headers);
 
+    print("Je me situe maintenant ici");
     try {
       if (response.statusCode == 200 || response.statusCode == 201) {
         await response.stream.bytesToString().then((value) {
@@ -957,21 +630,25 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
         //stopMessage();
         //finishWorking();
         showTopSnackBar(
-          Overlay.of(context)!,
+          Overlay.of(context),
           const CustomSnackBar.info(
             backgroundColor: Palette.greenColors,
-            message: "La matière première a été modifié",
+            message: "Le menu a été modifié",
           ),
         );
-        setState(() {
-          ref.refresh(getDataMenuFuture);
-        });
+        ref.refresh(getDataMenuFuture);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Menu(),
+          ),
+        );
       } else {
         showTopSnackBar(
-          Overlay.of(context)!,
+          Overlay.of(context),
           const CustomSnackBar.info(
             backgroundColor: Palette.deleteColors,
-            message: "La matière première n'a pas été modifié",
+            message: "Le menu n'a pas été modifié",
           ),
         );
         print("Error Create Programme  !!!");
