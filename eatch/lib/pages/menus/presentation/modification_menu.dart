@@ -20,13 +20,14 @@ import '../../../servicesAPI/multipart.dart';
 import 'menu.dart';
 
 class ModificationMenu extends ConsumerStatefulWidget {
-  ModificationMenu({
+  const ModificationMenu({
     Key? key,
     required this.imageUrl,
     required this.sId,
     required this.title,
     required this.description,
     required this.price,
+    required this.products,
   }) : super(key: key);
 
   final String imageUrl;
@@ -34,6 +35,7 @@ class ModificationMenu extends ConsumerStatefulWidget {
   final String title;
   final String description;
   final double price;
+  final List products;
 
   @override
   ConsumerState<ModificationMenu> createState() => _ModificationMenuState();
@@ -134,7 +136,7 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Menu(),
+                              builder: (context) => const Menu(),
                             ),
                           );
                         },
@@ -303,6 +305,107 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
                             crossAxisSpacing: 20,
                             mainAxisSpacing: 20,
                             mainAxisExtent: 50),
+                    itemCount: widget.products.length,
+                    itemBuilder: (context, index) {
+                      List<String> listProduits = [];
+                      String? produit;
+                      final inputController = TextEditingController();
+                      _controllerInput.add(inputController);
+                      for (int i = 0;
+                          i < categoriee[index].products!.length;
+                          i++) {
+                        listProduits
+                            .add(categoriee[index].products![i].productName!);
+                      }
+
+                      // print(listProduits);
+
+                      return SizedBox(
+                        height: 50,
+                        child: DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            hoverColor: Palette.primaryBackgroundColor,
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 42, vertical: 20),
+                            filled: true,
+                            fillColor: Palette.primaryBackgroundColor,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(
+                                  color: Palette.secondaryBackgroundColor),
+                              gapPadding: 10,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(
+                                  color: Palette.secondaryBackgroundColor),
+                              gapPadding: 10,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(
+                                  color: Palette.secondaryBackgroundColor),
+                              gapPadding: 10,
+                            ),
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
+                          value: produit,
+                          hint: Text(
+                            widget.products[index].productName!,
+                          ),
+                          isExpanded: true,
+                          onChanged: (value) {
+                            setState(
+                              () {
+                                produit = value!;
+                                print('Valeur : $produit');
+                                ////////////////////////////
+
+                                for (int j = 0; j < listProduits.length; j++) {
+                                  if (produit == listProduits[j]) {
+                                    listProdId.add(
+                                        categoriee[index].products![j].sId!);
+                                  }
+                                }
+                                print(listProdId);
+                                /////////////////////////////////
+
+                                inputController.text = value;
+                              },
+                            );
+                          },
+                          onSaved: (value) {
+                            setState(() {
+                              produit = value;
+                            });
+                          },
+                          items: listProduits.map((String val) {
+                            return DropdownMenuItem(
+                              value: val,
+                              child: Text(
+                                val,
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  width: width - 50,
+                  height: 150,
+                  child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 500,
+                            childAspectRatio: 3 / 2,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20,
+                            mainAxisExtent: 50),
                     itemCount: categoriee.length,
                     itemBuilder: (context, index) {
                       List<String> listProduits = [];
@@ -356,7 +459,7 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
                             setState(
                               () {
                                 produit = value!;
-                                print('Valeur : ${produit}');
+                                print('Valeur : $produit');
                                 ////////////////////////////
 
                                 for (int j = 0; j < listProduits.length; j++) {
@@ -466,7 +569,7 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Menu(),
+                        builder: (context) => const Menu(),
                       ),
                     );
                   }),
@@ -671,6 +774,109 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
 
                 ///
                 //////////////////////////////// - fin du champ description
+                ///
+
+                const SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  width: width - 50,
+                  height: 100,
+                  child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 500,
+                            childAspectRatio: 3 / 2,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20,
+                            mainAxisExtent: 50),
+                    itemCount: widget.products.length,
+                    itemBuilder: (context, index) {
+                      List<String> listProduits = [];
+                      String? produit;
+                      final inputController = TextEditingController();
+                      _controllerInput.add(inputController);
+                      for (int i = 0;
+                          i < categoriee[index].products!.length;
+                          i++) {
+                        listProduits
+                            .add(categoriee[index].products![i].productName!);
+                      }
+
+                      // print(listProduits);
+
+                      return SizedBox(
+                        height: 50,
+                        child: DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            hoverColor: Palette.primaryBackgroundColor,
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 42, vertical: 20),
+                            filled: true,
+                            fillColor: Palette.primaryBackgroundColor,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(
+                                  color: Palette.secondaryBackgroundColor),
+                              gapPadding: 10,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(
+                                  color: Palette.secondaryBackgroundColor),
+                              gapPadding: 10,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(
+                                  color: Palette.secondaryBackgroundColor),
+                              gapPadding: 10,
+                            ),
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
+                          value: produit,
+                          hint: Text(
+                            widget.products[index].productName,
+                          ),
+                          isExpanded: true,
+                          onChanged: (value) {
+                            setState(
+                              () {
+                                produit = value!;
+                                print('Valeur : $produit');
+                                ////////////////////////////
+
+                                for (int j = 0; j < listProduits.length; j++) {
+                                  if (produit == listProduits[j]) {
+                                    listProdId.add(
+                                        categoriee[index].products![j].sId!);
+                                  }
+                                }
+                                print(listProdId);
+                                /////////////////////////////////
+
+                                inputController.text = value;
+                              },
+                            );
+                          },
+                          onSaved: (value) {
+                            setState(() {
+                              produit = value;
+                            });
+                          },
+                          items: listProduits.map((String val) {
+                            return DropdownMenuItem(
+                              value: val,
+                              child: Text(
+                                val,
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
                 const SizedBox(
                   height: 20,
                 ),
@@ -738,7 +944,7 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
                             setState(
                               () {
                                 produit = value!;
-                                print('Valeur : ${produit}');
+                                print('Valeur : $produit');
                                 ////////////////////////////
 
                                 for (int j = 0; j < listProduits.length; j++) {
@@ -856,7 +1062,7 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => Menu(),
+                                builder: (context) => const Menu(),
                               ),
                             );
                           }),
@@ -908,7 +1114,7 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
     //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.11.110:4009/api/menus/update/$idMenu"); //$adressUrl
+        "http://192.168.1.34:4009/api/menus/update/$idMenu"); //$adressUrl
     final request = MultipartRequest(
       'PUT',
       url,
@@ -957,7 +1163,7 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
         //stopMessage();
         //finishWorking();
         showTopSnackBar(
-          Overlay.of(context)!,
+          Overlay.of(context),
           const CustomSnackBar.info(
             backgroundColor: Palette.greenColors,
             message: "La matière première a été modifié",
@@ -968,7 +1174,7 @@ class _ModificationMenuState extends ConsumerState<ModificationMenu> {
         });
       } else {
         showTopSnackBar(
-          Overlay.of(context)!,
+          Overlay.of(context),
           const CustomSnackBar.info(
             backgroundColor: Palette.deleteColors,
             message: "La matière première n'a pas été modifié",

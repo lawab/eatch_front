@@ -163,7 +163,7 @@ class ModificationProduitState extends ConsumerState<ModificationProduit> {
                                 borderRadius: BorderRadius.circular(16),
                                 child: _selectFile == false
                                     ? Image.network(
-                                        'http://192.168.11.110:4003${widget.imageUrl}',
+                                        'http://192.168.1.34:4003${widget.imageUrl}',
                                         fit: BoxFit.fill,
                                       )
                                     : isLoading
@@ -520,8 +520,8 @@ class ModificationProduitState extends ConsumerState<ModificationProduit> {
     print(token);
     print("Restaurant id $restaurantid");
 
-    var url = Uri.parse(
-        "http://192.168.11.110:4003/api/products/update/${widget.sId}");
+    var url =
+        Uri.parse("http://192.168.1.34:4003/api/products/update/${widget.sId}");
     final request = MultipartRequest(
       'PUT',
       url,

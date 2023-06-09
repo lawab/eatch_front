@@ -213,7 +213,7 @@ class _ProduitpageState extends ConsumerState<Produitpage> {
       var userdelete = prefs.getString('IdUser').toString();
       var restaurantId = prefs.getString('idRestaurant').toString();
       var token = prefs.getString('token');
-      String urlDelete = "http://192.168.11.110:4003/api/products/delete/$id";
+      String urlDelete = "http://192.168.1.34:4003/api/products/delete/$id";
       var json = {
         '_creator': userdelete,
         'restaurant': restaurantId,

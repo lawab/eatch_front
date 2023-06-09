@@ -19,6 +19,7 @@ class MenuCard extends ConsumerStatefulWidget {
       required this.title,
       required this.description,
       required this.price,
+      required this.products,
       required this.index})
       : super(key: key);
   final String imageUrl;
@@ -26,6 +27,7 @@ class MenuCard extends ConsumerStatefulWidget {
   final String title;
   final String description;
   final double price;
+  final List products;
 
   final int index;
 
@@ -92,7 +94,7 @@ class _MenuCardState extends ConsumerState<MenuCard> {
                       Radius.circular(10.0),
                     ),
                     child: Image.network(
-                      "http://192.168.11.110:4009${widget.imageUrl}",
+                      "http://192.168.1.34:4009${widget.imageUrl}",
                     ),
                   ),
                 ),
@@ -115,6 +117,7 @@ class _MenuCardState extends ConsumerState<MenuCard> {
                           price: widget.price,
                           sId: widget.sId,
                           title: widget.title,
+                          products: widget.products,
                         ),
                       ),
                     );
@@ -226,7 +229,7 @@ class _MenuCardState extends ConsumerState<MenuCard> {
 
       var token = prefs.getString('token');
       String urlDelete =
-          "http://192.168.11.110:4009/api/menus/delete/$idMenu"; // 192.168.11.110:4008 //$adressUrl
+          "http://192.168.1.34:4009/api/menus/delete/$idMenu"; // 192.168.1.34:4008 //$adressUrl
       //var json = {'_creator': id};
 
       //var body = jsonEncode(json);
@@ -245,7 +248,7 @@ class _MenuCardState extends ConsumerState<MenuCard> {
 
       if (response.statusCode == 200) {
         showTopSnackBar(
-          Overlay.of(context)!,
+          Overlay.of(context),
           const CustomSnackBar.info(
             backgroundColor: Colors.green,
             message: "Le menu a été supprimée avec succès",
@@ -255,7 +258,7 @@ class _MenuCardState extends ConsumerState<MenuCard> {
         return response;
       } else {
         showTopSnackBar(
-          Overlay.of(context)!,
+          Overlay.of(context),
           const CustomSnackBar.info(
             backgroundColor: Palette.deleteColors,
             message: "Le menu n'a pas été supprimée succès",
@@ -335,7 +338,7 @@ class _MenuCardState extends State<MenuCard> {
                     Radius.circular(10.0),
                   ),
                   child: Image.network(
-                    "http://192.168.11.110:4009${widget.imageUrl}",
+                    "http://192.168.1.34:4009${widget.imageUrl}",
                   ),
                 ),
               ),

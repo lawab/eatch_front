@@ -166,6 +166,7 @@ class _MenuState extends ConsumerState<Menu> {
                               title: menus[index].menuTitle!,
                               sId: menus[index].sId!,
                               index: index,
+                              products: menus[index].products!,
                             ),
                           );
                         },
@@ -253,6 +254,7 @@ class _MenuState extends ConsumerState<Menu> {
                           title: menus[index].menuTitle!,
                           sId: menus[index].sId!,
                           index: index,
+                          products: menus[index].products!,
                         ),
                       );
                     }),
@@ -684,7 +686,7 @@ class _MenuState extends ConsumerState<Menu> {
     //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.11.110:4009/api/menus/create"); // 192.168.11.110:4009
+        "http://192.168.1.34:4009/api/menus/create"); // 192.168.1.34:4009
     final request = MultipartRequest(
       'POST',
       url,

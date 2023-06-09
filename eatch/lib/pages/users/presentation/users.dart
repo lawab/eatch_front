@@ -783,7 +783,7 @@ class _UsersState extends ConsumerState<Users> {
     print(token);
     print("Restaurant id $restaurantid");
 
-    var url = Uri.parse("http://192.168.11.110:4001/api/users/create");
+    var url = Uri.parse("http://192.168.1.34:4001/api/users/create");
     final request = MultipartRequest(
       'POST',
       url,
@@ -880,7 +880,7 @@ class _UsersState extends ConsumerState<Users> {
     print(token);
     print("Restaurant id $restaurantid");
 
-    var url = Uri.parse("http://192.168.11.110:4001/api/users/create/role");
+    var url = Uri.parse("http://192.168.1.34:4001/api/users/create/role");
     final request = MultipartRequest(
       'POST',
       url,

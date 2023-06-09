@@ -511,7 +511,7 @@ class CreationProduitState extends ConsumerState<CreationProduit> {
     print(token);
     print("Restaurant id $restaurantid");
 
-    var url = Uri.parse("http://192.168.11.110:4003/api/products/create");
+    var url = Uri.parse("http://192.168.1.34:4003/api/products/create");
     final request = MultipartRequest(
       'POST',
       url,
