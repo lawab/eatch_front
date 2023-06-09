@@ -25,8 +25,8 @@ class GetDataCategoriesFuture extends ChangeNotifier {
     try {
       http.Response response = await http.get(
         Uri.parse(
-            // 'http://13.39.81.126:4005/api/categories/fetch/restaurant/$restaurantid'), //4002
-            'http://13.39.81.126:4003/api/products/fetch/categories/$restaurantid'),
+            // 'http://192.168.1.26:4005/api/categories/fetch/restaurant/$restaurantid'), //4002
+            'http://192.168.1.26:4003/api/products/fetch/categories/$restaurantid'),
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',
@@ -167,7 +167,7 @@ class GetDataCategoriesFuture extends ChangeNotifier {
     try {
       http.Response response = await http.get(
         Uri.parse(
-            'http://13.39.81.126:4005/api/categories/fetch/restaurant/$restaurantId'), //13.39.81.126 //13.39.81.126:4008 //restaurant/$restaurantId
+            'http://192.168.1.26:4005/api/categories/fetch/restaurant/$restaurantId'), //192.168.1.26 //192.168.1.26:4008 //restaurant/$restaurantId
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',
@@ -285,7 +285,7 @@ class GetDataCategoriesFuture extends ChangeNotifier {
     try {
       http.Response response = await http.get(
         Uri.parse(
-            'http://13.39.81.126:4003/api/products/fetch/categories/$restaurantId'), //4002 //products/fetch/categories/$restaurantId
+            'http://192.168.1.26:4003/api/products/fetch/categories/$restaurantId'), //4002 //products/fetch/categories/$restaurantId
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',
@@ -317,44 +317,68 @@ class GetDataCategoriesFuture extends ChangeNotifier {
 }
 
 class Categorie {
-  String? id;
-  String? title;
   Creator? cCreator;
   Restaurant? restaurant;
+  String? sId;
+  String? image;
+  String? deletedAt;
   List<Products>? products;
+  String? createdAt;
+  String? updatedAt;
+  int? iV;
+  String? title;
 
   Categorie(
-      {this.id, this.title, this.cCreator, this.restaurant, this.products});
+      {this.cCreator,
+      this.restaurant,
+      this.sId,
+      this.image,
+      this.deletedAt,
+      this.products,
+      this.createdAt,
+      this.updatedAt,
+      this.iV,
+      this.title});
 
   Categorie.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    title = json['title'];
     cCreator =
         json['_creator'] != null ? Creator.fromJson(json['_creator']) : null;
     restaurant = json['restaurant'] != null
         ? Restaurant.fromJson(json['restaurant'])
         : null;
+    sId = json['_id'];
+    image = json['image'];
+    deletedAt = json['deletedAt'];
     if (json['products'] != null) {
       products = <Products>[];
       json['products'].forEach((v) {
         products!.add(Products.fromJson(v));
       });
     }
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+    iV = json['__v'];
+    title = json['title'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['title'] = title;
     if (cCreator != null) {
       data['_creator'] = cCreator!.toJson();
     }
     if (restaurant != null) {
       data['restaurant'] = restaurant!.toJson();
     }
+    data['_id'] = sId;
+    data['image'] = image;
+    data['deletedAt'] = deletedAt;
     if (products != null) {
       data['products'] = products!.map((v) => v.toJson()).toList();
     }
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['__v'] = iV;
+    data['title'] = title;
     return data;
   }
 }
@@ -405,13 +429,13 @@ class Restaurant {
 
 class Products {
   String? sId;
-  List<Materials>? materials;
+  Recette? recette;
   Restaurant? restaurant;
   Category? category;
-  double? price;
+  int? price;
   String? sCreator;
-  String? productName;
   int? quantity;
+  String? productName;
   bool? promotion;
   String? devise;
   String? image;
@@ -425,13 +449,13 @@ class Products {
 
   Products(
       {this.sId,
-      this.materials,
+      this.recette,
       this.restaurant,
       this.category,
       this.price,
       this.sCreator,
-      this.productName,
       this.quantity,
+      this.productName,
       this.promotion,
       this.devise,
       this.image,
@@ -445,12 +469,8 @@ class Products {
 
   Products.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
-    if (json['materials'] != null) {
-      materials = <Materials>[];
-      json['materials'].forEach((v) {
-        materials!.add(Materials.fromJson(v));
-      });
-    }
+    recette =
+        json['recette'] != null ? Recette.fromJson(json['recette']) : null;
     restaurant = json['restaurant'] != null
         ? Restaurant.fromJson(json['restaurant'])
         : null;
@@ -458,8 +478,8 @@ class Products {
         json['category'] != null ? Category.fromJson(json['category']) : null;
     price = json['price'];
     sCreator = json['_creator'];
-    productName = json['productName'];
     quantity = json['quantity'];
+    productName = json['productName'];
     promotion = json['promotion'];
     devise = json['devise'];
     image = json['image'];
@@ -480,8 +500,8 @@ class Products {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['_id'] = sId;
-    if (materials != null) {
-      data['materials'] = materials!.map((v) => v.toJson()).toList();
+    if (recette != null) {
+      data['recette'] = recette!.toJson();
     }
     if (restaurant != null) {
       data['restaurant'] = restaurant!.toJson();
@@ -491,8 +511,8 @@ class Products {
     }
     data['price'] = price;
     data['_creator'] = sCreator;
-    data['productName'] = productName;
     data['quantity'] = quantity;
+    data['productName'] = productName;
     data['promotion'] = promotion;
     data['devise'] = devise;
     data['image'] = image;
@@ -509,92 +529,37 @@ class Products {
   }
 }
 
-class Materials {
-  String? sId;
-  String? mpName;
-  int? quantity;
-  String? lifetime;
-
-  Materials({this.sId, this.mpName, this.quantity, this.lifetime});
-
-  Materials.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    mpName = json['mp_name'];
-    quantity = json['quantity'];
-    lifetime = json['lifetime'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['_id'] = sId;
-    data['mp_name'] = mpName;
-    data['quantity'] = quantity;
-    data['lifetime'] = lifetime;
-    return data;
-  }
-}
-
-class Restaurants {
-  String? sId;
-  String? restaurantName;
-  Infos? infos;
-
-  Restaurants({this.sId, this.restaurantName, this.infos});
-
-  Restaurants.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    restaurantName = json['restaurant_name'];
-    infos = json['infos'] != null ? Infos.fromJson(json['infos']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['_id'] = sId;
-    data['restaurant_name'] = restaurantName;
-    if (infos != null) {
-      data['infos'] = infos!.toJson();
-    }
-    return data;
-  }
-}
-
-class Infos {
-  String? town;
-  String? address;
-
-  Infos({this.town, this.address});
-
-  Infos.fromJson(Map<String, dynamic> json) {
-    town = json['town'];
-    address = json['address'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['town'] = town;
-    data['address'] = address;
-    return data;
-  }
-}
-
-class Category {
+class Recette {
   String? sId;
   String? title;
   String? image;
-  Creator? cCreator;
-  Restaurant? restaurant;
+  String? description;
+  List<Engredients>? engredients;
+  String? sCreator;
+  String? deletedAt;
 
-  Category({this.sId, this.title, this.image, this.cCreator, this.restaurant});
+  Recette(
+      {this.sId,
+      this.title,
+      this.image,
+      this.description,
+      this.engredients,
+      this.sCreator,
+      this.deletedAt});
 
-  Category.fromJson(Map<String, dynamic> json) {
+  Recette.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     title = json['title'];
     image = json['image'];
-    cCreator =
-        json['_creator'] != null ? Creator.fromJson(json['_creator']) : null;
-    restaurant = json['restaurant'] != null
-        ? Restaurant.fromJson(json['restaurant'])
-        : null;
+    description = json['description'];
+    if (json['engredients'] != null) {
+      engredients = <Engredients>[];
+      json['engredients'].forEach((v) {
+        engredients!.add(Engredients.fromJson(v));
+      });
+    }
+    sCreator = json['_creator'];
+    deletedAt = json['deletedAt'];
   }
 
   Map<String, dynamic> toJson() {
@@ -602,12 +567,100 @@ class Category {
     data['_id'] = sId;
     data['title'] = title;
     data['image'] = image;
+    data['description'] = description;
+    if (engredients != null) {
+      data['engredients'] = engredients!.map((v) => v.toJson()).toList();
+    }
+    data['_creator'] = sCreator;
+    data['deletedAt'] = deletedAt;
+    return data;
+  }
+}
+
+class Engredients {
+  String? material;
+  int? grammage;
+  String? sId;
+
+  Engredients({this.material, this.grammage, this.sId});
+
+  Engredients.fromJson(Map<String, dynamic> json) {
+    material = json['material'];
+    grammage = json['grammage'];
+    sId = json['_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['material'] = material;
+    data['grammage'] = grammage;
+    data['_id'] = sId;
+    return data;
+  }
+}
+
+class Infos {
+  String? town;
+  String? address;
+  String? logo;
+
+  Infos({this.town, this.address, this.logo});
+
+  Infos.fromJson(Map<String, dynamic> json) {
+    town = json['town'];
+    address = json['address'];
+    logo = json['logo'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['town'] = town;
+    data['address'] = address;
+    data['logo'] = logo;
+    return data;
+  }
+}
+
+class Category {
+  Creator? cCreator;
+  Restaurant? restaurant;
+  String? sId;
+  String? title;
+  String? image;
+  String? deletedAt;
+
+  Category(
+      {this.cCreator,
+      this.restaurant,
+      this.sId,
+      this.title,
+      this.image,
+      this.deletedAt});
+
+  Category.fromJson(Map<String, dynamic> json) {
+    cCreator =
+        json['_creator'] != null ? Creator.fromJson(json['_creator']) : null;
+    restaurant = json['restaurant'] != null
+        ? Restaurant.fromJson(json['restaurant'])
+        : null;
+    sId = json['_id'];
+    title = json['title'];
+    image = json['image'];
+    deletedAt = json['deletedAt'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
     if (cCreator != null) {
       data['_creator'] = cCreator!.toJson();
     }
     if (restaurant != null) {
       data['restaurant'] = restaurant!.toJson();
     }
+    data['_id'] = sId;
+    data['title'] = title;
+    data['image'] = image;
+    data['deletedAt'] = deletedAt;
     return data;
   }
 }

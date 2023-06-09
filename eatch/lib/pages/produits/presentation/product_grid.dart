@@ -55,6 +55,10 @@ class ProductsGridState extends ConsumerState<ProductsGrid> {
                     imageUrl: widget.filterproductsList[index].image!,
                     price: widget.filterproductsList[index].price!,
                     title: widget.filterproductsList[index].productName!,
+                    sId: widget.filterproductsList[index].sId!,
+                    category: widget.filterproductsList[index].category!.sId!,
+                    quantity: widget.filterproductsList[index].quantity!,
+                    recette: widget.filterproductsList[index].recette!.sId!,
                   ),
                 ),
               );

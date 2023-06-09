@@ -1,4 +1,6 @@
 import 'package:eatch/servicesAPI/getMatiere.dart';
+import 'package:eatch/servicesAPI/getMenu.dart';
+import 'package:eatch/servicesAPI/get_produits.dart' as p;
 import 'package:eatch/utils/applayout.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +18,9 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
   bool img = false;
   var nomController = TextEditingController();
   var stockController = TextEditingController();
+
+  List<TextEditingController> listDesMenus = [];
+  List<TextEditingController> listDesProduits = [];
 
   MediaQueryData mediaQueryData(BuildContext context) {
     return MediaQuery.of(context);
@@ -35,7 +40,9 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(getDataMatiereFuture);
+    //final viewModel = ref.watch(getDataMatiereFuture);
+    final viewModel = ref.watch(getDataMenuFuture);
+    final viewModel1 = ref.watch(p.getDataProduitFuture);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -43,18 +50,18 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
         builder: (context, constraints) {
           if (constraints.maxWidth >= 900) {
             return horizontalView(height(context), width(context), context,
-                viewModel.listMatiere);
+                viewModel.listMenus, viewModel1.listProduit);
           } else {
             return verticalView(height(context), width(context), context,
-                viewModel.listMatiere);
+                viewModel.listMenus, viewModel1.listProduit);
           }
         },
       ),
     );
   }
 
-  Widget horizontalView(
-      double height, double width, context, List<Matiere> matiere) {
+  Widget horizontalView(double height, double width, context, List<Menus> menus,
+      List<p.Products> produits) {
     return AppLayout(
         content: Column(
       children: [
@@ -100,8 +107,8 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                         alignment: Alignment.centerRight,
                         height: 50,
                         color: const Color(0xFFFCEBD1),
-                        child: Row(
-                          children: const [
+                        child: const Row(
+                          children: [
                             SizedBox(
                               width: 50,
                             ),
@@ -159,14 +166,130 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                       ),
                       SizedBox(
                         width: MediaQuery.of(context).size.width - 50,
-                        child: const Text('MENU'),
+                        child: DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            hoverColor: Palette.primaryBackgroundColor,
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 42, vertical: 20),
+                            filled: true,
+                            fillColor: Palette.primaryBackgroundColor,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(
+                                  color: Palette.secondaryBackgroundColor),
+                              gapPadding: 10,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(
+                                  color: Palette.secondaryBackgroundColor),
+                              gapPadding: 10,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(
+                                  color: Palette.secondaryBackgroundColor),
+                              gapPadding: 10,
+                            ),
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
+                          //value: produit,
+                          hint: const Text('Veuillez choisir le menu'),
+                          validator: (value) {
+                            if (value == null) {
+                              return "Le choix du menu est obligatoire.";
+                            } else {
+                              return null;
+                            }
+                          },
+                          isExpanded: true,
+                          onChanged: (value) {
+                            for (int i = 0; i < menus.length; i++)
+                              setState(() {
+                                listDesMenus[i].text = value.toString();
+                              });
+                          },
+                          onSaved: (value) {
+                            setState(() {
+                              for (int i = 0; i < menus.length; i++)
+                                listDesMenus[i].text = value.toString();
+                            });
+                          },
+                          items: menus.map((val) {
+                            return DropdownMenuItem(
+                              value: val.sId,
+                              child: Text(
+                                val.menuTitle!,
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        //const Text('MENU'),
                       ),
                       const SizedBox(
                         height: 20,
                       ),
                       SizedBox(
                         width: MediaQuery.of(context).size.width - 50,
-                        child: const Text('PRODUITS'),
+                        child: DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            hoverColor: Palette.primaryBackgroundColor,
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 42, vertical: 20),
+                            filled: true,
+                            fillColor: Palette.primaryBackgroundColor,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(
+                                  color: Palette.secondaryBackgroundColor),
+                              gapPadding: 10,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(
+                                  color: Palette.secondaryBackgroundColor),
+                              gapPadding: 10,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(
+                                  color: Palette.secondaryBackgroundColor),
+                              gapPadding: 10,
+                            ),
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
+                          //value: produit,
+                          hint: const Text('Veuillez choisir le produit'),
+                          validator: (value) {
+                            if (value == null) {
+                              return "Le choix du produit est obligatoire.";
+                            } else {
+                              return null;
+                            }
+                          },
+                          isExpanded: true,
+                          onChanged: (value) {
+                            //for (int j = 0; j < produits.length; j++)
+                            setState(() {
+                              //listDesProduits[j].text = value.toString();
+                            });
+                          },
+                          onSaved: (value) {
+                            setState(() {
+                              //for (int j = 0; j < produits.length; j++)
+                              //listDesProduits[j].text = value.toString();
+                            });
+                          },
+                          items: produits.map((val) {
+                            return DropdownMenuItem(
+                              value: val.sId,
+                              child: Text(
+                                val.productName!,
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        // child: const Text('PRODUITS'),
                       ),
                       const SizedBox(
                         height: 20,
@@ -275,8 +398,8 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                     height: 10,
                                   ),
                                   Container(
-                                    child: Row(
-                                      children: const [
+                                    child: const Row(
+                                      children: [
                                         Expanded(
                                           child: Text('Menu Ramadan'),
                                         ),
@@ -431,8 +554,8 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
     ));
   }
 
-  Widget verticalView(
-      double height, double width, context, List<Matiere> matiere) {
+  Widget verticalView(double height, double width, context, List<Menus> menus,
+      List<p.Products> produits) {
     return AppLayout(
         content: Column(
       children: [

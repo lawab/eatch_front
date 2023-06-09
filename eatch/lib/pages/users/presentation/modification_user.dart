@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:eatch/servicesAPI/get_role.dart';
 import 'package:eatch/servicesAPI/multipart.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
@@ -78,6 +79,9 @@ class _ModificationUserState extends ConsumerState<ModificationUser> {
     super.dispose();
   }
 
+  // text controller
+  final _roleController = TextEditingController();
+
   //**********************************/
 
   @override
@@ -98,10 +102,10 @@ class _ModificationUserState extends ConsumerState<ModificationUser> {
                 !PREMIERE LIGNE 
                                 **/
 
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
+                children: [
                   Text("MODIFIER LES INFORMTIONS"),
                 ],
               ),
@@ -121,7 +125,47 @@ class _ModificationUserState extends ConsumerState<ModificationUser> {
                       const SizedBox(height: 20),
                       emailForm(),
                       const SizedBox(height: 20),
-                      roleForm(),
+                      Row(
+                        children: [
+                          Expanded(flex: 3, child: roleForm()),
+                          const SizedBox(width: 20),
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(
+                                vertical: 10.0,
+                              ),
+                              height: 50.0,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: ElevatedButton.icon(
+                                onPressed: () {
+                                  addRole();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Palette.yellowColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                ),
+                                icon: const Icon(
+                                  Icons.add,
+                                  color: Palette.primaryBackgroundColor,
+                                ),
+                                label: const Text(
+                                  " AJOUTER UN RÔLE",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Palette.primaryBackgroundColor,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                        ],
+                      ),
                       const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -170,7 +214,7 @@ class _ModificationUserState extends ConsumerState<ModificationUser> {
                                   borderRadius: BorderRadius.circular(16),
                                   child: _selectFile == false
                                       ? Image.network(
-                                          'http://13.39.81.126:4001${widget.avatar}',
+                                          'http://192.168.1.26:4001${widget.avatar}',
                                           fit: BoxFit.fill,
                                         )
                                       : isLoading
@@ -242,6 +286,66 @@ class _ModificationUserState extends ConsumerState<ModificationUser> {
   }
 
   DropdownButtonFormField<String> roleForm() {
+    final viewModel = ref.watch(getDataRoleFuture);
+    return DropdownButtonFormField(
+      decoration: InputDecoration(
+        hoverColor: Palette.primaryBackgroundColor,
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
+        filled: true,
+        fillColor: Palette.primaryBackgroundColor,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
+          gapPadding: 10,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
+          gapPadding: 10,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
+          gapPadding: 10,
+        ),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+      ),
+      value: widget.role,
+      hint: const Text(
+        'Rôle*',
+      ),
+      isExpanded: true,
+      onChanged: (value) {
+        setState(() {
+          _role = value;
+        });
+      },
+      onSaved: (value) {
+        setState(() {
+          _role = value;
+        });
+      },
+      validator: (String? value) {
+        if (value == null) {
+          return "Le rôle de l'utilisateur est obligatoire.";
+        } else {
+          return null;
+        }
+      },
+      items: viewModel.listRole.map((val) {
+        return DropdownMenuItem(
+          value: val.value,
+          child: Text(
+            val.value!,
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  /*
+  DropdownButtonFormField<String> roleForm() {
     return DropdownButtonFormField(
       decoration: InputDecoration(
         hoverColor: Palette.primaryBackgroundColor,
@@ -299,7 +403,7 @@ class _ModificationUserState extends ConsumerState<ModificationUser> {
       }).toList(),
     );
   }
-
+  */
   TextFormField nomForm() {
     return TextFormField(
       initialValue: widget.firstName,
@@ -523,7 +627,7 @@ class _ModificationUserState extends ConsumerState<ModificationUser> {
     print("Restaurant id $restaurantid");
 
     var url =
-        Uri.parse("http://13.39.81.126:4001/api/users/update/${widget.sId}");
+        Uri.parse("http://192.168.1.26:4001/api/users/update/${widget.sId}");
     final request = MultipartRequest(
       'PUT',
       url,
@@ -581,6 +685,198 @@ class _ModificationUserState extends ConsumerState<ModificationUser> {
     } catch (e) {
       rethrow;
     }
+  }
+
+  void saveNewRole() {
+    setState(() {
+      _roleController.clear();
+    });
+    Navigator.of(context).pop();
+  }
+
+  void addRole() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return DialogBox(
+          roleController: _roleController,
+          onSave: () {
+            setState(() {
+              creationRole(context, _roleController.text);
+              _roleController.clear();
+            });
+            Navigator.of(context).pop();
+          },
+          onCancel: () => Navigator.of(context).pop(),
+        );
+      },
+    );
+  }
+
+  Future<void> creationRole(
+    BuildContext context,
+    value,
+  ) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var id = prefs.getString('IdUser').toString();
+    var token = prefs.getString('token');
+    var restaurantid = prefs.getString('idRestaurant');
+    print(id);
+    print(token);
+    print("Restaurant id $restaurantid");
+
+    var url = Uri.parse("http://192.168.1.26:4001/api/users/create/role");
+    final request = MultipartRequest(
+      'POST',
+      url,
+      onProgress: (int bytes, int total) {
+        final progress = bytes / total;
+        print('progress: $progress ($bytes/$total)');
+      },
+    );
+    var json = {
+      "restaurant": restaurantid,
+      "value": value,
+      "_creator": id,
+    };
+    var body = jsonEncode(json);
+
+    request.headers.addAll({
+      "body": body,
+    });
+
+    request.fields['form_key'] = 'form_value';
+    request.headers['authorization'] = 'Bearer $token';
+    print("RESPENSE SEND STEAM FILE REQ");
+    var response = await request.send();
+    print("Upload Response$response");
+    print(response.statusCode);
+    print(request.headers);
+
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        await response.stream.bytesToString().then((value) {
+          print(value);
+        });
+        setState(() {
+          ref.refresh(getDataRoleFuture);
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Utilisateur crée"),
+        ));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Erreur de serveur"),
+        ));
+        print("Error Create Programme  !!!");
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+}
+
+class DialogBox extends StatelessWidget {
+  final roleController;
+  VoidCallback onSave;
+  VoidCallback onCancel;
+
+  DialogBox({
+    super.key,
+    required this.roleController,
+    required this.onSave,
+    required this.onCancel,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Palette.primaryBackgroundColor,
+      content: SizedBox(
+        height: 120,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TextFormField(
+              controller: roleController,
+              textInputAction: TextInputAction.next,
+              autocorrect: true,
+              textCapitalization: TextCapitalization.characters,
+              enableSuggestions: false,
+              onEditingComplete: (() => FocusScope.of(context).requestFocus()),
+              keyboardType: TextInputType.name,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return "Le role est obligatoire !";
+                } else if (value.length < 2) {
+                  return "Entrez au moins 2 caractères !";
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 00.0,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  gapPadding: 10,
+                ),
+                hintText: "Nouveau rôle*",
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // buttons -> save + cancel
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                // save button
+                MyButton(
+                  text: "Ajouter",
+                  onPressed: onSave,
+                  color: Palette.primaryColor,
+                ),
+
+                const SizedBox(width: 8),
+
+                // cancel button
+                MyButton(
+                  text: "Annuler",
+                  onPressed: onCancel,
+                  color: Palette.deleteColors,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MyButton extends StatelessWidget {
+  final String text;
+  VoidCallback onPressed;
+  Color color;
+  MyButton({
+    super.key,
+    required this.text,
+    required this.color,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+      onPressed: onPressed,
+      color: color,
+      child: Text(
+        text,
+        style: const TextStyle(color: Palette.primaryBackgroundColor),
+      ),
+    );
   }
 }
 

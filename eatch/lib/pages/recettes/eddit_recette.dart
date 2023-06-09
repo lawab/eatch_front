@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:eatch/pages/recettes/recettes.dart';
 import 'package:eatch/servicesAPI/getMatiere.dart';
 import 'package:eatch/servicesAPI/get_recettes.dart';
-import 'package:eatch/servicesAPI/getMatiere.dart' as material;
 import 'package:eatch/servicesAPI/multipart.dart';
 import 'package:eatch/utils/applayout.dart';
 import 'package:eatch/utils/default_button/default_button.dart';
@@ -56,21 +55,20 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
   }
 
 /* LA LISTE QUI VA CONTENIR LES INGREDIENTS */
-  List<material.Matiere> listmatiere = [];
+  List<Matiere> listmatiere = [];
 
-/* LE LOADING PENDANT LE TÉLÉCHARGEMENT DE L’IMAGE DE LA RECETTE */
+  // ***** LES VARIABLES ****** //
   bool isLoading = false;
-
-/* SI UNE IMAGE EST SÉLECTIONNÉE SEL DEVIENT TRUE */
   bool _selectFile = false;
 
-/* LE FICHIER IMAGE TELECHARGER DEPUIS LE PC */
   Uint8List? selectedImageInBytes;
-  List<int> _selectedFile = [];
-
-/* LE FICHIER IMAGE TELECHARGER DEPUIS LE PC A ENVOYER SUR INTERNET */
   FilePickerResult? result;
 
+  List<int> _selectedFile = [];
+  bool filee = false;
+  PlatformFile? file;
+
+  String? recetteImage;
 /* LA LISTE DE TOUS LES INGRÉDIENTS QUI SERONT CRÉÉS */
   List/*<Ingredient>*/ ingredientsList = [];
   List ingredientsListold = [];
@@ -141,51 +139,73 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
 /*LA METHODE QUI PERMET DE SOUMETTRE LE CONTENU DU FORMULAIRE */
   void _submit() {
     setState(() {
-      ingredientsListold.addAll(widget.ingredients);
-      ingredientsList.addAll(ingredientsListold);
+      // ingredientsListold.addAll(widget.ingredients);
+      // ingredientsList.addAll(ingredientsListold);
+
+      for (int i = 0; i < widget.ingredients.length; i++) {
+        ingredientsList.add(Ingredient(
+          material: widget.ingredients[i].material!.sId!,
+          grammage: widget.ingredients[i].grammage.toString(),
+          unity: widget.ingredients[i].unity.toString(),
+        ));
+      }
     });
     final isValid = _formkey.currentState!.validate();
     if (!isValid) {
       return;
     } else if (ingredientsList.isEmpty) {
       showTopSnackBar(
-        Overlay.of(context)!,
+        Overlay.of(context),
         const CustomSnackBar.info(
           backgroundColor: Colors.red,
           message: "Les ingrédients sont obligatoires .",
         ),
       );
-    } else {
-      _formkey.currentState!.save();
-
-      // ingredientsList.addAll();
-
-      for (int i = 0; i < _matierePremieres.length; i++) {
-        ingredientsList.add(Ingredient(
-          material: _matierePremieres[i].text,
-          grammage: _quantite[i].text,
-        ));
-      }
-      updateRecette(
-        context,
-        _titreRecette.text,
-        _descriptionRecette.text,
-        ingredientsList,
-        _selectedFile,
-        result,
-      );
-      print(_titreRecette.text);
-      print(_descriptionRecette.text);
-      print(ingredientsList);
-
-      _clear();
-      setState(() {
-        _selectFile = false;
-        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-          _addFiel();
-        });
-      });
     }
+    _formkey.currentState!.save();
+
+    // for (int i = 0; i < widget.ingredients.length; i++) {
+    //   ingredientsList.add(Ingredient(
+    //     material: widget.ingredients[i].material!.sId!,
+    //     grammage: widget.ingredients[i].grammage.toString(),
+    //     unity: widget.ingredients[i].unity.toString(),
+    //   ));
+    // }
+
+    for (int i = 0; i < _matierePremieres.length; i++) {
+      ingredientsList.add(Ingredient(
+        material: _matierePremieres[i].text,
+        grammage: _quantite[i].text,
+        unity: _uniteDeMesure[i].text,
+      ));
+    }
+
+    print("IMMMMMAGGAGAGAGAGAGAGAGAGAGA");
+    print(_selectedFile);
+    print(result);
+    print(_titreRecette.text);
+    print(_descriptionRecette.text);
+    print(ingredientsList);
+    updateRecette(
+      context,
+      _selectedFile,
+      result,
+      _titreRecette.text,
+      _descriptionRecette.text,
+      ingredientsList,
+    );
+
+    // _clear();
+    setState(() {
+      // _selectFile = false;
+      // result = null;
+      // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      //   _addFiel();
+      // });
+    });
+    // Navigator.of(context).pushAndRemoveUntil(
+    //     MaterialPageRoute(builder: (context) => const RecettesPage()),
+    //     (Route<dynamic> route) => false);
   }
 
 /*EFFACER CES VARIABLES DE LA MEMOIRE SI ELLES NE SONT PAS UTILISEES */
@@ -230,6 +250,8 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
     listmatiere.addAll(listMatieres);
 
     // final viewRecetteModel = ref.watch(getDataRecettesFuture);
+
+    final viewModel = ref.watch(getDataMatiereFuture);
     return AppLayout(
       content: SingleChildScrollView(
         /*LE FORMULAIRE DE CREATION DE RECETTE*/
@@ -364,7 +386,8 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
                                             ),
                                           ),
                                           onChanged: null,
-                                          items: listmatiere.map((val) {
+                                          items:
+                                              viewModel.listMatiere.map((val) {
                                             return DropdownMenuItem(
                                               value: val.sId,
                                               child: Text(
@@ -702,7 +725,8 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
                                                   value.toString();
                                             });
                                           },
-                                          items: listmatiere.map((val) {
+                                          items:
+                                              viewModel.listMatiere.map((val) {
                                             return DropdownMenuItem(
                                               value: val.sId,
                                               child: Text(
@@ -810,6 +834,7 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
                           color: Palette.secondaryBackgroundColor,
                           child: GestureDetector(
                             onTap: () async {
+                              recetteImage = null;
                               result = await FilePicker.platform.pickFiles(
                                   type: FileType.custom,
                                   allowedExtensions: [
@@ -819,10 +844,15 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
                                   ]);
                               if (result != null) {
                                 setState(() {
+                                  file = result!.files.single;
+
                                   Uint8List fileBytes =
                                       result!.files.single.bytes as Uint8List;
 
                                   _selectedFile = fileBytes;
+
+                                  filee = true;
+
                                   selectedImageInBytes =
                                       result!.files.first.bytes;
                                   _selectFile = true;
@@ -830,8 +860,8 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
                               }
                             },
                             child: Container(
-                              width: 100,
-                              height: 100,
+                              width: SizeConfig.screenWidth * 0.05,
+                              height: SizeConfig.screenWidth * 0.05,
                               decoration: BoxDecoration(
                                 border: Border.all(
                                   width: 1,
@@ -843,7 +873,7 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
                                 borderRadius: BorderRadius.circular(16),
                                 child: _selectFile == false
                                     ? Image.network(
-                                        'http://13.39.81.126:4010${widget.image}',
+                                        'http://192.168.1.26:4010${widget.image}',
                                         fit: BoxFit.fill,
                                       )
                                     : isLoading
@@ -891,10 +921,10 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
                             text: 'ANNULER',
                             textcolor: Palette.textsecondaryColor,
                             onPressed: () {
-                              setState(() {
-                                _selectFile = false;
-                                _clear();
-                              });
+                              // setState(() {
+                              //   _selectFile = false;
+                              //   _clear();
+                              // });
                               Navigator.of(context).pushAndRemoveUntil(
                                   MaterialPageRoute(
                                       builder: (context) =>
@@ -925,6 +955,95 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
   }
 
   Future<void> updateRecette(
+    BuildContext context,
+    selectedFile,
+    result,
+    String title,
+    String description,
+    List/*<Ingredient>*/ ingredients,
+  ) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var id = prefs.getString('IdUser').toString();
+    var token = prefs.getString('token');
+    var restaurantid = prefs.getString('idRestaurant');
+    print(id);
+    print(token);
+    print("Restaurant id $restaurantid");
+
+    var url =
+        Uri.parse("http://192.168.1.26:4010/api/recettes/update/${widget.sId}");
+
+    final request = MultipartRequest(
+      'PUT',
+      url,
+      onProgress: (int bytes, int total) {
+        final progress = bytes / total;
+        print('progress: $progress ($bytes/$total)');
+      },
+    );
+    var ingredient = jsonEncode(ingredientsList).toString();
+    var json = {
+      'title': title,
+      'description': description,
+      'engredients': ingredient,
+      '_creator': id,
+      'restaurant': restaurantid!,
+    };
+    var body = jsonEncode(json);
+
+    request.headers.addAll({
+      "body": body,
+    });
+
+    request.fields['form_key'] = 'form_value';
+    request.headers['authorization'] = 'Bearer $token';
+    if (result != null) {
+      request.files.add(
+        http.MultipartFile.fromBytes('file', selectedFile,
+            contentType: MediaType('application', 'octet-stream'),
+            filename: result.files.first.name),
+      );
+    }
+
+    print("RESPENSE SEND STEAM FILE REQ");
+    var response = await request.send();
+    print("Upload Response$response");
+    print(response.statusCode);
+    print(request.headers);
+
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        await response.stream.bytesToString().then((value) {
+          print(value);
+        });
+        setState(() {
+          ref.refresh(getDataRecettesFuture);
+        });
+
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.info(
+            backgroundColor: Colors.green,
+            message: "Recette modifiée avec succès",
+          ),
+        );
+      } else {
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.error(
+            backgroundColor: Colors.red,
+            message: "Erreur du Serveur",
+          ),
+        );
+        print("Error Create Programme  !!!");
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+/*
+  Future<void> updateRecette(
     contextt,
     String title,
     String description,
@@ -938,7 +1057,7 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
     var restaurantid = prefs.getString('idRestaurant');
     String adressUrl = prefs.getString('ipport').toString();
     var url = Uri.parse(
-        "http://13.39.81.126:4010/api/recettes/update/${widget.sId}"); //13.39.81.126
+        "http://192.168.1.26:4010/api/recettes/update/${widget.sId}"); //13.39.81.126
     print(url);
     final request = MultipartRequest(
       'PUT',
@@ -986,7 +1105,7 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
         //finishWorking();
 
         showTopSnackBar(
-          Overlay.of(contextt)!,
+          Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.green,
             message: "Recette Crée",
@@ -995,7 +1114,7 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
         ref.refresh(getDataRecettesFuture);
       } else {
         showTopSnackBar(
-          Overlay.of(contextt)!,
+          Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.red,
             message: "Erreur de création",
@@ -1007,6 +1126,7 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
       rethrow;
     }
   }
+ */
 }
 
 class Ingredient {
@@ -1014,7 +1134,11 @@ class Ingredient {
   String? grammage;
   String? unity;
 
-  Ingredient({this.material, this.grammage});
+  Ingredient({
+    this.material,
+    this.grammage,
+    this.unity,
+  });
 
   Ingredient.fromJson(Map<String, dynamic> json) {
     material = json['material'];
@@ -1023,10 +1147,10 @@ class Ingredient {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['material'] = this.material;
-    data['grammage'] = this.grammage;
-    data['unity'] = this.unity;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['material'] = material;
+    data['grammage'] = grammage;
+    data['unity'] = unity;
     return data;
   }
 }

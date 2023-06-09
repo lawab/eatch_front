@@ -1,21 +1,41 @@
+import 'dart:convert';
+
 import 'package:eatch/pages/produits/presentation/modification_produit.dart';
+import 'package:eatch/servicesAPI/getProduit.dart';
+import 'package:eatch/servicesAPI/get_categories.dart';
 import 'package:eatch/utils/default_button/default_button.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:eatch/utils/size/size.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
-class Produitpage extends StatelessWidget {
+class Produitpage extends ConsumerStatefulWidget {
   const Produitpage({
     super.key,
-    required this.imageUrl,
     required this.title,
     required this.price,
+    required this.quantity,
+    required this.sId,
+    required this.imageUrl,
+    required this.recette,
+    required this.category,
   });
-  final String imageUrl;
   final String title;
-  final double price;
+  final String recette;
+  final String category;
+  final String imageUrl;
+  final String sId;
+  final int price;
+  final int quantity;
 
+  @override
+  ConsumerState<Produitpage> createState() => _ProduitpageState();
+}
+
+class _ProduitpageState extends ConsumerState<Produitpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,14 +68,14 @@ class Produitpage extends StatelessWidget {
                   child: SizedBox.fromSize(
                     size: const Size.fromRadius(100),
                     child: Image.network(
-                      imageUrl,
+                      widget.imageUrl,
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  title,
+                  widget.title,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
@@ -67,7 +87,8 @@ class Produitpage extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  NumberFormat.simpleCurrency(name: "MAD ").format(price),
+                  NumberFormat.simpleCurrency(name: "MAD ")
+                      .format(widget.price),
                   style: const TextStyle(
                     fontSize: 15.0,
                     fontWeight: FontWeight.bold,
@@ -87,7 +108,8 @@ class Produitpage extends StatelessWidget {
                         onPressed: () {
                           dialogDelete(
                             context,
-                            title,
+                            widget.title,
+                            widget.sId,
                           );
                         },
                       ),
@@ -105,9 +127,13 @@ class Produitpage extends StatelessWidget {
                             context,
                             MaterialPageRoute(builder: (context) {
                               return ModificationProduit(
-                                imageUrl: imageUrl,
-                                price: price,
-                                title: title,
+                                imageUrl: widget.imageUrl,
+                                price: widget.price,
+                                title: widget.title,
+                                category: widget.category,
+                                quantity: widget.quantity,
+                                recette: widget.recette,
+                                sId: widget.sId,
                               );
                             }),
                           );
@@ -124,7 +150,7 @@ class Produitpage extends StatelessWidget {
     );
   }
 
-  Future dialogDelete(BuildContext context, String nomproduit) {
+  Future dialogDelete(BuildContext context, String productName, productId) {
     return showDialog(
       context: context,
       builder: (_) {
@@ -160,7 +186,10 @@ class Produitpage extends StatelessWidget {
                 ),
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Palette.deleteColors),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  deleteProduct(context, productId);
+                },
                 label: const Text("Supprimer."),
               )
             ],
@@ -169,12 +198,50 @@ class Produitpage extends StatelessWidget {
                 color: Colors.white,
                 height: 150,
                 child: Text(
-                  "Voulez vous supprimer la catégorie $nomproduit?",
+                  "Voulez vous supprimer le produit $productName ?",
                   style: const TextStyle(
                     color: Colors.black,
                   ),
                 )));
       },
     );
+  }
+
+  Future<http.Response> deleteProduct(BuildContext context, String id) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var userdelete = prefs.getString('IdUser').toString();
+      var restaurantId = prefs.getString('idRestaurant').toString();
+      var token = prefs.getString('token');
+      String urlDelete = "http://192.168.1.26:4003/api/products/delete/$id";
+      var json = {
+        '_creator': userdelete,
+        'restaurant': restaurantId,
+      };
+      var body = jsonEncode(json);
+
+      final http.Response response = await http.delete(
+        Uri.parse(urlDelete),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'Accept': 'application/json',
+          'authorization': 'Bearer $token',
+          'body': body,
+        },
+      );
+
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        setState(() {
+          ref.refresh(getDataCategoriesFuture);
+          ref.refresh(GetDataProduitFuture as Refreshable);
+        });
+        return response;
+      } else {
+        return Future.error("Server Error");
+      }
+    } catch (e) {
+      return Future.error(e);
+    }
   }
 }

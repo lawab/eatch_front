@@ -30,7 +30,7 @@ class RestaurantDetailState extends State<RestaurantDetail> {
                 image: DecorationImage(
                     opacity: 100,
                     image: NetworkImage(
-                        'http://13.39.81.126:4002${widget.restaurant.infos!.logo.toString()}'),
+                        'http://192.168.1.26:4002${widget.restaurant.infos!.logo.toString()}'),
                     //image: AssetImage('eatch.jpg'),
                     fit: BoxFit.cover),
               ),

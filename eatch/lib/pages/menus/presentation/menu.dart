@@ -16,6 +16,7 @@ import '../../../servicesAPI/getMenu.dart';
 import '../../../servicesAPI/multipart.dart';
 import 'package:http/http.dart' as http;
 import 'menu_card.dart';
+import 'modification_menu.dart';
 
 class Menu extends ConsumerStatefulWidget {
   const Menu({
@@ -48,6 +49,16 @@ class _MenuState extends ConsumerState<Menu> {
   var descriptioncontroller = TextEditingController();
 
   final List<TextEditingController> _controllerInput = [];
+
+  _clear() {
+    setState(() {
+      nomcontroller.clear();
+      prixcontroller.clear();
+      descriptioncontroller.clear();
+      listProdId.clear();
+    });
+  }
+
   //final List<Widget> _textFieldInput = [];
   String? matiere;
 
@@ -158,15 +169,73 @@ class _MenuState extends ConsumerState<Menu> {
                                 mainAxisSpacing: 30,
                                 mainAxisExtent: 200),
                         itemBuilder: (context, index) {
-                          return Container(
-                            child: MenuCard(
-                              description: menus[index].description!,
-                              imageUrl: menus[index].image!,
-                              price: menus[index].price!,
-                              title: menus[index].menuTitle!,
-                              sId: menus[index].sId!,
-                              index: index,
-                            ),
+                          return Column(
+                            children: [
+                              MenuCard(
+                                description: menus[index].description!,
+                                imageUrl: menus[index].image!,
+                                price: menus[index].price!,
+                                title: menus[index].menuTitle!,
+                                sId: menus[index].sId!,
+                                prod: menus[index].products!,
+                                index: index,
+                              ),
+                              const SizedBox(height: 1),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ModificationMenu(
+                                              description:
+                                                  menus[index].description!,
+                                              imageUrl: menus[index].image!,
+                                              price: menus[index].price!,
+                                              sId: menus[index].sId!,
+                                              title: menus[index].menuTitle!,
+                                              products: menus[index].products!,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        height: 30,
+                                        decoration: BoxDecoration(
+                                          color: Palette.secondaryColor,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        alignment: Alignment.center,
+                                        child: const Text("Modifier"),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 0.5),
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: () {
+                                        dialogDelete(menus[index].menuTitle!,
+                                            menus[index].sId!);
+                                      },
+                                      child: Container(
+                                        height: 30,
+                                        decoration: BoxDecoration(
+                                          color: Palette.deleteColors,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        alignment: Alignment.center,
+                                        child: const Text("Supprimer"),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              )
+                            ],
                           );
                         },
                       ),
@@ -246,13 +315,71 @@ class _MenuState extends ConsumerState<Menu> {
                             mainAxisExtent: 200),
                     itemBuilder: (context, index) {
                       return Container(
-                        child: MenuCard(
-                          description: menus[index].description!,
-                          imageUrl: menus[index].image!,
-                          price: menus[index].price!,
-                          title: menus[index].menuTitle!,
-                          sId: menus[index].sId!,
-                          index: index,
+                        child: Column(
+                          children: [
+                            MenuCard(
+                              description: menus[index].description!,
+                              imageUrl: menus[index].image!,
+                              price: menus[index].price!,
+                              title: menus[index].menuTitle!,
+                              sId: menus[index].sId!,
+                              prod: menus[index].products!,
+                              index: index,
+                            ),
+                            const SizedBox(height: 1),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ModificationMenu(
+                                            description:
+                                                menus[index].description!,
+                                            imageUrl: menus[index].image!,
+                                            price: menus[index].price!,
+                                            sId: menus[index].sId!,
+                                            title: menus[index].menuTitle!,
+                                            products: menus[index].products!,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        color: Palette.secondaryColor,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      alignment: Alignment.center,
+                                      child: const Text("Modifier"),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 0.5),
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: () {
+                                      dialogDelete(menus[index].menuTitle!,
+                                          menus[index].sId!);
+                                    },
+                                    child: Container(
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        color: Palette.deleteColors,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      alignment: Alignment.center,
+                                      child: const Text("Supprimer"),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            )
+                          ],
                         ),
                       );
                     }),
@@ -275,8 +402,8 @@ class _MenuState extends ConsumerState<Menu> {
               alignment: Alignment.centerRight,
               height: 50,
               color: const Color(0xFFFCEBD1),
-              child: Row(
-                children: const [
+              child: const Row(
+                children: [
                   SizedBox(
                     width: 50,
                   ),
@@ -663,6 +790,67 @@ class _MenuState extends ConsumerState<Menu> {
     );
   }
 
+  ////////////////////////////////////
+  Future dialogDelete(String nom, String idMenus) {
+    return showDialog(
+      context: context,
+      builder: (con) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: const Center(
+            child: Text(
+              "Confirmez la suppression",
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'HelveticaNeue',
+              ),
+            ),
+          ),
+          actions: [
+            ElevatedButton.icon(
+                icon: const Icon(
+                  Icons.close,
+                  size: 14,
+                ),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
+                onPressed: () {
+                  Navigator.of(con, rootNavigator: true).pop();
+                },
+                label: const Text("Quitter   ")),
+            const SizedBox(
+              width: 20,
+            ),
+            ElevatedButton.icon(
+                icon: const Icon(
+                  Icons.delete,
+                  size: 14,
+                ),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Palette.deleteColors),
+                onPressed: () {
+                  deleteMenu(context, idMenus);
+                  Navigator.of(con, rootNavigator: true).pop();
+                },
+                label: const Text("Supprimer."))
+          ],
+          content: Container(
+            alignment: Alignment.center,
+            color: Colors.white,
+            height: 150,
+            child: Text(
+              "Voulez vous supprimer $nom ?",
+              style: const TextStyle(
+                color: Colors.black,
+                fontFamily: 'HelveticaNeue',
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   ///////// - Création de Menu
   ///
   Future<void> creationMenu(
@@ -684,7 +872,7 @@ class _MenuState extends ConsumerState<Menu> {
     //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://13.39.81.126:4009/api/menus/create"); // 13.39.81.126:4009
+        "http://192.168.1.26:4009/api/menus/create"); // 192.168.1.26:4009
     final request = MultipartRequest(
       'POST',
       url,
@@ -705,6 +893,7 @@ class _MenuState extends ConsumerState<Menu> {
       '_creator': id,
       'products': dd,
     };
+
     var body = jsonEncode(json);
 
     request.headers.addAll({
@@ -732,16 +921,19 @@ class _MenuState extends ConsumerState<Menu> {
         //stopMessage();
         //finishWorking();
         showTopSnackBar(
-          Overlay.of(context)!,
+          Overlay.of(context),
           const CustomSnackBar.info(
             backgroundColor: Colors.green,
             message: "Le menu a été crée",
           ),
         );
         ref.refresh(getDataMenuFuture);
+        setState(() {
+          _clear();
+        });
       } else {
         showTopSnackBar(
-          Overlay.of(context)!,
+          Overlay.of(context),
           const CustomSnackBar.info(
             backgroundColor: Colors.red,
             message: "Le menu n'a pas été crée",
@@ -751,6 +943,59 @@ class _MenuState extends ConsumerState<Menu> {
       }
     } catch (e) {
       throw e;
+    }
+  }
+
+  ////////// - Suppression de Menu
+  ///
+  Future<http.Response> deleteMenu(BuildContext context, String idMenu) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var id = prefs.getString('IdUser').toString();
+
+      //String adressUrl = prefs.getString('ipport').toString();
+
+      var token = prefs.getString('token');
+      String urlDelete =
+          "http://192.168.1.26:4009/api/menus/delete/$idMenu"; // 192.168.1.26:4008 //$adressUrl
+      //var json = {'_creator': id};
+
+      //var body = jsonEncode(json);
+
+      final http.Response response =
+          await http.delete(Uri.parse(urlDelete), headers: {
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'Accept': 'application/json',
+        'authorization': 'Bearer $token',
+      }, body: {
+        '_creator': id
+      });
+
+      print(response.statusCode);
+      print(response.body);
+
+      if (response.statusCode == 200) {
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.info(
+            backgroundColor: Colors.green,
+            message: "Le menu a été supprimée avec succès",
+          ),
+        );
+        ref.refresh(getDataMenuFuture);
+        return response;
+      } else {
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.info(
+            backgroundColor: Palette.deleteColors,
+            message: "Le menu n'a pas été supprimée succès",
+          ),
+        );
+        return Future.error("Server Error");
+      }
+    } catch (e) {
+      return Future.error(e);
     }
   }
 }

@@ -1,12 +1,18 @@
 // ignore_for_file: avoid_function_literals_in_foreach_calls, unused_field, prefer_final_fields
 
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:eatch/pages/produits/presentation/creation_produit.dart';
+import 'package:eatch/servicesAPI/multipart.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import '../../../servicesAPI/get_categories.dart';
 import '../../../utils/applayout.dart';
 import '../../../utils/default_button/default_button.dart';
@@ -15,6 +21,7 @@ import '../../../utils/size/size.dart';
 import '../../produits/presentation/product_grid.dart';
 import 'categorie_card.dart';
 import 'modification_categorie.dart';
+import 'package:http/http.dart' as http;
 
 class CategoriesPage extends ConsumerStatefulWidget {
   const CategoriesPage({
@@ -147,7 +154,6 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(getDataCategoriesFuture);
-    print('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
     SizeConfig().init(context);
     return AppLayout(
       content: SingleChildScrollView(
@@ -186,8 +192,8 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                           Radius.circular(10),
                         ),
                       ),
-                      child: Row(
-                        children: const [
+                      child: const Row(
+                        children: [
                           Icon(
                             Icons.add,
                             color: Palette.primaryBackgroundColor,
@@ -224,6 +230,7 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                           const SizedBox(height: 20),
 
                           ////////////// - Image(début)
+
                           Container(
                             padding: const EdgeInsets.only(right: 70),
                             color: Palette.secondaryBackgroundColor,
@@ -300,7 +307,12 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
                                       _formKey.currentState!.save();
-                                      print("nom is $_nomCategorie");
+                                      creationCategorie(
+                                        context,
+                                        _nomCategorie,
+                                        _selectedFile,
+                                        result,
+                                      );
                                     } else {
                                       print("Bad");
                                     }
@@ -417,56 +429,59 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                             ),
                             Expanded(
                                 child: search == false
-                                    ? viewModel.listCategories.isEmpty
-                                        ? Center(
-                                            child: Text('Aucune Catégorie'),
-                                          )
-                                        : GridView.builder(
-                                            itemCount:
-                                                viewModel.listCategories.length,
-                                            gridDelegate:
-                                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 01,
-                                              mainAxisSpacing: 10,
-                                              childAspectRatio: 4.1,
-                                            ),
-                                            itemBuilder: (context, index) {
-                                              print('***********************');
-                                              return CategorieCard(
-                                                categorie: viewModel
-                                                    .listCategories[index],
-                                                index: index,
-                                                onPress: () {
-                                                  setState(() {
-                                                    selectedIndexCategorie =
-                                                        index;
-                                                    _pageController
-                                                        .jumpToPage(index);
-                                                  });
-                                                },
-                                                selectedIndex:
-                                                    selectedIndexCategorie,
-                                                onTapDelete: () {
-                                                  dialogDelete(viewModel
+                                    ? GridView.builder(
+                                        itemCount:
+                                            viewModel.listCategories.length,
+                                        gridDelegate:
+                                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 01,
+                                          mainAxisSpacing: 10,
+                                          childAspectRatio: 4.1,
+                                        ),
+                                        itemBuilder: (context, index) {
+                                          return CategorieCard(
+                                            categorie:
+                                                viewModel.listCategories[index],
+                                            index: index,
+                                            onPress: () {
+                                              setState(() {
+                                                selectedIndexCategorie = index;
+                                                _pageController
+                                                    .jumpToPage(index);
+                                              });
+                                            },
+                                            selectedIndex:
+                                                selectedIndexCategorie,
+                                            onTapDelete: () {
+                                              dialogDelete(
+                                                  viewModel
                                                       .listCategories[index]
-                                                      .title!);
-                                                },
-                                                onTapEdit: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) {
-                                                      return ModificationCategorie(
-                                                        nomCategorie: viewModel
-                                                            .listCategories[
-                                                                index]
-                                                            .title!,
-                                                      );
-                                                    }),
+                                                      .title!,
+                                                  viewModel
+                                                      .listCategories[index]
+                                                      .sId!);
+                                            },
+                                            onTapEdit: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                                  return ModificationCategorie(
+                                                    nomCategorie: viewModel
+                                                        .listCategories[index]
+                                                        .title!,
+                                                    imageUrl: viewModel
+                                                        .listCategories[index]
+                                                        .image!,
+                                                    sId: viewModel
+                                                        .listCategories[index]
+                                                        .sId!,
                                                   );
-                                                },
+                                                }),
                                               );
-                                            })
+                                            },
+                                          );
+                                        })
                                     : categorieSearch.isEmpty
                                         ? const Center(
                                             child: Text(
@@ -499,7 +514,9 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                                                 onTapDelete: () {
                                                   dialogDelete(
                                                       categorieSearch[index]
-                                                          .title!);
+                                                          .title!,
+                                                      categorieSearch[index]
+                                                          .sId!);
                                                 },
                                                 onTapEdit: () {
                                                   Navigator.push(
@@ -511,6 +528,13 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                                                             categorieSearch[
                                                                     index]
                                                                 .title!,
+                                                        imageUrl:
+                                                            categorieSearch[
+                                                                    index]
+                                                                .image!,
+                                                        sId: categorieSearch[
+                                                                index]
+                                                            .sId!,
                                                       );
                                                     }),
                                                   );
@@ -568,12 +592,9 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                                           child: Text(
                                             search == false
                                                 ? viewModel
-                                                        .listCategories.isEmpty
-                                                    ? ''
-                                                    : viewModel
-                                                        .listCategories[
-                                                            selectedIndexCategorie]
-                                                        .title!
+                                                    .listCategories[
+                                                        selectedIndexCategorie]
+                                                    .title!
                                                 : categorieSearch.isNotEmpty
                                                     ? categorieSearch[
                                                             selectedIndexCategorie]
@@ -646,12 +667,9 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                                           child: Text(
                                             search == false
                                                 ? viewModel
-                                                        .listCategories.isEmpty
-                                                    ? ''
-                                                    : viewModel
-                                                        .listCategories[
-                                                            selectedIndexCategorie]
-                                                        .title!
+                                                    .listCategories[
+                                                        selectedIndexCategorie]
+                                                    .title!
                                                 : categorieSearch.isNotEmpty
                                                     ? categorieSearch[
                                                             selectedIndexCategorie]
@@ -719,50 +737,48 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                                           const NeverScrollableScrollPhysics(),
                                       controller: _pageController,
                                       children: [
-                                        viewModel.listCategories.isEmpty
+                                        viewModel
+                                                .listCategories[
+                                                    selectedIndexCategorie]
+                                                .products!
+                                                .isEmpty
                                             ? const Center(
                                                 child: Text(
-                                                  'Aucun Produit',
+                                                  'Aucun Produit trouvé',
                                                 ),
                                               )
-                                            : viewModel
-                                                    .listCategories[
-                                                        selectedIndexCategorie]
-                                                    .products!
-                                                    .isEmpty
-                                                ? const Center(
-                                                    child: Text(
-                                                      'Aucun Produit trouvé',
-                                                    ),
-                                                  )
-                                                : searchProduit == false
-                                                    ? ProductsGrid(
-                                                        filterproductsList:
-                                                            viewModel
-                                                                .listCategories[
-                                                                    selectedIndexCategorie]
-                                                                .products!,
-                                                        crossAxisCount: MediaQuery.of(
-                                                                        context)
+                                            : searchProduit == false
+                                                ? ProductsGrid(
+                                                    filterproductsList: viewModel
+                                                        .listCategories[
+                                                            selectedIndexCategorie]
+                                                        .products!,
+                                                    crossAxisCount: MediaQuery
+                                                                    .of(context)
+                                                                .size
+                                                                .width <
+                                                            485
+                                                        ? 1
+                                                        : MediaQuery.of(context)
                                                                     .size
                                                                     .width <
-                                                                485
-                                                            ? 1
+                                                                605
+                                                            ? 02
                                                             : MediaQuery.of(context)
                                                                         .size
                                                                         .width <
-                                                                    605
-                                                                ? 02
-                                                                : MediaQuery.of(context)
-                                                                            .size
-                                                                            .width <
-                                                                        750
-                                                                    ? 03
-                                                                    : 04,
-                                                        mainAxisSpacing: 10,
-                                                        crossAxisSpacing: 10,
-                                                        childAspectRatio:
-                                                            1 / 1.19,
+                                                                    750
+                                                                ? 03
+                                                                : 04,
+                                                    mainAxisSpacing: 10,
+                                                    crossAxisSpacing: 10,
+                                                    childAspectRatio: 1 / 1.19,
+                                                  )
+                                                : produitSearch.isEmpty
+                                                    ? const Center(
+                                                        child: Text(
+                                                          'Aucun Produit trouvé',
+                                                        ),
                                                       )
                                                     : produitSearch.isEmpty
                                                         ? const Center(
@@ -770,37 +786,33 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                                                               'Aucun Produit trouvé',
                                                             ),
                                                           )
-                                                        : produitSearch.isEmpty
-                                                            ? const Center(
-                                                                child: Text(
-                                                                  'Aucun Produit trouvé',
-                                                                ),
-                                                              )
-                                                            : ProductsGrid(
-                                                                filterproductsList:
-                                                                    produitSearch
-                                                                            .isEmpty
-                                                                        ? []
-                                                                        : produitSearch,
-                                                                crossAxisCount: MediaQuery.of(context)
+                                                        : ProductsGrid(
+                                                            filterproductsList:
+                                                                produitSearch
+                                                                        .isEmpty
+                                                                    ? []
+                                                                    : produitSearch,
+                                                            crossAxisCount: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width <
+                                                                    485
+                                                                ? 1
+                                                                : MediaQuery.of(context)
                                                                             .size
                                                                             .width <
-                                                                        485
-                                                                    ? 1
+                                                                        605
+                                                                    ? 02
                                                                     : MediaQuery.of(context).size.width <
-                                                                            605
-                                                                        ? 02
-                                                                        : MediaQuery.of(context).size.width <
-                                                                                750
-                                                                            ? 03
-                                                                            : 04,
-                                                                mainAxisSpacing:
-                                                                    10,
-                                                                crossAxisSpacing:
-                                                                    10,
-                                                                childAspectRatio:
-                                                                    1 / 1.19,
-                                                              ),
+                                                                            750
+                                                                        ? 03
+                                                                        : 04,
+                                                            mainAxisSpacing: 10,
+                                                            crossAxisSpacing:
+                                                                10,
+                                                            childAspectRatio:
+                                                                1 / 1.19,
+                                                          ),
                                       ],
                                     ),
                                   )
@@ -904,7 +916,7 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                                         categorieId: viewModel
                                             .listCategories[
                                                 selectedIndexCategorie]
-                                            .id!,
+                                            .sId!,
                                       );
                                     }),
                                   );
@@ -934,16 +946,16 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
     );
   }
 
-  Future dialogDelete(String nomcategorie) {
+  Future dialogDelete(String categorieTitle, categorieId) {
     return showDialog(
         context: context,
         builder: (_) {
           return AlertDialog(
               backgroundColor: Colors.white,
-              title: const Center(
+              title: Center(
                 child: Text(
-                  "Confirmez la suppression",
-                  style: TextStyle(
+                  "Confirmez la suppression de la categorie $categorieTitle",
+                  style: const TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
@@ -970,7 +982,10 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                     size: 14,
                   ),
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    deleteCategorie(context, categorieId);
+                  },
                   label: const Text("Supprimer."),
                 )
               ],
@@ -979,7 +994,7 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
                   color: Colors.white,
                   height: 150,
                   child: Text(
-                    "Voulez vous supprimer la catégorie $nomcategorie?",
+                    "Voulez vous supprimer la catégorie $categorieTitle ?",
                     style: const TextStyle(
                       color: Colors.black,
                     ),
@@ -1033,6 +1048,135 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
         _nomCategorie = value!;
       },
     );
+  }
+
+  Future<void> creationCategorie(
+    contextt,
+    title,
+    selectedFile,
+    result,
+  ) async {
+    ////////////
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var id = prefs.getString('IdUser').toString();
+    var restaurantId = prefs.getString('idRestaurant').toString();
+    var token = prefs.getString('token');
+
+    var url = Uri.parse(
+        "http://192.168.1.26:4005/api/categories/create"); //13.39.81.126
+    final request = MultipartRequest(
+      'POST',
+      url,
+      onProgress: (int bytes, int total) {
+        final progress = bytes / total;
+        print('progress: $progress ($bytes/$total)');
+      },
+    );
+    var json = {
+      'title': title,
+      'restaurant_id': restaurantId,
+      'user_id': id,
+    };
+    var body = jsonEncode(json);
+
+    request.headers.addAll({
+      "body": body,
+    });
+
+    request.fields['form_key'] = 'form_value';
+    request.headers['authorization'] = 'Bearer $token';
+    request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
+        contentType: MediaType('application', 'octet-stream'),
+        filename: result.files.first.name));
+
+    print("RESPENSE SEND STEAM FILE REQ");
+    //var responseString = await streamedResponse.stream.bytesToString();
+    var response = await request.send();
+    print("Upload Response$response");
+    print(response.statusCode);
+    print(request.headers);
+
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        await response.stream.bytesToString().then((value) {
+          print(value);
+        });
+        //stopMessage();
+        //finishWorking();
+
+        showTopSnackBar(
+          Overlay.of(contextt),
+          const CustomSnackBar.info(
+            backgroundColor: Colors.green,
+            message: "Restaurant Modifié",
+          ),
+        );
+        ref.refresh(getDataCategoriesFuture);
+      } else {
+        showTopSnackBar(
+          Overlay.of(contextt),
+          const CustomSnackBar.info(
+            backgroundColor: Colors.red,
+            message: "Erreur de création",
+          ),
+        );
+        print("Error Create Programme  !!!");
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<http.Response> deleteCategorie(contextt, String id) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var userdelete = prefs.getString('IdUser').toString();
+      var token = prefs.getString('token');
+      var restaurantId = prefs.getString('idRestaurant').toString();
+      String urlDelete = "http://192.168.1.26:4005/api/categories/delete/$id";
+      //13.39.81.126
+
+      var json = {
+        'user_id': userdelete,
+        'restaurant_id': restaurantId,
+      };
+      var body = jsonEncode(json);
+
+      final http.Response response = await http.patch(
+        Uri.parse(urlDelete),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'Accept': 'application/json',
+          'authorization': 'Bearer $token',
+          'body': body,
+        },
+      );
+
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        showTopSnackBar(
+          Overlay.of(contextt),
+          const CustomSnackBar.info(
+            backgroundColor: Colors.green,
+            message: "Categorie supprimée",
+          ),
+        );
+        ref.refresh(getDataCategoriesFuture);
+        return response;
+      } else {
+        showTopSnackBar(
+          Overlay.of(contextt),
+          const CustomSnackBar.info(
+            backgroundColor: Colors.red,
+            message: "Erreur de suppression",
+          ),
+        );
+        return Future.error("Server Error");
+      }
+    } catch (e) {
+      return Future.error(e);
+    }
   }
 }
 
