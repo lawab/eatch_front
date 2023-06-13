@@ -43,7 +43,7 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
     "Steak",
   ];
 
-  String? quantite;
+  String? unite;
 
   MediaQueryData mediaQueryData(BuildContext context) {
     return MediaQuery.of(context);
@@ -201,7 +201,7 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
                                         height: 10,
                                       ),
                                       Text(
-                                          'Quantité : ${listFini[index].quantity}'),
+                                          'Quantité : ${listFini[index].quantity} ${listFini[index].unit}'),
                                       const SizedBox(
                                         height: 10,
                                       ),
@@ -422,19 +422,19 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
                   ),
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                 ),
-                value: quantite,
+                value: unite,
                 hint: const Text(
-                  'Mesure*',
+                  'Unité*',
                 ),
                 isExpanded: true,
                 onChanged: (value) {
                   setState(() {
-                    quantite = value;
+                    unite = value;
                   });
                 },
                 onSaved: (value) {
                   setState(() {
-                    quantite = value;
+                    unite = value;
                   });
                 },
                 validator: (String? value) {
@@ -600,7 +600,8 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
                       quantiteController.text,
                       dateinput.text,
                       _selectedFile1,
-                      result1);
+                      result1,
+                      unite!);
                   dateinput.clear();
                 }),
                 style: ElevatedButton.styleFrom(
@@ -897,6 +898,7 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
     String peremption,
     List<int> selectedFile,
     FilePickerResult? result,
+    String unit,
   ) async {
     ////////////
 
@@ -909,7 +911,7 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
     //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.1.26:4015/api/semiMaterials/create"); // 192.168.1.26:4008
+        "http://192.168.1.105:4015/api/semiMaterials/create"); // 192.168.1.105:4008
     final request = MultipartRequest(
       'POST',
       url,
@@ -921,6 +923,7 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
     );
 
     var json = {
+      'unit': unit,
       'laboratoryId': idLabo,
       'title': nomMatierePremiere,
       'quantity': quantite,
@@ -991,7 +994,7 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
     var idLabo = prefs.getString('idLabo');
 
     var url = Uri.parse(
-        "http://192.168.1.26:4015/api/laboratories/updateManufacturing"); //192.168.1.26 // 192.168.1.26 //192.168.1.26
+        "http://192.168.1.105:4015/api/laboratories/updateManufacturing"); //192.168.1.105 // 192.168.1.105 //192.168.1.105
     final request = MultipartRequest(
       'PATCH',
       url,

@@ -1187,7 +1187,7 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
     var idLabo = prefs.getString('idLabo');
 
     var url = Uri.parse(
-        "http://192.168.1.26:4015/api/raws/create"); //192.168.1.26 // 192.168.1.26 //192.168.1.26
+        "http://192.168.1.105:4015/api/raws/create"); //192.168.1.105 // 192.168.1.105 //192.168.1.105
     final request = MultipartRequest(
       'POST',
       url,
@@ -1270,7 +1270,7 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
     var idLabo = prefs.getString('idLabo');
 
     var url = Uri.parse(
-        "http://192.168.1.26:4015/api/laboratories/updateProviding"); //192.168.1.26 // 192.168.1.26 //192.168.1.26
+        "http://192.168.1.105:4015/api/laboratories/updateProviding"); //192.168.1.105 // 192.168.1.105 //192.168.1.105
     final request = MultipartRequest(
       'PATCH',
       url,
@@ -1357,7 +1357,7 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
     var idLabo = prefs.getString('idLabo');
 
     var url = Uri.parse(
-        "http://192.168.1.26:4015/api/providers/create"); //192.168.1.26 // 192.168.1.26 //192.168.1.26
+        "http://192.168.1.105:4015/api/providers/create"); //192.168.1.105 // 192.168.1.105 //192.168.1.105
     final request = MultipartRequest(
       'POST',
       url,

@@ -27,24 +27,28 @@ class GetDataLaboratoriesFuture extends ChangeNotifier {
     try {
       http.Response response = await http.get(
         Uri.parse(
-            'http://192.168.1.26:4015/api/laboratories/fetch/all'), //192.168.1.26 //192.168.1.26:4008
+            'http://192.168.1.105:4015/api/laboratories/fetch/all'), //192.168.1.105 //192.168.1.105:4008
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',
         },
       );
       print(response.statusCode);
+      print(
+          '******************************************************************');
       print(response.body);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-
+        //le pref a suprimmer prochainement
+        prefs.setString('idLabo', data[0]['_id']);
         for (int i = 0; i < data.length; i++) {
           if (data[i]["deletedAt"] == null) {
             listLabo.add(Labo.fromJson(data[i]));
-          }
-          for (int j = 0; j < data[i]["materials"].length; i++) {
-            if (data[i]["materials"][j]["deletedAt"] == null) {
-              listFINI.add(Materials.fromJson(data[i]["materials"]));
+
+            for (int j = 0; j < data[i]["materials"].length; j++) {
+              if (data[i]["materials"][j]["deletedAt"] == null) {
+                listFINI.add(Materials.fromJson(data[i]["materials"][j]));
+              }
             }
           }
         }
@@ -328,6 +332,7 @@ class Materials {
   int? quantity;
   String? lifetime;
   String? image;
+  String? unit;
   String? laboratory;
   Null? deletedAt;
   String? createdAt;
@@ -340,6 +345,7 @@ class Materials {
       this.quantity,
       this.lifetime,
       this.image,
+      this.unit,
       this.laboratory,
       this.deletedAt,
       this.createdAt,
@@ -352,6 +358,7 @@ class Materials {
     quantity = json['quantity'];
     lifetime = json['lifetime'];
     image = json['image'];
+    unit = json['unit'];
     laboratory = json['laboratory'];
     deletedAt = json['deletedAt'];
     createdAt = json['createdAt'];
@@ -366,6 +373,7 @@ class Materials {
     data['quantity'] = this.quantity;
     data['lifetime'] = this.lifetime;
     data['image'] = this.image;
+    data['unit'] = this.unit;
     data['laboratory'] = this.laboratory;
     data['deletedAt'] = this.deletedAt;
     data['createdAt'] = this.createdAt;

@@ -25,7 +25,7 @@ class GetDataUserFuture extends ChangeNotifier {
 
     try {
       http.Response response = await http.get(
-        Uri.parse('http://192.168.1.26:4001/api/users/fetch/all'),
+        Uri.parse('http://192.168.1.105:4001/api/users/fetch/all'),
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',

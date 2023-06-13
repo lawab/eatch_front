@@ -873,7 +873,7 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
                                 borderRadius: BorderRadius.circular(16),
                                 child: _selectFile == false
                                     ? Image.network(
-                                        'http://192.168.1.26:4010${widget.image}',
+                                        'http://192.168.1.105:4010${widget.image}',
                                         fit: BoxFit.fill,
                                       )
                                     : isLoading
@@ -970,8 +970,8 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
     print(token);
     print("Restaurant id $restaurantid");
 
-    var url =
-        Uri.parse("http://192.168.1.26:4010/api/recettes/update/${widget.sId}");
+    var url = Uri.parse(
+        "http://192.168.1.105:4010/api/recettes/update/${widget.sId}");
 
     final request = MultipartRequest(
       'PUT',
@@ -1057,7 +1057,7 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
     var restaurantid = prefs.getString('idRestaurant');
     String adressUrl = prefs.getString('ipport').toString();
     var url = Uri.parse(
-        "http://192.168.1.26:4010/api/recettes/update/${widget.sId}"); //13.39.81.126
+        "http://192.168.1.105:4010/api/recettes/update/${widget.sId}"); //13.39.81.126
     print(url);
     final request = MultipartRequest(
       'PUT',

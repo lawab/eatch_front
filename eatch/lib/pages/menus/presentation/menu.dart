@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:eatch/servicesAPI/get_categories.dart';
 import 'package:eatch/utils/applayout.dart';
+import 'package:eatch/utils/default_button/default_button.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -116,7 +117,7 @@ class _MenuState extends ConsumerState<Menu> {
                         const SizedBox(
                           width: 50,
                         ),
-                        const Text('Menus'),
+                        const Text('MENUS'),
                         Expanded(child: Container()),
                         ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
@@ -142,14 +143,6 @@ class _MenuState extends ConsumerState<Menu> {
                 : SizedBox(
                     height: height - 65,
                     child: Creation(categoriee, height, width),
-                  ),
-            ajout == true
-                ? const Divider(
-                    height: 5,
-                    color: Palette.yellowColor,
-                  )
-                : const SizedBox(
-                    height: 5,
                   ),
             ajout == true
                 ? Container()
@@ -291,14 +284,6 @@ class _MenuState extends ConsumerState<Menu> {
                     height: height,
                     child: Creation(categoriee, height, width),
                   ),
-            ajout == true
-                ? const Divider(
-                    height: 5,
-                    color: Palette.yellowColor,
-                  )
-                : const SizedBox(
-                    height: 5,
-                  ),
             SizedBox(
               height: ajout == false ? height - 216 : height - 536,
               child: SingleChildScrollView(
@@ -401,13 +386,13 @@ class _MenuState extends ConsumerState<Menu> {
             Container(
               alignment: Alignment.centerRight,
               height: 50,
-              color: const Color(0xFFFCEBD1),
+              color: Palette.yellowColor,
               child: const Row(
                 children: [
                   SizedBox(
                     width: 50,
                   ),
-                  Text('Création Menu'),
+                  Text('CREATION DE MENU'),
                   SizedBox(
                     width: 20,
                   ),
@@ -458,7 +443,7 @@ class _MenuState extends ConsumerState<Menu> {
             ),
             /////////////////////////////////////////// - début du champ prix
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
 
             ///
@@ -506,7 +491,7 @@ class _MenuState extends ConsumerState<Menu> {
             ///
 
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
 
             ///
@@ -516,7 +501,7 @@ class _MenuState extends ConsumerState<Menu> {
               width: width - 50,
               child: TextFormField(
                 maxLength: 500,
-                maxLines: 5,
+                maxLines: 4,
                 controller: descriptioncontroller,
                 keyboardType: TextInputType.text,
                 onChanged: (value) {},
@@ -557,105 +542,125 @@ class _MenuState extends ConsumerState<Menu> {
             ///
             //////////////////////////////// - fin du champ description
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
-            SizedBox(
-              width: width - 50,
-              height: 150,
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 500,
-                    childAspectRatio: 3 / 2,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 20,
-                    mainAxisExtent: 50),
-                itemCount: categoriee.length,
-                itemBuilder: (context, index) {
-                  List<String> listProduits = [];
-                  String? produit;
-                  final inputController = TextEditingController();
-                  _controllerInput.add(inputController);
-                  for (int i = 0; i < categoriee[index].products!.length; i++) {
-                    listProduits
-                        .add(categoriee[index].products![i].productName!);
-                  }
+            Container(
+              child: Column(
+                children: [
+                  Text('Produits par catégories'),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Palette.yellowColor),
+                    ),
+                    width: width - 50,
+                    height: 150,
+                    child: GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 500,
+                              childAspectRatio: 3 / 2,
+                              crossAxisSpacing: 20,
+                              mainAxisSpacing: 20,
+                              mainAxisExtent: 50),
+                      itemCount: categoriee.length,
+                      itemBuilder: (context, index) {
+                        List<String> listProduits = [];
+                        String? produit;
+                        final inputController = TextEditingController();
+                        _controllerInput.add(inputController);
+                        for (int i = 0;
+                            i < categoriee[index].products!.length;
+                            i++) {
+                          listProduits
+                              .add(categoriee[index].products![i].productName!);
+                        }
 
-                  // print(listProduits);
+                        // print(listProduits);
 
-                  return SizedBox(
-                    height: 50,
-                    child: DropdownButtonFormField(
-                      decoration: InputDecoration(
-                        hoverColor: Palette.primaryBackgroundColor,
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 42, vertical: 20),
-                        filled: true,
-                        fillColor: Palette.primaryBackgroundColor,
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          borderSide: const BorderSide(
-                              color: Palette.secondaryBackgroundColor),
-                          gapPadding: 10,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          borderSide: const BorderSide(
-                              color: Palette.secondaryBackgroundColor),
-                          gapPadding: 10,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          borderSide: const BorderSide(
-                              color: Palette.secondaryBackgroundColor),
-                          gapPadding: 10,
-                        ),
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                      ),
-                      value: produit,
-                      hint: Text(
-                        categoriee[index].title!,
-                      ),
-                      isExpanded: true,
-                      onChanged: (value) {
-                        setState(
-                          () {
-                            produit = value!;
-                            print('Valeur : ${produit}');
-                            ////////////////////////////
+                        return SizedBox(
+                          height: 50,
+                          child: DropdownButtonFormField(
+                            decoration: InputDecoration(
+                              hoverColor: Palette.primaryBackgroundColor,
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 42, vertical: 20),
+                              filled: true,
+                              fillColor: Palette.primaryBackgroundColor,
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: const BorderSide(
+                                    color: Palette.secondaryBackgroundColor),
+                                gapPadding: 10,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: const BorderSide(
+                                    color: Palette.secondaryBackgroundColor),
+                                gapPadding: 10,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: const BorderSide(
+                                    color: Palette.secondaryBackgroundColor),
+                                gapPadding: 10,
+                              ),
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.always,
+                            ),
+                            value: produit,
+                            hint: Text(
+                              categoriee[index].title!,
+                            ),
+                            isExpanded: true,
+                            onChanged: (value) {
+                              setState(
+                                () {
+                                  produit = value!;
+                                  print('Valeur : ${produit}');
+                                  ////////////////////////////
 
-                            for (int j = 0; j < listProduits.length; j++) {
-                              if (produit == listProduits[j]) {
-                                listProdId
-                                    .add(categoriee[index].products![j].sId!);
-                              }
-                            }
-                            print(listProdId);
-                            /////////////////////////////////
+                                  for (int j = 0;
+                                      j < listProduits.length;
+                                      j++) {
+                                    if (produit == listProduits[j]) {
+                                      listProdId.add(
+                                          categoriee[index].products![j].sId!);
+                                    }
+                                  }
+                                  print(listProdId);
+                                  /////////////////////////////////
 
-                            inputController.text = value;
-                          },
-                        );
-                      },
-                      onSaved: (value) {
-                        setState(() {
-                          produit = value;
-                        });
-                      },
-                      items: listProduits.map((String val) {
-                        return DropdownMenuItem(
-                          value: val,
-                          child: Text(
-                            val,
+                                  inputController.text = value;
+                                },
+                              );
+                            },
+                            onSaved: (value) {
+                              setState(() {
+                                produit = value;
+                              });
+                            },
+                            items: listProduits.map((String val) {
+                              return DropdownMenuItem(
+                                value: val,
+                                child: Text(
+                                  val,
+                                ),
+                              );
+                            }).toList(),
                           ),
                         );
-                      }).toList(),
+                      },
                     ),
-                  );
-                },
+                  ),
+                ],
               ),
             ),
+
             const SizedBox(
-              height: 40,
+              height: 20,
             ),
             /////////// - Ici se trouve le bouton pour l'image
             Container(
@@ -714,73 +719,66 @@ class _MenuState extends ConsumerState<Menu> {
             ),
 
             const SizedBox(
-              height: 30,
+              height: 20,
             ),
 
             /// - fin du choix de l'image
             Container(
               alignment: Alignment.centerRight,
               child: SizedBox(
-                width: 350,
+                width: 420,
                 child: Row(children: [
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  ElevatedButton(
-                    onPressed: (() {
-                      for (int i = 0; i < _controllerInput.length; i++) {
-                        //print(i);
-                        if (_controllerInput[i].text.isNotEmpty) {
-                          print(_controllerInput[i].text);
+                  SizedBox(
+                    width: 200,
+                    child: DefaultButton(
+                      color: Palette.primaryColor,
+                      foreground: Colors.red,
+                      text: 'ENREGISTRER',
+                      textcolor: Palette.primaryBackgroundColor,
+                      onPressed: () {
+                        for (int i = 0; i < _controllerInput.length; i++) {
+                          //print(i);
+                          if (_controllerInput[i].text.isNotEmpty) {
+                            print(_controllerInput[i].text);
+                          }
                         }
-                      }
-                      creationMenu(
-                        context,
-                        nomcontroller.text,
-                        prixcontroller.text,
-                        descriptioncontroller.text,
-                        _selectedFile!,
-                        result,
-                        listProdId,
-                      );
+                        creationMenu(
+                          context,
+                          nomcontroller.text,
+                          prixcontroller.text,
+                          descriptioncontroller.text,
+                          _selectedFile!,
+                          result,
+                          listProdId,
+                        );
 
-                      setState(() {
-                        ajout = false;
-                      });
-                    }),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Palette.primaryColor,
-                      minimumSize: const Size(150, 50),
-                      maximumSize: const Size(200, 70),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
+                        setState(() {
+                          ajout = false;
+                        });
+                      },
                     ),
-                    child: const Text('Enregistrer'),
                   ),
                   const SizedBox(
                     width: 20,
                   ),
-                  ElevatedButton(
-                    onPressed: (() {
-                      setState(() {
-                        ajout = false;
-                      });
-                    }),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Palette.secondaryBackgroundColor,
-                      minimumSize: const Size(150, 50),
-                      maximumSize: const Size(200, 70),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                    ),
-                    child: const Text(
-                      'Annuler',
-                      style: TextStyle(color: Colors.grey),
+                  SizedBox(
+                    width: 200,
+                    child: DefaultButton(
+                      color: Palette.secondaryBackgroundColor,
+                      foreground: Colors.red,
+                      text: 'ANNULER',
+                      textcolor: Palette.textsecondaryColor,
+                      onPressed: () {
+                        setState(() {
+                          ajout = false;
+                        });
+                      },
                     ),
                   ),
                 ]),
               ),
             ),
+
             const SizedBox(
               height: 10,
             ),
@@ -872,7 +870,7 @@ class _MenuState extends ConsumerState<Menu> {
     //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.1.26:4009/api/menus/create"); // 192.168.1.26:4009
+        "http://192.168.1.105:4009/api/menus/create"); // 192.168.1.105:4009
     final request = MultipartRequest(
       'POST',
       url,
@@ -957,7 +955,7 @@ class _MenuState extends ConsumerState<Menu> {
 
       var token = prefs.getString('token');
       String urlDelete =
-          "http://192.168.1.26:4009/api/menus/delete/$idMenu"; // 192.168.1.26:4008 //$adressUrl
+          "http://192.168.1.105:4009/api/menus/delete/$idMenu"; // 192.168.1.105:4008 //$adressUrl
       //var json = {'_creator': id};
 
       //var body = jsonEncode(json);

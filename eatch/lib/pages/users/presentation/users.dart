@@ -2,8 +2,11 @@
 
 import 'dart:convert';
 
+import 'package:eatch/servicesAPI/getLabo.dart';
+import 'package:eatch/servicesAPI/getRestaurant.dart' as g;
 import 'package:eatch/servicesAPI/get_role.dart';
 import 'package:eatch/servicesAPI/get_user.dart';
+import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:http_parser/http_parser.dart' show MediaType;
 import 'dart:typed_data';
 import 'package:eatch/pages/users/presentation/allUser.dart';
@@ -17,10 +20,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import '../../../utils/applayout.dart';
 import '../../../utils/default_button/default_button.dart';
 import '../../../utils/palettes/palette.dart';
 import '../../../utils/size/size.dart';
+
+enum SingingCharacter { restaurant, laboratoire }
 
 class Users extends ConsumerStatefulWidget {
   const Users({
@@ -100,9 +107,35 @@ class _UsersState extends ConsumerState<Users> {
   List<int> _selectedFile = [];
 
 /* LE FICHIER IMAGE TELECHARGER DEPUIS LE PC A ENVOYER SUR INTERNET */
+  String? restaurant;
+  String? laboratoire;
   FilePickerResult? result;
+  bool rest = false;
+  bool lab = false;
+  List<String> laboo = [];
+  List<String> restauu = [];
+  SingingCharacter? _character = SingingCharacter.restaurant;
   @override
   Widget build(BuildContext context) {
+    final viewModel = ref.watch(g.getDataRsetaurantFuture);
+    final viewModele = ref.watch(getDataLaboratoriesFuture);
+    if (rest == false) {
+      for (int i = 0; i < viewModel.listRsetaurant.length; i++) {
+        restauu.add(viewModel.listRsetaurant[i].restaurantName!);
+        setState(() {
+          rest = true;
+        });
+      }
+    }
+    if (lab == false) {
+      for (int i = 0; i < viewModele.listLabo.length; i++) {
+        laboo.add(viewModele.listLabo[i].laboName!);
+        setState(() {
+          lab = true;
+        });
+      }
+    }
+
     SizeConfig().init(context);
 
     return MaterialApp(
@@ -110,11 +143,8 @@ class _UsersState extends ConsumerState<Users> {
       home: LayoutBuilder(
         builder: (context, constraints) {
           if (constraints.maxWidth >= 900) {
-            return horizontalView(
-              height(context),
-              width(context),
-              context,
-            );
+            return horizontalView(height(context), width(context), context,
+                viewModel.listRsetaurant, viewModele.listLabo, laboo, restauu);
           } else {
             return verticalView(
               height(context),
@@ -131,72 +161,70 @@ class _UsersState extends ConsumerState<Users> {
     double height,
     double width,
     context,
+    List<g.Restaurant> restau,
+    List<Labo> labo,
+    List<String> labooo,
+    List<String> restauuu,
   ) {
     return AppLayout(
       content: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.only(
+          /*padding: const EdgeInsets.only(
             left: 10,
             top: 10,
-          ),
+          ),*/
           color: Palette.secondaryBackgroundColor,
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text("GESTION DES UTILISATEURS"),
-                  if (!_showContent)
-                    Stack(
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            setState(() {
-                              _showContent = !_showContent;
-                            });
-                          },
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: 180,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 10,
-                            ),
-                            decoration: const BoxDecoration(
-                              color: Palette.primaryColor,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                              ),
-                            ),
-                            child: const Row(
-                              children: [
-                                Icon(
-                                  Icons.add,
-                                  color: Palette.primaryBackgroundColor,
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                      left: 05.0,
-                                    ),
-                                    child: Text(
-                                      "Ajouter un utilisateur",
-                                      style: TextStyle(
-                                        color: Palette.primaryBackgroundColor,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
+              _showContent
+                  ? Container(
+                      alignment: Alignment.centerRight,
+                      height: 50,
+                      color: Palette.yellowColor, //Color(0xFFFCEBD1),
+                      child: Row(
+                        children: [
+                          const SizedBox(
+                            width: 50,
+                          ),
+                          const Text("CREATION D'UTILISATEURS"),
+                          Expanded(child: Container()),
+                        ],
+                      ),
+                    )
+                  : Container(
+                      alignment: Alignment.centerRight,
+                      height: 80,
+                      color: Palette.yellowColor, //Color(0xFFFCEBD1),
+                      child: Row(
+                        children: [
+                          const SizedBox(
+                            width: 50,
+                          ),
+                          const Text("GESTION DES UTILISATEURS"),
+                          Expanded(child: Container()),
+                          ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Palette.primaryColor,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                minimumSize: const Size(180, 50)),
+                            onPressed: () {
+                              setState(() {
+                                _showContent = !_showContent;
+                              });
+                            },
+                            icon: const Icon(Icons.add),
+                            label: const Text(
+                              "Ajouter un utilisateur",
                             ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(
+                            width: 20,
+                          ),
+                        ],
+                      ),
                     ),
-                ],
-              ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               _showContent
                   ? Container(
                       padding: const EdgeInsets.symmetric(
@@ -206,15 +234,15 @@ class _UsersState extends ConsumerState<Users> {
                         child: Column(
                           children: [
                             nomForm(),
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 10),
                             prenomForm(),
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 10),
                             emailForm(),
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 10),
                             passwordForm(),
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 10),
                             confirmPasswordForm(),
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 10),
                             Row(
                               children: [
                                 Expanded(flex: 3, child: roleForm()),
@@ -257,7 +285,186 @@ class _UsersState extends ConsumerState<Users> {
                                 const SizedBox(width: 20),
                               ],
                             ),
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 10),
+                            Container(
+                              height: 100,
+                              child: Row(children: [
+                                Expanded(
+                                  child: Column(
+                                    children: <Widget>[
+                                      ListTile(
+                                        title: const Text('Restaurant'),
+                                        leading: Radio<SingingCharacter>(
+                                          value: SingingCharacter.restaurant,
+                                          groupValue: _character,
+                                          onChanged: (SingingCharacter? value) {
+                                            setState(() {
+                                              _character = value;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      ListTile(
+                                        title: const Text('Laboratoire'),
+                                        leading: Radio<SingingCharacter>(
+                                          value: SingingCharacter.laboratoire,
+                                          groupValue: _character,
+                                          onChanged: (SingingCharacter? value) {
+                                            setState(() {
+                                              _character = value;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                _character == SingingCharacter.restaurant
+                                    ? Expanded(
+                                        child: DropdownButtonFormField(
+                                          decoration: InputDecoration(
+                                            hoverColor:
+                                                Palette.primaryBackgroundColor,
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                    horizontal: 42,
+                                                    vertical: 20),
+                                            filled: true,
+                                            fillColor:
+                                                Palette.primaryBackgroundColor,
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              borderSide: const BorderSide(
+                                                  color: Palette
+                                                      .secondaryBackgroundColor),
+                                              gapPadding: 10,
+                                            ),
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              borderSide: const BorderSide(
+                                                  color: Palette
+                                                      .secondaryBackgroundColor),
+                                              gapPadding: 10,
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              borderSide: const BorderSide(
+                                                  color: Palette
+                                                      .secondaryBackgroundColor),
+                                              gapPadding: 10,
+                                            ),
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.always,
+                                          ),
+                                          value: restaurant,
+                                          hint: const Text(
+                                            'Restaurant*',
+                                          ),
+                                          isExpanded: true,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              restaurant = value;
+                                            });
+                                          },
+                                          onSaved: (value) {
+                                            setState(() {
+                                              restaurant = value;
+                                            });
+                                          },
+                                          validator: (String? value) {
+                                            if (value == null) {
+                                              return "Le rôle de l'utilisateur est obligatoire.";
+                                            } else {
+                                              return null;
+                                            }
+                                          },
+                                          items: restauuu.map((val) {
+                                            return DropdownMenuItem(
+                                              value: val,
+                                              child: Text(
+                                                val,
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      )
+                                    : Expanded(
+                                        child: DropdownButtonFormField(
+                                          decoration: InputDecoration(
+                                            hoverColor:
+                                                Palette.primaryBackgroundColor,
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                    horizontal: 42,
+                                                    vertical: 20),
+                                            filled: true,
+                                            fillColor:
+                                                Palette.primaryBackgroundColor,
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              borderSide: const BorderSide(
+                                                  color: Palette
+                                                      .secondaryBackgroundColor),
+                                              gapPadding: 10,
+                                            ),
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              borderSide: const BorderSide(
+                                                  color: Palette
+                                                      .secondaryBackgroundColor),
+                                              gapPadding: 10,
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              borderSide: const BorderSide(
+                                                  color: Palette
+                                                      .secondaryBackgroundColor),
+                                              gapPadding: 10,
+                                            ),
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.always,
+                                          ),
+                                          value: laboratoire,
+                                          hint: const Text(
+                                            'Laboratoire*',
+                                          ),
+                                          isExpanded: true,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              laboratoire = value;
+                                            });
+                                          },
+                                          onSaved: (value) {
+                                            setState(() {
+                                              laboratoire = value;
+                                            });
+                                          },
+                                          validator: (String? value) {
+                                            if (value == null) {
+                                              return "Le rôle de l'utilisateur est obligatoire.";
+                                            } else {
+                                              return null;
+                                            }
+                                          },
+                                          items: labooo.map((val) {
+                                            return DropdownMenuItem(
+                                              value: val,
+                                              child: Text(
+                                                val,
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                              ]),
+                            ),
+                            const SizedBox(height: 10),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.end,
@@ -783,7 +990,7 @@ class _UsersState extends ConsumerState<Users> {
     print(token);
     print("Restaurant id $restaurantid");
 
-    var url = Uri.parse("http://192.168.1.26:4001/api/users/create");
+    var url = Uri.parse("http://192.168.1.105:4001/api/users/create");
     final request = MultipartRequest(
       'POST',
       url,
@@ -880,7 +1087,7 @@ class _UsersState extends ConsumerState<Users> {
     print(token);
     print("Restaurant id $restaurantid");
 
-    var url = Uri.parse("http://192.168.1.26:4001/api/users/create/role");
+    var url = Uri.parse("http://192.168.1.105:4001/api/users/create/role");
     final request = MultipartRequest(
       'POST',
       url,
@@ -907,23 +1114,29 @@ class _UsersState extends ConsumerState<Users> {
     print("Upload Response$response");
     print(response.statusCode);
     print(request.headers);
-
+    print('Roleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
     try {
       if (response.statusCode == 200 || response.statusCode == 201) {
         await response.stream.bytesToString().then((value) {
           print(value);
         });
-        setState(() {
-          ref.refresh(getDataRoleFuture);
-        });
 
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Rôle crée"),
-        ));
+        ref.refresh(getDataRoleFuture);
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.info(
+            backgroundColor: Colors.green,
+            message: "Le role a été crée",
+          ),
+        );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Erreur de serveur"),
-        ));
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.error(
+            backgroundColor: Colors.red,
+            message: "Role non créé",
+          ),
+        );
         print("Error Create Programme  !!!");
       }
     } catch (e) {

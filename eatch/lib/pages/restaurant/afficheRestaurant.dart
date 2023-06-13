@@ -2,6 +2,7 @@ import 'dart:html';
 import 'dart:typed_data';
 import 'package:eatch/pages/restaurant/detailRestaurant.dart';
 import 'package:eatch/servicesAPI/multipart.dart';
+import 'package:eatch/utils/default_button/default_button.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:eatch/pages/restaurant/modificationRestaurant.dart';
@@ -121,219 +122,230 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
         children: [
           ajout == false
               ? Container(
-                  alignment: Alignment.centerRight,
-                  height: 80,
-                  color: Palette.yellowColor, //Color(0xFFFCEBD1),
-                  child: Row(
+                  child: Column(
                     children: [
-                      const SizedBox(
-                        width: 50,
+                      Container(
+                        alignment: Alignment.centerRight,
+                        height: 80,
+                        color: Palette.yellowColor, //Color(0xFFFCEBD1),
+                        child: Row(
+                          children: [
+                            const SizedBox(
+                              width: 50,
+                            ),
+                            const Text('GESTION DE RESTAURANT'),
+                            Expanded(child: Container()),
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Palette.primaryColor,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  minimumSize: const Size(180, 50)),
+                              onPressed: () {
+                                setState(() {
+                                  ajout = true;
+                                });
+                              },
+                              icon: const Icon(Icons.add),
+                              label: const Text('Créer un restaurant'),
+                            ),
+                            const SizedBox(
+                              width: 20,
+                            ),
+                          ],
+                        ),
                       ),
-                      const Text('Gestion de restaurant'),
-                      Expanded(child: Container()),
-                      ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Palette.primaryColor,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            minimumSize: const Size(180, 50)),
-                        onPressed: () {
-                          setState(() {
-                            ajout = true;
-                          });
-                        },
-                        icon: const Icon(Icons.add),
-                        label: const Text('Créer un restaurant'),
-                      ),
                       const SizedBox(
-                        width: 20,
+                        height: 5,
+                      ),
+                      Container(
+                        height: ajout == false ? height - 145 : height - 465,
+                        width: width,
+                        padding: const EdgeInsets.only(
+                            left: 10, right: 10, top: 10, bottom: 10),
+                        child: GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithMaxCrossAxisExtent(
+                                  maxCrossAxisExtent: 470,
+                                  childAspectRatio: 3 / 2,
+                                  crossAxisSpacing: 20,
+                                  mainAxisSpacing: 50,
+                                  mainAxisExtent: 355),
+                          itemCount: listRsetaurant.length,
+                          itemBuilder: (BuildContext ctx, index) {
+                            return GestureDetector(
+                              child: Container(
+                                height: height,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF1E9647),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      width: width / 3,
+                                      height: height / 3 - 20,
+                                      child: Stack(
+                                        fit: StackFit.expand,
+                                        children: [
+                                          //Logo_Eatch_png.png
+                                          Container(
+                                            width: width / 5,
+                                            height: height / 3 - 20,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0),
+                                              color: Colors.black,
+                                              image: DecorationImage(
+                                                  opacity: 150,
+                                                  image: NetworkImage(
+                                                      'http://192.168.1.105:4002${listRsetaurant[index].infos!.logo.toString()}'), //192.168.1.105:4002
+                                                  fit: BoxFit.cover),
+                                            ),
+                                          ),
+
+                                          Positioned(
+                                            top: 5,
+                                            left: 30,
+                                            width: width / 5,
+                                            height: 50,
+                                            child: Text(
+                                              'Nom du restaurant: ${listRsetaurant[index].restaurantName!}',
+                                              style: const TextStyle(
+                                                  fontFamily: 'Righteous',
+                                                  fontSize: 18,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontStyle: FontStyle.italic),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: 60,
+                                            left: 30,
+                                            width: width / 5,
+                                            height: 30,
+                                            child: Text(
+                                              "Ville: ${listRsetaurant[index].infos!.town!}",
+                                              style: const TextStyle(
+                                                fontFamily: 'Righteous',
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: 90,
+                                            left: 30,
+                                            width: width / 5,
+                                            height: 30,
+                                            child: Text(
+                                              "Adresse: ${listRsetaurant[index].infos!.address!}",
+                                              style: const TextStyle(
+                                                fontFamily: 'Righteous',
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: 120,
+                                            left: 30,
+                                            width: width / 5,
+                                            height: 30,
+                                            child: const Text(
+                                              "Nombre d'emplyé: 50",
+                                              style: TextStyle(
+                                                fontFamily: 'Righteous',
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: 150,
+                                            left: 30,
+                                            width: width / 5,
+                                            height: 30,
+                                            child: Text(
+                                              "Date de création: ${listRsetaurant[index].createdAt}",
+                                              style: const TextStyle(
+                                                fontFamily: 'Righteous',
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: width / 5,
+                                      height: 50,
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: IconButton(
+                                              onPressed: (() {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        RestaurantModification(
+                                                      restaurant:
+                                                          listRsetaurant[index],
+                                                    ),
+                                                  ),
+                                                );
+                                              }),
+                                              icon: const Icon(
+                                                Icons.edit,
+                                                color: Color(0xFFF09F1B),
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: IconButton(
+                                              onPressed: (() {
+                                                dialogDelete(
+                                                    listRsetaurant[index]
+                                                        .sId
+                                                        .toString(),
+                                                    listRsetaurant[index]
+                                                        .restaurantName
+                                                        .toString());
+                                              }),
+                                              icon: const Icon(
+                                                Icons.delete,
+                                                color: Color(0xFFF09F1B),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => RestaurantDetail(
+                                              restaurant: listRsetaurant[index],
+                                            )));
+                              },
+                            );
+                          },
+                        ),
                       ),
                     ],
                   ),
                 )
               : SizedBox(
-                  height: 400,
                   child: creation(),
                 ),
-          ajout == true
+          /*ajout == true
               ? const Divider(
                   height: 5,
                   color: Palette.yellowColor,
                 )
-              : const SizedBox(
-                  height: 5,
-                ),
-          Container(
-            height: ajout == false ? height - 145 : height - 465,
-            width: width,
-            padding:
-                const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 470,
-                  childAspectRatio: 3 / 2,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 50,
-                  mainAxisExtent: 355),
-              itemCount: listRsetaurant.length,
-              itemBuilder: (BuildContext ctx, index) {
-                return GestureDetector(
-                  child: Container(
-                    height: height,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1E9647),
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          width: width / 3,
-                          height: height / 3 - 20,
-                          child: Stack(
-                            fit: StackFit.expand,
-                            children: [
-                              //Logo_Eatch_png.png
-                              Container(
-                                width: width / 5,
-                                height: height / 3 - 20,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                  color: Colors.black,
-                                  image: DecorationImage(
-                                      opacity: 150,
-                                      image: NetworkImage(
-                                          'http://192.168.1.26:4002${listRsetaurant[index].infos!.logo.toString()}'), //192.168.1.26:4002
-                                      fit: BoxFit.cover),
-                                ),
-                              ),
-
-                              Positioned(
-                                top: 5,
-                                left: 30,
-                                width: width / 5,
-                                height: 50,
-                                child: Text(
-                                  'Nom du restaurant: ${listRsetaurant[index].restaurantName!}',
-                                  style: const TextStyle(
-                                      fontFamily: 'Righteous',
-                                      fontSize: 18,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontStyle: FontStyle.italic),
-                                ),
-                              ),
-                              Positioned(
-                                top: 60,
-                                left: 30,
-                                width: width / 5,
-                                height: 30,
-                                child: Text(
-                                  "Ville: ${listRsetaurant[index].infos!.town!}",
-                                  style: const TextStyle(
-                                    fontFamily: 'Righteous',
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 90,
-                                left: 30,
-                                width: width / 5,
-                                height: 30,
-                                child: Text(
-                                  "Adresse: ${listRsetaurant[index].infos!.address!}",
-                                  style: const TextStyle(
-                                    fontFamily: 'Righteous',
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 120,
-                                left: 30,
-                                width: width / 5,
-                                height: 30,
-                                child: const Text(
-                                  "Nombre d'emplyé: 50",
-                                  style: TextStyle(
-                                    fontFamily: 'Righteous',
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 150,
-                                left: 30,
-                                width: width / 5,
-                                height: 30,
-                                child: Text(
-                                  "Date de création: ${listRsetaurant[index].createdAt}",
-                                  style: const TextStyle(
-                                    fontFamily: 'Righteous',
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: width / 5,
-                          height: 50,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: IconButton(
-                                  onPressed: (() {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            RestaurantModification(
-                                          restaurant: listRsetaurant[index],
-                                        ),
-                                      ),
-                                    );
-                                  }),
-                                  icon: const Icon(
-                                    Icons.edit,
-                                    color: Color(0xFFF09F1B),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: IconButton(
-                                  onPressed: (() {
-                                    dialogDelete(
-                                        listRsetaurant[index].sId.toString(),
-                                        listRsetaurant[index]
-                                            .restaurantName
-                                            .toString());
-                                  }),
-                                  icon: const Icon(
-                                    Icons.delete,
-                                    color: Color(0xFFF09F1B),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => RestaurantDetail(
-                                  restaurant: listRsetaurant[index],
-                                )));
-                  },
-                );
-              },
-            ),
-          ),
+              : */
         ],
       ),
     );
@@ -427,7 +439,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   image: DecorationImage(
                                       opacity: 150,
                                       image: NetworkImage(
-                                          'http://192.168.1.26:4002${listRsetaurant[index].infos!.logo.toString()}'),
+                                          'http://192.168.1.105:4002${listRsetaurant[index].infos!.logo.toString()}'),
                                       //image: AssetImage('Logo_Eatch_png.png'),
                                       fit: BoxFit.cover),
                                 ),
@@ -572,7 +584,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
             Container(
               alignment: Alignment.centerRight,
               height: 50,
-              color: const Color(0xFFFCEBD1),
+              color: Palette.yellowColor,
               child: Row(
                 children: [
                   const SizedBox(
@@ -813,53 +825,45 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
             Container(
               alignment: Alignment.centerRight,
               child: SizedBox(
-                width: 350,
+                width: 420,
                 child: Row(children: [
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  ElevatedButton(
-                    onPressed: (() {
-                      creationRestaurant(
-                        context,
-                        nomController.text,
-                        villeController.text,
-                        adresseController.text,
-                        _selectedFile,
-                        result,
-                      );
-                      setState(() {
-                        ajout = false;
-                      });
-                    }),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Palette.primaryColor,
-                      minimumSize: const Size(150, 50),
-                      maximumSize: const Size(200, 70),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
+                  SizedBox(
+                    width: 200,
+                    child: DefaultButton(
+                      color: Palette.primaryColor,
+                      foreground: Colors.red,
+                      text: 'ENREGISTRER',
+                      textcolor: Palette.primaryBackgroundColor,
+                      onPressed: () {
+                        creationRestaurant(
+                          context,
+                          nomController.text,
+                          villeController.text,
+                          adresseController.text,
+                          _selectedFile,
+                          result,
+                        );
+                        setState(() {
+                          ajout = false;
+                        });
+                      },
                     ),
-                    child: const Text('Enregistrer'),
                   ),
                   const SizedBox(
                     width: 20,
                   ),
-                  ElevatedButton(
-                    onPressed: (() {
-                      setState(() {
-                        ajout = false;
-                      });
-                    }),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Palette.secondaryBackgroundColor,
-                      minimumSize: const Size(150, 50),
-                      maximumSize: const Size(200, 70),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                    ),
-                    child: const Text(
-                      'Annuler',
-                      style: TextStyle(color: Colors.grey),
+                  SizedBox(
+                    width: 200,
+                    child: DefaultButton(
+                      color: Palette.secondaryBackgroundColor,
+                      foreground: Colors.red,
+                      text: 'ANNULER',
+                      textcolor: Palette.textsecondaryColor,
+                      onPressed: () {
+                        setState(() {
+                          ajout = false;
+                        });
+                      },
                     ),
                   ),
                 ]),
@@ -950,7 +954,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
     var token = prefs.getString('token');
 
     var url = Uri.parse(
-        "http://192.168.1.26:4002/api/restaurants/create"); //192.168.1.26
+        "http://192.168.1.105:4002/api/restaurants/create"); //192.168.1.105
     final request = MultipartRequest(
       'POST',
       url,
@@ -1020,8 +1024,8 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
-      String urlDelete = "http://192.168.1.26:4002/api/restaurants/delete/$id";
-      //192.168.1.26
+      String urlDelete = "http://192.168.1.105:4002/api/restaurants/delete/$id";
+      //192.168.1.105
 
       final http.Response response =
           await http.put(Uri.parse(urlDelete), headers: {

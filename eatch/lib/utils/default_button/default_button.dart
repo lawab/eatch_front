@@ -23,7 +23,7 @@ class DefaultButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: getProportionateScreenHeight(95.0),
+      height: 50, //getProportionateScreenHeight(95.0),
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(15.0),

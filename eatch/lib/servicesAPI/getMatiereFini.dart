@@ -26,7 +26,7 @@ class GetDataMatiereFiniFuture extends ChangeNotifier {
     try {
       http.Response response = await http.get(
         Uri.parse(
-            'http://192.168.1.26:4015/api/semiMaterials/fetch/all'), //192.168.1.26 //192.168.1.26:4008
+            'http://192.168.1.105:4015/api/semiMaterials/fetch/all'), //192.168.1.105 //192.168.1.105:4008
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',
@@ -57,10 +57,11 @@ class MatiereFini {
   String? sId;
   String? title;
   int? quantity;
+  String? unit;
   String? lifetime;
   String? image;
   String? laboratory;
-  Null deletedAt;
+  Null? deletedAt;
   String? createdAt;
   String? updatedAt;
   int? iV;
@@ -69,6 +70,7 @@ class MatiereFini {
       {this.sId,
       this.title,
       this.quantity,
+      this.unit,
       this.lifetime,
       this.image,
       this.laboratory,
@@ -81,6 +83,7 @@ class MatiereFini {
     sId = json['_id'];
     title = json['title'];
     quantity = json['quantity'];
+    unit = json['unit'];
     lifetime = json['lifetime'];
     image = json['image'];
     laboratory = json['laboratory'];
@@ -95,6 +98,7 @@ class MatiereFini {
     data['_id'] = this.sId;
     data['title'] = this.title;
     data['quantity'] = this.quantity;
+    data['unit'] = this.unit;
     data['lifetime'] = this.lifetime;
     data['image'] = this.image;
     data['laboratory'] = this.laboratory;

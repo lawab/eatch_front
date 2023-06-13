@@ -128,7 +128,7 @@ class FournisseurPageState extends ConsumerState<FournisseurPage> {
                                     height: 100,
                                     alignment: Alignment.center,
                                     child: Image.network(
-                                        'http://192.168.1.26:4015${fournisseurLIST[index].image}')),
+                                        'http://192.168.1.105:4015${fournisseurLIST[index].image}')),
                               ),
                               Expanded(
                                 flex: 5,
@@ -608,7 +608,7 @@ class FournisseurPageState extends ConsumerState<FournisseurPage> {
     var idLabo = prefs.getString('idLabo');
 
     var url = Uri.parse(
-        "http://192.168.1.26:4015/api/providers/create"); //192.168.1.26 // 192.168.1.26 //192.168.1.26
+        "http://192.168.1.105:4015/api/providers/create"); //192.168.1.105 // 192.168.1.105 //192.168.1.105
     final request = MultipartRequest(
       'POST',
       url,
@@ -698,7 +698,7 @@ class FournisseurPageState extends ConsumerState<FournisseurPage> {
     var idLabo = prefs.getString('idLabo');
 
     var url = Uri.parse(
-        "http://192.168.1.26:4015/api/providers/update/$idChoisie"); //192.168.1.26
+        "http://192.168.1.105:4015/api/providers/update/$idChoisie"); //192.168.1.105
     final request = MultipartRequest(
       'PATCH',
       url,
@@ -779,8 +779,8 @@ class FournisseurPageState extends ConsumerState<FournisseurPage> {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
-      String urlDelete = "http://192.168.1.26:4015/api/providers/delete/$id";
-      //192.168.1.26
+      String urlDelete = "http://192.168.1.105:4015/api/providers/delete/$id";
+      //192.168.1.105
 
       final http.Response response =
           await http.patch(Uri.parse(urlDelete), headers: {

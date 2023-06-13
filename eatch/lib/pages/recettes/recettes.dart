@@ -256,7 +256,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'Gestion des Recettes',
+                      'GESTION DES RECETTES',
                     ),
                     Container(
                       margin: const EdgeInsets.symmetric(
@@ -305,10 +305,10 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         alignment: Alignment.centerLeft,
-                        height: 80,
+                        height: 50,
                         color: Palette.yellowColor,
                         child: const Text(
-                          'Créer une Recette',
+                          'CREATION DE RECETTE',
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -737,7 +737,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                               ),
                               child: Center(
                                 child: Text(
-                                  'Aucune recette trouvée',
+                                  'Aucune recette ',
                                   style: Theme.of(context)
                                       .textTheme
                                       .headlineMedium,
@@ -776,7 +776,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                                           Radius.circular(15),
                                                     ),
                                                     child: Image.network(
-                                                      'http://192.168.1.26:4010${recette.image}',
+                                                      'http://192.168.1.105:4010${recette.image}',
                                                       height: 180,
                                                       width: double.infinity,
                                                       fit: BoxFit.cover,
@@ -1110,7 +1110,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
     var restaurantid = prefs.getString('idRestaurant');
     String adressUrl = prefs.getString('ipport').toString();
     var url = Uri.parse(
-        "http://192.168.1.26:4010/api/recettes/create"); //13.39.81.126
+        "http://192.168.1.105:4010/api/recettes/create"); //13.39.81.126
     print(url);
     final request = MultipartRequest(
       'POST',
@@ -1243,7 +1243,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userdelete = prefs.getString('IdUser').toString();
       var token = prefs.getString('token');
-      String urlDelete = "http://192.168.1.26:4010/api/recettes/delete/$id";
+      String urlDelete = "http://192.168.1.105:4010/api/recettes/delete/$id";
       var json = {
         '_creator': userdelete,
       };

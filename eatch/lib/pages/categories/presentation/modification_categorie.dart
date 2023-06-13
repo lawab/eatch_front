@@ -156,7 +156,7 @@ class _ModificationCategorieState extends ConsumerState<ModificationCategorie> {
                               borderRadius: BorderRadius.circular(16),
                               child: _selectFile == false
                                   ? Image.network(
-                                      'http://192.168.1.26:4005${widget.imageUrl}',
+                                      'http://192.168.1.105:4005${widget.imageUrl}',
                                       fit: BoxFit.fill,
                                     )
                                   : isLoading
@@ -242,7 +242,7 @@ class _ModificationCategorieState extends ConsumerState<ModificationCategorie> {
     var token = prefs.getString('token');
 
     var url = Uri.parse(
-        "http://192.168.1.26:4005/api/categories/update/${widget.sId}");
+        "http://192.168.1.105:4005/api/categories/update/${widget.sId}");
     final request = MultipartRequest(
       'PATCH',
       url,
