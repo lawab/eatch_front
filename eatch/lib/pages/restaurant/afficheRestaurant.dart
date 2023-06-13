@@ -631,7 +631,6 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                           color: Palette.secondaryBackgroundColor),
                       gapPadding: 10,
                     ),
-                    labelText: "Nom",
                     hintText: "Entrer le nom du restaurant",
                     // If  you are using latest version of flutter then lable text and hint text shown like this
                     // if you r using flutter less then 1.20.* then maybe this is not working properly
@@ -672,7 +671,6 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                           color: Palette.secondaryBackgroundColor),
                       gapPadding: 10,
                     ),
-                    labelText: "Ville",
                     hintText: "Entrer la ville ou se trouve le restaurant",
                     // If  you are using latest version of flutter then lable text and hint text shown like this
                     // if you r using flutter less then 1.20.* then maybe this is not working properly
@@ -713,7 +711,6 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                           color: Palette.secondaryBackgroundColor),
                       gapPadding: 10,
                     ),
-                    labelText: "Adresse",
                     hintText: "Entrer l'adresse du restaurant",
                     // If  you are using latest version of flutter then lable text and hint text shown like this
                     // if you r using flutter less then 1.20.* then maybe this is not working properly
@@ -754,7 +751,6 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                           color: Palette.secondaryBackgroundColor),
                       gapPadding: 10,
                     ),
-                    labelText: "Nombre d'employés",
                     hintText: "Entrer le nombre d'employés du restaurant",
                     // If  you are using latest version of flutter then lable text and hint text shown like this
                     // if you r using flutter less then 1.20.* then maybe this is not working properly

@@ -7,6 +7,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
@@ -26,6 +27,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
   var nomController = TextEditingController();
   var stockController = TextEditingController();
   var peremptionController = TextEditingController();
+  var dateinput = TextEditingController();
 
   _clear() {
     setState(() {
@@ -86,6 +88,9 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
     });
   }
 
+  List<String> listOfUnite = ["Unité *", "kg", "litre", "Carton"];
+
+  String? unite;
   DateTime date = DateTime.now();
   //String dateJour = '';
   bool dd = false;
@@ -146,7 +151,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                 ),
           ajout == true
               ? Container(
-                  //height: 300,
+                  height: height,
                   color: Palette.secondaryBackgroundColor,
                   child: creation())
               : SizedBox(
@@ -259,7 +264,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
         Container(
           alignment: Alignment.centerRight,
           height: 50,
-          color: Palette.secondaryColor,
+          color: Palette.yellowColor,
           child: Row(
             children: const [
               SizedBox(
@@ -305,7 +310,6 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                       const BorderSide(color: Palette.secondaryBackgroundColor),
                   gapPadding: 10,
                 ),
-                labelText: "Nom du type",
                 hintText: "Entrer le nom du type",
                 // If  you are using latest version of flutter then lable text and hint text shown like this
                 // if you r using flutter less then 1.20.* then maybe this is not working properly
@@ -316,44 +320,112 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
         const SizedBox(
           height: 20,
         ),
-        SizedBox(
-          width: MediaQuery.of(context).size.width - 50,
-          child: TextFormField(
-            controller: stockController,
-            //keyboardType: TextInputType.emailAddress,
-            onChanged: (value) {},
-            decoration: InputDecoration(
-                hoverColor: Palette.primaryBackgroundColor,
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
-                filled: true,
-                fillColor: Palette.primaryBackgroundColor,
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide:
-                      const BorderSide(color: Palette.secondaryBackgroundColor),
-                  gapPadding: 10,
+        Container(
+          child: Row(children: [
+            Expanded(
+              flex: 7,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width - 50,
+                child: TextFormField(
+                  controller: stockController,
+                  //keyboardType: TextInputType.emailAddress,
+                  onChanged: (value) {},
+                  decoration: InputDecoration(
+                      hoverColor: Palette.primaryBackgroundColor,
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 42, vertical: 20),
+                      filled: true,
+                      fillColor: Palette.primaryBackgroundColor,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(
+                            color: Palette.secondaryBackgroundColor),
+                        gapPadding: 10,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(
+                            color: Palette.secondaryBackgroundColor),
+                        gapPadding: 10,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(
+                            color: Palette.secondaryBackgroundColor),
+                        gapPadding: 10,
+                      ),
+                      hintText: "Entrer la quantité de base",
+                      // If  you are using latest version of flutter then lable text and hint text shown like this
+                      // if you r using flutter less then 1.20.* then maybe this is not working properly
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      suffixIcon: const Icon(Icons.food_bank)),
                 ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide:
-                      const BorderSide(color: Palette.secondaryBackgroundColor),
-                  gapPadding: 10,
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              flex: 2,
+              child: DropdownButtonFormField(
+                decoration: InputDecoration(
+                  hoverColor: Colors.white,
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
+                  filled: true,
+                  fillColor: Colors.white,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: const BorderSide(color: Palette.yellowColor),
+                    gapPadding: 10,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: const BorderSide(color: Palette.yellowColor),
+                    gapPadding: 10,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: const BorderSide(color: Palette.yellowColor),
+                    gapPadding: 10,
+                  ),
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide:
-                      const BorderSide(color: Palette.secondaryBackgroundColor),
-                  gapPadding: 10,
+                value: unite,
+                hint: const Text(
+                  'Unité*',
                 ),
-                labelText: "Stock",
-                hintText: "Entrer le stock de base",
-                // If  you are using latest version of flutter then lable text and hint text shown like this
-                // if you r using flutter less then 1.20.* then maybe this is not working properly
-                floatingLabelBehavior: FloatingLabelBehavior.always,
-                suffixIcon: const Icon(Icons.food_bank)),
-          ),
+                isExpanded: true,
+                onChanged: (value) {
+                  setState(() {
+                    unite = value;
+                  });
+                },
+                onSaved: (value) {
+                  setState(() {
+                    unite = value;
+                  });
+                },
+                validator: (String? value) {
+                  if (value == null) {
+                    return "L'unité est obligatoire.";
+                  } else {
+                    return null;
+                  }
+                },
+                items: listOfUnite.map((String val) {
+                  return DropdownMenuItem(
+                    value: val,
+                    child: Text(
+                      val,
+                    ),
+                  );
+                }).toList(),
+              ),
+            )
+          ]),
         ),
+
         const SizedBox(
           height: 20,
         ),
@@ -368,41 +440,69 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                 style: TextStyle(fontSize: 16),
               ),
               const SizedBox(width: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  DateTime? newDate = await showDatePicker(
-                    context: context,
-                    initialDate: date,
-                    firstDate: DateTime(1900),
-                    lastDate: DateTime(2100),
-                  );
+              Container(
+                width: 200,
+                child: TextFormField(
+                  controller: dateinput,
+                  keyboardType: TextInputType.emailAddress,
+                  onChanged: (value) {},
+                  readOnly: true,
+                  onTap: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(
+                            2000), //DateTime.now() - not to allow to choose before today.
+                        lastDate: DateTime(2101));
 
-                  if (newDate == null) return;
+                    if (pickedDate != null) {
+                      print(
+                          pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                      String formattedDate =
+                          DateFormat('yyyy-MM-dd').format(pickedDate);
 
-                  setState(() {
-                    date = newDate;
-                    dd = true;
-                    //dateJour =
-                    //"${date.year}/${date.month}/${date.day}";
-                  });
-                  print(date);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Palette.primaryColor,
-                  minimumSize: const Size(150, 40),
-                  maximumSize: const Size(200, 50),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                      print(
+                          formattedDate); //formatted date output using intl package =>  2021-03-16
+                      //you can implement different kind of Date Format here according to your requirement
+
+                      setState(() {
+                        dateinput.text =
+                            formattedDate; //set output date to TextField value.
+                      });
+                    } else {
+                      print("Date non selectionnée");
+                    }
+                  },
+                  decoration: InputDecoration(
+                    hoverColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 42, vertical: 20),
+                    filled: true,
+                    fillColor: Colors.white,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(color: Palette.yellowColor),
+                      gapPadding: 10,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(color: Palette.yellowColor),
+                      gapPadding: 10,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(color: Palette.yellowColor),
+                      gapPadding: 10,
+                    ),
+                    labelText: "Date",
+                    hintText: "Entrer une date ",
+
+                    // If  you are using latest version of flutter then lable text and hint text shown like this
+                    // if you r using flutter less then 1.20.* then maybe this is not working properly
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    suffixIcon: const Icon(Icons.date_range),
+                  ),
                 ),
-                child: dd == false
-                    ? Text(
-                        "${date.year}-${date.month}-${date.day}",
-                        style: const TextStyle(fontSize: 18),
-                      )
-                    : Text(
-                        "${date.year}-${date.month}-${date.day}",
-                        style: const TextStyle(fontSize: 18),
-                      ),
               ),
             ],
           ),
@@ -487,7 +587,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                     context,
                     nomController.text,
                     stockController.text,
-                    date.toString(),
+                    dateinput.text,
                     _selectedFile!,
                     result,
                   );

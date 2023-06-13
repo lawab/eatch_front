@@ -432,7 +432,7 @@ class _MenuState extends ConsumerState<Menu> {
                         color: Palette.secondaryBackgroundColor),
                     gapPadding: 10,
                   ),
-                  labelText: "Nom",
+
                   hintText: "Entrer le nom du menu",
                   // If  you are using latest version of flutter then lable text and hint text shown like this
                   // if you r using flutter less then 1.20.* then maybe this is not working properly
@@ -477,7 +477,7 @@ class _MenuState extends ConsumerState<Menu> {
                         color: Palette.secondaryBackgroundColor),
                     gapPadding: 10,
                   ),
-                  labelText: "Prix",
+
                   hintText: "Entrer le prix du menu",
                   // If  you are using latest version of flutter then lable text and hint text shown like this
                   // if you r using flutter less then 1.20.* then maybe this is not working properly
@@ -500,8 +500,8 @@ class _MenuState extends ConsumerState<Menu> {
             SizedBox(
               width: width - 50,
               child: TextFormField(
-                maxLength: 500,
-                maxLines: 4,
+                maxLength: 400,
+                maxLines: 3,
                 controller: descriptioncontroller,
                 keyboardType: TextInputType.text,
                 onChanged: (value) {},
@@ -529,7 +529,7 @@ class _MenuState extends ConsumerState<Menu> {
                         color: Palette.secondaryBackgroundColor),
                     gapPadding: 10,
                   ),
-                  labelText: "Description",
+
                   hintText: "Entrer une description pour ce menu",
                   // If  you are using latest version of flutter then lable text and hint text shown like this
                   // if you r using flutter less then 1.20.* then maybe this is not working properly
@@ -542,9 +542,10 @@ class _MenuState extends ConsumerState<Menu> {
             ///
             //////////////////////////////// - fin du champ description
             const SizedBox(
-              height: 10,
+              height: 5,
             ),
             Container(
+              padding: EdgeInsets.all(10),
               child: Column(
                 children: [
                   Text('Produits par catégories'),

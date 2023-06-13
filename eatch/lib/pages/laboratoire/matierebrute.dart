@@ -547,7 +547,7 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
                 ),
                 value: unite,
                 hint: const Text(
-                  'Quantité*',
+                  'Unité*',
                 ),
                 isExpanded: true,
                 onChanged: (value) {

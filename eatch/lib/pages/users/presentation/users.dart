@@ -71,11 +71,7 @@ class _UsersState extends ConsumerState<Users> {
   String? _restaurant;
 
   String? _nouveauRole;
-  List<String> listOfRole = [
-    "COMPTABLE",
-    "RH",
-    "EMPLOYEE",
-  ];
+  List<String> listOfRole = ["COMPTABLE", "RH", "EMPLOYEE", "LABORANTIN"];
 
   final FocusNode _prenomFocusNode = FocusNode();
   final FocusNode _emailFocusNode = FocusNode();
@@ -246,7 +242,7 @@ class _UsersState extends ConsumerState<Users> {
                             Row(
                               children: [
                                 Expanded(flex: 3, child: roleForm()),
-                                const SizedBox(width: 20),
+                                /*const SizedBox(width: 20),
                                 Expanded(
                                   flex: 1,
                                   child: Container(
@@ -282,7 +278,7 @@ class _UsersState extends ConsumerState<Users> {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 20),
+                                const SizedBox(width: 20),*/
                               ],
                             ),
                             const SizedBox(height: 10),
@@ -695,11 +691,11 @@ class _UsersState extends ConsumerState<Users> {
           return null;
         }
       },
-      items: viewModel.listRole.map((val) {
+      items: listOfRole.map((val) {
         return DropdownMenuItem(
-          value: val.sId,
+          value: val,
           child: Text(
-            val.value!,
+            val,
           ),
         );
       }).toList(),
@@ -746,7 +742,7 @@ class _UsersState extends ConsumerState<Users> {
           borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
           gapPadding: 10,
         ),
-        hintText: "Password*",
+        hintText: "Mot de passe*",
         floatingLabelBehavior: FloatingLabelBehavior.always,
         suffixIcon: GestureDetector(
           onTap: () {
@@ -803,7 +799,7 @@ class _UsersState extends ConsumerState<Users> {
           borderSide: const BorderSide(color: Palette.secondaryBackgroundColor),
           gapPadding: 10,
         ),
-        hintText: "Confirm Password*",
+        hintText: "Confirmer le mot de passe*",
         floatingLabelBehavior: FloatingLabelBehavior.always,
         suffixIcon: GestureDetector(
           onTap: () {

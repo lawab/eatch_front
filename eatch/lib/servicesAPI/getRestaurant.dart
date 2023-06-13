@@ -33,7 +33,7 @@ class GetDataRsetaurantFuture extends ChangeNotifier {
       );
       print('get restaurant');
       print(response.statusCode);
-      print(response.body);
+      //print(response.body);
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
@@ -41,7 +41,6 @@ class GetDataRsetaurantFuture extends ChangeNotifier {
         for (int i = 0; i < data.length; i++) {
           if (data[i]['deletedAt'] == null) {
             listRsetaurant.add(Restaurant.fromJson(data[i]));
-            print('*******************************************yyyyyyyyyyyyy');
             for (int j = 0; j < data[i]['providings'].length; j++) {
               listApprovisionnement
                   .add(Providings.fromJson(data[i]['providings'][j]));
@@ -146,7 +145,7 @@ class Providings {
   int? qte;
   String? dateProviding;
   bool? validated;
-  Null? dateValidated;
+  String? dateValidated;
   String? sId;
 
   Providings(

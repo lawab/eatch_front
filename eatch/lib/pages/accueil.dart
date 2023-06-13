@@ -60,9 +60,16 @@ class AccueilState extends State<Accueil> {
                     Expanded(
                       child: InkWell(
                         child: Container(
-                          color: Palette.greenColors,
                           height: 200,
                           alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Palette.greenColors,
+                            image: DecorationImage(
+                              image: AssetImage('Restau_eatch.jpg'),
+                              opacity: 50,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                           child: const Text(
                             'RESTAURANTS',
                             style: TextStyle(
@@ -88,9 +95,16 @@ class AccueilState extends State<Accueil> {
                     Expanded(
                       child: InkWell(
                         child: Container(
-                          color: Palette.greenColors,
                           height: 200,
                           alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Palette.greenColors,
+                            image: DecorationImage(
+                              image: AssetImage('Labo_eatch.jpg'),
+                              opacity: 50,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
                           child: const Text(
                             'LABORATOIRES',
                             style: TextStyle(
