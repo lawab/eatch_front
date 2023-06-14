@@ -138,10 +138,6 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                           setState(() {
                             ajout = true;
                           });
-                          /*Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => RestaurantCreation()));*/
                         },
                         icon: const Icon(Icons.add),
                         label: const Text('Ajouter un type de matière'),
@@ -162,8 +158,8 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                           alignment: Alignment.centerRight,
                           height: 50,
                           color: const Color(0xFFFCEBD1),
-                          child: Row(
-                            children: const [
+                          child: const Row(
+                            children: [
                               SizedBox(
                                 width: 50,
                               ),
@@ -308,26 +304,6 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                                         style: const TextStyle(fontSize: 18),
                                       ),
                               ),
-
-                              /*const SizedBox(width: 10),
-                              dd == false
-                                  ? Text(
-                                      date.toString(),
-                                      style: const TextStyle(fontSize: 18),
-                                    )
-                                  : Text(
-                                      date.toString(),
-                                      style: const TextStyle(fontSize: 18),
-                                    )*/
-                              /*dd == false
-                                  ? Text(
-                                      "${date.year}/${date.month}/${date.day}",
-                                      style: const TextStyle(fontSize: 18),
-                                    )
-                                  : Text(
-                                      dateJour,
-                                      style: const TextStyle(fontSize: 18),
-                                    )*/
                             ],
                           ),
                         ),
@@ -337,6 +313,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                         ),
 
                         // fin --------------------------------------------
+
                         // Creation du bouton qui reécupere l'image
                         Container(
                           padding: const EdgeInsets.only(right: 70),
@@ -422,7 +399,6 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                                     ajout = false;
                                     _clear();
                                   });
-                                  //setState(() {});
                                 }),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Palette.primaryColor,
@@ -485,7 +461,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                       image: DecorationImage(
                           opacity: 50,
                           image: NetworkImage(
-                              "http://192.168.1.34:4008${matiere[index].image!}"), //192.168.1.34
+                              "http://192.168.11.110:4008${matiere[index].image!}"), //192.168.11.110
                           fit: BoxFit.cover),
                     ),
                     child: Column(
@@ -620,8 +596,8 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                         alignment: Alignment.centerRight,
                         height: 50,
                         color: const Color(0xFFFCEBD1),
-                        child: Row(
-                          children: const [
+                        child: const Row(
+                          children: [
                             SizedBox(
                               width: 50,
                             ),
@@ -677,6 +653,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                       const SizedBox(
                         height: 20,
                       ),
+
                       // début --------------------------------------------
                       SizedBox(
                         width: MediaQuery.of(context).size.width - 50,
@@ -724,26 +701,6 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                                       style: const TextStyle(fontSize: 18),
                                     ),
                             ),
-
-                            /*const SizedBox(width: 10),
-                              dd == false
-                                  ? Text(
-                                      date.toString(),
-                                      style: const TextStyle(fontSize: 18),
-                                    )
-                                  : Text(
-                                      date.toString(),
-                                      style: const TextStyle(fontSize: 18),
-                                    )*/
-                            /*dd == false
-                                  ? Text(
-                                      "${date.year}/${date.month}/${date.day}",
-                                      style: const TextStyle(fontSize: 18),
-                                    )
-                                  : Text(
-                                      dateJour,
-                                      style: const TextStyle(fontSize: 18),
-                                    )*/
                           ],
                         ),
                       ),
@@ -753,6 +710,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                       ),
 
                       // fin --------------------------------------------
+
                       // Creation du bouton qui reécupere l'image
                       Container(
                         padding: const EdgeInsets.only(right: 70),
@@ -934,7 +892,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                   image: DecorationImage(
                       opacity: 50,
                       image: NetworkImage(
-                          "http://192.168.1.34:4008${matiere[index].image!}"),
+                          "http://192.168.11.110:4008${matiere[index].image!}"),
                       fit: BoxFit.cover),
                 ),
                 child: Column(
@@ -1221,7 +1179,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
     //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.1.34:4008/api/materials/create"); // 192.168.1.34:4008
+        "http://192.168.11.110:4008/api/materials/create"); // 192.168.11.110:4008
     final request = MultipartRequest(
       'POST',
       url,
@@ -1300,7 +1258,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
 
       var token = prefs.getString('token');
       String urlDelete =
-          "http://192.168.1.34:4008/api/materials/delete/$idMatierePremiere"; // 192.168.1.34:4008 //$adressUrl
+          "http://192.168.11.110:4008/api/materials/delete/$idMatierePremiere"; // 192.168.11.110:4008 //$adressUrl
       //var json = {'_creator': id};
 
       //var body = jsonEncode(json);
@@ -1361,7 +1319,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
     //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.1.34:4008/api/materials/update/$idModifMatiere"); //$adressUrl
+        "http://192.168.11.110:4008/api/materials/update/$idModifMatiere"); //$adressUrl
     final request = MultipartRequest(
       'PUT',
       url,

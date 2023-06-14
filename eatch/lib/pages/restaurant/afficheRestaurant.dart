@@ -202,7 +202,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   image: DecorationImage(
                                       opacity: 150,
                                       image: NetworkImage(
-                                          'http://192.168.1.34:4002${listRsetaurant[index].infos!.logo.toString()}'), //13.39.81.126:4002
+                                          'http://192.168.11.110:4002${listRsetaurant[index].infos!.logo.toString()}'), //13.39.81.126:4002
                                       fit: BoxFit.cover),
                                 ),
                               ),
@@ -427,7 +427,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   image: DecorationImage(
                                       opacity: 150,
                                       image: NetworkImage(
-                                          'http://192.168.1.34:4002${listRsetaurant[index].infos!.logo.toString()}'),
+                                          'http://192.168.11.110:4002${listRsetaurant[index].infos!.logo.toString()}'),
                                       //image: AssetImage('Logo_Eatch_png.png'),
                                       fit: BoxFit.cover),
                                 ),
@@ -874,7 +874,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
     );
   }
 
-  Future dialogDelete(id, nom) {
+  Future dialogDelete(ids, nom) {
     return showDialog(
         context: context,
         builder: (con) {
@@ -911,7 +911,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                   ),
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                   onPressed: () {
-                    deleteRestaurant(context, id);
+                    deleteRestaurant(context, ids);
                     Navigator.pop(con);
                   },
                   label: const Text("Supprimer."))
@@ -950,7 +950,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
     var token = prefs.getString('token');
 
     var url = Uri.parse(
-        "http://192.168.1.34:4002/api/restaurants/create"); //13.39.81.126
+        "http://192.168.11.110:4002/api/restaurants/create"); //13.39.81.126
     final request = MultipartRequest(
       'POST',
       url,
@@ -1016,20 +1016,26 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
   }
 
   /////// - Suppression restaurant
-  Future<http.Response> deleteRestaurant(contextt, String id) async {
+  Future<http.Response> deleteRestaurant(contextt, String ids) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
+      var id = prefs.getString('IdUser').toString();
       var token = prefs.getString('token');
-      String urlDelete = "http://192.168.1.34:4002/api/restaurants/delete/$id";
+      String urlDelete =
+          "http://192.168.11.110:4002/api/restaurants/delete/$ids";
       //13.39.81.126
+
+      var json = {
+        '_creator': id,
+      };
+      var body = jsonEncode(json);
 
       final http.Response response =
           await http.put(Uri.parse(urlDelete), headers: {
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
         'Accept': 'application/json',
         'authorization': 'Bearer $token',
-      }, body: {
-        '_creator': id
+        'body': body,
       });
 
       print(response.statusCode);

@@ -141,7 +141,7 @@ class _MenuState extends ConsumerState<Menu> {
                   )
                 : SizedBox(
                     height: height - 65,
-                    child: Creation(categoriee, height, width),
+                    child: creation(categoriee, height, width),
                   ),
             ajout == true
                 ? const Divider(
@@ -289,7 +289,7 @@ class _MenuState extends ConsumerState<Menu> {
                   )
                 : SizedBox(
                     height: height,
-                    child: Creation(categoriee, height, width),
+                    child: creation(categoriee, height, width),
                   ),
             ajout == true
                 ? const Divider(
@@ -391,7 +391,7 @@ class _MenuState extends ConsumerState<Menu> {
     );
   }
 
-  Widget Creation(List<Categorie> categoriee, heigth, width) {
+  Widget creation(List<Categorie> categoriee, heigth, width) {
     return Container(
       height: heigth,
       color: Palette.secondaryBackgroundColor,
@@ -872,7 +872,7 @@ class _MenuState extends ConsumerState<Menu> {
     //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.1.34:4009/api/menus/create"); // 192.168.1.34:4009
+        "http://192.168.11.110:4009/api/menus/create"); // 192.168.11.110:4009
     final request = MultipartRequest(
       'POST',
       url,
@@ -957,7 +957,7 @@ class _MenuState extends ConsumerState<Menu> {
 
       var token = prefs.getString('token');
       String urlDelete =
-          "http://192.168.1.34:4009/api/menus/delete/$idMenu"; // 192.168.1.34:4008 //$adressUrl
+          "http://192.168.11.110:4009/api/menus/delete/$idMenu"; // 192.168.11.110:4008 //$adressUrl
       //var json = {'_creator': id};
 
       //var body = jsonEncode(json);
@@ -989,7 +989,7 @@ class _MenuState extends ConsumerState<Menu> {
           Overlay.of(context),
           const CustomSnackBar.info(
             backgroundColor: Palette.deleteColors,
-            message: "Le menu n'a pas été supprimée succès",
+            message: "Le menu n'a pas été supprimée avec succès",
           ),
         );
         return Future.error("Server Error");
