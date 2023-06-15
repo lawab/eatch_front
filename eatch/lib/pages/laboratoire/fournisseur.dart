@@ -61,7 +61,8 @@ class FournisseurPageState extends ConsumerState<FournisseurPage> {
             return horizontalView(height(context), width(context), context,
                 viewModel.listFournisseur);
           } else {
-            return verticalView(height(context), width(context), context);
+            return verticalView(height(context), width(context), context,
+                viewModel.listFournisseur);
           }
         },
       ),
@@ -72,156 +73,307 @@ class FournisseurPageState extends ConsumerState<FournisseurPage> {
   Widget horizontalView(double height, double width, contextt,
       List<Fournisseur> fournisseurLIST) {
     return AppLayout(
-        content: Container(
-      height: height,
-      width: width,
-      child: Column(
-        children: [
-          Container(
-            alignment: Alignment.centerRight,
-            height: 80,
-            color: Palette.yellowColor, //Color(0xFFFCEBD1),
-            child: Row(
-              children: [
-                const SizedBox(
-                  width: 50,
-                ),
-                const Text('Fournisseurs'),
-                Expanded(child: Container()),
-                ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Palette.primaryColor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      minimumSize: const Size(180, 50)),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(Icons.backspace),
-                  label: const Text('Retour'),
-                ),
-                const SizedBox(
-                  width: 20,
-                ),
-              ],
+      content: Container(
+        height: height,
+        width: width,
+        child: Column(
+          children: [
+            Container(
+              alignment: Alignment.centerRight,
+              height: 80,
+              color: Palette.yellowColor, //Color(0xFFFCEBD1),
+              child: Row(
+                children: [
+                  const SizedBox(
+                    width: 50,
+                  ),
+                  const Text('Fournisseurs'),
+                  Expanded(child: Container()),
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Palette.primaryColor,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        minimumSize: const Size(180, 50)),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.backspace),
+                    label: const Text('Retour'),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(
-            height: 40,
-          ),
-          Container(
-            height: height - 300,
-            child: ListView.builder(
-                itemCount: fournisseurLIST.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                      elevation: 10,
-                      child: InkWell(
-                        child: Container(
-                          height: 100,
-                          alignment: Alignment.center,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                    height: 100,
-                                    alignment: Alignment.center,
-                                    child: Image.network(
-                                        'http://192.168.1.105:4015${fournisseurLIST[index].image}')),
-                              ),
-                              Expanded(
-                                flex: 5,
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                      '${fournisseurLIST[index].firstName!} ${fournisseurLIST[index].lastName!}'),
+            const SizedBox(
+              height: 40,
+            ),
+            Container(
+              height: height - 300,
+              child: ListView.builder(
+                  itemCount: fournisseurLIST.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                        elevation: 10,
+                        child: InkWell(
+                          child: Container(
+                            height: 100,
+                            alignment: Alignment.center,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                      height: 100,
+                                      alignment: Alignment.center,
+                                      child: Image.network(
+                                          'http://192.168.1.105:4015${fournisseurLIST[index].image}')),
                                 ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: CircleAvatar(
-                                  maxRadius: 20,
-                                  backgroundColor: Colors.black,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        modif = true;
-                                        firstNameController.text =
-                                            fournisseurLIST[index].firstName!;
-                                        lasttNameController.text =
-                                            fournisseurLIST[index].lastName!;
-                                        emailController.text =
-                                            fournisseurLIST[index].email!;
-                                        adressController.text =
-                                            fournisseurLIST[index].adresse!;
-                                        phoneController.text =
-                                            fournisseurLIST[index].phone!;
-                                      });
-                                      dialog(
-                                          context, fournisseurLIST[index].sId!);
-                                    },
-                                    icon: const Icon(
-                                      Icons.edit,
-                                      color: Colors.white,
+                                Expanded(
+                                  flex: 5,
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                        '${fournisseurLIST[index].firstName!} ${fournisseurLIST[index].lastName!}'),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: CircleAvatar(
+                                    maxRadius: 20,
+                                    backgroundColor: Colors.black,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          modif = true;
+                                          firstNameController.text =
+                                              fournisseurLIST[index].firstName!;
+                                          lasttNameController.text =
+                                              fournisseurLIST[index].lastName!;
+                                          emailController.text =
+                                              fournisseurLIST[index].email!;
+                                          adressController.text =
+                                              fournisseurLIST[index].adresse!;
+                                          phoneController.text =
+                                              fournisseurLIST[index].phone!;
+                                        });
+                                        dialog(context,
+                                            fournisseurLIST[index].sId!);
+                                      },
+                                      icon: const Icon(
+                                        Icons.edit,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: CircleAvatar(
-                                  maxRadius: 20,
-                                  backgroundColor: Colors.red,
-                                  child: IconButton(
-                                      onPressed: () {
-                                        dialogDelete(
-                                            context,
-                                            fournisseurLIST[index].sId!,
-                                            fournisseurLIST[index].firstName!);
-                                      },
-                                      icon: const Icon(
-                                        Icons.delete,
-                                        color: Colors.white,
-                                      )),
+                                Expanded(
+                                  flex: 1,
+                                  child: CircleAvatar(
+                                    maxRadius: 20,
+                                    backgroundColor: Colors.red,
+                                    child: IconButton(
+                                        onPressed: () {
+                                          dialogDelete(
+                                              context,
+                                              fournisseurLIST[index].sId!,
+                                              fournisseurLIST[index]
+                                                  .firstName!);
+                                        },
+                                        icon: const Icon(
+                                          Icons.delete,
+                                          color: Colors.white,
+                                        )),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        onTap: () {
-                          //dialogSortie(context);
-                        },
-                      ));
-                }),
-          ),
-          const SizedBox(
-            height: 50,
-          ),
-          Container(
-            alignment: Alignment.center,
-            child: ElevatedButton.icon(
-              onPressed: (() {
-                dialog(contextt, '');
-              }),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Palette.primaryColor,
-                minimumSize: const Size(150, 50),
-                maximumSize: const Size(200, 70),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-              ),
-              icon: Icon(Icons.add),
-              label: const Text('Ajouter'),
+                          onTap: () {
+                            //dialogSortie(context);
+                          },
+                        ));
+                  }),
             ),
-          ),
-        ],
+            const SizedBox(
+              height: 50,
+            ),
+            Container(
+              alignment: Alignment.center,
+              child: ElevatedButton.icon(
+                onPressed: (() {
+                  dialog(contextt, '');
+                }),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Palette.primaryColor,
+                  minimumSize: const Size(150, 50),
+                  maximumSize: const Size(200, 70),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+                icon: Icon(Icons.add),
+                label: const Text('Ajouter'),
+              ),
+            ),
+          ],
+        ),
       ),
-    ));
+    );
   }
 
-  Widget verticalView(double height, double width, context) {
-    return AppLayout(content: Container());
+  Widget verticalView(double height, double width, contextt,
+      List<Fournisseur> fournisseurLIST) {
+    return AppLayout(
+      content: Container(
+        height: height,
+        width: width,
+        child: Column(
+          children: [
+            Container(
+              alignment: Alignment.centerRight,
+              height: 50,
+              color: Palette.yellowColor, //Color(0xFFFCEBD1),
+              child: Row(
+                children: [
+                  const SizedBox(
+                    width: 50,
+                  ),
+                  const Text('Fournisseurs'),
+                  Expanded(child: Container()),
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Palette.primaryColor,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        minimumSize: const Size(180, 50)),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.backspace),
+                    label: const Text('Retour'),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              height: height - 242,
+              child: ListView.builder(
+                  itemCount: fournisseurLIST.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                        elevation: 10,
+                        child: InkWell(
+                          child: Container(
+                            height: 100,
+                            alignment: Alignment.center,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                      height: 100,
+                                      alignment: Alignment.center,
+                                      child: Image.network(
+                                          'http://192.168.1.105:4015${fournisseurLIST[index].image}')),
+                                ),
+                                Expanded(
+                                  flex: 5,
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                        '${fournisseurLIST[index].firstName!} ${fournisseurLIST[index].lastName!}'),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: CircleAvatar(
+                                    maxRadius: 20,
+                                    backgroundColor: Colors.black,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          modif = true;
+                                          firstNameController.text =
+                                              fournisseurLIST[index].firstName!;
+                                          lasttNameController.text =
+                                              fournisseurLIST[index].lastName!;
+                                          emailController.text =
+                                              fournisseurLIST[index].email!;
+                                          adressController.text =
+                                              fournisseurLIST[index].adresse!;
+                                          phoneController.text =
+                                              fournisseurLIST[index].phone!;
+                                        });
+                                        dialog(context,
+                                            fournisseurLIST[index].sId!);
+                                      },
+                                      icon: const Icon(
+                                        Icons.edit,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: CircleAvatar(
+                                    maxRadius: 20,
+                                    backgroundColor: Colors.red,
+                                    child: IconButton(
+                                        onPressed: () {
+                                          dialogDelete(
+                                              context,
+                                              fournisseurLIST[index].sId!,
+                                              fournisseurLIST[index]
+                                                  .firstName!);
+                                        },
+                                        icon: const Icon(
+                                          Icons.delete,
+                                          color: Colors.white,
+                                        )),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          onTap: () {
+                            //dialogSortie(context);
+                          },
+                        ));
+                  }),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              alignment: Alignment.center,
+              child: ElevatedButton.icon(
+                onPressed: (() {
+                  dialog(contextt, '');
+                }),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Palette.primaryColor,
+                  minimumSize: const Size(150, 50),
+                  maximumSize: const Size(200, 70),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+                icon: Icon(Icons.add),
+                label: const Text('Ajouter'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Future dialog(BuildContext contextt, String id) {
@@ -304,7 +456,7 @@ class FournisseurPageState extends ConsumerState<FournisseurPage> {
               child: Column(
                 children: [
                   SizedBox(
-                    width: MediaQuery.of(context).size.width / 4,
+                    width: MediaQuery.of(context).size.width / 3,
                     child: TextFormField(
                       controller: firstNameController,
                       keyboardType: TextInputType.emailAddress,
@@ -345,7 +497,7 @@ class FournisseurPageState extends ConsumerState<FournisseurPage> {
                     height: 20,
                   ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width / 4,
+                    width: MediaQuery.of(context).size.width / 3,
                     child: TextFormField(
                       controller: lasttNameController,
                       keyboardType: TextInputType.emailAddress,
@@ -386,7 +538,7 @@ class FournisseurPageState extends ConsumerState<FournisseurPage> {
                     height: 20,
                   ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width / 4,
+                    width: MediaQuery.of(context).size.width / 3,
                     child: TextFormField(
                       controller: emailController,
                       keyboardType: TextInputType.emailAddress,
@@ -427,7 +579,7 @@ class FournisseurPageState extends ConsumerState<FournisseurPage> {
                     height: 20,
                   ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width / 4,
+                    width: MediaQuery.of(context).size.width / 3,
                     child: TextFormField(
                       controller: adressController,
                       keyboardType: TextInputType.emailAddress,

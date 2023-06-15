@@ -38,12 +38,14 @@ class _NavigationState extends State<Navigation> {
   }
 
   bool lab = false;
+  var role = '';
   Future ind() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //if(prefs.getInt('index').toInt().is)
     setState(
       () {
         lab = prefs.getBool('lab')!;
+        role = prefs.getString('Idrole')!;
         if (prefs.getInt('index') != null) {
           int aa = prefs.getInt('index')!.toInt();
           index = aa;
@@ -112,7 +114,7 @@ class _NavigationState extends State<Navigation> {
                 },
               ),
         //////////////////////////////////////
-        lab == true
+        role != 'SUPER_ADMIN'
             ? Container()
             : NavigationButton(
                 axis: widget.orientation,

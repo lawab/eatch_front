@@ -2,6 +2,7 @@ import 'package:eatch/pages/laboAccueil.dart';
 import 'package:eatch/pages/restaurantAccueil.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Accueil extends StatefulWidget {
   const Accueil({Key? key}) : super(key: key);
@@ -11,6 +12,18 @@ class Accueil extends StatefulWidget {
 }
 
 class AccueilState extends State<Accueil> {
+  @override
+  void initState() {
+    rr();
+    // TODO: implement initState
+    super.initState();
+  }
+
+  void rr() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt('index', 20);
+  }
+
   MediaQueryData mediaQueryData(BuildContext context) {
     return MediaQuery.of(context);
   }
@@ -80,7 +93,10 @@ class AccueilState extends State<Accueil> {
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
-                        onTap: () {
+                        onTap: () async {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          prefs.setInt('index', 0);
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -115,7 +131,10 @@ class AccueilState extends State<Accueil> {
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
-                        onTap: () {
+                        onTap: () async {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          prefs.setInt('index', 9);
                           Navigator.push(
                               context,
                               MaterialPageRoute(

@@ -64,42 +64,6 @@ class MatiereLaboAfficheState extends ConsumerState<MatiereLaboAffiche> {
       body: Container(
         child: Column(
           children: [
-            /*Container(
-              alignment: Alignment.centerRight,
-              height: 80,
-              color: Palette.yellowColor,
-              child: Row(
-                children: [
-                  const SizedBox(
-                    width: 50,
-                  ),
-                  const Text('Matières premières du laboratoire'),
-                  Expanded(child: Container()),
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Palette.primaryColor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      minimumSize: const Size(180, 50),
-                    ),
-                    onPressed: () {
-                      /*setState(() {
-                        ajout = true;
-                      });*/
-                      /*Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => RestaurantCreation()));*/
-                    },
-                    icon: const Icon(Icons.add),
-                    label: const Text('Ajouter un type de matière'),
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                ],
-              ),
-            ),*/
             Container(
               height: height - 280,
               child: GridView.builder(
@@ -207,8 +171,122 @@ class MatiereLaboAfficheState extends ConsumerState<MatiereLaboAffiche> {
 
   Widget verticalView(
       double height, double width, context, List<Materials> matiere) {
-    return AppLayout(
-      content: Container(),
+    return Scaffold(
+      body: Container(
+        child: Column(
+          children: [
+            Container(
+              height: height - 230,
+              child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 300,
+                      childAspectRatio: 3 / 2,
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 50,
+                      mainAxisExtent: 400),
+                  itemCount: matiere.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      elevation: 10,
+                      child: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: 198,
+                              width: 300,
+                              decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage('emballage.jpeg'),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              'Nom : ${matiere[index].title}',
+                              style: TextStyle(fontSize: 12),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              'Quantité : ${matiere[index].quantity} ${matiere[index].unit}',
+                              style: TextStyle(fontSize: 12),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              'Dernière date : ${matiere[index].updatedAt}',
+                              style: TextStyle(fontSize: 12),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              'Date de création : ${matiere[index].createdAt}',
+                              style: TextStyle(fontSize: 12),
+                            ),
+                            Container(
+                              alignment: Alignment.center,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: Container(),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                      flex: 5,
+                                      child: Container(
+                                        height: 50,
+                                        width: 50,
+                                        alignment: Alignment.center,
+                                        decoration: const BoxDecoration(
+                                            color: Colors.black,
+                                            shape: BoxShape.circle),
+                                        child: IconButton(
+                                          splashColor: Palette.greenColors,
+                                          onPressed: () {
+                                            dialogAjout(
+                                                context,
+                                                matiere[index].quantity!,
+                                                matiere[index].title!,
+                                                matiere[index].unit!,
+                                                matiere[index].sId!,
+                                                'idLabo');
+                                          },
+                                          iconSize: 30,
+                                          icon: const Icon(
+                                            Icons.add_box,
+                                            color: Palette.greenColors,
+                                          ),
+                                        ),
+                                      )),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Container(),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -403,6 +481,7 @@ class MatiereLaboAfficheState extends ConsumerState<MatiereLaboAffiche> {
         );
 
         ref.refresh(getDataRsetaurantFuture);
+        ref.refresh(getDataLaboratoriesFuture);
       } else {
         showTopSnackBar(
           Overlay.of(context),

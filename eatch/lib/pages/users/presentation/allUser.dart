@@ -1,6 +1,7 @@
 // ignore_for_file: sized_box_for_whitespace, avoid_unnecessary_containers, non_constant_identifier_names, avoid_function_literals_in_foreach_calls
 
 import 'dart:convert';
+import 'dart:js_interop';
 
 import 'package:eatch/servicesAPI/get_user.dart';
 import 'package:eatch/utils/palettes/palette.dart';
@@ -251,7 +252,9 @@ class AllUsersState extends ConsumerState<AllUsers> {
                                               .listAllUsers[index].username);
                                           print(viewModel
                                               .listAllUsers[index].avatar!);
-
+                                          /*print(viewModel.listAllUsers[index]
+                                              .restaurant!.sId!);*/
+                                          print('ppppppppppppppppppppppooo');
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -272,9 +275,27 @@ class AllUsersState extends ConsumerState<AllUsers> {
                                                     .listAllUsers[index].role!,
                                                 sId: viewModel
                                                     .listAllUsers[index].sId!,
+                                                id: viewModel
+                                                        .listAllUsers[index]
+                                                        .restaurant
+                                                        .isNull
+                                                    ? viewModel
+                                                            .listAllUsers[index]
+                                                            .laboratory
+                                                            .isNull
+                                                        ? ''
+                                                        : viewModel
+                                                            .listAllUsers[index]
+                                                            .laboratory!
+                                                            .sId!
+                                                    : viewModel
+                                                        .listAllUsers[index]
+                                                        .restaurant!
+                                                        .sId!,
                                               );
                                             }),
                                           );
+                                          print('object');
                                         },
                                       )),
                                       Expanded(
@@ -403,6 +424,19 @@ class AllUsersState extends ConsumerState<AllUsers> {
                                                     UserSearch[index].lastName!,
                                                 role: UserSearch[index].role!,
                                                 sId: UserSearch[index].sId!,
+                                                id: UserSearch[index]
+                                                        .restaurant!
+                                                        .isNull
+                                                    ? UserSearch[index]
+                                                            .laboratory
+                                                            .isNull
+                                                        ? UserSearch[index]
+                                                            .laboratory!
+                                                            .laboName!
+                                                        : ''
+                                                    : UserSearch[index]
+                                                        .restaurant!
+                                                        .sId!,
                                                 // username:
                                                 //     UserSearch[index].username!,
                                               );

@@ -2,6 +2,7 @@ import 'package:eatch/pages/accueil.dart';
 import 'package:eatch/pages/laboAccueil.dart';
 import 'package:eatch/pages/restaurantAccueil.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'palettes/palette.dart';
 
@@ -20,6 +21,21 @@ class BarreHaute extends StatefulWidget {
 }
 
 class BarreHauteState extends State<BarreHaute> {
+  @override
+  void initState() {
+    rr();
+    // TODO: implement initState
+    super.initState();
+  }
+
+  var nom = '';
+  void rr() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      nom = prefs.getString('UserName')!;
+    });
+  }
+
   SampleItem? selectedMenu;
   @override
   Widget build(BuildContext context) {
@@ -53,14 +69,14 @@ class BarreHauteState extends State<BarreHaute> {
                     height: 30,
                   ),
                 ),
-                const Expanded(
+                Expanded(
                   child: Padding(
-                    padding: EdgeInsets.only(
+                    padding: const EdgeInsets.only(
                       left: 05.0,
                     ),
                     child: Text(
-                      "Daoud Alima",
-                      style: TextStyle(
+                      nom,
+                      style: const TextStyle(
                         color: Palette.primaryColor,
                       ),
                     ),

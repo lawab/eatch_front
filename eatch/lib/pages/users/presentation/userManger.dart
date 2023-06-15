@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:eatch/servicesAPI/get_user.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
@@ -218,6 +220,21 @@ class ManagerUsersState extends ConsumerState<ManagerUsers> {
                                                     .listManager[index].role!,
                                                 sId: viewModel
                                                     .listManager[index].sId!,
+                                                id: viewModel.listManager[index]
+                                                        .restaurant!.isNull
+                                                    ? viewModel
+                                                            .listManager[index]
+                                                            .laboratory
+                                                            .isNull
+                                                        ? viewModel
+                                                            .listManager[index]
+                                                            .laboratory!
+                                                            .laboName!
+                                                        : ''
+                                                    : viewModel
+                                                        .listManager[index]
+                                                        .restaurant!
+                                                        .sId!,
                                                 // username: viewModel
                                                 //     .listManager[index]
                                                 //     .username!,
@@ -323,6 +340,19 @@ class ManagerUsersState extends ConsumerState<ManagerUsers> {
                                                     UserSearch[index].lastName!,
                                                 role: UserSearch[index].role!,
                                                 sId: UserSearch[index].sId!,
+                                                id: UserSearch[index]
+                                                        .restaurant!
+                                                        .isNull
+                                                    ? UserSearch[index]
+                                                            .laboratory
+                                                            .isNull
+                                                        ? UserSearch[index]
+                                                            .laboratory!
+                                                            .laboName!
+                                                        : ''
+                                                    : UserSearch[index]
+                                                        .restaurant!
+                                                        .sId!,
                                                 // username:
                                                 //     UserSearch[index].username!,
                                               );

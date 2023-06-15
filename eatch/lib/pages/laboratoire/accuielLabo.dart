@@ -288,6 +288,243 @@ class AccuilLaboState extends State<AccuilLabo> {
   }
 
   Widget verticalView(double height, double width, context) {
-    return Scaffold();
+    return AppLayout(
+      content: Container(
+        height: height,
+        width: width,
+        child: Column(
+          children: [
+            Container(
+              alignment: Alignment.centerRight,
+              height: 50,
+              color: Palette.yellowColor, //Color(0xFFFCEBD1),
+              child: Row(
+                children: [
+                  const SizedBox(
+                    width: 50,
+                  ),
+                  const Text('Gestion du laboratoire'),
+                  Expanded(child: Container()),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              alignment: Alignment.center,
+              height: height - 180,
+              child: Container(
+                height: 200,
+                child: Row(children: [
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Expanded(
+                    child: Card(
+                        elevation: 10,
+                        child: InkWell(
+                          child: Container(
+                            height: 200,
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: 150,
+                                  width: 150,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                        image: AssetImage('fourni.jpg'),
+                                        fit: BoxFit.fill),
+                                  ),
+                                ),
+                                const Text(
+                                  'Approvisionner',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15),
+                                ),
+                              ],
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const MatiereBrutee()),
+                            );
+                          },
+                        )),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Expanded(
+                    child: Card(
+                        elevation: 10,
+                        child: InkWell(
+                          child: Container(
+                            height: 200,
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: 150,
+                                  width: 150,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                        image: AssetImage('founisseur.png'),
+                                        fit: BoxFit.fill),
+                                  ),
+                                ),
+                                const Text(
+                                  'Fournisseur',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15),
+                                ),
+                              ],
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const FournisseurPage()),
+                            );
+                          },
+                        )),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Expanded(
+                    child: Card(
+                      elevation: 10,
+                      child: InkWell(
+                        child: Container(
+                          height: 200,
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 150,
+                                width: 150,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      image: AssetImage('stockk.png'),
+                                      fit: BoxFit.fill),
+                                ),
+                              ),
+                              const Text(
+                                'Voir le stock',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 15),
+                              ),
+                            ],
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SotckLabo()),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Expanded(
+                    child: Card(
+                        elevation: 10,
+                        child: InkWell(
+                          child: Container(
+                            height: 200,
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: 150,
+                                  width: 150,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                        image: AssetImage('fini.jpg'),
+                                        fit: BoxFit.fill),
+                                  ),
+                                ),
+                                const Text(
+                                  'Gestion de la matière finie',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15),
+                                ),
+                              ],
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const MatiereFiniPage()),
+                            );
+                          },
+                        )),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Expanded(
+                    child: Card(
+                        elevation: 10,
+                        child: InkWell(
+                          child: Container(
+                            height: 200,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  height: 150,
+                                  width: 150,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                        image: AssetImage('logo_vert.png'),
+                                        fit: BoxFit.fill),
+                                  ),
+                                ),
+                                const Text(
+                                  'Sortie de la matière finie',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15),
+                                ),
+                              ],
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const SortieMatiere()),
+                            );
+                          },
+                        )),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                ]),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

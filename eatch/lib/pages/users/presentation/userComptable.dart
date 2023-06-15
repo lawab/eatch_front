@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:eatch/servicesAPI/get_user.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
@@ -219,6 +221,25 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                                                     .listComptable[index].role!,
                                                 sId: viewModel
                                                     .listComptable[index].sId!,
+                                                id: viewModel
+                                                        .listComptable[index]
+                                                        .restaurant
+                                                        .isNull
+                                                    ? viewModel
+                                                            .listComptable[
+                                                                index]
+                                                            .laboratory
+                                                            .isNull
+                                                        ? viewModel
+                                                            .listComptable[
+                                                                index]
+                                                            .laboratory!
+                                                            .laboName!
+                                                        : ''
+                                                    : viewModel
+                                                        .listComptable[index]
+                                                        .restaurant!
+                                                        .sId!,
                                                 // username: viewModel
                                                 //     .listComptable[index]
                                                 //     .username!,
@@ -317,6 +338,19 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                                                     UserSearch[index].lastName!,
                                                 role: UserSearch[index].role!,
                                                 sId: UserSearch[index].sId!,
+                                                id: UserSearch[index]
+                                                        .restaurant
+                                                        .isNull
+                                                    ? UserSearch[index]
+                                                            .laboratory
+                                                            .isNull
+                                                        ? UserSearch[index]
+                                                            .laboratory!
+                                                            .laboName!
+                                                        : ''
+                                                    : UserSearch[index]
+                                                        .restaurant!
+                                                        .sId!,
                                                 // username:
                                                 //     UserSearch[index].username!,
                                               );

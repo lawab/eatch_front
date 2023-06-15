@@ -1,5 +1,5 @@
+import 'dart:async';
 import 'package:eatch/servicesAPI/getRestaurant.dart';
-import 'package:eatch/utils/applayout.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,6 +13,44 @@ class Approvisonnement extends ConsumerStatefulWidget {
 }
 
 class ApprovisonnementState extends ConsumerState<Approvisonnement> {
+  @override
+  void initState() {
+    startTimer();
+    // TODO: implement initState
+    super.initState();
+  }
+
+  Timer? _timer;
+  int _start = 120;
+
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_start == 0) {
+          setState(() {
+            timer.cancel();
+            ref.refresh(getDataRsetaurantFuture);
+            print('refresh********************************************');
+            _start = 120;
+            startTimer();
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer!.cancel();
+    super.dispose();
+  }
+
   var demandeController = TextEditingController();
   MediaQueryData mediaQueryData(BuildContext context) {
     return MediaQuery.of(context);
@@ -45,10 +83,10 @@ class ApprovisonnementState extends ConsumerState<Approvisonnement> {
 
         aa = DateTime(aa.year, aa.month, aa.day);
         bb = DateTime(bb.year, bb.month, bb.day);
-        print('jour');
-        print((bb.difference(aa).inHours / 24).round());
+
+        //print((bb.difference(aa).inHours / 24).round());
         int jour = (aa.difference(bb).inHours / 24).round();
-        print(jour);
+
         if (jour == 0) {
           listdemande.add(view.listApprovisionnement[i]);
         } else {
@@ -69,7 +107,8 @@ class ApprovisonnementState extends ConsumerState<Approvisonnement> {
             return horizontalView(
                 height(context), width(context), context, listdemande);
           } else {
-            return verticalView(height(context), width(context), context);
+            return verticalView(
+                height(context), width(context), context, listdemande);
           }
         },
       ),
@@ -100,14 +139,57 @@ class ApprovisonnementState extends ConsumerState<Approvisonnement> {
                           child: Row(
                             children: [
                               Expanded(
-                                flex: 3,
+                                flex: 2,
                                 child: Container(
-                                  alignment: Alignment.centerLeft,
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    demande[index].material!.title!,
+                                    style: const TextStyle(
+                                        fontFamily: 'Allerta',
+                                        fontSize: 20,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                              VerticalDivider(
+                                color: Colors.black,
+                                width: 10,
+                              ),
+                              Expanded(
+                                flex: 5,
+                                child: Container(
+                                  alignment: Alignment.center,
                                   child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                        CrossAxisAlignment.center,
                                     children: [
+                                      RichText(
+                                        text: TextSpan(children: [
+                                          const TextSpan(
+                                            text: "Laboratoire: ",
+                                            style: TextStyle(
+                                                fontFamily: 'Allerta',
+                                                fontSize: 12,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          TextSpan(
+                                            text: demande[index]
+                                                .laboratory!
+                                                .laboName!,
+                                            style: const TextStyle(
+                                                fontFamily: 'Allerta',
+                                                fontSize: 12,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.normal),
+                                          )
+                                        ]),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
                                       RichText(
                                         text: TextSpan(children: [
                                           const TextSpan(
@@ -188,23 +270,15 @@ class ApprovisonnementState extends ConsumerState<Approvisonnement> {
                                   ),
                                 ),
                               ),
-                              Expanded(
-                                flex: 5,
-                                child: Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    demande[index].material!.title!,
-                                    style: const TextStyle(
-                                        fontFamily: 'Allerta',
-                                        fontSize: 20,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
+                              VerticalDivider(
+                                color: Colors.black,
+                                width: 10,
                               ),
                               Expanded(
-                                flex: 1,
+                                flex: 2,
                                 child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     const Text('STATUS : '),
                                     const SizedBox(
@@ -256,8 +330,218 @@ class ApprovisonnementState extends ConsumerState<Approvisonnement> {
     );
   }
 
-  Widget verticalView(double height, double width, context) {
-    return AppLayout(content: Container());
+  Widget verticalView(
+      double height, double width, contextt, List<Providings> demande) {
+    return Scaffold(
+      body: Container(
+        height: height,
+        width: width,
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.all(20),
+              height: height,
+              child: ListView.builder(
+                  itemCount: demande.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      elevation: 10,
+                      child: InkWell(
+                        child: Container(
+                          height: 100,
+                          alignment: Alignment.center,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    demande[index].material!.title!,
+                                    style: const TextStyle(
+                                        fontFamily: 'Allerta',
+                                        fontSize: 20,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                              VerticalDivider(
+                                color: Colors.black,
+                                width: 10,
+                              ),
+                              Expanded(
+                                flex: 5,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      RichText(
+                                        text: TextSpan(children: [
+                                          const TextSpan(
+                                            text: "Laboratoire: ",
+                                            style: TextStyle(
+                                                fontFamily: 'Allerta',
+                                                fontSize: 12,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          TextSpan(
+                                            text: demande[index]
+                                                .laboratory!
+                                                .laboName!,
+                                            style: const TextStyle(
+                                                fontFamily: 'Allerta',
+                                                fontSize: 12,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.normal),
+                                          )
+                                        ]),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      RichText(
+                                        text: TextSpan(children: [
+                                          const TextSpan(
+                                            text: "Date de demande: ",
+                                            style: TextStyle(
+                                                fontFamily: 'Allerta',
+                                                fontSize: 12,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          TextSpan(
+                                            text: demande[index]
+                                                .dateProviding
+                                                .toString(),
+                                            style: const TextStyle(
+                                                fontFamily: 'Allerta',
+                                                fontSize: 12,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.normal),
+                                          )
+                                        ]),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      RichText(
+                                        text: TextSpan(children: [
+                                          const TextSpan(
+                                            text: "Date d'acceptation: ",
+                                            style: TextStyle(
+                                                fontFamily: 'Allerta',
+                                                fontSize: 12,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          TextSpan(
+                                            text: demande[index]
+                                                        .dateValidated
+                                                        .toString() ==
+                                                    'null'
+                                                ? 'En attente'
+                                                : demande[index]
+                                                    .dateValidated
+                                                    .toString(),
+                                            style: const TextStyle(
+                                                fontFamily: 'Allerta',
+                                                fontSize: 12,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.normal),
+                                          )
+                                        ]),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      RichText(
+                                        text: TextSpan(children: [
+                                          const TextSpan(
+                                            text: "Quantité demandée: ",
+                                            style: TextStyle(
+                                                fontFamily: 'Allerta',
+                                                fontSize: 12,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          TextSpan(
+                                            text:
+                                                '${demande[index].qte.toString()} ${demande[index].material!.unit.toString()}',
+                                            style: const TextStyle(
+                                                fontFamily: 'Allerta',
+                                                fontSize: 12,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.normal),
+                                          )
+                                        ]),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              VerticalDivider(
+                                color: Colors.black,
+                                width: 10,
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const Text('STATUS : '),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    demande[index].dateValidated == null &&
+                                            demande[index].validated == false
+                                        ? const CircleAvatar(
+                                            maxRadius: 20,
+                                            backgroundColor: Colors.amber,
+                                            child: Icon(
+                                              Icons.watch,
+                                              color: Colors.white,
+                                            ),
+                                          )
+                                        : demande[index].validated == false
+                                            ? const CircleAvatar(
+                                                maxRadius: 20,
+                                                backgroundColor: Colors.red,
+                                                child: Icon(
+                                                  Icons.close,
+                                                  color: Colors.white,
+                                                ),
+                                              )
+                                            : const CircleAvatar(
+                                                maxRadius: 20,
+                                                backgroundColor: Colors.green,
+                                                child: Icon(
+                                                  Icons.done,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        onTap: () {
+                          //dialogSortie(context);
+                        },
+                      ),
+                    );
+                  }),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Future dialogSortie(BuildContext contextt) {

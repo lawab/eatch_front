@@ -36,8 +36,10 @@ class GetDataUserFuture extends ChangeNotifier {
       print(response.body);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        print("les users $data");
         for (int i = 0; i < data.length; i++) {
+          /*print('ppppppppppppppppppppppppppppp');
+          print(data[i]['restaurant']);
+          print('ppppppppppppppppppppppppppppp');*/
           if (data[i]['deletedAt'] == null) {
             listAllUsers.add(User.fromJson(data[i]));
 
@@ -63,6 +65,7 @@ class GetDataUserFuture extends ChangeNotifier {
 class User {
   String? sId;
   Restaurant? restaurant;
+  Laboratory? laboratory;
   String? firstName;
   String? lastName;
   String? email;
@@ -80,6 +83,7 @@ class User {
   User(
       {this.sId,
       this.restaurant,
+      this.laboratory,
       this.firstName,
       this.lastName,
       this.email,
@@ -99,6 +103,18 @@ class User {
     restaurant = json['restaurant'] != null
         ? Restaurant.fromJson(json['restaurant'])
         : null;
+    laboratory = json['laboratory'] != null
+        ? Laboratory.fromJson(json['laboratory'])
+        : null;
+    /*restaurant != null
+        ? restaurant = json['restaurant'] != null
+            ? Restaurant.fromJson(json['restaurant'])
+            : null
+        : laboratory != null
+            ? laboratory = json['laboratory'] != null
+                ? Laboratory.fromJson(json['laboratory'])
+                : null
+            : null;*/
     firstName = json['firstName'];
     lastName = json['lastName'];
     email = json['email'];
@@ -119,6 +135,13 @@ class User {
     data['_id'] = sId;
     if (restaurant != null) {
       data['restaurant'] = restaurant!.toJson();
+    } /*else if (laboratory != null) {
+      data['laboratory'] = laboratory!.toJson();
+    } else {
+      null;
+    }*/
+    if (laboratory != null) {
+      data['laboratory'] = laboratory!.toJson();
     }
     data['firstName'] = firstName;
     data['lastName'] = lastName;
@@ -179,6 +202,81 @@ class Infos {
     data['town'] = town;
     data['address'] = address;
     data['logo'] = logo;
+    return data;
+  }
+}
+
+class Laboratory {
+  String? sId;
+  String? laboName;
+  String? address;
+  String? email;
+  List<Materials>? materials;
+  List<Null>? providers;
+  String? sCreator;
+  Null? deletedAt;
+
+  Laboratory(
+      {this.sId,
+      this.laboName,
+      this.address,
+      this.email,
+      this.materials,
+      this.providers,
+      this.sCreator,
+      this.deletedAt});
+
+  Laboratory.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    laboName = json['labo_name'];
+    address = json['address'];
+    email = json['email'];
+    if (json['materials'] != null) {
+      materials = <Materials>[];
+      json['materials'].forEach((v) {
+        materials!.add(new Materials.fromJson(v));
+      });
+    }
+    /*if (json['providers'] != null) {
+      providers = <Null>[];
+      json['providers'].forEach((v) {
+        providers!.add(new Null.fromJson(v));
+      });
+    }*/
+    sCreator = json['_creator'];
+    deletedAt = json['deletedAt'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_id'] = this.sId;
+    data['labo_name'] = this.laboName;
+    data['address'] = this.address;
+    data['email'] = this.email;
+    if (this.materials != null) {
+      data['materials'] = this.materials!.map((v) => v.toJson()).toList();
+    }
+    /*if (this.providers != null) {
+      data['providers'] = this.providers!.map((v) => v.toJson()).toList();
+    }*/
+    data['_creator'] = this.sCreator;
+    data['deletedAt'] = this.deletedAt;
+    return data;
+  }
+}
+
+class Materials {
+  String? sId;
+
+  Materials({this.sId});
+
+  Materials.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_id'] = this.sId;
     return data;
   }
 }

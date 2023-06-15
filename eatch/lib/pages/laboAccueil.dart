@@ -23,6 +23,18 @@ class LaboAccueil extends ConsumerStatefulWidget {
 }
 
 class LaboAccueilState extends ConsumerState<LaboAccueil> {
+  @override
+  void initState() {
+    rr();
+    // TODO: implement initState
+    super.initState();
+  }
+
+  void rr() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt('index', 30);
+  }
+
   var nomController = TextEditingController();
   var emailController = TextEditingController();
   var adresseController = TextEditingController();
@@ -532,7 +544,7 @@ class LaboAccueilState extends ConsumerState<LaboAccueil> {
     );
     var json = {
       'labo_name': nomRestaurant,
-      'adress': adresseRestaurant,
+      'address': adresseRestaurant,
       'email': emailController,
       '_creator': id,
     };

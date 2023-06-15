@@ -21,6 +21,18 @@ class RestaurantAccueil extends ConsumerStatefulWidget {
 }
 
 class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
+  @override
+  void initState() {
+    rr();
+    // TODO: implement initState
+    super.initState();
+  }
+
+  void rr() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt('index', 40);
+  }
+
   var nomController = TextEditingController();
   var villeController = TextEditingController();
   var adresseController = TextEditingController();

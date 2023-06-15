@@ -26,6 +26,7 @@ Future<http.Response> deconnexionUser(contextt) async {
 
     print(response.statusCode);
     if (response.statusCode == 200) {
+      prefs.setString("isLogin", 'false');
       showTopSnackBar(
         Overlay.of(contextt)!,
         const CustomSnackBar.info(

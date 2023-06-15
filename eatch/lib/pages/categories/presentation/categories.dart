@@ -1144,7 +1144,7 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
     var json = {
       'title': title,
       'restaurant_id': restaurantId,
-      'user_id': id,
+      '_creator': id,
     };
     var body = jsonEncode(json);
 

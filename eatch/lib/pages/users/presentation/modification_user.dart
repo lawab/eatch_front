@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:eatch/servicesAPI/getLabo.dart';
+import 'package:eatch/servicesAPI/getRestaurant.dart';
 import 'package:eatch/servicesAPI/get_role.dart';
 import 'package:eatch/servicesAPI/multipart.dart';
 import 'package:file_picker/file_picker.dart';
@@ -17,6 +19,8 @@ import '../../../utils/size/size.dart';
 
 import 'package:http/http.dart' as http;
 
+enum SingingCharacter { restaurant, laboratoire }
+
 class ModificationUser extends ConsumerStatefulWidget {
   const ModificationUser({
     required this.sId,
@@ -25,6 +29,7 @@ class ModificationUser extends ConsumerStatefulWidget {
     required this.email,
     required this.role,
     required this.avatar,
+    required this.id,
     super.key,
   });
 
@@ -34,6 +39,7 @@ class ModificationUser extends ConsumerStatefulWidget {
   final String email;
   final String role;
   final String avatar;
+  final String id;
 
   @override
   ConsumerState<ModificationUser> createState() => _ModificationUserState();
@@ -41,6 +47,10 @@ class ModificationUser extends ConsumerStatefulWidget {
 
 class _ModificationUserState extends ConsumerState<ModificationUser> {
   // ***** LES VARIABLES ****** //
+  String? restaurant;
+  String? laboratoire;
+  String? restaurantId;
+  String? laboratoireId;
   bool _showContent = false;
   bool isLoading = false;
   bool _selectFile = false;
@@ -62,11 +72,15 @@ class _ModificationUserState extends ConsumerState<ModificationUser> {
   String _email = "";
   String? _role;
   List<String> listOfRole = [
+    "SUPER_ADMIN",
     "COMPTABLE",
     "RH",
     "MANAGER",
+    "LABORANTIN",
   ];
-
+  List<String> laboo = [];
+  List<String> restauu = [];
+  SingingCharacter? _character = SingingCharacter.restaurant;
   final FocusNode _prenomFocusNode = FocusNode();
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _nomUtilisateurFocusNode = FocusNode();
@@ -83,10 +97,47 @@ class _ModificationUserState extends ConsumerState<ModificationUser> {
   final _roleController = TextEditingController();
 
   //**********************************/
-
+  bool rest = false;
+  bool lab = false;
   @override
   Widget build(BuildContext context) {
+    print('*************************************************************p');
     SizeConfig().init(context);
+    final viewModel = ref.watch(getDataRsetaurantFuture);
+    final viewModele = ref.watch(getDataLaboratoriesFuture);
+    _role = widget.role;
+    print(
+        '*************************************************************p ${widget.id}ttttttttt');
+    if (widget.id != '') {
+      if (rest == false) {
+        for (int i = 0; i < viewModel.listRsetaurant.length; i++) {
+          if (widget.id == viewModel.listRsetaurant[i].sId) {
+            restaurant = viewModel.listRsetaurant[i].restaurantName;
+            restaurantId = viewModel.listRsetaurant[i].sId;
+          }
+          restauu.add(viewModel.listRsetaurant[i].restaurantName!);
+          setState(() {
+            rest = true;
+          });
+        }
+      }
+      if (lab == false) {
+        for (int i = 0; i < viewModele.listLabo.length; i++) {
+          print('Labo   $i');
+          if (widget.id == viewModele.listLabo[i].sId) {
+            setState(() {
+              _character = SingingCharacter.laboratoire;
+              laboratoire = viewModele.listLabo[i].laboName;
+              laboratoireId = viewModele.listLabo[i].sId;
+            });
+          }
+          laboo.add(viewModele.listLabo[i].laboName!);
+          setState(() {
+            lab = true;
+          });
+        }
+      }
+    }
 
     return AppLayout(
       content: SingleChildScrollView(
@@ -125,47 +176,220 @@ class _ModificationUserState extends ConsumerState<ModificationUser> {
                       const SizedBox(height: 20),
                       emailForm(),
                       const SizedBox(height: 20),
-                      Row(
-                        children: [
-                          Expanded(flex: 3, child: roleForm()),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(
-                                vertical: 10.0,
-                              ),
-                              height: 50.0,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              child: ElevatedButton.icon(
-                                onPressed: () {
-                                  addRole();
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Palette.yellowColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0),
+                      roleForm(),
+                      const SizedBox(height: 20),
+                      widget.role == 'SUPER_ADMIN'
+                          ? Container()
+                          : Container(
+                              height: 100,
+                              child: Column(children: [
+                                Container(
+                                  height: 50,
+                                  width: 350,
+                                  child: Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: ListTile(
+                                          title: const Text('Restaurant'),
+                                          leading: Radio<SingingCharacter>(
+                                            value: SingingCharacter.restaurant,
+                                            groupValue: _character,
+                                            onChanged:
+                                                (SingingCharacter? value) {
+                                              setState(() {
+                                                _character = value;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: ListTile(
+                                          title: const Text('Laboratoire'),
+                                          leading: Radio<SingingCharacter>(
+                                            value: SingingCharacter.laboratoire,
+                                            groupValue: _character,
+                                            onChanged:
+                                                (SingingCharacter? value) {
+                                              setState(() {
+                                                _character = value;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                icon: const Icon(
-                                  Icons.add,
-                                  color: Palette.primaryBackgroundColor,
-                                ),
-                                label: const Text(
-                                  " AJOUTER UN RÔLE",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Palette.primaryBackgroundColor,
-                                  ),
-                                ),
-                              ),
+                                _character == SingingCharacter.restaurant
+                                    ? Expanded(
+                                        child: DropdownButtonFormField(
+                                          decoration: InputDecoration(
+                                            hoverColor:
+                                                Palette.primaryBackgroundColor,
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                    horizontal: 42,
+                                                    vertical: 20),
+                                            filled: true,
+                                            fillColor:
+                                                Palette.primaryBackgroundColor,
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              borderSide: const BorderSide(
+                                                  color: Palette
+                                                      .secondaryBackgroundColor),
+                                              gapPadding: 10,
+                                            ),
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              borderSide: const BorderSide(
+                                                  color: Palette
+                                                      .secondaryBackgroundColor),
+                                              gapPadding: 10,
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              borderSide: const BorderSide(
+                                                  color: Palette
+                                                      .secondaryBackgroundColor),
+                                              gapPadding: 10,
+                                            ),
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.always,
+                                          ),
+                                          value: restaurant,
+                                          hint: const Text(
+                                            'Restaurant*',
+                                          ),
+                                          isExpanded: true,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              restaurant = value;
+                                            });
+                                          },
+                                          onSaved: (value) {
+                                            setState(() {
+                                              restaurant = value;
+                                              for (int i = 0;
+                                                  i <
+                                                      viewModel.listRsetaurant
+                                                          .length;
+                                                  i++) {
+                                                if (restaurant ==
+                                                    viewModel.listRsetaurant[i]
+                                                        .restaurantName) {
+                                                  restaurantId = viewModel
+                                                      .listRsetaurant[i].sId;
+                                                }
+                                              }
+                                            });
+                                          },
+                                          validator: (String? value) {
+                                            if (value == null) {
+                                              return "Le rôle de l'utilisateur est obligatoire.";
+                                            } else {
+                                              return null;
+                                            }
+                                          },
+                                          items: restauu.map((val) {
+                                            return DropdownMenuItem(
+                                              value: val,
+                                              child: Text(
+                                                val,
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      )
+                                    : Expanded(
+                                        child: DropdownButtonFormField(
+                                          decoration: InputDecoration(
+                                            hoverColor:
+                                                Palette.primaryBackgroundColor,
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                    horizontal: 42,
+                                                    vertical: 20),
+                                            filled: true,
+                                            fillColor:
+                                                Palette.primaryBackgroundColor,
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              borderSide: const BorderSide(
+                                                  color: Palette
+                                                      .secondaryBackgroundColor),
+                                              gapPadding: 10,
+                                            ),
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              borderSide: const BorderSide(
+                                                  color: Palette
+                                                      .secondaryBackgroundColor),
+                                              gapPadding: 10,
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              borderSide: const BorderSide(
+                                                  color: Palette
+                                                      .secondaryBackgroundColor),
+                                              gapPadding: 10,
+                                            ),
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.always,
+                                          ),
+                                          value: laboratoire,
+                                          hint: const Text(
+                                            'Laboratoire*',
+                                          ),
+                                          isExpanded: true,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              laboratoire = value;
+                                              for (int i = 0;
+                                                  i <
+                                                      viewModele
+                                                          .listLabo.length;
+                                                  i++) {
+                                                if (laboratoire ==
+                                                    viewModele
+                                                        .listLabo[i].laboName) {
+                                                  laboratoireId = viewModele
+                                                      .listLabo[i].sId;
+                                                }
+                                              }
+                                            });
+                                          },
+                                          onSaved: (value) {
+                                            setState(() {
+                                              laboratoire = value;
+                                            });
+                                          },
+                                          validator: (String? value) {
+                                            if (value == null) {
+                                              return "Le rôle de l'utilisateur est obligatoire.";
+                                            } else {
+                                              return null;
+                                            }
+                                          },
+                                          items: laboo.map((val) {
+                                            return DropdownMenuItem(
+                                              value: val,
+                                              child: Text(
+                                                val,
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                              ]),
                             ),
-                          ),
-                          const SizedBox(width: 20),
-                        ],
-                      ),
                       const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -286,7 +510,6 @@ class _ModificationUserState extends ConsumerState<ModificationUser> {
   }
 
   DropdownButtonFormField<String> roleForm() {
-    final viewModel = ref.watch(getDataRoleFuture);
     return DropdownButtonFormField(
       decoration: InputDecoration(
         hoverColor: Palette.primaryBackgroundColor,
@@ -311,7 +534,7 @@ class _ModificationUserState extends ConsumerState<ModificationUser> {
         ),
         floatingLabelBehavior: FloatingLabelBehavior.always,
       ),
-      value: widget.role,
+      value: _role,
       hint: const Text(
         'Rôle*',
       ),
@@ -333,11 +556,11 @@ class _ModificationUserState extends ConsumerState<ModificationUser> {
           return null;
         }
       },
-      items: viewModel.listRole.map((val) {
+      items: listOfRole.map((val) {
         return DropdownMenuItem(
-          value: val.value,
+          value: val,
           child: Text(
-            val.value!,
+            val,
           ),
         );
       }).toList(),

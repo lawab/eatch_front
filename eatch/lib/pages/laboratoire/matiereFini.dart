@@ -61,6 +61,7 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
     return size(buildContext).height;
   }
 
+  bool vertical = false;
   bool ajoutFini = false;
   @override
   Widget build(BuildContext context) {
@@ -74,7 +75,8 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
             return horizontalView(height(context), width(context), context,
                 viewModel.listMatiereFini);
           } else {
-            return verticalView(height(context), width(context), context);
+            return verticalView(height(context), width(context), context,
+                viewModel.listMatiereFini);
           }
         },
       ),
@@ -126,6 +128,7 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
                               onPressed: () async {
                                 setState(() {
                                   ajoutFini = true;
+                                  vertical = false;
                                 });
                               },
                               icon: const Icon(Icons.add),
@@ -304,102 +307,253 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
     );
   }
 
-  Widget verticalView(double height, double width, context) {
-    return Scaffold();
+  Widget verticalView(
+      double height, double width, contextt, List<MatiereFini> listFini) {
+    return Scaffold(
+      body: AppLayout(
+        content: Container(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Container(
+                  alignment: Alignment.centerRight,
+                  height: 50,
+                  color: Palette.yellowColor, //Color(0xFFFCEBD1),
+                  child: Row(
+                    children: [
+                      const SizedBox(
+                        width: 50,
+                      ),
+                      const Text('Gestion des matières finies'),
+                      Expanded(child: Container()),
+                      ajoutFini == true
+                          ? ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Palette.primaryColor,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  minimumSize: const Size(180, 50)),
+                              onPressed: () {
+                                setState(() {
+                                  ajoutFini = false;
+                                });
+                              },
+                              icon: const Icon(Icons.backspace),
+                              label: const Text('Retour'),
+                            )
+                          : ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  minimumSize: const Size(180, 50)),
+                              onPressed: () async {
+                                setState(() {
+                                  ajoutFini = true;
+                                  vertical = true;
+                                });
+                              },
+                              icon: const Icon(Icons.add),
+                              label: const Text('Ajouter une matière brute'),
+                            ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                ajoutFini == true
+                    ? Container()
+                    : Container(
+                        alignment: Alignment.centerRight,
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Palette.primaryColor,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              minimumSize: const Size(100, 50)),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(Icons.backspace),
+                          label: const Text('Retour'),
+                        ),
+                      ),
+                const SizedBox(
+                  height: 10,
+                ),
+                ajoutFini == true
+                    ? Container(
+                        height: height - 222,
+                        child: creation(),
+                      )
+                    : Container(
+                        height: height - 222,
+                        child: GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithMaxCrossAxisExtent(
+                                    maxCrossAxisExtent: 300,
+                                    childAspectRatio: 3 / 2,
+                                    crossAxisSpacing: 20,
+                                    mainAxisSpacing: 50,
+                                    mainAxisExtent: 380),
+                            itemCount: listFini.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                elevation: 10,
+                                child: Container(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        height: 180,
+                                        width: 300,
+                                        decoration: const BoxDecoration(
+                                          image: DecorationImage(
+                                            image: AssetImage('emballage.jpeg'),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 15,
+                                      ),
+                                      Text(
+                                        'Nom : ${listFini[index].title}',
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        'Quantité : ${listFini[index].quantity} ${listFini[index].unit}',
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        'Dernière date : ${listFini[index].updatedAt}',
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        'Date de création : ${listFini[index].createdAt}',
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                      Container(
+                                        alignment: Alignment.center,
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 2,
+                                              child: IconButton(
+                                                alignment: Alignment.center,
+                                                splashColor:
+                                                    Palette.greenColors,
+                                                onPressed: () {},
+                                                icon: const Icon(
+                                                  Icons.edit,
+                                                  size: 30,
+                                                  color: Palette.greenColors,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            Expanded(
+                                                flex: 5,
+                                                child: Container(
+                                                  height: 50,
+                                                  width: 50,
+                                                  alignment: Alignment.center,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                          color: Colors.black,
+                                                          shape:
+                                                              BoxShape.circle),
+                                                  child: IconButton(
+                                                    splashColor:
+                                                        Palette.greenColors,
+                                                    onPressed: () {
+                                                      dialogAjout(
+                                                          contextt,
+                                                          listFini[index].sId!,
+                                                          'Steak',
+                                                          listFini[index]
+                                                              .title!,
+                                                          listFini[index]
+                                                              .quantity
+                                                              .toString());
+                                                    },
+                                                    iconSize: 30,
+                                                    icon: const Icon(
+                                                      Icons.add_box,
+                                                      color:
+                                                          Palette.greenColors,
+                                                    ),
+                                                  ),
+                                                )),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            Expanded(
+                                              flex: 2,
+                                              child: IconButton(
+                                                alignment: Alignment.center,
+                                                splashColor: Colors.red,
+                                                onPressed: () {
+                                                  dialogDelete(
+                                                      context,
+                                                      listFini[index].sId!,
+                                                      listFini[index].title!);
+                                                },
+                                                icon: const Icon(
+                                                  Icons.delete,
+                                                  size: 30,
+                                                  color: Colors.red,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }),
+                      ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget creation() {
-    return Column(
-      children: [
-        SizedBox(
-          width: MediaQuery.of(context).size.width / 2,
-          child: TextFormField(
-            controller: titleController,
-            keyboardType: TextInputType.emailAddress,
-            onChanged: (value) {},
-            decoration: InputDecoration(
-                hoverColor: Colors.white,
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
-                filled: true,
-                fillColor: Colors.white,
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide: const BorderSide(color: Palette.yellowColor),
-                  gapPadding: 10,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide: const BorderSide(color: Palette.yellowColor),
-                  gapPadding: 10,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide: const BorderSide(color: Palette.yellowColor),
-                  gapPadding: 10,
-                ),
-                labelText: "Titre",
-                hintText: "Inscrire le titre",
-                // If  you are using latest version of flutter then lable text and hint text shown like this
-                // if you r using flutter less then 1.20.* then maybe this is not working properly
-                floatingLabelBehavior: FloatingLabelBehavior.always,
-                suffixIcon: const Icon(Icons.title)),
-          ),
-        ),
-        const SizedBox(
-          height: 50,
-        ),
-        Container(
-          width: MediaQuery.of(context).size.width / 2,
-          height: 50,
-          child: Row(children: [
-            Expanded(
-              flex: 7,
-              child: SizedBox(
-                child: TextFormField(
-                  controller: quantiteController,
-                  keyboardType: TextInputType.emailAddress,
-                  onChanged: (value) {},
-                  decoration: InputDecoration(
-                      hoverColor: Colors.white,
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 42, vertical: 20),
-                      filled: true,
-                      fillColor: Colors.white,
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide:
-                            const BorderSide(color: Palette.yellowColor),
-                        gapPadding: 10,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide:
-                            const BorderSide(color: Palette.yellowColor),
-                        gapPadding: 10,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide:
-                            const BorderSide(color: Palette.yellowColor),
-                        gapPadding: 10,
-                      ),
-                      labelText: "Mesure",
-                      hintText: "Inscrire la mesure",
-                      // If  you are using latest version of flutter then lable text and hint text shown like this
-                      // if you r using flutter less then 1.20.* then maybe this is not working properly
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      suffixIcon: const Icon(Icons.accessibility)),
-                ),
-              ),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              flex: 2,
-              child: DropdownButtonFormField(
-                decoration: InputDecoration(
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          SizedBox(
+            width: vertical == false
+                ? MediaQuery.of(context).size.width / 2
+                : MediaQuery.of(context).size.width - 100,
+            child: TextFormField(
+              controller: titleController,
+              keyboardType: TextInputType.emailAddress,
+              onChanged: (value) {},
+              decoration: InputDecoration(
                   hoverColor: Colors.white,
                   contentPadding:
                       const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
@@ -420,220 +574,305 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
                     borderSide: const BorderSide(color: Palette.yellowColor),
                     gapPadding: 10,
                   ),
+                  labelText: "Titre",
+                  hintText: "Inscrire le titre",
+                  // If  you are using latest version of flutter then lable text and hint text shown like this
+                  // if you r using flutter less then 1.20.* then maybe this is not working properly
                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                ),
-                value: unite,
-                hint: const Text(
-                  'Unité*',
-                ),
-                isExpanded: true,
-                onChanged: (value) {
-                  setState(() {
-                    unite = value;
-                  });
-                },
-                onSaved: (value) {
-                  setState(() {
-                    unite = value;
-                  });
-                },
-                validator: (String? value) {
-                  if (value == null) {
-                    return "La quantité est obligatoire.";
-                  } else {
-                    return null;
-                  }
-                },
-                items: listOfQuantite.map((String val) {
-                  return DropdownMenuItem(
-                    value: val,
-                    child: Text(
-                      val,
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-          ]),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Container(
-          width: 300,
-          child: TextFormField(
-            controller: dateinput,
-            keyboardType: TextInputType.emailAddress,
-            onChanged: (value) {},
-            readOnly: true,
-            onTap: () async {
-              DateTime? pickedDate = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(
-                      2000), //DateTime.now() - not to allow to choose before today.
-                  lastDate: DateTime(2101));
-
-              if (pickedDate != null) {
-                print(
-                    pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
-                String formattedDate =
-                    DateFormat('yyyy-MM-dd').format(pickedDate);
-
-                print(
-                    formattedDate); //formatted date output using intl package =>  2021-03-16
-                //you can implement different kind of Date Format here according to your requirement
-
-                setState(() {
-                  dateinput.text =
-                      formattedDate; //set output date to TextField value.
-                });
-              } else {
-                print("Date non selectionnée");
-              }
-            },
-            decoration: InputDecoration(
-              hoverColor: Colors.white,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
-              filled: true,
-              fillColor: Colors.white,
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-                borderSide: const BorderSide(color: Palette.yellowColor),
-                gapPadding: 10,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-                borderSide: const BorderSide(color: Palette.yellowColor),
-                gapPadding: 10,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-                borderSide: const BorderSide(color: Palette.yellowColor),
-                gapPadding: 10,
-              ),
-              labelText: "Date",
-              hintText: "Entrer la date de péremption",
-
-              // If  you are using latest version of flutter then lable text and hint text shown like this
-              // if you r using flutter less then 1.20.* then maybe this is not working properly
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              suffixIcon: const Icon(Icons.date_range),
+                  suffixIcon: const Icon(Icons.title)),
             ),
           ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        Container(
-          width: MediaQuery.of(context).size.width / 2,
-          padding: const EdgeInsets.only(right: 70),
-          color: Palette.secondaryBackgroundColor,
-          alignment: Alignment.centerRight,
-          child: GestureDetector(
-            onTap: () async {
-              result1 = await FilePicker.platform
-                  .pickFiles(type: FileType.custom, allowedExtensions: [
-                "png",
-                "jpg",
-                "jpeg",
-              ]);
-              if (result1 != null) {
-                setState(() {
-                  file1 = result1!.files.single;
-
-                  Uint8List fileBytes =
-                      result1!.files.single.bytes as Uint8List;
-
-                  _selectedFile1 = fileBytes;
-
-                  filee1 = true;
-
-                  selectedImageInBytes1 = result1!.files.first.bytes;
-                  _selectFile1 = true;
-                });
-              }
-            },
-            child: Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  width: 4,
-                  color: Palette.greenColors,
-                ),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: _selectFile1 == false
-                    ? const Icon(
-                        Icons.camera_alt_outlined,
-                        color: Palette.greenColors,
-                        size: 40,
-                      )
-                    : Image.memory(
-                        selectedImageInBytes1!,
-                        fit: BoxFit.fill,
-                      ),
-              ),
-            ),
+          SizedBox(
+            height: vertical == false ? 50 : 20,
           ),
-        ),
-        const SizedBox(
-          height: 100,
-        ),
-        Container(
-          alignment: Alignment.center,
-          child: SizedBox(
-            width: 350,
+          Container(
+            width: vertical == false
+                ? MediaQuery.of(context).size.width / 2
+                : MediaQuery.of(context).size.width - 100,
+            height: 50,
             child: Row(children: [
+              Expanded(
+                flex: 7,
+                child: SizedBox(
+                  child: TextFormField(
+                    controller: quantiteController,
+                    keyboardType: TextInputType.emailAddress,
+                    onChanged: (value) {},
+                    decoration: InputDecoration(
+                        hoverColor: Colors.white,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 42, vertical: 20),
+                        filled: true,
+                        fillColor: Colors.white,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide:
+                              const BorderSide(color: Palette.yellowColor),
+                          gapPadding: 10,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide:
+                              const BorderSide(color: Palette.yellowColor),
+                          gapPadding: 10,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide:
+                              const BorderSide(color: Palette.yellowColor),
+                          gapPadding: 10,
+                        ),
+                        labelText: "Mesure",
+                        hintText: "Inscrire la mesure",
+                        // If  you are using latest version of flutter then lable text and hint text shown like this
+                        // if you r using flutter less then 1.20.* then maybe this is not working properly
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        suffixIcon: const Icon(Icons.accessibility)),
+                  ),
+                ),
+              ),
               const SizedBox(
                 width: 10,
               ),
-              ElevatedButton(
-                onPressed: (() {
-                  creationMatiereSemiFini(
-                      context,
-                      titleController.text,
-                      quantiteController.text,
-                      dateinput.text,
-                      _selectedFile1,
-                      result1,
-                      unite!);
-                  dateinput.clear();
-                }),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Palette.primaryColor,
-                  minimumSize: const Size(150, 50),
-                  maximumSize: const Size(200, 70),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-                child: const Text('Enregistrer'),
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              ElevatedButton(
-                onPressed: (() {}),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Palette.secondaryBackgroundColor,
-                  minimumSize: const Size(150, 50),
-                  maximumSize: const Size(200, 70),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-                child: const Text(
-                  'Annuler',
-                  style: TextStyle(color: Colors.grey),
+              Expanded(
+                flex: 2,
+                child: DropdownButtonFormField(
+                  decoration: InputDecoration(
+                    hoverColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 42, vertical: 20),
+                    filled: true,
+                    fillColor: Colors.white,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(color: Palette.yellowColor),
+                      gapPadding: 10,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(color: Palette.yellowColor),
+                      gapPadding: 10,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(color: Palette.yellowColor),
+                      gapPadding: 10,
+                    ),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                  value: unite,
+                  hint: const Text(
+                    'Unité*',
+                  ),
+                  isExpanded: true,
+                  onChanged: (value) {
+                    setState(() {
+                      unite = value;
+                    });
+                  },
+                  onSaved: (value) {
+                    setState(() {
+                      unite = value;
+                    });
+                  },
+                  validator: (String? value) {
+                    if (value == null) {
+                      return "La quantité est obligatoire.";
+                    } else {
+                      return null;
+                    }
+                  },
+                  items: listOfQuantite.map((String val) {
+                    return DropdownMenuItem(
+                      value: val,
+                      child: Text(
+                        val,
+                      ),
+                    );
+                  }).toList(),
                 ),
               ),
             ]),
           ),
-        ),
-      ],
+          SizedBox(
+            height: vertical == false ? 50 : 20,
+          ),
+          Container(
+            width: 300,
+            child: TextFormField(
+              controller: dateinput,
+              keyboardType: TextInputType.emailAddress,
+              onChanged: (value) {},
+              readOnly: true,
+              onTap: () async {
+                DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(
+                        2000), //DateTime.now() - not to allow to choose before today.
+                    lastDate: DateTime(2101));
+
+                if (pickedDate != null) {
+                  print(
+                      pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                  String formattedDate =
+                      DateFormat('yyyy-MM-dd').format(pickedDate);
+
+                  print(
+                      formattedDate); //formatted date output using intl package =>  2021-03-16
+                  //you can implement different kind of Date Format here according to your requirement
+
+                  setState(() {
+                    dateinput.text =
+                        formattedDate; //set output date to TextField value.
+                  });
+                } else {
+                  print("Date non selectionnée");
+                }
+              },
+              decoration: InputDecoration(
+                hoverColor: Colors.white,
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
+                filled: true,
+                fillColor: Colors.white,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: const BorderSide(color: Palette.yellowColor),
+                  gapPadding: 10,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: const BorderSide(color: Palette.yellowColor),
+                  gapPadding: 10,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide: const BorderSide(color: Palette.yellowColor),
+                  gapPadding: 10,
+                ),
+                labelText: "Date",
+                hintText: "Entrer la date de péremption",
+
+                // If  you are using latest version of flutter then lable text and hint text shown like this
+                // if you r using flutter less then 1.20.* then maybe this is not working properly
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                suffixIcon: const Icon(Icons.date_range),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width / 2,
+            padding: const EdgeInsets.only(right: 70),
+            color: Palette.secondaryBackgroundColor,
+            alignment: Alignment.centerRight,
+            child: GestureDetector(
+              onTap: () async {
+                result1 = await FilePicker.platform
+                    .pickFiles(type: FileType.custom, allowedExtensions: [
+                  "png",
+                  "jpg",
+                  "jpeg",
+                ]);
+                if (result1 != null) {
+                  setState(() {
+                    file1 = result1!.files.single;
+
+                    Uint8List fileBytes =
+                        result1!.files.single.bytes as Uint8List;
+
+                    _selectedFile1 = fileBytes;
+
+                    filee1 = true;
+
+                    selectedImageInBytes1 = result1!.files.first.bytes;
+                    _selectFile1 = true;
+                  });
+                }
+              },
+              child: Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    width: 4,
+                    color: Palette.greenColors,
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: _selectFile1 == false
+                      ? const Icon(
+                          Icons.camera_alt_outlined,
+                          color: Palette.greenColors,
+                          size: 40,
+                        )
+                      : Image.memory(
+                          selectedImageInBytes1!,
+                          fit: BoxFit.fill,
+                        ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: vertical == false ? 100 : 50,
+          ),
+          Container(
+            alignment: Alignment.center,
+            child: SizedBox(
+              width: 350,
+              child: Row(children: [
+                const SizedBox(
+                  width: 10,
+                ),
+                ElevatedButton(
+                  onPressed: (() {
+                    creationMatiereSemiFini(
+                        context,
+                        titleController.text,
+                        quantiteController.text,
+                        dateinput.text,
+                        _selectedFile1,
+                        result1,
+                        unite!);
+                    dateinput.clear();
+                  }),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Palette.primaryColor,
+                    minimumSize: const Size(150, 50),
+                    maximumSize: const Size(200, 70),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                  child: const Text('Enregistrer'),
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                ElevatedButton(
+                  onPressed: (() {}),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Palette.secondaryBackgroundColor,
+                    minimumSize: const Size(150, 50),
+                    maximumSize: const Size(200, 70),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                  child: const Text(
+                    'Annuler',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ),
+              ]),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

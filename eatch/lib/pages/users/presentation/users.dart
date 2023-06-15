@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
+import 'dart:js_interop';
 
 import 'package:eatch/servicesAPI/getLabo.dart';
 import 'package:eatch/servicesAPI/getRestaurant.dart' as g;
@@ -105,6 +106,8 @@ class _UsersState extends ConsumerState<Users> {
 /* LE FICHIER IMAGE TELECHARGER DEPUIS LE PC A ENVOYER SUR INTERNET */
   String? restaurant;
   String? laboratoire;
+  String? restaurantId;
+  String? laboratoireId;
   FilePickerResult? result;
   bool rest = false;
   bool lab = false;
@@ -284,32 +287,40 @@ class _UsersState extends ConsumerState<Users> {
                             const SizedBox(height: 10),
                             Container(
                               height: 100,
-                              child: Row(children: [
-                                Expanded(
-                                  child: Column(
+                              child: Column(children: [
+                                Container(
+                                  height: 50,
+                                  width: 350,
+                                  child: Row(
                                     children: <Widget>[
-                                      ListTile(
-                                        title: const Text('Restaurant'),
-                                        leading: Radio<SingingCharacter>(
-                                          value: SingingCharacter.restaurant,
-                                          groupValue: _character,
-                                          onChanged: (SingingCharacter? value) {
-                                            setState(() {
-                                              _character = value;
-                                            });
-                                          },
+                                      Expanded(
+                                        child: ListTile(
+                                          title: const Text('Restaurant'),
+                                          leading: Radio<SingingCharacter>(
+                                            value: SingingCharacter.restaurant,
+                                            groupValue: _character,
+                                            onChanged:
+                                                (SingingCharacter? value) {
+                                              setState(() {
+                                                _character = value;
+                                              });
+                                            },
+                                          ),
                                         ),
                                       ),
-                                      ListTile(
-                                        title: const Text('Laboratoire'),
-                                        leading: Radio<SingingCharacter>(
-                                          value: SingingCharacter.laboratoire,
-                                          groupValue: _character,
-                                          onChanged: (SingingCharacter? value) {
-                                            setState(() {
-                                              _character = value;
-                                            });
-                                          },
+                                      Expanded(
+                                        child: ListTile(
+                                          title: const Text('Laboratoire'),
+                                          leading: Radio<SingingCharacter>(
+                                            value: SingingCharacter.laboratoire,
+                                            groupValue: _character,
+                                            onChanged:
+                                                (SingingCharacter? value) {
+                                              setState(() {
+                                                _character = value;
+                                              });
+                                            },
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -368,6 +379,14 @@ class _UsersState extends ConsumerState<Users> {
                                           onSaved: (value) {
                                             setState(() {
                                               restaurant = value;
+                                              for (int i = 0;
+                                                  i < restau.length;
+                                                  i++) {
+                                                if (restaurant ==
+                                                    restau[i].restaurantName) {
+                                                  restaurantId = restau[i].sId;
+                                                }
+                                              }
                                             });
                                           },
                                           validator: (String? value) {
@@ -434,6 +453,14 @@ class _UsersState extends ConsumerState<Users> {
                                           onChanged: (value) {
                                             setState(() {
                                               laboratoire = value;
+                                              for (int i = 0;
+                                                  i < labo.length;
+                                                  i++) {
+                                                if (laboratoire ==
+                                                    labo[i].laboName) {
+                                                  laboratoireId = labo[i].sId;
+                                                }
+                                              }
                                             });
                                           },
                                           onSaved: (value) {
@@ -542,11 +569,10 @@ class _UsersState extends ConsumerState<Users> {
                                           _email,
                                           _role,
                                           _password,
+                                          restaurantId,
+                                          laboratoireId,
+                                          _character!,
                                         );
-
-                                        setState(() {
-                                          _showContent = !_showContent;
-                                        });
                                       } else {
                                         print("Bad");
                                       }
@@ -644,7 +670,6 @@ class _UsersState extends ConsumerState<Users> {
   }
 
   DropdownButtonFormField<String> roleForm() {
-    final viewModel = ref.watch(getDataRoleFuture);
     return DropdownButtonFormField(
       decoration: InputDecoration(
         hoverColor: Palette.primaryBackgroundColor,
@@ -977,6 +1002,9 @@ class _UsersState extends ConsumerState<Users> {
     email,
     role,
     password,
+    retaurantId,
+    laboId,
+    SingingCharacter verif,
   ) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var id = prefs.getString('IdUser').toString();
@@ -995,16 +1023,32 @@ class _UsersState extends ConsumerState<Users> {
         print('progress: $progress ($bytes/$total)');
       },
     );
-    var json = {
-      "firstName": firstName,
-      "lastName": lastName,
-      "email": email,
-      "restaurant": restaurantid!.trim(),
-      "role": role,
-      "password": password,
-      "_creator": id,
-    };
-    var body = jsonEncode(json);
+    Map<String, dynamic>? jsonn;
+    if (verif == SingingCharacter.laboratoire) {
+      print('LLLLLLLLLLLLLLLLLLLLLLAAAAAAAAAAAAAAAAAAAAAAAAABBBBBBBBBBBBB');
+      jsonn = {
+        "firstName": firstName,
+        "lastName": lastName,
+        "email": email,
+        "laboratory": laboId,
+        "role": role,
+        "password": password,
+        "_creator": id,
+      };
+    } else {
+      print('RRRRRRRRRRRRRRRRRRRRRRRRREEEEEEEEEEEEEEEEEEESSSSSSSSSSSSSSSSS');
+      jsonn = {
+        "firstName": firstName,
+        "lastName": lastName,
+        "email": email,
+        "restaurant": retaurantId,
+        "role": role,
+        "password": password,
+        "_creator": id,
+      };
+    }
+
+    var body = jsonEncode(jsonn);
 
     request.headers.addAll({
       "body": body,
@@ -1028,16 +1072,24 @@ class _UsersState extends ConsumerState<Users> {
           print(value);
         });
         setState(() {
-          ref.refresh(getDataUserFuture);
+          _showContent = !_showContent;
         });
-
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Utilisateur crée"),
-        ));
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.success(
+            backgroundColor: Colors.green,
+            message: "Utilisateur créé",
+          ),
+        );
+        ref.refresh(getDataUserFuture);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Erreur de serveur"),
-        ));
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.error(
+            backgroundColor: Colors.red,
+            message: "Echec de création d'utilisateur ",
+          ),
+        );
         print("Error Create Programme  !!!");
       }
     } catch (e) {
