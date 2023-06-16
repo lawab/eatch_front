@@ -157,7 +157,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                                   Radius.circular(10.0),
                                                 ),
                                                 child: Image.network(
-                                                  "http://192.168.11.110:5005${viewModel.listPromotion[index].image}",
+                                                  "http://192.168.1.105:5005${viewModel.listPromotion[index].image}",
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -523,7 +523,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                                   Radius.circular(10.0),
                                                 ),
                                                 child: Image.network(
-                                                  "http://192.168.11.110:5005${viewModel.listPromotion[index].image}",
+                                                  "http://192.168.1.105:5005${viewModel.listPromotion[index].image}",
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -660,498 +660,565 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
   }
 
   Widget verticalView(double height, double width, context) {
+    final viewModel = ref.watch(getDataPromotionFuture);
     return AppLayout(
-      content: Column(
-        children: [
-          ajout == false
-              ? Container(
-                  alignment: Alignment.centerRight,
-                  height: 80,
-                  color: Palette.yellowColor,
-                  child: Row(
-                    children: [
-                      const SizedBox(
-                        width: 50,
-                      ),
-                      const Text('Promotions'),
-                      Expanded(child: Container()),
-                      ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Palette.primaryColor,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            minimumSize: const Size(180, 50)),
-                        onPressed: () {
-                          setState(() {
-                            ajout = true;
-                          });
-                        },
-                        icon: const Icon(Icons.add),
-                        label: const Text('Ajouter un type de matière'),
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                    ],
-                  ),
-                )
-              : Container(
-                  height: 300,
-                  color: Palette.secondaryBackgroundColor,
-                  child: SingleChildScrollView(
+      content: SingleChildScrollView(
+        child: Column(
+          children: [
+            ajout == false
+                ? Container(
+                    height: height - 65,
                     child: Column(
                       children: [
                         Container(
                           alignment: Alignment.centerRight,
-                          height: 50,
-                          color: const Color(0xFFFCEBD1),
-                          child: const Row(
+                          height: 80,
+                          color: Palette.yellowColor,
+                          child: Row(
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 width: 50,
                               ),
-                              Text('Création de Type de matière première'),
-                              SizedBox(
+                              const Text('Promotions'),
+                              Expanded(child: Container()),
+                              ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Palette.primaryColor,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    minimumSize: const Size(180, 50)),
+                                onPressed: () {
+                                  setState(() {
+                                    ajout = true;
+                                  });
+                                },
+                                icon: const Icon(Icons.add),
+                                label: const Text('Ajouter une promotion'),
+                              ),
+                              const SizedBox(
                                 width: 20,
                               ),
                             ],
                           ),
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width - 50,
-                          child: TextFormField(
-                            controller: nomController,
-                            keyboardType: TextInputType.emailAddress,
-                            onChanged: (value) {},
-                            decoration: InputDecoration(
-                                hoverColor: Palette.primaryBackgroundColor,
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 42, vertical: 20),
-                                filled: true,
-                                fillColor: Palette.primaryBackgroundColor,
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  borderSide: const BorderSide(
-                                      color: Palette.secondaryBackgroundColor),
-                                  gapPadding: 10,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  borderSide: const BorderSide(
-                                      color: Palette.secondaryBackgroundColor),
-                                  gapPadding: 10,
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  borderSide: const BorderSide(
-                                      color: Palette.secondaryBackgroundColor),
-                                  gapPadding: 10,
-                                ),
-                                labelText: "Nom du type",
-                                hintText: "Entrer le nom du type",
-                                // If  you are using latest version of flutter then lable text and hint text shown like this
-                                // if you r using flutter less then 1.20.* then maybe this is not working properly
-                                floatingLabelBehavior:
-                                    FloatingLabelBehavior.always,
-                                suffixIcon: const Icon(Icons.food_bank)),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width - 50,
-                          child: DropdownButtonFormField(
-                            decoration: InputDecoration(
-                              hoverColor: Palette.primaryBackgroundColor,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 42, vertical: 20),
-                              filled: true,
-                              fillColor: Palette.primaryBackgroundColor,
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: const BorderSide(
-                                    color: Palette.secondaryBackgroundColor),
-                                gapPadding: 10,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: const BorderSide(
-                                    color: Palette.secondaryBackgroundColor),
-                                gapPadding: 10,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: const BorderSide(
-                                    color: Palette.secondaryBackgroundColor),
-                                gapPadding: 10,
-                              ),
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.always,
-                            ),
-                            //value: produit,
-                            hint: const Text('Veuillez choisir le menu'),
-                            validator: (value) {
-                              if (value == null) {
-                                return "Le choix du menu est obligatoire.";
-                              } else {
-                                return null;
-                              }
-                            },
-                            isExpanded: true,
-                            onChanged: (value) {
-                              //for (int i = 0; i < menus.length; i++)
-                              setState(() {
-                                //listDesMenus[i].text = value.toString();
-                              });
-                            },
-                            onSaved: (value) {
-                              setState(() {
-                                //for (int i = 0; i < menus.length; i++)
-                                ///listDesMenus[i].text = value.toString();
-                              });
-                            },
-                            items: listDesMenus.map((val) {
-                              return DropdownMenuItem(
-                                value: val,
-                                child: Text(
-                                  val,
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                          //const Text('MENU'),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width - 50,
-                          child: DropdownButtonFormField(
-                            decoration: InputDecoration(
-                              hoverColor: Palette.primaryBackgroundColor,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 42, vertical: 20),
-                              filled: true,
-                              fillColor: Palette.primaryBackgroundColor,
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: const BorderSide(
-                                    color: Palette.secondaryBackgroundColor),
-                                gapPadding: 10,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: const BorderSide(
-                                    color: Palette.secondaryBackgroundColor),
-                                gapPadding: 10,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: const BorderSide(
-                                    color: Palette.secondaryBackgroundColor),
-                                gapPadding: 10,
-                              ),
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.always,
-                            ),
-                            //value: produit,
-                            hint: const Text('Veuillez choisir le produit'),
-                            validator: (value) {
-                              if (value == null) {
-                                return "Le choix du produit est obligatoire.";
-                              } else {
-                                return null;
-                              }
-                            },
-                            isExpanded: true,
-                            onChanged: (value) {
-                              //for (int j = 0; j < listDesProduits.length; j++)
-                              // setState(() {
-                              //   listDesProduits[j].text = value.toString();
-                              // });
-                            },
-                            onSaved: (value) {
-                              // setState(() {
-                              //   for (int j = 0; j < produits.length; j++)
-                              //     listDesProduits[j].text = value.toString();
-                              // });
-                            },
-                            items: listDesProduits.map((val) {
-                              return DropdownMenuItem(
-                                value: val,
-                                child: Text(
-                                  val,
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                          // child: const Text('PRODUITS'),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width - 50,
-                          child: const Text('MATIERE PREMIERE'),
-                        ),
-                        const SizedBox(
-                          height: 50,
-                        ),
                         Container(
-                          alignment: Alignment.centerRight,
-                          child: SizedBox(
-                            width: 350,
-                            child: Row(children: [
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              ElevatedButton(
-                                onPressed: (() {
-                                  setState(() {});
-                                }),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Palette.primaryColor,
-                                  minimumSize: const Size(150, 50),
-                                  maximumSize: const Size(200, 70),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                ),
-                                child: const Text('Enregistrer'),
-                              ),
-                              const SizedBox(
-                                width: 20,
-                              ),
-                              ElevatedButton(
-                                onPressed: (() {
-                                  setState(() {
-                                    ajout = false;
-                                  });
-                                }),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      Palette.secondaryBackgroundColor,
-                                  minimumSize: const Size(150, 50),
-                                  maximumSize: const Size(200, 70),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                ),
-                                child: const Text(
-                                  'Annuler',
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                              ),
-                            ]),
+                          height: ajout == false ? height - 147 : height - 371,
+                          width: width,
+                          padding: const EdgeInsets.all(10),
+                          child: GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithMaxCrossAxisExtent(
+                                    maxCrossAxisExtent: 400,
+                                    childAspectRatio: 3 / 2,
+                                    crossAxisSpacing: 20,
+                                    mainAxisSpacing: 50,
+                                    mainAxisExtent: 350),
+                            itemCount: viewModel.listPromotion.length,
+                            itemBuilder: ((context, index) {
+                              return index % 2 == 0
+                                  ? Card(
+                                      elevation: 10,
+                                      child: Container(
+                                        child: Column(
+                                          children: [
+                                            Expanded(
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                  Radius.circular(10.0),
+                                                ),
+                                                child: Image.network(
+                                                  "http://192.168.1.105:5005${viewModel.listPromotion[index].image}",
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Container(
+                                                color: Colors.white,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    const SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Container(
+                                                      child: Row(
+                                                        children: [
+                                                          Expanded(
+                                                            child: Text(viewModel
+                                                                .listPromotion[
+                                                                    index]
+                                                                .promotionName!),
+                                                          ),
+                                                          const Expanded(
+                                                            child: Text(
+                                                              '100 DH',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                          Expanded(
+                                                            child: SizedBox(
+                                                              height: 15,
+                                                              width: 550 / 2,
+                                                              child: ListView
+                                                                  .builder(
+                                                                scrollDirection:
+                                                                    Axis.horizontal,
+                                                                itemCount: 3,
+                                                                itemBuilder:
+                                                                    ((context,
+                                                                        index) {
+                                                                  return const Icon(
+                                                                    Icons.star,
+                                                                    color: Color
+                                                                        .fromARGB(
+                                                                            255,
+                                                                            250,
+                                                                            230,
+                                                                            50),
+                                                                    size: 12,
+                                                                  );
+                                                                }),
+                                                              ),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 15,
+                                                    ),
+                                                    Container(
+                                                      child: Row(
+                                                        children: [
+                                                          Container(
+                                                            child: const Text(
+                                                                'Nombre de Commandes :  '),
+                                                          ),
+                                                          const Expanded(
+                                                            child: Text('158'),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Text(
+                                                      viewModel
+                                                          .listPromotion[index]
+                                                          .description!,
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    if (viewModel
+                                                            .listPromotion[
+                                                                index]
+                                                            .menu !=
+                                                        null)
+                                                      Text(
+                                                        viewModel
+                                                            .listPromotion[
+                                                                index]
+                                                            .menu!
+                                                            .menuTitle!,
+                                                        textAlign:
+                                                            TextAlign.start,
+                                                      ),
+                                                    const SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    if (viewModel
+                                                            .listPromotion[
+                                                                index]
+                                                            .product !=
+                                                        null)
+                                                      Text(
+                                                        viewModel
+                                                            .listPromotion[
+                                                                index]
+                                                            .product!
+                                                            .productName!,
+                                                        textAlign:
+                                                            TextAlign.start,
+                                                      )
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ModificationPromotion(
+                                                            description: viewModel
+                                                                .listPromotion[
+                                                                    index]
+                                                                .description!,
+                                                            imageUrl: viewModel
+                                                                .listPromotion[
+                                                                    index]
+                                                                .image!,
+                                                            menus: viewModel
+                                                                    .listPromotion[
+                                                                        index]
+                                                                    .menu
+                                                                    .isNull
+                                                                ? ""
+                                                                : viewModel
+                                                                    .listPromotion[
+                                                                        index]
+                                                                    .menu!
+                                                                    .sId!,
+                                                            products: viewModel
+                                                                    .listPromotion[
+                                                                        index]
+                                                                    .product
+                                                                    .isNull
+                                                                ? ""
+                                                                : viewModel
+                                                                    .listPromotion[
+                                                                        index]
+                                                                    .product!
+                                                                    .sId!,
+                                                            sId: viewModel
+                                                                .listPromotion[
+                                                                    index]
+                                                                .sId!,
+                                                            title: viewModel
+                                                                .listPromotion[
+                                                                    index]
+                                                                .promotionName!,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: Container(
+                                                      height: 30,
+                                                      decoration: BoxDecoration(
+                                                        color: Palette
+                                                            .secondaryColor,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
+                                                      ),
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: const Text(
+                                                          "Modifier"),
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 0.5),
+                                                Expanded(
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      dialogDelete(
+                                                          viewModel
+                                                              .listPromotion[
+                                                                  index]
+                                                              .promotionName!,
+                                                          viewModel
+                                                              .listPromotion[
+                                                                  index]
+                                                              .sId!);
+                                                    },
+                                                    child: Container(
+                                                      height: 30,
+                                                      decoration: BoxDecoration(
+                                                        color: Palette
+                                                            .deleteColors,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
+                                                      ),
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: const Text(
+                                                          "Supprimer"),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  : Card(
+                                      elevation: 10,
+                                      child: Container(
+                                        child: Column(
+                                          children: [
+                                            Expanded(
+                                              child: Container(
+                                                color: Colors.white,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    const SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Container(
+                                                      child: Row(
+                                                        children: [
+                                                          Expanded(
+                                                            child: Text(viewModel
+                                                                .listPromotion[
+                                                                    index]
+                                                                .promotionName!),
+                                                          ),
+                                                          const Expanded(
+                                                            child: Text(
+                                                              '100 DH',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                          Expanded(
+                                                            child: SizedBox(
+                                                              height: 15,
+                                                              width: 550 / 2,
+                                                              child: ListView
+                                                                  .builder(
+                                                                scrollDirection:
+                                                                    Axis.horizontal,
+                                                                itemCount: 5,
+                                                                itemBuilder:
+                                                                    ((context,
+                                                                        index) {
+                                                                  return const Icon(
+                                                                    Icons.star,
+                                                                    color: Color
+                                                                        .fromARGB(
+                                                                            255,
+                                                                            250,
+                                                                            230,
+                                                                            50),
+                                                                    size: 12,
+                                                                  );
+                                                                }),
+                                                              ),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 15,
+                                                    ),
+                                                    Container(
+                                                      child: Row(
+                                                        children: [
+                                                          Container(
+                                                            child: const Text(
+                                                                'Nombre de Commandes :  '),
+                                                          ),
+                                                          const Expanded(
+                                                            child: Text('158'),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Text(
+                                                      viewModel
+                                                          .listPromotion[index]
+                                                          .description!,
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    if (viewModel
+                                                            .listPromotion[
+                                                                index]
+                                                            .menu !=
+                                                        null)
+                                                      Text(
+                                                        viewModel
+                                                            .listPromotion[
+                                                                index]
+                                                            .menu!
+                                                            .menuTitle!,
+                                                        textAlign:
+                                                            TextAlign.start,
+                                                      ),
+                                                    const SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    if (viewModel
+                                                            .listPromotion[
+                                                                index]
+                                                            .product !=
+                                                        null)
+                                                      Text(
+                                                        viewModel
+                                                            .listPromotion[
+                                                                index]
+                                                            .product!
+                                                            .productName!,
+                                                        textAlign:
+                                                            TextAlign.start,
+                                                      )
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                  Radius.circular(10.0),
+                                                ),
+                                                child: Image.network(
+                                                  "http://192.168.1.105:5005${viewModel.listPromotion[index].image}",
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ModificationPromotion(
+                                                            description: viewModel
+                                                                .listPromotion[
+                                                                    index]
+                                                                .description!,
+                                                            imageUrl: viewModel
+                                                                .listPromotion[
+                                                                    index]
+                                                                .image!,
+                                                            menus: viewModel
+                                                                    .listPromotion[
+                                                                        index]
+                                                                    .menu
+                                                                    .isNull
+                                                                ? ""
+                                                                : viewModel
+                                                                    .listPromotion[
+                                                                        index]
+                                                                    .menu!
+                                                                    .sId!,
+                                                            products: viewModel
+                                                                    .listPromotion[
+                                                                        index]
+                                                                    .product
+                                                                    .isNull
+                                                                ? ""
+                                                                : viewModel
+                                                                    .listPromotion[
+                                                                        index]
+                                                                    .product!
+                                                                    .sId!,
+                                                            sId: viewModel
+                                                                .listPromotion[
+                                                                    index]
+                                                                .sId!,
+                                                            title: viewModel
+                                                                .listPromotion[
+                                                                    index]
+                                                                .promotionName!,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: Container(
+                                                      height: 30,
+                                                      decoration: BoxDecoration(
+                                                        color: Palette
+                                                            .secondaryColor,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
+                                                      ),
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: const Text(
+                                                          "Modifier"),
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 0.5),
+                                                Expanded(
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      dialogDelete(
+                                                          viewModel
+                                                              .listPromotion[
+                                                                  index]
+                                                              .promotionName!,
+                                                          viewModel
+                                                              .listPromotion[
+                                                                  index]
+                                                              .sId!);
+                                                    },
+                                                    child: Container(
+                                                      height: 30,
+                                                      decoration: BoxDecoration(
+                                                        color: Palette
+                                                            .deleteColors,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
+                                                      ),
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: const Text(
+                                                          "Supprimer"),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                            }),
                           ),
                         ),
                       ],
                     ),
+                  )
+                : Container(
+                    color: Palette.secondaryBackgroundColor,
+                    child: creation(listDesMenus, listDesProduits),
                   ),
-                ),
-          ajout == true
-              ? const Divider(
-                  height: 5,
-                  color: Palette.yellowColor,
-                )
-              : const SizedBox(
-                  height: 5,
-                ),
-          Container(
-            height: ajout == false ? height - 226 : height - 436,
-            width: width,
-            padding: const EdgeInsets.all(10),
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 400,
-                  childAspectRatio: 3 / 2,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 50,
-                  mainAxisExtent: 350),
-              itemCount: 5,
-              itemBuilder: ((context, index) {
-                return index % 2 == 0
-                    ? Card(
-                        elevation: 10,
-                        child: Container(
-                            child: Column(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  color: Colors.black,
-                                  image: DecorationImage(
-                                      opacity: 50,
-                                      image: AssetImage('boisson.png'),
-                                      fit: BoxFit.cover),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                                child: Container(
-                              color: Colors.white,
-                              child: Column(
-                                children: [
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
-                                    child: const Row(
-                                      children: [
-                                        Expanded(
-                                          child: Text('Menu Ramadan'),
-                                        ),
-                                        Expanded(
-                                          child: Text(
-                                            '100 DH',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                  Container(
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          child: const Text(
-                                              'Nombre de Commandes :  '),
-                                        ),
-                                        const Expanded(
-                                          child: Text('158'),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  SizedBox(
-                                    height: 15,
-                                    width: 550 / 2,
-                                    child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: 5,
-                                      itemBuilder: ((context, index) {
-                                        return const Icon(
-                                          Icons.star,
-                                          color:
-                                              Color.fromARGB(255, 250, 230, 50),
-                                          size: 12,
-                                        );
-                                      }),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  const Text(
-                                      "Cette promotion composée d'un burger,une boisson,d'un mini burger,des frites maxi")
-                                ],
-                              ),
-                            ))
-                          ],
-                        )),
-                      )
-                    : Card(
-                        elevation: 10,
-                        child: Container(
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  color: Colors.white,
-                                  child: Column(
-                                    children: [
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Container(
-                                        child: const Row(
-                                          children: [
-                                            Expanded(
-                                              child: Text('Menu Ramadan'),
-                                            ),
-                                            Expanded(
-                                              child: Text(
-                                                '100 DH',
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 15,
-                                      ),
-                                      Container(
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              child: const Text(
-                                                  'Nombre de Commandes :  '),
-                                            ),
-                                            const Expanded(
-                                              child: Text('158'),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      SizedBox(
-                                        height: 15,
-                                        width: 550 / 2,
-                                        child: ListView.builder(
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: 5,
-                                          itemBuilder: ((context, index) {
-                                            return const Icon(
-                                              Icons.star,
-                                              color: Color.fromARGB(
-                                                  255, 250, 230, 50),
-                                              size: 12,
-                                            );
-                                          }),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      const Text(
-                                          "Cette promotion composée d'un burger,une boisson,d'un mini burger,des frites maxi")
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                    color: Colors.black,
-                                    image: DecorationImage(
-                                        opacity: 50,
-                                        image: AssetImage('boisson.png'),
-                                        fit: BoxFit.cover),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-              }),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -1159,6 +1226,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
   Widget creation(List<String> listDesMenus, List<String> listDesProduits) {
     final viewModel1 = ref.watch(getDataMenuFuture);
     final viewModel2 = ref.watch(p.getDataProduitFuture);
+    print('Voici la liste des produits: ${viewModel2.listProduit.length}');
     return Column(
       children: [
         Container(
@@ -1193,34 +1261,35 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                   keyboardType: TextInputType.emailAddress,
                   onChanged: (value) {},
                   decoration: InputDecoration(
-                      hoverColor: Palette.primaryBackgroundColor,
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 42, vertical: 20),
-                      filled: true,
-                      fillColor: Palette.primaryBackgroundColor,
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Palette.secondaryBackgroundColor),
-                        gapPadding: 10,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Palette.secondaryBackgroundColor),
-                        gapPadding: 10,
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                            color: Palette.secondaryBackgroundColor),
-                        gapPadding: 10,
-                      ),
-                      hintText: "Entrer le nom du type",
-                      // If  you are using latest version of flutter then lable text and hint text shown like this
-                      // if you r using flutter less then 1.20.* then maybe this is not working properly
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      suffixIcon: const Icon(Icons.food_bank)),
+                    hoverColor: Palette.primaryBackgroundColor,
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 42, vertical: 20),
+                    filled: true,
+                    fillColor: Palette.primaryBackgroundColor,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(
+                          color: Palette.secondaryBackgroundColor),
+                      gapPadding: 10,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(
+                          color: Palette.secondaryBackgroundColor),
+                      gapPadding: 10,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(
+                          color: Palette.secondaryBackgroundColor),
+                      gapPadding: 10,
+                    ),
+                    hintText: "Entrer le nom du type",
+                    // If  you are using latest version of flutter then lable text and hint text shown like this
+                    // if you r using flutter less then 1.20.* then maybe this is not working properly
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    suffixIcon: const Icon(Icons.food_bank),
+                  ),
                 ),
               ),
               const SizedBox(
@@ -1665,7 +1734,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
     //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.1.105:5005/api/promotions/create"); // 192.168.11.110:4009
+        "http://192.168.1.105:5005/api/promotions/create"); // 192.168.1.105:4009
     final request = MultipartRequest(
       'POST',
       url,
@@ -1750,7 +1819,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
 
       var token = prefs.getString('token');
       String urlDelete =
-          "http://192.168.1.105:5005/api/promotions/delete/$idPromotion"; // 192.168.11.110:4008 //$adressUrl
+          "http://192.168.1.105:5005/api/promotions/delete/$idPromotion"; // 192.168.1.105:4008 //$adressUrl
 
       var json = {
         '_creator': id,

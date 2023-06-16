@@ -1177,7 +1177,7 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
           Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.green,
-            message: "Restaurant Modifié",
+            message: "La catégorie a été crée avec succès",
           ),
         );
         ref.refresh(getDataCategoriesFuture);
@@ -1186,7 +1186,7 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
           Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.red,
-            message: "Erreur de création",
+            message: "La catégorie n'a pas été crée avec succès",
           ),
         );
         print("Error Create Programme  !!!");
