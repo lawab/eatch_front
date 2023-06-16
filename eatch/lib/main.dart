@@ -1,12 +1,34 @@
+import 'package:eatch/pages/accueil.dart';
 import 'package:eatch/pages/authentification/authentification.dart';
+import 'package:eatch/pages/categories/presentation/categories.dart';
+import 'package:eatch/pages/dashboard/dashboard_comptable.dart';
+import 'package:eatch/pages/dashboard/dashboard_manager.dart';
+import 'package:eatch/pages/laboAccueil.dart';
+import 'package:eatch/pages/laboratoire/accuielLabo.dart';
+import 'package:eatch/pages/matiere_premiere/menu_Matiere.dart';
+import 'package:eatch/pages/menus/presentation/menu.dart';
+import 'package:eatch/pages/promotion/affichePromotion.dart';
 import 'package:eatch/pages/recettes/recettes.dart';
+import 'package:eatch/pages/restaurant/afficheRestaurant.dart';
+import 'package:eatch/pages/restaurantAccueil.dart';
+import 'package:eatch/pages/users/presentation/users.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+Future<void> main() async {
   runApp(const ProviderScope(child: MyApp()));
+  prefs = await SharedPreferences.getInstance();
+  if (prefs!.getString("isLogin").toString() == 'true') {
+    login = true;
+  } else {
+    login = false;
+  }
 }
+
+bool login = false;
+SharedPreferences? prefs;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -22,13 +44,55 @@ class MyApp extends StatelessWidget {
             PointerDeviceKind.mouse,
           },
         ),
-        title: 'Flutter Demo',
+        title: 'Eatch',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
         home:
-            const Authentification() //const DashboardComptable() //const Authentification() //Authentification(),ClientAccueil()
+            displayPage() //const DashboardComptable() //const Authentification() //Authentification(),ClientAccueil()
         );
+  }
+
+  Widget displayPage() {
+    Widget widget = CircularProgressIndicator();
+
+    if (login == true) {
+      //String role = prefs!.getString("role").toString();
+
+      //////
+      if (prefs!.getInt('index')!.toInt() == 0) {
+        widget = const DashboardManager();
+      } else if (prefs!.getInt('index')!.toInt() == 1) {
+        widget = const DashboardComptable();
+      } else if (prefs!.getInt('index')!.toInt() == 2) {
+        widget = const Users();
+      } else if (prefs!.getInt('index')!.toInt() == 3) {
+        widget = const CategoriesPage();
+      } else if (prefs!.getInt('index')!.toInt() == 4) {
+        widget = const RestaurantAffiche();
+      } else if (prefs!.getInt('index')!.toInt() == 5) {
+        widget = const MatiereMenu();
+      } else if (prefs!.getInt('index')!.toInt() == 6) {
+        widget = const Menu();
+      } else if (prefs!.getInt('index')!.toInt() == 7) {
+        widget = const PromotionAffiche();
+      } else if (prefs!.getInt('index')!.toInt() == 8) {
+        widget = const RecettesPage();
+      } else if (prefs!.getInt('index')!.toInt() == 9) {
+        widget = const AccuilLabo();
+      } else if (prefs!.getInt('index')!.toInt() == 20) {
+        widget = const Accueil();
+      } else if (prefs!.getInt('index')!.toInt() == 30) {
+        widget = const LaboAccueil();
+      } else if (prefs!.getInt('index')!.toInt() == 40) {
+        widget = const RestaurantAccueil();
+      }
+
+      //////
+    } else {
+      widget = Authentification();
+    }
+    return widget;
   }
 }
 

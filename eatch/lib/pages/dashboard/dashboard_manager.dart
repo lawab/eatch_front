@@ -146,6 +146,12 @@ class DashboardManagerState extends ConsumerState<DashboardManager> {
                                                     nomCategorie: viewModel
                                                         .listCategories[index]
                                                         .title!,
+                                                    imageUrl: viewModel
+                                                        .listCategories[index]
+                                                        .image!,
+                                                    sId: viewModel
+                                                        .listCategories[index]
+                                                        .sId!,
                                                   );
                                                 }),
                                               );

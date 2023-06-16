@@ -22,7 +22,7 @@ class GetDataRecettesFuture extends ChangeNotifier {
     String adressUrl = prefs.getString('ipport').toString();
     try {
       http.Response response = await http.get(
-        Uri.parse('http://192.168.1.34:4010/api/recettes/fetch/all'), //4002
+        Uri.parse('http://192.168.1.105:4010/api/recettes/fetch/all'), //4002
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',

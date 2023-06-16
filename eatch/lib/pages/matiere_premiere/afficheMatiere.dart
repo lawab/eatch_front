@@ -7,10 +7,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
-
 import '../../servicesAPI/multipart.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart' show MediaType;
@@ -27,6 +27,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
   var nomController = TextEditingController();
   var stockController = TextEditingController();
   var peremptionController = TextEditingController();
+  var dateinput = TextEditingController();
 
   _clear() {
     setState(() {
@@ -87,6 +88,9 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
     });
   }
 
+  List<String> listOfUnite = ["Unité *", "kg", "litre", "Carton"];
+
+  String? unite;
   DateTime date = DateTime.now();
   //String dateJour = '';
   bool dd = false;
@@ -113,20 +117,17 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
 
   Widget horizontalView(
       double height, double width, context, List<Matiere> matiere) {
-    return AppLayout(
-      content: Column(
+    return Scaffold(
+      body: Column(
         children: [
-          ajout == false
-              ? Container(
+          ajout == true
+              ? Container()
+              : Container(
                   alignment: Alignment.centerRight,
                   height: 80,
-                  color: Palette.yellowColor,
+                  color: Palette.secondaryBackgroundColor,
                   child: Row(
                     children: [
-                      const SizedBox(
-                        width: 50,
-                      ),
-                      const Text('Matières premières'),
                       Expanded(child: Container()),
                       ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
@@ -147,832 +148,634 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                       ),
                     ],
                   ),
-                )
-              : Container(
-                  height: 300,
-                  color: Palette.secondaryBackgroundColor,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Container(
-                          alignment: Alignment.centerRight,
-                          height: 50,
-                          color: const Color(0xFFFCEBD1),
-                          child: const Row(
-                            children: [
-                              SizedBox(
-                                width: 50,
-                              ),
-                              Text('Création de Type de matière première'),
-                              SizedBox(
-                                width: 20,
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width - 50,
-                          child: TextFormField(
-                            controller: nomController,
-                            keyboardType: TextInputType.emailAddress,
-                            onChanged: (value) {},
-                            decoration: InputDecoration(
-                                hoverColor: Palette.primaryBackgroundColor,
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 42, vertical: 20),
-                                filled: true,
-                                fillColor: Palette.primaryBackgroundColor,
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  borderSide: const BorderSide(
-                                      color: Palette.secondaryBackgroundColor),
-                                  gapPadding: 10,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  borderSide: const BorderSide(
-                                      color: Palette.secondaryBackgroundColor),
-                                  gapPadding: 10,
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  borderSide: const BorderSide(
-                                      color: Palette.secondaryBackgroundColor),
-                                  gapPadding: 10,
-                                ),
-                                labelText: "Nom du type",
-                                hintText: "Entrer le nom du type",
-                                // If  you are using latest version of flutter then lable text and hint text shown like this
-                                // if you r using flutter less then 1.20.* then maybe this is not working properly
-                                floatingLabelBehavior:
-                                    FloatingLabelBehavior.always,
-                                suffixIcon: const Icon(Icons.food_bank)),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width - 50,
-                          child: TextFormField(
-                            controller: stockController,
-                            //keyboardType: TextInputType.emailAddress,
-                            onChanged: (value) {},
-                            decoration: InputDecoration(
-                                hoverColor: Palette.primaryBackgroundColor,
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 42, vertical: 20),
-                                filled: true,
-                                fillColor: Palette.primaryBackgroundColor,
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  borderSide: const BorderSide(
-                                      color: Palette.secondaryBackgroundColor),
-                                  gapPadding: 10,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  borderSide: const BorderSide(
-                                      color: Palette.secondaryBackgroundColor),
-                                  gapPadding: 10,
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  borderSide: const BorderSide(
-                                      color: Palette.secondaryBackgroundColor),
-                                  gapPadding: 10,
-                                ),
-                                labelText: "Stock",
-                                hintText: "Entrer le stock de base",
-                                // If  you are using latest version of flutter then lable text and hint text shown like this
-                                // if you r using flutter less then 1.20.* then maybe this is not working properly
-                                floatingLabelBehavior:
-                                    FloatingLabelBehavior.always,
-                                suffixIcon: const Icon(Icons.food_bank)),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        // début --------------------------------------------
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width - 50,
-                          child: Row(
-                            children: [
-                              const SizedBox(width: 15),
-                              const Text(
-                                "Date de péremption",
-                                style: TextStyle(fontSize: 16),
-                              ),
-                              const SizedBox(width: 20),
-                              ElevatedButton(
-                                onPressed: () async {
-                                  DateTime? newDate = await showDatePicker(
-                                    context: context,
-                                    initialDate: date,
-                                    firstDate: DateTime(1900),
-                                    lastDate: DateTime(2100),
-                                  );
-
-                                  if (newDate == null) return;
-
-                                  setState(() {
-                                    date = newDate;
-                                    dd = true;
-                                    //dateJour =
-                                    //"${date.year}/${date.month}/${date.day}";
-                                  });
-                                  print(date);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Palette.primaryColor,
-                                  minimumSize: const Size(150, 40),
-                                  maximumSize: const Size(200, 50),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                ),
-                                child: dd == false
-                                    ? Text(
-                                        "${date.year}-${date.month}-${date.day}",
-                                        style: const TextStyle(fontSize: 18),
-                                      )
-                                    : Text(
-                                        "${date.year}-${date.month}-${date.day}",
-                                        style: const TextStyle(fontSize: 18),
-                                      ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        const SizedBox(
-                          height: 10,
-                        ),
-
-                        // fin --------------------------------------------
-
-                        // Creation du bouton qui reécupere l'image
-                        Container(
-                          padding: const EdgeInsets.only(right: 70),
-                          color: Palette.secondaryBackgroundColor,
-                          alignment: Alignment.centerRight,
-                          child: GestureDetector(
-                            onTap: () async {
-                              result = await FilePicker.platform.pickFiles(
-                                  type: FileType.custom,
-                                  allowedExtensions: [
-                                    "png",
-                                    "jpg",
-                                    "jpeg",
-                                  ]);
-                              if (result != null) {
-                                setState(() {
-                                  file = result!.files.single;
-
-                                  Uint8List fileBytes =
-                                      result!.files.single.bytes as Uint8List;
-
-                                  _selectedFile = fileBytes;
-
-                                  filee = true;
-
-                                  selectedImageInBytes =
-                                      result!.files.first.bytes;
-                                  _selectFile = true;
-                                });
-                              }
-                            },
-                            child: Container(
-                              width: 100,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  width: 4,
-                                  color: Palette.greenColors,
-                                ),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(16),
-                                child: _selectFile == false
-                                    ? const Icon(
-                                        Icons.camera_alt_outlined,
-                                        color: Palette.greenColors,
-                                        size: 40,
-                                      )
-                                    : Image.memory(
-                                        selectedImageInBytes!,
-                                        fit: BoxFit.fill,
-                                      ),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(
-                          height: 30,
-                        ),
-
-                        // fin de la creation du bouton image
-                        Container(
-                          alignment: Alignment.centerRight,
-                          child: SizedBox(
-                            width: 350,
-                            child: Row(children: [
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              ElevatedButton(
-                                onPressed: (() {
-                                  creationMatierePremiere(
-                                    context,
-                                    nomController.text,
-                                    stockController.text,
-                                    date.toString(),
-                                    _selectedFile!,
-                                    result,
-                                  );
-                                  setState(() {
-                                    ajout = false;
-                                    _clear();
-                                  });
-                                }),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Palette.primaryColor,
-                                  minimumSize: const Size(150, 50),
-                                  maximumSize: const Size(200, 70),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                ),
-                                child: const Text('Enregistrer'),
-                              ),
-                              const SizedBox(
-                                width: 20,
-                              ),
-                              ElevatedButton(
-                                onPressed: (() {
-                                  setState(() {
-                                    ajout = false;
-                                    _clear();
-                                  });
-                                }),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      Palette.secondaryBackgroundColor,
-                                  minimumSize: const Size(150, 50),
-                                  maximumSize: const Size(200, 70),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                ),
-                                child: const Text(
-                                  'Annuler',
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                              ),
-                            ]),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                 ),
-          const SizedBox(
-            height: 30,
-          ),
-          SizedBox(
-            height: ajout == false ? height - 175 : height - 400,
-            width: width - 20,
-            child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                    childAspectRatio: 3 / 2,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 50,
-                    mainAxisExtent: 300),
-                itemCount: matiere.length,
-                itemBuilder: (BuildContext ctx, index) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(15.0),
-                      image: DecorationImage(
-                          opacity: 50,
-                          image: NetworkImage(
-                              "http://192.168.1.34:4008${matiere[index].image!}"), //192.168.1.34
-                          fit: BoxFit.cover),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          matiere[index].mpName!,
-                          style: GoogleFonts.raleway().copyWith(
-                              fontSize: 30,
-                              color: Colors.white,
-                              fontWeight: FontWeight.normal),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          'Initiale: ${matiere[index].quantity.toString()} ${matiere[index].unity!}',
-                          style: GoogleFonts.raleway().copyWith(
-                              fontSize: 15,
-                              color: Colors.white,
-                              fontWeight: FontWeight.normal),
-                        ),
-                        Text(
-                          'Consommation: ${matiere[index].consumerQuantity.toString()} ${matiere[index].unity!}',
-                          style: GoogleFonts.raleway().copyWith(
-                              fontSize: 15,
-                              color: Colors.white,
-                              fontWeight: FontWeight.normal),
-                        ),
-                        Text(
-                          'Reste: ${(matiere[index].quantity! - matiere[index].consumerQuantity!).toString()} ${matiere[index].unity!}',
-                          style: GoogleFonts.raleway().copyWith(
-                              fontSize: 15,
-                              color: Colors.white,
-                              fontWeight: FontWeight.normal),
-                        ),
-                        Expanded(child: Container()),
-                        SizedBox(
-                          height: 100,
+          ajout == true
+              ? Container(
+                  height: height,
+                  color: Palette.secondaryBackgroundColor,
+                  child: creation())
+              : SizedBox(
+                  height: height - 375,
+                  width: width - 20,
+                  child: GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 200,
+                              childAspectRatio: 3 / 2,
+                              crossAxisSpacing: 20,
+                              mainAxisSpacing: 50,
+                              mainAxisExtent: 300),
+                      itemCount: matiere.length,
+                      itemBuilder: (BuildContext ctx, index) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(15.0),
+                            image: DecorationImage(
+                                opacity: 50,
+                                image: NetworkImage(
+                                    "http://192.168.1.105:4008${matiere[index].image!}"), //192.168.1.105
+                                fit: BoxFit.cover),
+                          ),
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              ElevatedButton.icon(
-                                style: ElevatedButton.styleFrom(
-                                  minimumSize: Size(width, 50),
-                                  backgroundColor: Palette.secondaryColor,
-                                ),
-                                onPressed: (() {
-                                  dialogModif(
-                                      context,
-                                      matiere[index].mpName!,
-                                      matiere[index].quantity!,
-                                      matiere[index].unity!,
-                                      matiere[index].sId!);
-                                }),
-                                icon: const Icon(Icons.edit),
-                                label: const Text('Modifier'),
+                              Text(
+                                matiere[index].mpName!,
+                                style: GoogleFonts.raleway().copyWith(
+                                    fontSize: 30,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.normal),
                               ),
-                              ElevatedButton.icon(
-                                onPressed: (() {
-                                  dialogDelete(matiere[index].mpName!,
-                                      matiere[index].sId!);
-                                }),
-                                icon: const Icon(Icons.delete),
-                                label: const Text('Supprimer'),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Palette.deleteColors,
-                                  minimumSize: Size(width, 50),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                'Initiale: ${matiere[index].quantity.toString()} ${matiere[index].unity!}',
+                                style: GoogleFonts.raleway().copyWith(
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                              Text(
+                                'Consommation: ${matiere[index].consumerQuantity.toString()} ${matiere[index].unity!}',
+                                style: GoogleFonts.raleway().copyWith(
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                              Text(
+                                'Reste: ${(matiere[index].quantity! - matiere[index].consumerQuantity!).toString()} ${matiere[index].unity!}',
+                                style: GoogleFonts.raleway().copyWith(
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                              Expanded(child: Container()),
+                              SizedBox(
+                                height: 100,
+                                child: Column(
+                                  children: [
+                                    ElevatedButton.icon(
+                                      style: ElevatedButton.styleFrom(
+                                        minimumSize: Size(width, 50),
+                                        backgroundColor: Palette.secondaryColor,
+                                      ),
+                                      onPressed: (() {
+                                        dialogModif(
+                                            context,
+                                            matiere[index].mpName!,
+                                            matiere[index].quantity!,
+                                            matiere[index].unity!,
+                                            matiere[index].sId!);
+                                      }),
+                                      icon: const Icon(Icons.edit),
+                                      label: const Text('Modifier'),
+                                    ),
+                                    ElevatedButton.icon(
+                                      onPressed: (() {
+                                        dialogDelete(matiere[index].mpName!,
+                                            matiere[index].sId!);
+                                      }),
+                                      icon: const Icon(Icons.delete),
+                                      label: const Text('Supprimer'),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Palette.deleteColors,
+                                        minimumSize: Size(width, 50),
+                                      ),
+                                    )
+                                  ],
                                 ),
                               )
                             ],
                           ),
-                        )
-                      ],
-                    ),
-                  );
-                }),
-          ),
+                        );
+                      }),
+                ),
         ],
       ),
     );
   }
 
+  Widget creation() {
+    return Column(
+      children: [
+        Container(
+          alignment: Alignment.centerRight,
+          height: 50,
+          color: Palette.yellowColor,
+          child: Row(
+            children: const [
+              SizedBox(
+                width: 50,
+              ),
+              Text('Création de Type de matière première'),
+              SizedBox(
+                width: 20,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width - 50,
+          child: TextFormField(
+            controller: nomController,
+            keyboardType: TextInputType.emailAddress,
+            onChanged: (value) {},
+            decoration: InputDecoration(
+                hoverColor: Palette.primaryBackgroundColor,
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
+                filled: true,
+                fillColor: Palette.primaryBackgroundColor,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide:
+                      const BorderSide(color: Palette.secondaryBackgroundColor),
+                  gapPadding: 10,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide:
+                      const BorderSide(color: Palette.secondaryBackgroundColor),
+                  gapPadding: 10,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  borderSide:
+                      const BorderSide(color: Palette.secondaryBackgroundColor),
+                  gapPadding: 10,
+                ),
+                hintText: "Entrer le nom du type",
+                // If  you are using latest version of flutter then lable text and hint text shown like this
+                // if you r using flutter less then 1.20.* then maybe this is not working properly
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+                suffixIcon: const Icon(Icons.food_bank)),
+          ),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Container(
+          child: Row(children: [
+            Expanded(
+              flex: 7,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width - 50,
+                child: TextFormField(
+                  controller: stockController,
+                  //keyboardType: TextInputType.emailAddress,
+                  onChanged: (value) {},
+                  decoration: InputDecoration(
+                      hoverColor: Palette.primaryBackgroundColor,
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 42, vertical: 20),
+                      filled: true,
+                      fillColor: Palette.primaryBackgroundColor,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(
+                            color: Palette.secondaryBackgroundColor),
+                        gapPadding: 10,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(
+                            color: Palette.secondaryBackgroundColor),
+                        gapPadding: 10,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(
+                            color: Palette.secondaryBackgroundColor),
+                        gapPadding: 10,
+                      ),
+                      hintText: "Entrer la quantité de base",
+                      // If  you are using latest version of flutter then lable text and hint text shown like this
+                      // if you r using flutter less then 1.20.* then maybe this is not working properly
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      suffixIcon: const Icon(Icons.food_bank)),
+                ),
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              flex: 2,
+              child: DropdownButtonFormField(
+                decoration: InputDecoration(
+                  hoverColor: Colors.white,
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
+                  filled: true,
+                  fillColor: Colors.white,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: const BorderSide(color: Palette.yellowColor),
+                    gapPadding: 10,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: const BorderSide(color: Palette.yellowColor),
+                    gapPadding: 10,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: const BorderSide(color: Palette.yellowColor),
+                    gapPadding: 10,
+                  ),
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                ),
+                value: unite,
+                hint: const Text(
+                  'Unité*',
+                ),
+                isExpanded: true,
+                onChanged: (value) {
+                  setState(() {
+                    unite = value;
+                  });
+                },
+                onSaved: (value) {
+                  setState(() {
+                    unite = value;
+                  });
+                },
+                validator: (String? value) {
+                  if (value == null) {
+                    return "L'unité est obligatoire.";
+                  } else {
+                    return null;
+                  }
+                },
+                items: listOfUnite.map((String val) {
+                  return DropdownMenuItem(
+                    value: val,
+                    child: Text(
+                      val,
+                    ),
+                  );
+                }).toList(),
+              ),
+            )
+          ]),
+        ),
+
+        const SizedBox(
+          height: 20,
+        ),
+        // début --------------------------------------------
+        SizedBox(
+          width: MediaQuery.of(context).size.width - 50,
+          child: Row(
+            children: [
+              const SizedBox(width: 15),
+              const Text(
+                "Date de péremption",
+                style: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(width: 20),
+              Container(
+                width: 200,
+                child: TextFormField(
+                  controller: dateinput,
+                  keyboardType: TextInputType.emailAddress,
+                  onChanged: (value) {},
+                  readOnly: true,
+                  onTap: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(
+                            2000), //DateTime.now() - not to allow to choose before today.
+                        lastDate: DateTime(2101));
+
+                    if (pickedDate != null) {
+                      print(
+                          pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                      String formattedDate =
+                          DateFormat('yyyy-MM-dd').format(pickedDate);
+
+                      print(
+                          formattedDate); //formatted date output using intl package =>  2021-03-16
+                      //you can implement different kind of Date Format here according to your requirement
+
+                      setState(() {
+                        dateinput.text =
+                            formattedDate; //set output date to TextField value.
+                      });
+                    } else {
+                      print("Date non selectionnée");
+                    }
+                  },
+                  decoration: InputDecoration(
+                    hoverColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 42, vertical: 20),
+                    filled: true,
+                    fillColor: Colors.white,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(color: Palette.yellowColor),
+                      gapPadding: 10,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(color: Palette.yellowColor),
+                      gapPadding: 10,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      borderSide: const BorderSide(color: Palette.yellowColor),
+                      gapPadding: 10,
+                    ),
+                    labelText: "Date",
+                    hintText: "Entrer une date ",
+
+                    // If  you are using latest version of flutter then lable text and hint text shown like this
+                    // if you r using flutter less then 1.20.* then maybe this is not working properly
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    suffixIcon: const Icon(Icons.date_range),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(
+          height: 10,
+        ),
+
+        // fin --------------------------------------------
+        // Creation du bouton qui reécupere l'image
+        Container(
+          padding: const EdgeInsets.only(right: 70),
+          color: Palette.secondaryBackgroundColor,
+          alignment: Alignment.centerRight,
+          child: GestureDetector(
+            onTap: () async {
+              result = await FilePicker.platform
+                  .pickFiles(type: FileType.custom, allowedExtensions: [
+                "png",
+                "jpg",
+                "jpeg",
+              ]);
+              if (result != null) {
+                setState(() {
+                  file = result!.files.single;
+
+                  Uint8List fileBytes = result!.files.single.bytes as Uint8List;
+
+                  _selectedFile = fileBytes;
+
+                  filee = true;
+
+                  selectedImageInBytes = result!.files.first.bytes;
+                  _selectFile = true;
+                });
+              }
+            },
+            child: Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 4,
+                  color: Palette.greenColors,
+                ),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: _selectFile == false
+                    ? const Icon(
+                        Icons.camera_alt_outlined,
+                        color: Palette.greenColors,
+                        size: 40,
+                      )
+                    : Image.memory(
+                        selectedImageInBytes!,
+                        fit: BoxFit.fill,
+                      ),
+              ),
+            ),
+          ),
+        ),
+
+        const SizedBox(
+          height: 30,
+        ),
+
+        // fin de la creation du bouton image
+        Container(
+          alignment: Alignment.centerRight,
+          child: SizedBox(
+            width: 350,
+            child: Row(children: [
+              const SizedBox(
+                width: 10,
+              ),
+              ElevatedButton(
+                onPressed: (() {
+                  creationMatierePremiere(
+                    context,
+                    nomController.text,
+                    stockController.text,
+                    dateinput.text,
+                    _selectedFile!,
+                    result,
+                  );
+                  setState(() {
+                    ajout = false;
+                    _clear();
+                  });
+                  //setState(() {});
+                }),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Palette.primaryColor,
+                  minimumSize: const Size(150, 50),
+                  maximumSize: const Size(200, 70),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+                child: const Text('Enregistrer'),
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              ElevatedButton(
+                onPressed: (() {
+                  setState(() {
+                    ajout = false;
+                    _clear();
+                  });
+                }),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Palette.secondaryBackgroundColor,
+                  minimumSize: const Size(150, 50),
+                  maximumSize: const Size(200, 70),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+                child: const Text(
+                  'Annuler',
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+            ]),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget verticalView(
       double height, double width, context, List<Matiere> matiere) {
-    return AppLayout(
-        content: Column(
-      children: [
-        ajout == false
-            ? Container(
-                alignment: Alignment.centerRight,
-                height: 80,
-                color: const Color(0xFFFCEBD1),
-                child: Row(
-                  children: [
-                    const SizedBox(
-                      width: 50,
-                    ),
-                    const Text('Matières premières'),
-                    Expanded(child: Container()),
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Palette.primaryColor,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          minimumSize: const Size(180, 50)),
-                      onPressed: () {
-                        setState(() {
-                          ajout = true;
-                        });
-                        /*Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => RestaurantCreation()));*/
-                      },
-                      icon: const Icon(Icons.add),
-                      label: const Text('Ajouter un type de matière'),
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                  ],
-                ),
-              )
-            : Container(
-                height: 300,
-                color: Palette.secondaryBackgroundColor,
-                child: SingleChildScrollView(
-                  child: Column(
+    return Scaffold(
+      body: Column(
+        children: [
+          ajout == true
+              ? Container()
+              : Container(
+                  alignment: Alignment.centerRight,
+                  height: 80,
+                  color: Palette.secondaryBackgroundColor,
+                  child: Row(
                     children: [
-                      Container(
-                        alignment: Alignment.centerRight,
-                        height: 50,
-                        color: const Color(0xFFFCEBD1),
-                        child: const Row(
-                          children: [
-                            SizedBox(
-                              width: 50,
-                            ),
-                            Text('Création de Type de matière première'),
-                            SizedBox(
-                              width: 20,
-                            ),
-                          ],
-                        ),
+                      Expanded(child: Container()),
+                      ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Palette.primaryColor,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            minimumSize: const Size(180, 50)),
+                        onPressed: () {
+                          setState(() {
+                            ajout = true;
+                          });
+                        },
+                        icon: const Icon(Icons.add),
+                        label: const Text('Ajouter un type de matière'),
                       ),
                       const SizedBox(
-                        height: 10,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width - 50,
-                        child: TextFormField(
-                          controller: nomController,
-                          keyboardType: TextInputType.emailAddress,
-                          onChanged: (value) {},
-                          decoration: InputDecoration(
-                              hoverColor: Palette.primaryBackgroundColor,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 42, vertical: 20),
-                              filled: true,
-                              fillColor: Palette.primaryBackgroundColor,
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: const BorderSide(
-                                    color: Palette.secondaryBackgroundColor),
-                                gapPadding: 10,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: const BorderSide(
-                                    color: Palette.secondaryBackgroundColor),
-                                gapPadding: 10,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: const BorderSide(
-                                    color: Palette.secondaryBackgroundColor),
-                                gapPadding: 10,
-                              ),
-                              labelText: "Nom du type",
-                              hintText: "Entrer le nom du type",
-                              // If  you are using latest version of flutter then lable text and hint text shown like this
-                              // if you r using flutter less then 1.20.* then maybe this is not working properly
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.always,
-                              suffixIcon: const Icon(Icons.food_bank)),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-
-                      // début --------------------------------------------
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width - 50,
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 15),
-                            const Text(
-                              "Date de péremption",
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            const SizedBox(width: 20),
-                            ElevatedButton(
-                              onPressed: () async {
-                                DateTime? newDate = await showDatePicker(
-                                  context: context,
-                                  initialDate: date,
-                                  firstDate: DateTime(1900),
-                                  lastDate: DateTime(2100),
-                                );
-
-                                if (newDate == null) return;
-
-                                setState(() {
-                                  date = newDate;
-                                  dd = true;
-                                  //dateJour =
-                                  //"${date.year}/${date.month}/${date.day}";
-                                });
-                                print(date);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Palette.primaryColor,
-                                minimumSize: const Size(150, 40),
-                                maximumSize: const Size(200, 50),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                              ),
-                              child: dd == false
-                                  ? Text(
-                                      "${date.year}-${date.month}-${date.day}",
-                                      style: const TextStyle(fontSize: 18),
-                                    )
-                                  : Text(
-                                      "${date.year}-${date.month}-${date.day}",
-                                      style: const TextStyle(fontSize: 18),
-                                    ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(
-                        height: 10,
-                      ),
-
-                      // fin --------------------------------------------
-
-                      // Creation du bouton qui reécupere l'image
-                      Container(
-                        padding: const EdgeInsets.only(right: 70),
-                        color: Palette.secondaryBackgroundColor,
-                        alignment: Alignment.centerRight,
-                        child: GestureDetector(
-                          onTap: () async {
-                            result = await FilePicker.platform.pickFiles(
-                                type: FileType.custom,
-                                allowedExtensions: [
-                                  "png",
-                                  "jpg",
-                                  "jpeg",
-                                ]);
-                            if (result != null) {
-                              setState(() {
-                                file = result!.files.single;
-
-                                Uint8List fileBytes =
-                                    result!.files.single.bytes as Uint8List;
-
-                                _selectedFile = fileBytes;
-
-                                filee = true;
-
-                                selectedImageInBytes =
-                                    result!.files.first.bytes;
-                                _selectFile = true;
-                              });
-                            }
-                          },
-                          child: Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 4,
-                                color: Palette.greenColors,
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(16),
-                              child: _selectFile == false
-                                  ? const Icon(
-                                      Icons.camera_alt_outlined,
-                                      color: Palette.greenColors,
-                                      size: 40,
-                                    )
-                                  : Image.memory(
-                                      selectedImageInBytes!,
-                                      fit: BoxFit.fill,
-                                    ),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(
-                        height: 30,
-                      ),
-
-                      // fin de la creation du bouton image
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width - 50,
-                        child: TextFormField(
-                          controller: stockController,
-                          //keyboardType: TextInputType.emailAddress,
-                          onChanged: (value) {},
-                          decoration: InputDecoration(
-                              hoverColor: Palette.primaryBackgroundColor,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 42, vertical: 20),
-                              filled: true,
-                              fillColor: Palette.primaryBackgroundColor,
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: const BorderSide(
-                                    color: Palette.secondaryBackgroundColor),
-                                gapPadding: 10,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: const BorderSide(
-                                    color: Palette.secondaryBackgroundColor),
-                                gapPadding: 10,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: const BorderSide(
-                                    color: Palette.secondaryBackgroundColor),
-                                gapPadding: 10,
-                              ),
-                              labelText: "Stock",
-                              hintText: "Entrer le stock de base",
-                              // If  you are using latest version of flutter then lable text and hint text shown like this
-                              // if you r using flutter less then 1.20.* then maybe this is not working properly
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.always,
-                              suffixIcon: const Icon(Icons.food_bank)),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 50,
-                      ),
-                      Container(
-                        alignment: Alignment.centerRight,
-                        child: SizedBox(
-                          width: 350,
-                          child: Row(children: [
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            ElevatedButton(
-                              onPressed: (() {
-                                setState(() {
-                                  ajout = false;
-                                  _clear();
-                                });
-                              }),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Palette.primaryColor,
-                                minimumSize: const Size(150, 50),
-                                maximumSize: const Size(200, 70),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                              ),
-                              child: const Text('Enregistrer'),
-                            ),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            ElevatedButton(
-                              onPressed: (() {
-                                setState(() {
-                                  ajout = false;
-                                  _clear();
-                                });
-                              }),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    Palette.secondaryBackgroundColor,
-                                minimumSize: const Size(150, 50),
-                                maximumSize: const Size(200, 70),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                              ),
-                              child: const Text(
-                                'Annuler',
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                            ),
-                          ]),
-                        ),
+                        width: 20,
                       ),
                     ],
                   ),
                 ),
-              ),
-        const SizedBox(
-          height: 5,
-        ),
-        SizedBox(
-          height: ajout == true ? height - 465 : height - 245, //85,
-          width: width - 20,
-          child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 200,
-                childAspectRatio: 3 / 2,
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 50,
-                mainAxisExtent: 300),
-            itemCount: matiere.length,
-            itemBuilder: (BuildContext ctx, index) {
-              return Container(
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(15.0),
-                  image: DecorationImage(
-                      opacity: 50,
-                      image: NetworkImage(
-                          "http://192.168.1.34:4008${matiere[index].image!}"),
-                      fit: BoxFit.cover),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      matiere[index].mpName!,
-                      style: GoogleFonts.raleway().copyWith(
-                          fontSize: 30,
-                          color: Colors.white,
-                          fontWeight: FontWeight.normal),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      'Initiale: ${matiere[index].quantity.toString()} ${matiere[index].unity!}',
-                      style: GoogleFonts.raleway().copyWith(
-                          fontSize: 15,
-                          color: Colors.white,
-                          fontWeight: FontWeight.normal),
-                    ),
-                    Text(
-                      'Consommation: ${matiere[index].consumerQuantity.toString()} ${matiere[index].unity!}',
-                      style: GoogleFonts.raleway().copyWith(
-                          fontSize: 15,
-                          color: Colors.white,
-                          fontWeight: FontWeight.normal),
-                    ),
-                    Text(
-                      'Reste: ${(matiere[index].quantity! - matiere[index].consumerQuantity!).toString()} ${matiere[index].unity!}',
-                      style: GoogleFonts.raleway().copyWith(
-                          fontSize: 15,
-                          color: Colors.white,
-                          fontWeight: FontWeight.normal),
-                    ),
-                    Expanded(child: Container()),
-                    SizedBox(
-                      height: 100,
-                      child: Column(
-                        children: [
-                          ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: Size(width, 50),
-                              backgroundColor: Palette.secondaryColor,
-                            ),
-                            onPressed: (() {
-                              dialogModif(
-                                  context,
-                                  matiere[index].mpName!,
-                                  matiere[index].quantity!,
-                                  matiere[index].unity!,
-                                  matiere[index].sId!);
-                            }),
-                            icon: const Icon(Icons.edit),
-                            label: const Text('Modifier'),
+          ajout == true
+              ? Container(
+                  height: height,
+                  color: Palette.secondaryBackgroundColor,
+                  child: creation())
+              : SizedBox(
+                  height: height - 375,
+                  width: width - 20,
+                  child: GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 200,
+                              childAspectRatio: 3 / 2,
+                              crossAxisSpacing: 20,
+                              mainAxisSpacing: 50,
+                              mainAxisExtent: 300),
+                      itemCount: matiere.length,
+                      itemBuilder: (BuildContext ctx, index) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(15.0),
+                            image: DecorationImage(
+                                opacity: 50,
+                                image: NetworkImage(
+                                    "http://192.168.1.105:4008${matiere[index].image!}"), //192.168.1.105
+                                fit: BoxFit.cover),
                           ),
-                          ElevatedButton.icon(
-                            onPressed: (() {
-                              dialogDelete(
-                                  matiere[index].mpName!, matiere[index].sId!);
-                            }),
-                            icon: const Icon(Icons.delete),
-                            label: const Text('Supprimer'),
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Palette.deleteColors,
-                                minimumSize: Size(width, 50)),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                matiere[index].mpName!,
+                                style: GoogleFonts.raleway().copyWith(
+                                    fontSize: 30,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                'Initiale: ${matiere[index].quantity.toString()} ${matiere[index].unity!}',
+                                style: GoogleFonts.raleway().copyWith(
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                              Text(
+                                'Consommation: ${matiere[index].consumerQuantity.toString()} ${matiere[index].unity!}',
+                                style: GoogleFonts.raleway().copyWith(
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                              Text(
+                                'Reste: ${(matiere[index].quantity! - matiere[index].consumerQuantity!).toString()} ${matiere[index].unity!}',
+                                style: GoogleFonts.raleway().copyWith(
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                              Expanded(child: Container()),
+                              SizedBox(
+                                height: 100,
+                                child: Column(
+                                  children: [
+                                    ElevatedButton.icon(
+                                      style: ElevatedButton.styleFrom(
+                                        minimumSize: Size(width, 50),
+                                        backgroundColor: Palette.secondaryColor,
+                                      ),
+                                      onPressed: (() {
+                                        dialogModif(
+                                            context,
+                                            matiere[index].mpName!,
+                                            matiere[index].quantity!,
+                                            matiere[index].unity!,
+                                            matiere[index].sId!);
+                                      }),
+                                      icon: const Icon(Icons.edit),
+                                      label: const Text('Modifier'),
+                                    ),
+                                    ElevatedButton.icon(
+                                      onPressed: (() {
+                                        dialogDelete(matiere[index].mpName!,
+                                            matiere[index].sId!);
+                                      }),
+                                      icon: const Icon(Icons.delete),
+                                      label: const Text('Supprimer'),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Palette.deleteColors,
+                                        minimumSize: Size(width, 50),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                      }),
                 ),
-              );
-            },
-          ),
-        ),
-      ],
-    ));
+        ],
+      ),
+    );
   }
 
   Future dialogDelete(String nom, String idMatiere) {
@@ -1170,7 +973,6 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
     FilePickerResult? result,
   ) async {
     ////////////
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var id = prefs.getString('IdUser').toString();
     var restaurantId = prefs.getString('idRestaurant').toString();
@@ -1179,7 +981,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
     //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.1.34:4008/api/materials/create"); // 192.168.1.34:4008
+        "http://192.168.1.105:4008/api/materials/create"); // 192.168.1.105:4008
     final request = MultipartRequest(
       'POST',
       url,
@@ -1224,7 +1026,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
         //stopMessage();
         //finishWorking();
         showTopSnackBar(
-          Overlay.of(context)!,
+          Overlay.of(context),
           const CustomSnackBar.info(
             backgroundColor: Palette.greenColors,
             message: "La matière première a été crée",
@@ -1233,7 +1035,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
         ref.refresh(getDataMatiereFuture);
       } else {
         showTopSnackBar(
-          Overlay.of(context)!,
+          Overlay.of(context),
           const CustomSnackBar.info(
             backgroundColor: Palette.deleteColors,
             message: "La matière première n'a pas été crée",
@@ -1258,10 +1060,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
 
       var token = prefs.getString('token');
       String urlDelete =
-          "http://192.168.1.34:4008/api/materials/delete/$idMatierePremiere"; // 192.168.1.34:4008 //$adressUrl
-      //var json = {'_creator': id};
-
-      //var body = jsonEncode(json);
+          "http://192.168.1.105:4008/api/materials/delete/$idMatierePremiere"; // 192.168.1.105:4008 //$adressUrl
 
       final http.Response response =
           await http.delete(Uri.parse(urlDelete), headers: {
@@ -1277,7 +1076,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
 
       if (response.statusCode == 200) {
         showTopSnackBar(
-          Overlay.of(context)!,
+          Overlay.of(context),
           const CustomSnackBar.info(
             backgroundColor: Palette.greenColors,
             message: "La matière première a été supprimée avec succès",
@@ -1287,7 +1086,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
         return response;
       } else {
         showTopSnackBar(
-          Overlay.of(context)!,
+          Overlay.of(context),
           const CustomSnackBar.info(
             backgroundColor: Palette.deleteColors,
             message: "La matière première n'a pas été supprimée succès",
@@ -1310,7 +1109,6 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
     String idModifMatiere,
   ) async {
     ////////////
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var id = prefs.getString('IdUser').toString();
     var restaurantId = prefs.getString('idRestaurant').toString();
@@ -1319,7 +1117,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
     //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.1.34:4008/api/materials/update/$idModifMatiere"); //$adressUrl
+        "http://192.168.1.105:4008/api/materials/update/$idModifMatiere"); //$adressUrl
     final request = MultipartRequest(
       'PUT',
       url,
@@ -1362,10 +1160,8 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
           print(value);
         });
 
-        //stopMessage();
-        //finishWorking();
         showTopSnackBar(
-          Overlay.of(context)!,
+          Overlay.of(context),
           const CustomSnackBar.info(
             backgroundColor: Colors.green,
             message: "La matière première a été modifié",
@@ -1376,7 +1172,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
         });
       } else {
         showTopSnackBar(
-          Overlay.of(context)!,
+          Overlay.of(context),
           const CustomSnackBar.info(
             backgroundColor: Colors.red,
             message: "La matière première n'a pas été modifié",

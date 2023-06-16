@@ -127,7 +127,7 @@ class _AppLayoutState extends State<AppLayout> {
             !BARRE DE NAVIGATION VERTICAL 
                                       **/
             SizedBox(
-              height: getProportionateScreenHeight(120.0),
+              height: 50,
               child: Navigation(
                 orientation: Axis.horizontal,
               ),

@@ -18,6 +18,7 @@ class GetDataMenuFuture extends ChangeNotifier {
   //RÔLE_Manager
 
   Future getData() async {
+    print("object");
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     var restaurantId = prefs.getString('idRestaurant').toString();
@@ -27,7 +28,7 @@ class GetDataMenuFuture extends ChangeNotifier {
     try {
       http.Response response = await http.get(
         Uri.parse(
-            'http://192.168.1.34:4009/api/menus/fetch/restaurant/$restaurantId'), //192.168.1.34 //192.168.1.34:4008
+            'http://192.168.1.105:4009/api/menus/fetch/restaurant/$restaurantId'), //192.168.1.105 //192.168.1.105:4008
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',

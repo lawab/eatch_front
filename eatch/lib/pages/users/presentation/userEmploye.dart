@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:eatch/servicesAPI/get_user.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
@@ -83,10 +85,10 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
               ),
             ),
           ),
-          Card(
+          const Card(
             child: SizedBox(
               height: 50,
-              child: Row(children: const [
+              child: Row(children: [
                 Expanded(
                     child: Center(
                   child: Text(
@@ -136,7 +138,7 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
           ),
           search == false
               ? SizedBox(
-                  height: MediaQuery.of(context).size.height - 403,
+                  height: MediaQuery.of(context).size.height - 437,
                   child: ListView.builder(
                       itemCount: viewModel.listEmploye.length,
                       itemBuilder: ((context, index) {
@@ -217,6 +219,21 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
                                                     .listEmploye[index].role!,
                                                 sId: viewModel
                                                     .listEmploye[index].sId!,
+                                                id: viewModel.listEmploye[index]
+                                                        .restaurant.isNull
+                                                    ? viewModel
+                                                            .listEmploye[index]
+                                                            .laboratory
+                                                            .isNull
+                                                        ? viewModel
+                                                            .listEmploye[index]
+                                                            .laboratory!
+                                                            .laboName!
+                                                        : ''
+                                                    : viewModel
+                                                        .listEmploye[index]
+                                                        .restaurant!
+                                                        .sId!,
                                                 // username: viewModel
                                                 //     .listEmploye[index]
                                                 //     .username!,
@@ -246,103 +263,115 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
                       })),
                 )
               : SizedBox(
-                  height: MediaQuery.of(context).size.height - 403,
+                  height: MediaQuery.of(context).size.height - 437,
                   child: ListView.builder(
-                      itemCount: UserSearch.length,
-                      itemBuilder: ((context, index) {
-                        return Card(
-                          child: SizedBox(
-                            height: 50,
-                            child: Row(children: [
-                              Expanded(
-                                  child: Center(
-                                child: Text(
-                                  UserSearch[index].lastName!,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                  softWrap: false,
-                                ),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text(
-                                  UserSearch[index].firstName!,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                  softWrap: false,
-                                ),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text(
-                                  UserSearch[index].username!,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                  softWrap: false,
-                                ),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text(
-                                  UserSearch[index].email!,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                  softWrap: false,
-                                ),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text(UserSearch[index].role!),
-                              )),
-                              SizedBox(
-                                width: 100,
+                    itemCount: UserSearch.length,
+                    itemBuilder: ((context, index) {
+                      return Card(
+                        child: SizedBox(
+                          height: 50,
+                          child: Row(children: [
+                            Expanded(
                                 child: Center(
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                          child: IconButton(
-                                        icon: const Icon(Icons.edit),
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                              return ModificationUser(
-                                                avatar:
-                                                    UserSearch[index].avatar!,
-                                                email: UserSearch[index].email!,
-                                                firstName: UserSearch[index]
-                                                    .firstName!,
-                                                lastName:
-                                                    UserSearch[index].lastName!,
-                                                role: UserSearch[index].role!,
-                                                sId: UserSearch[index].sId!,
-                                                // username:
-                                                //     UserSearch[index].username!,
-                                              );
-                                            }),
-                                          );
-                                        },
-                                      )),
-                                      Expanded(
-                                          child: IconButton(
-                                        icon: const Icon(
-                                          Icons.delete,
-                                          color: Palette.deleteColors,
-                                        ),
-                                        onPressed: () {
-                                          dialogDelete(
-                                              UserSearch[index].lastName!);
-                                        },
-                                      ))
-                                    ],
-                                  ),
+                              child: Text(
+                                UserSearch[index].lastName!,
+                                overflow: TextOverflow.fade,
+                                maxLines: 1,
+                                softWrap: false,
+                              ),
+                            )),
+                            Expanded(
+                                child: Center(
+                              child: Text(
+                                UserSearch[index].firstName!,
+                                overflow: TextOverflow.fade,
+                                maxLines: 1,
+                                softWrap: false,
+                              ),
+                            )),
+                            Expanded(
+                                child: Center(
+                              child: Text(
+                                UserSearch[index].username!,
+                                overflow: TextOverflow.fade,
+                                maxLines: 1,
+                                softWrap: false,
+                              ),
+                            )),
+                            Expanded(
+                                child: Center(
+                              child: Text(
+                                UserSearch[index].email!,
+                                overflow: TextOverflow.fade,
+                                maxLines: 1,
+                                softWrap: false,
+                              ),
+                            )),
+                            Expanded(
+                                child: Center(
+                              child: Text(UserSearch[index].role!),
+                            )),
+                            SizedBox(
+                              width: 100,
+                              child: Center(
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                        child: IconButton(
+                                      icon: const Icon(Icons.edit),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) {
+                                            return ModificationUser(
+                                              avatar: UserSearch[index].avatar!,
+                                              email: UserSearch[index].email!,
+                                              firstName:
+                                                  UserSearch[index].firstName!,
+                                              lastName:
+                                                  UserSearch[index].lastName!,
+                                              role: UserSearch[index].role!,
+                                              sId: UserSearch[index].sId!,
+                                              id: UserSearch[index]
+                                                      .restaurant!
+                                                      .isNull
+                                                  ? UserSearch[index]
+                                                          .laboratory
+                                                          .isNull
+                                                      ? UserSearch[index]
+                                                          .laboratory!
+                                                          .laboName!
+                                                      : ''
+                                                  : UserSearch[index]
+                                                      .restaurant!
+                                                      .sId!,
+                                              // username:
+                                              //     UserSearch[index].username!,
+                                            );
+                                          }),
+                                        );
+                                      },
+                                    )),
+                                    Expanded(
+                                        child: IconButton(
+                                      icon: const Icon(
+                                        Icons.delete,
+                                        color: Palette.deleteColors,
+                                      ),
+                                      onPressed: () {
+                                        dialogDelete(
+                                            UserSearch[index].lastName!);
+                                      },
+                                    ))
+                                  ],
                                 ),
                               ),
-                            ]),
-                          ),
-                        );
-                      })),
+                            ),
+                          ]),
+                        ),
+                      );
+                    }),
+                  ),
                 ),
         ],
       ),

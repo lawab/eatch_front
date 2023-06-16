@@ -27,17 +27,17 @@ class GetDataMatiereFuture extends ChangeNotifier {
     try {
       http.Response response = await http.get(
         Uri.parse(
-            'http://192.168.1.34:4008/api/materials/fetch/restaurant/$restaurantId'), //192.168.1.34 //192.168.1.34:4008
+            'http://192.168.1.105:4008/api/materials/fetch/restaurant/$restaurantId'), //192.168.1.105 //192.168.1.105:4008
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',
         },
       );
-
+      print('response.statusCode');
+      print(response.statusCode);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
 
-        print(response.body);
         for (int i = 0; i < data.length; i++) {
           if (data[i]["deletedAt"] == null) {
             listMatiere.add(Matiere.fromJson(data[i]));

@@ -1,8 +1,9 @@
 // ignore_for_file: must_be_immutable, use_build_context_synchronously
-
 import 'package:eatch/pages/categories/presentation/categories.dart';
 import 'package:eatch/pages/dashboard/dashboard_manager.dart';
+import 'package:eatch/pages/laboratoire/accuielLabo.dart';
 import 'package:eatch/pages/matiere_premiere/afficheMatiere.dart';
+import 'package:eatch/pages/matiere_premiere/menu_Matiere.dart';
 import 'package:eatch/pages/menus/presentation/menu.dart';
 import 'package:eatch/pages/promotion/affichePromotion.dart';
 import 'package:eatch/pages/recettes/recettes.dart';
@@ -36,11 +37,15 @@ class _NavigationState extends State<Navigation> {
     super.initState();
   }
 
+  bool lab = false;
+  var role = '';
   Future ind() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //if(prefs.getInt('index').toInt().is)
     setState(
       () {
+        lab = prefs.getBool('lab')!;
+        role = prefs.getString('Idrole')!;
         if (prefs.getInt('index') != null) {
           int aa = prefs.getInt('index')!.toInt();
           index = aa;
@@ -56,208 +61,261 @@ class _NavigationState extends State<Navigation> {
     return ListView(
       scrollDirection: widget.orientation,
       children: [
-        NavigationButton(
-          axis: widget.orientation,
-          index: index,
-          text: "ACCUEIL",
-          selectedIndex: 0,
-          onPress: () async {
-            SharedPreferences prefs = await SharedPreferences.getInstance();
+        lab == true
+            ? Container()
+            : NavigationButton(
+                axis: widget.orientation,
+                index: index,
+                text: "ACCUEIL",
+                selectedIndex: 0,
+                onPress: () async {
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
 
-            setState(
-              () {
-                index = 0;
-                prefs.setInt('index', index);
-              },
-            );
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => const DashboardManager(),
+                  setState(
+                    () {
+                      index = 0;
+                      prefs.setInt('index', index);
+                    },
+                  );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          const DashboardManager(),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
         ////////////////////////////////////
-        NavigationButton(
-          axis: widget.orientation,
-          index: index,
-          text: "Dashboard",
-          selectedIndex: 1,
-          onPress: () async {
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            setState(
-              () {
-                index = 1;
-                prefs.setInt('index', index);
-              },
-            );
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => const DashboardComptable(),
+        lab == true
+            ? Container()
+            : NavigationButton(
+                axis: widget.orientation,
+                index: index,
+                text: "Dashboard",
+                selectedIndex: 1,
+                onPress: () async {
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  setState(
+                    () {
+                      index = 1;
+                      prefs.setInt('index', index);
+                    },
+                  );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          const DashboardComptable(),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
         //////////////////////////////////////
-        NavigationButton(
-          axis: widget.orientation,
-          index: index,
-          text: "UTILISATEURS",
-          selectedIndex: 2,
-          onPress: () async {
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            setState(
-              () {
-                index = 2;
-                prefs.setInt('index', index);
-              },
-            );
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => const Users(),
+        role != 'SUPER_ADMIN'
+            ? Container()
+            : NavigationButton(
+                axis: widget.orientation,
+                index: index,
+                text: "UTILISATEURS",
+                selectedIndex: 2,
+                onPress: () async {
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  setState(
+                    () {
+                      index = 2;
+                      prefs.setInt('index', index);
+                    },
+                  );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => const Users(),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
-        NavigationButton(
-          axis: widget.orientation,
-          index: index,
-          text: "CATÉGORIES",
-          selectedIndex: 3,
-          onPress: () async {
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            setState(
-              () {
-                index = 3;
-                prefs.setInt('index', index);
-              },
-            );
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => const CategoriesPage(),
+        lab == true
+            ? Container()
+            : NavigationButton(
+                axis: widget.orientation,
+                index: index,
+                text: "CATÉGORIES",
+                selectedIndex: 3,
+                onPress: () async {
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  setState(
+                    () {
+                      index = 3;
+                      prefs.setInt('index', index);
+                    },
+                  );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => const CategoriesPage(),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
-        NavigationButton(
-          axis: widget.orientation,
-          index: index,
-          text: "GESTION DE RESTAURANT",
-          selectedIndex: 4,
-          onPress: () async {
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            setState(
-              () {
-                index = 4;
-                prefs.setInt('index', index);
-              },
-            );
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => const RestaurantAffiche(),
+        lab == true
+            ? Container()
+            : NavigationButton(
+                axis: widget.orientation,
+                index: index,
+                text: "GESTION DE RESTAURANT",
+                selectedIndex: 4,
+                onPress: () async {
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  setState(
+                    () {
+                      index = 4;
+                      prefs.setInt('index', index);
+                    },
+                  );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          const RestaurantAffiche(),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
-        NavigationButton(
-          axis: widget.orientation,
-          index: index,
-          text: "MATIERE PREMIERE",
-          selectedIndex: 5,
-          onPress: () async {
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            setState(
-              () {
-                index = 5;
-                prefs.setInt('index', index);
-              },
-            );
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => const MatiereAffiche(),
+        lab == true
+            ? Container()
+            : NavigationButton(
+                axis: widget.orientation,
+                index: index,
+                text: "MATIERE PREMIERE",
+                selectedIndex: 5,
+                onPress: () async {
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  setState(
+                    () {
+                      index = 5;
+                      prefs.setInt('index', index);
+                    },
+                  );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => const MatiereMenu(),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
-        NavigationButton(
-          axis: widget.orientation,
-          index: index,
-          text: "Menu",
-          selectedIndex: 6,
-          onPress: () async {
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            setState(
-              () {
-                index = 6;
-                prefs.setInt('index', index);
-              },
-            );
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => const Menu(),
+        lab == true
+            ? Container()
+            : NavigationButton(
+                axis: widget.orientation,
+                index: index,
+                text: "Menu",
+                selectedIndex: 6,
+                onPress: () async {
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  setState(
+                    () {
+                      index = 6;
+                      prefs.setInt('index', index);
+                    },
+                  );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => const Menu(),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
-        NavigationButton(
-          axis: widget.orientation,
-          index: index,
-          text: "Promotion",
-          selectedIndex: 7,
-          onPress: () async {
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            setState(
-              () {
-                index = 7;
-                prefs.setInt('index', index);
-              },
-            );
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => const PromotionAffiche(),
+        lab == true
+            ? Container()
+            : NavigationButton(
+                axis: widget.orientation,
+                index: index,
+                text: "Promotion",
+                selectedIndex: 7,
+                onPress: () async {
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  setState(
+                    () {
+                      index = 7;
+                      prefs.setInt('index', index);
+                    },
+                  );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          const PromotionAffiche(),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
-        NavigationButton(
-          axis: widget.orientation,
-          index: index,
-          text: "RECETTES",
-          selectedIndex: 8,
-          onPress: () async {
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            setState(
-              () {
-                index = 8;
-                prefs.setInt('index', index);
-              },
-            );
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => const RecettesPage(),
+        lab == true
+            ? Container()
+            : NavigationButton(
+                axis: widget.orientation,
+                index: index,
+                text: "RECETTES",
+                selectedIndex: 8,
+                onPress: () async {
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  setState(
+                    () {
+                      index = 8;
+                      prefs.setInt('index', index);
+                    },
+                  );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => const RecettesPage(),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
         NavigationButton(
           axis: widget.orientation,
           index: index,
-          text: "QUITTER L'APPLICATION",
+          text: "LABORATOIRE",
           selectedIndex: 9,
           onPress: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             setState(
               () {
                 index = 9;
+                prefs.setInt('index', index);
+              },
+            );
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => const AccuilLabo(),
+              ),
+            );
+          },
+        ),
+
+        NavigationButton(
+          axis: widget.orientation,
+          index: index,
+          text: "QUITTER L'APPLICATION",
+          selectedIndex: 10,
+          onPress: () async {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            setState(
+              () {
+                index = 10;
                 prefs.setInt('index', 0);
               },
             );
@@ -291,7 +349,7 @@ class NavigationButton extends StatelessWidget {
         horizontal: 10,
         vertical: 05.0,
       ),
-      height: 50.0,
+      height: 40.0,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15.0),
       ),

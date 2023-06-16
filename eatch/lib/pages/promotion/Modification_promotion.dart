@@ -471,7 +471,7 @@ class ModificationPromotionState extends ConsumerState<ModificationPromotion> {
     //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.1.34:5005/api/promotions/update/$idPromo"); //$adressUrl
+        "http://192.168.1.105:5005/api/promotions/update/$idPromo"); //$adressUrl
     final request = MultipartRequest(
       'PUT',
       url,

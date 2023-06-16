@@ -4,9 +4,10 @@ import 'dart:convert';
 
 import 'package:eatch/pages/recettes/eddit_recette.dart';
 import 'package:eatch/pages/recettes/grid.dart';
+import 'package:eatch/servicesAPI/getLabo.dart';
 import 'package:eatch/servicesAPI/getMatiere.dart';
 import 'package:eatch/servicesAPI/get_categories.dart';
-import 'package:eatch/servicesAPI/get_recettes.dart';
+import 'package:eatch/servicesAPI/get_recettes.dart' as recette;
 import 'package:eatch/servicesAPI/multipart.dart';
 import 'package:eatch/utils/applayout.dart';
 import 'package:eatch/utils/default_button/default_button.dart';
@@ -21,6 +22,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
+
+enum SingingCharacter { restaurant, laboratoire }
 
 class RecettesPage extends ConsumerStatefulWidget {
   const RecettesPage({super.key});
@@ -94,12 +97,13 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
   final List<TextEditingController> _matierePremieres = [];
   final List<TextEditingController> _quantite = [];
   final List<TextEditingController> _uniteDeMesure = [];
+  final List<SingingCharacter> choix = [];
 
 /*LA CLE DU FORMULAIRE*/
   final _formkey = GlobalKey<FormState>();
 
 /*LA LISTE QUI CONTIENT LE CONTENU DE LA RECHERCHE*/
-  List<Recette> recetteSearch = [];
+  List<recette.Recette> recetteSearch = [];
 
 /*LA METHODE QUI PERMET D'AJOUTER UN INGREDIENT */
   _addFiel() {
@@ -107,9 +111,11 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
       _matierePremieres.add(TextEditingController());
       _quantite.add(TextEditingController());
       _uniteDeMesure.add(TextEditingController());
+      choix.add(_character!);
     });
   }
 
+  SingingCharacter? _character = SingingCharacter.restaurant;
 /*LA METHODE QUI PERMET DE SUPPRIMER UN INGREDIENT */
   _removeItem(i) {
     setState(() {
@@ -138,7 +144,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
       return;
     } else if (_matierePremieres.length == 0) {
       showTopSnackBar(
-        Overlay.of(context)!,
+        Overlay.of(context),
         const CustomSnackBar.info(
           backgroundColor: Colors.red,
           message: "Les ingrédients sont obligatoires .",
@@ -151,6 +157,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
         ingredientsList.add(Ingredient(
           material: _matierePremieres[i].text,
           grammage: _quantite[i].text,
+          unity: _uniteDeMesure[i].text,
         ));
       }
       creationRecette(
@@ -177,11 +184,11 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
 
 /*LA METHODE QUI PERMET DE FAIRE LA RECHERCHE*/
   void filterRecetteResults(String query) {
-    final viewRecetteModel = ref.watch(getDataRecettesFuture);
-    List<Recette> dummySearchList = [];
+    final viewRecetteModel = ref.watch(recette.getDataRecettesFuture);
+    List<recette.Recette> dummySearchList = [];
     dummySearchList.addAll(viewRecetteModel.listRecette);
     if (query.isNotEmpty) {
-      List<Recette> dummyListData = [];
+      List<recette.Recette> dummyListData = [];
       for (var item in dummySearchList) {
         if (item.title!.contains(query)) {
           dummyListData.add(item);
@@ -239,7 +246,8 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
 
   Widget horizontalView(double height, double width, context) {
     final viewModel = ref.watch(getDataMatiereFuture);
-    final viewRecetteModel = ref.watch(getDataRecettesFuture);
+    final viewRecetteModel = ref.watch(recette.getDataRecettesFuture);
+    final viewModelL = ref.watch(getDataLaboratoriesFuture);
     return AppLayout(
       content: SingleChildScrollView(
         child: Column(
@@ -255,7 +263,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'Gestion des Recettes',
+                      'GESTION DES RECETTES',
                     ),
                     Container(
                       margin: const EdgeInsets.symmetric(
@@ -304,10 +312,10 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         alignment: Alignment.centerLeft,
-                        height: 80,
+                        height: 50,
                         color: Palette.yellowColor,
                         child: const Text(
-                          'Créer une Recette',
+                          'CREATION DE RECETTE',
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -389,8 +397,329 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                               const SizedBox(height: 20),
 
                               /* ENSEMBLE DES INGRÉDIENTS */
+                              Container(
+                                height: 300,
+                                child: ListView.builder(
+                                    itemCount: _matierePremieres.length,
+                                    itemBuilder: (context, index) {
+                                      return Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              InkWell(
+                                                child: const Icon(
+                                                    Icons.remove_circle),
+                                                onTap: () {
+                                                  _removeItem(index);
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                4,
+                                            child: Row(
+                                              children: <Widget>[
+                                                Expanded(
+                                                  child: ListTile(
+                                                    title: const Text(
+                                                        'Restaurant'),
+                                                    leading:
+                                                        Radio<SingingCharacter>(
+                                                      value: SingingCharacter
+                                                          .restaurant,
+                                                      groupValue: choix[index],
+                                                      onChanged:
+                                                          (SingingCharacter?
+                                                              value) {
+                                                        setState(() {
+                                                          choix[index] = value!;
+                                                        });
+                                                      },
+                                                    ),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: ListTile(
+                                                    title: const Text(
+                                                        'Laboratoire'),
+                                                    leading:
+                                                        Radio<SingingCharacter>(
+                                                      value: SingingCharacter
+                                                          .laboratoire,
+                                                      groupValue: choix[index],
+                                                      onChanged:
+                                                          (SingingCharacter?
+                                                              value) {
+                                                        setState(() {
+                                                          choix[index] = value!;
+                                                        });
+                                                      },
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              /* MATIÈRE PREMIÈRE */
+                                              choix[index] ==
+                                                      SingingCharacter
+                                                          .restaurant
+                                                  ? Expanded(
+                                                      flex: 3,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(2),
+                                                        child: Container(
+                                                          color: Palette
+                                                              .secondaryBackgroundColor,
+                                                          child:
+                                                              DropdownButtonFormField(
+                                                            hint: const Text(
+                                                              'Matière Première via Restaurant*',
+                                                            ),
+                                                            validator: (value) {
+                                                              if (value ==
+                                                                  null) {
+                                                                return "Le nom de la matière première est obligatoire.";
+                                                              } else {
+                                                                return null;
+                                                              }
+                                                            },
+                                                            decoration:
+                                                                InputDecoration(
+                                                              border:
+                                                                  OutlineInputBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10.0),
+                                                              ),
+                                                            ),
+                                                            onChanged: (value) {
+                                                              setState(() {
+                                                                _matierePremieres[
+                                                                            index]
+                                                                        .text =
+                                                                    value
+                                                                        .toString();
+                                                              });
+                                                            },
+                                                            onSaved: (value) {
+                                                              setState(() {
+                                                                _matierePremieres[
+                                                                            index]
+                                                                        .text =
+                                                                    value
+                                                                        .toString();
+                                                              });
+                                                            },
+                                                            items: viewModel
+                                                                .listMatiere
+                                                                .map((val) {
+                                                              return DropdownMenuItem(
+                                                                value: val.sId,
+                                                                child: Text(
+                                                                  val.mpName!,
+                                                                ),
+                                                              );
+                                                            }).toList(),
+                                                            // items: listOfMatiere
+                                                            //     .map((String val) {
+                                                            //   return DropdownMenuItem(
+                                                            //     value: val,
+                                                            //     child: Text(
+                                                            //       val,
+                                                            //     ),
+                                                            //   );
+                                                            // }).toList(),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Expanded(
+                                                      flex: 3,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(2),
+                                                        child: Container(
+                                                          color: Palette
+                                                              .secondaryBackgroundColor,
+                                                          child:
+                                                              DropdownButtonFormField(
+                                                            hint: const Text(
+                                                              'Matière Première via Laboratoire*',
+                                                            ),
+                                                            validator: (value) {
+                                                              if (value ==
+                                                                  null) {
+                                                                return "Le nom de la matière première est obligatoire.";
+                                                              } else {
+                                                                return null;
+                                                              }
+                                                            },
+                                                            decoration:
+                                                                InputDecoration(
+                                                              border:
+                                                                  OutlineInputBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10.0),
+                                                              ),
+                                                            ),
+                                                            onChanged: (value) {
+                                                              setState(() {
+                                                                _matierePremieres[
+                                                                            index]
+                                                                        .text =
+                                                                    value
+                                                                        .toString();
+                                                              });
+                                                            },
+                                                            onSaved: (value) {
+                                                              setState(() {
+                                                                _matierePremieres[
+                                                                            index]
+                                                                        .text =
+                                                                    value
+                                                                        .toString();
+                                                              });
+                                                            },
+                                                            items: viewModelL
+                                                                .listFINI
+                                                                .map((val) {
+                                                              return DropdownMenuItem(
+                                                                value: val.sId,
+                                                                child: Text(
+                                                                  val.title!,
+                                                                ),
+                                                              );
+                                                            }).toList(),
+                                                            // items: listOfMatiere
+                                                            //     .map((String val) {
+                                                            //   return DropdownMenuItem(
+                                                            //     value: val,
+                                                            //     child: Text(
+                                                            //       val,
+                                                            //     ),
+                                                            //   );
+                                                            // }).toList(),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                              const SizedBox(width: 20),
 
-                              Column(
+                                              /* QUANTITÉ */
+                                              Expanded(
+                                                flex: 1,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(2),
+                                                  child: TextFormField(
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    controller:
+                                                        _quantite[index],
+                                                    validator: (value) {
+                                                      if (value!.isEmpty) {
+                                                        return "La quantité est obligatoire !";
+                                                      } else if (value == "0") {
+                                                        return "La quantité doit être supérieur a zéro minute !";
+                                                      }
+                                                      return null;
+                                                    },
+                                                    inputFormatters: <TextInputFormatter>[
+                                                      FilteringTextInputFormatter
+                                                          .allow(
+                                                              RegExp(r'[0-9]')),
+                                                    ],
+                                                    decoration: InputDecoration(
+                                                      border:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.0),
+                                                      ),
+                                                      hintText: "Quantité*",
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 20),
+
+                                              /* UNITE DE MESURE */
+                                              Expanded(
+                                                flex: 2,
+                                                child: Container(
+                                                  color: Palette
+                                                      .secondaryBackgroundColor,
+                                                  child:
+                                                      DropdownButtonFormField(
+                                                    hint: const Text(
+                                                      'Unité*',
+                                                    ),
+                                                    validator: (value) {
+                                                      if (value == null) {
+                                                        return "L ' Unité de mésure est obligatoire.";
+                                                      } else {
+                                                        return null;
+                                                      }
+                                                    },
+                                                    decoration: InputDecoration(
+                                                      border:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.0),
+                                                      ),
+                                                    ),
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        _uniteDeMesure[index]
+                                                                .text =
+                                                            value.toString();
+                                                      });
+                                                    },
+                                                    onSaved: (value) {
+                                                      setState(() {
+                                                        _uniteDeMesure[index]
+                                                                .text =
+                                                            value.toString();
+                                                      });
+                                                    },
+                                                    items: listOfUnities
+                                                        .map((String val) {
+                                                      return DropdownMenuItem(
+                                                        value: val,
+                                                        child: Text(
+                                                          val,
+                                                        ),
+                                                      );
+                                                    }).toList(),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 20),
+                                        ],
+                                      );
+                                    }),
+                              ),
+                              /*Column(
                                 children: [
                                   for (int i = 0;
                                       i < _matierePremieres.length;
@@ -411,75 +740,201 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                           ],
                                         ),
                                         const SizedBox(height: 10),
+                                        Container(
+                                          child: Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: ListTile(
+                                                  title:
+                                                      const Text('Restaurant'),
+                                                  leading:
+                                                      Radio<SingingCharacter>(
+                                                    value: SingingCharacter
+                                                        .restaurant,
+                                                    groupValue: _character,
+                                                    onChanged:
+                                                        (SingingCharacter?
+                                                            value) {
+                                                      setState(() {
+                                                        _character = value;
+                                                      });
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: ListTile(
+                                                  title:
+                                                      const Text('Laboratoire'),
+                                                  leading:
+                                                      Radio<SingingCharacter>(
+                                                    value: SingingCharacter
+                                                        .laboratoire,
+                                                    groupValue: _character,
+                                                    onChanged:
+                                                        (SingingCharacter?
+                                                            value) {
+                                                      setState(() {
+                                                        _character = value;
+                                                      });
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceEvenly,
                                           children: [
                                             /* MATIÈRE PREMIÈRE */
-                                            Expanded(
-                                              flex: 3,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(2),
-                                                child: Container(
-                                                  color: Palette
-                                                      .secondaryBackgroundColor,
-                                                  child:
-                                                      DropdownButtonFormField(
-                                                    hint: const Text(
-                                                      'Matière Première*',
-                                                    ),
-                                                    validator: (value) {
-                                                      if (value == null) {
-                                                        return "Le nom de la matière première est obligatoire.";
-                                                      } else {
-                                                        return null;
-                                                      }
-                                                    },
-                                                    decoration: InputDecoration(
-                                                      border:
-                                                          OutlineInputBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10.0),
+                                            _character ==
+                                                    SingingCharacter.restaurant
+                                                ? Expanded(
+                                                    flex: 3,
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              2),
+                                                      child: Container(
+                                                        color: Palette
+                                                            .secondaryBackgroundColor,
+                                                        child:
+                                                            DropdownButtonFormField(
+                                                          hint: const Text(
+                                                            'Matière Première via Restaurant*',
+                                                          ),
+                                                          validator: (value) {
+                                                            if (value == null) {
+                                                              return "Le nom de la matière première est obligatoire.";
+                                                            } else {
+                                                              return null;
+                                                            }
+                                                          },
+                                                          decoration:
+                                                              InputDecoration(
+                                                            border:
+                                                                OutlineInputBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10.0),
+                                                            ),
+                                                          ),
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _matierePremieres[
+                                                                          i]
+                                                                      .text =
+                                                                  value
+                                                                      .toString();
+                                                            });
+                                                          },
+                                                          onSaved: (value) {
+                                                            setState(() {
+                                                              _matierePremieres[
+                                                                          i]
+                                                                      .text =
+                                                                  value
+                                                                      .toString();
+                                                            });
+                                                          },
+                                                          items: viewModel
+                                                              .listMatiere
+                                                              .map((val) {
+                                                            return DropdownMenuItem(
+                                                              value: val.sId,
+                                                              child: Text(
+                                                                val.mpName!,
+                                                              ),
+                                                            );
+                                                          }).toList(),
+                                                          // items: listOfMatiere
+                                                          //     .map((String val) {
+                                                          //   return DropdownMenuItem(
+                                                          //     value: val,
+                                                          //     child: Text(
+                                                          //       val,
+                                                          //     ),
+                                                          //   );
+                                                          // }).toList(),
+                                                        ),
                                                       ),
                                                     ),
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        _matierePremieres[i]
-                                                                .text =
-                                                            value.toString();
-                                                      });
-                                                    },
-                                                    onSaved: (value) {
-                                                      setState(() {
-                                                        _matierePremieres[i]
-                                                                .text =
-                                                            value.toString();
-                                                      });
-                                                    },
-                                                    items: viewModel.listMatiere
-                                                        .map((val) {
-                                                      return DropdownMenuItem(
-                                                        value: val.sId,
-                                                        child: Text(
-                                                          val.mpName!,
+                                                  )
+                                                : Expanded(
+                                                    flex: 3,
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              2),
+                                                      child: Container(
+                                                        color: Palette
+                                                            .secondaryBackgroundColor,
+                                                        child:
+                                                            DropdownButtonFormField(
+                                                          hint: const Text(
+                                                            'Matière Première via Laboratoire*',
+                                                          ),
+                                                          validator: (value) {
+                                                            if (value == null) {
+                                                              return "Le nom de la matière première est obligatoire.";
+                                                            } else {
+                                                              return null;
+                                                            }
+                                                          },
+                                                          decoration:
+                                                              InputDecoration(
+                                                            border:
+                                                                OutlineInputBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10.0),
+                                                            ),
+                                                          ),
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              _matierePremieres[
+                                                                          i]
+                                                                      .text =
+                                                                  value
+                                                                      .toString();
+                                                            });
+                                                          },
+                                                          onSaved: (value) {
+                                                            setState(() {
+                                                              _matierePremieres[
+                                                                          i]
+                                                                      .text =
+                                                                  value
+                                                                      .toString();
+                                                            });
+                                                          },
+                                                          items: viewModelL
+                                                              .listFINI
+                                                              .map((val) {
+                                                            return DropdownMenuItem(
+                                                              value: val.sId,
+                                                              child: Text(
+                                                                val.title!,
+                                                              ),
+                                                            );
+                                                          }).toList(),
+                                                          // items: listOfMatiere
+                                                          //     .map((String val) {
+                                                          //   return DropdownMenuItem(
+                                                          //     value: val,
+                                                          //     child: Text(
+                                                          //       val,
+                                                          //     ),
+                                                          //   );
+                                                          // }).toList(),
                                                         ),
-                                                      );
-                                                    }).toList(),
-                                                    // items: listOfMatiere
-                                                    //     .map((String val) {
-                                                    //   return DropdownMenuItem(
-                                                    //     value: val,
-                                                    //     child: Text(
-                                                    //       val,
-                                                    //     ),
-                                                    //   );
-                                                    // }).toList(),
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
-                                              ),
-                                            ),
                                             const SizedBox(width: 20),
 
                                             /* QUANTITÉ */
@@ -572,7 +1027,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                       ],
                                     ),
                                 ],
-                              ),
+                              ),*/
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -736,7 +1191,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                               ),
                               child: Center(
                                 child: Text(
-                                  'Aucune recette trouvée',
+                                  'Aucune recette ',
                                   style: Theme.of(context)
                                       .textTheme
                                       .headlineMedium,
@@ -775,7 +1230,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                                           Radius.circular(15),
                                                     ),
                                                     child: Image.network(
-                                                      'http://192.168.1.34:4010${recette.image}',
+                                                      'http://192.168.1.105:4010${recette.image}',
                                                       height: 180,
                                                       width: double.infinity,
                                                       fit: BoxFit.cover,
@@ -1089,7 +1544,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
 
   Widget verticalView(double height, double width, context) {
     final viewModel = ref.watch(getDataCategoriesFuture);
-    final viewRecetteModel = ref.watch(getDataRecettesFuture);
+    final viewRecetteModel = ref.watch(recette.getDataRecettesFuture);
     return AppLayout(
       content: Container(),
     );
@@ -1109,7 +1564,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
     var restaurantid = prefs.getString('idRestaurant');
     String adressUrl = prefs.getString('ipport').toString();
     var url = Uri.parse(
-        "http://192.168.1.34:4010/api/recettes/create"); //13.39.81.126
+        "http://192.168.1.105:4010/api/recettes/create"); //13.39.81.126
     print(url);
     final request = MultipartRequest(
       'POST',
@@ -1155,16 +1610,16 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
         //finishWorking();
 
         showTopSnackBar(
-          Overlay.of(contextt)!,
+          Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.green,
             message: "Recette Crée",
           ),
         );
-        ref.refresh(getDataRecettesFuture);
+        ref.refresh(recette.getDataRecettesFuture);
       } else {
         showTopSnackBar(
-          Overlay.of(contextt)!,
+          Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.red,
             message: "Erreur de création",
@@ -1242,7 +1697,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userdelete = prefs.getString('IdUser').toString();
       var token = prefs.getString('token');
-      String urlDelete = "http://192.168.1.34:4010/api/recettes/delete/$id";
+      String urlDelete = "http://192.168.1.105:4010/api/recettes/delete/$id";
       var json = {
         '_creator': userdelete,
       };
@@ -1260,7 +1715,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
 
       print(response.statusCode);
       if (response.statusCode == 200) {
-        ref.refresh(getDataRecettesFuture);
+        ref.refresh(recette.getDataRecettesFuture);
 
         return response;
       } else {
@@ -1275,18 +1730,25 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
 class Ingredient {
   String? material;
   String? grammage;
+  String? unity;
 
-  Ingredient({this.material, this.grammage});
+  Ingredient({
+    this.material,
+    this.grammage,
+    this.unity,
+  });
 
   Ingredient.fromJson(Map<String, dynamic> json) {
     material = json['material'];
     grammage = json['grammage'];
+    unity = json['unity'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['material'] = this.material;
-    data['grammage'] = this.grammage;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['material'] = material;
+    data['grammage'] = grammage;
+    data['unity'] = unity;
     return data;
   }
 }
