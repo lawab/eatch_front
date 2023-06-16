@@ -27,7 +27,7 @@ class GetDataMatiereFuture extends ChangeNotifier {
     try {
       http.Response response = await http.get(
         Uri.parse(
-            'http://192.168.11.110:4008/api/materials/fetch/restaurant/$restaurantId'), //192.168.11.110 //192.168.11.110:4008
+            'http://192.168.1.34:4008/api/materials/fetch/restaurant/$restaurantId'), //192.168.1.34 //192.168.1.34:4008
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',

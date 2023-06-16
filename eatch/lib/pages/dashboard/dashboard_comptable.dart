@@ -285,7 +285,7 @@ class _DashboardComptableState extends State<DashboardComptable> {
                                       ),
                                     ),
                                     SizedBox(
-                                      height: ((height * 2 / 4) - 215.250),
+                                      height: ((height * 2 / 4) - 244.500),
                                       child: BarChart(),
                                     )
                                   ],

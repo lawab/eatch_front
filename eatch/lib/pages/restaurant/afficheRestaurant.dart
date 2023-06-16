@@ -202,7 +202,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   image: DecorationImage(
                                       opacity: 150,
                                       image: NetworkImage(
-                                          'http://192.168.11.110:4002${listRsetaurant[index].infos!.logo.toString()}'), //13.39.81.126:4002
+                                          'http://192.168.1.34:4002${listRsetaurant[index].infos!.logo.toString()}'), //13.39.81.126:4002
                                       fit: BoxFit.cover),
                                 ),
                               ),
@@ -389,7 +389,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                   height: 5,
                 ),
           Container(
-            height: ajout == false ? height - 216 : height - 436,
+            height: ajout == false ? height - 217.2 : height - 437.2,
             width: width,
             padding: const EdgeInsets.all(10),
             child: GridView.builder(
@@ -427,7 +427,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                                   image: DecorationImage(
                                       opacity: 150,
                                       image: NetworkImage(
-                                          'http://192.168.11.110:4002${listRsetaurant[index].infos!.logo.toString()}'),
+                                          'http://192.168.1.34:4002${listRsetaurant[index].infos!.logo.toString()}'),
                                       //image: AssetImage('Logo_Eatch_png.png'),
                                       fit: BoxFit.cover),
                                 ),
@@ -950,7 +950,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
     var token = prefs.getString('token');
 
     var url = Uri.parse(
-        "http://192.168.11.110:4002/api/restaurants/create"); //13.39.81.126
+        "http://192.168.1.34:4002/api/restaurants/create"); //13.39.81.126
     final request = MultipartRequest(
       'POST',
       url,
@@ -1021,8 +1021,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var id = prefs.getString('IdUser').toString();
       var token = prefs.getString('token');
-      String urlDelete =
-          "http://192.168.11.110:4002/api/restaurants/delete/$ids";
+      String urlDelete = "http://192.168.1.34:4002/api/restaurants/delete/$ids";
       //13.39.81.126
 
       var json = {

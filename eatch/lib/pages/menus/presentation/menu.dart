@@ -300,7 +300,7 @@ class _MenuState extends ConsumerState<Menu> {
                     height: 5,
                   ),
             SizedBox(
-              height: ajout == false ? height - 216 : height - 536,
+              height: ajout == false ? height - 217.2 : height - 537.2,
               child: SingleChildScrollView(
                 child: GridView.builder(
                     physics: const NeverScrollableScrollPhysics(),
@@ -872,7 +872,7 @@ class _MenuState extends ConsumerState<Menu> {
     //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.11.110:4009/api/menus/create"); // 192.168.11.110:4009
+        "http://192.168.1.34:4009/api/menus/create"); // 192.168.1.34:4009
     final request = MultipartRequest(
       'POST',
       url,
@@ -957,7 +957,7 @@ class _MenuState extends ConsumerState<Menu> {
 
       var token = prefs.getString('token');
       String urlDelete =
-          "http://192.168.11.110:4009/api/menus/delete/$idMenu"; // 192.168.11.110:4008 //$adressUrl
+          "http://192.168.1.34:4009/api/menus/delete/$idMenu"; // 192.168.1.34:4008 //$adressUrl
       //var json = {'_creator': id};
 
       //var body = jsonEncode(json);
