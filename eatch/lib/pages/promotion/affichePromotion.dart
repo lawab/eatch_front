@@ -4,7 +4,8 @@ import 'dart:typed_data';
 
 import 'package:eatch/pages/promotion/Modification_promotion.dart';
 import 'package:eatch/servicesAPI/getMenu.dart';
-import 'package:eatch/servicesAPI/get_produits.dart' as p;
+import 'package:eatch/servicesAPI/getProduit.dart';
+// import 'package:eatch/servicesAPI/get_produits.dart' as p;
 import 'package:eatch/utils/applayout.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:file_picker/file_picker.dart';
@@ -157,7 +158,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                                   Radius.circular(10.0),
                                                 ),
                                                 child: Image.network(
-                                                  "http://192.168.11.110:5005${viewModel.listPromotion[index].image}",
+                                                  "http://13.39.81.126:5005${viewModel.listPromotion[index].image}",
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -523,7 +524,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                                   Radius.circular(10.0),
                                                 ),
                                                 child: Image.network(
-                                                  "http://192.168.11.110:5005${viewModel.listPromotion[index].image}",
+                                                  "http://13.39.81.126:5005${viewModel.listPromotion[index].image}",
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -1158,7 +1159,9 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
 
   Widget creation(List<String> listDesMenus, List<String> listDesProduits) {
     final viewModel1 = ref.watch(getDataMenuFuture);
-    final viewModel2 = ref.watch(p.getDataProduitFuture);
+    final viewModel2 = ref.watch(getDataProduitFuture);
+    print('viewModel2.listProduit.length');
+    print(viewModel2.listProduit.length);
     return Column(
       children: [
         Container(
@@ -1665,7 +1668,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
     //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.1.105:5005/api/promotions/create"); // 192.168.11.110:4009
+        "http://13.39.81.126:5005/api/promotions/create"); // 13.39.81.126:4009
     final request = MultipartRequest(
       'POST',
       url,
@@ -1750,7 +1753,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
 
       var token = prefs.getString('token');
       String urlDelete =
-          "http://192.168.1.105:5005/api/promotions/delete/$idPromotion"; // 192.168.11.110:4008 //$adressUrl
+          "http://13.39.81.126:5005/api/promotions/delete/$idPromotion"; // 13.39.81.126:4008 //$adressUrl
 
       var json = {
         '_creator': id,

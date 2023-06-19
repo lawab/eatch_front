@@ -328,7 +328,7 @@ class RestaurantModificationState
                           image: DecorationImage(
                               opacity: 100,
                               image: NetworkImage(
-                                  'http://192.168.1.105:4002${widget.restaurant.infos!.logo.toString()}'), //192.168.1.105
+                                  'http://13.39.81.126:4002${widget.restaurant.infos!.logo.toString()}'), //13.39.81.126
                               fit: BoxFit.cover),
                         ),
                         child: const Text(
@@ -404,7 +404,7 @@ class RestaurantModificationState
     String adress_url = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.1.105:4002/api/restaurants/update/$idChoisie"); //192.168.1.105
+        "http://13.39.81.126:4002/api/restaurants/update/$idChoisie"); //13.39.81.126
     final request = MultipartRequest(
       'PUT',
       url,

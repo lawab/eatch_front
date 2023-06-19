@@ -651,7 +651,7 @@ class AuthentificationState extends State<Authentification> {
 
     prefs.setString('ipport', adressUrl);
     String url =
-        "http://192.168.1.105:4001/api/users/login"; //192.168.1.105:4001 //192.168.1.105:4001 // $adress_url
+        "http://13.39.81.126:4001/api/users/login"; //13.39.81.126:4001 //13.39.81.126:4001 // $adress_url
     print(url);
     print(email);
     print(pass);
@@ -683,8 +683,9 @@ class AuthentificationState extends State<Authentification> {
         if (data['user']['role'] == 'SUPER_ADMIN') {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => const Accueil()));
-        } else if (data['role'] == 'LABORANTIN') {
+        } else if (data['user']['role'] == 'LABORANTIN') {
           prefs.setInt('index', 9);
+          prefs.setBool('lab', true);
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => const AccuilLabo()));
         } else if (data['role'] == 'MANAGER') {

@@ -1150,7 +1150,7 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
     //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.1.105:4015/api/semiMaterials/create"); // 192.168.1.105:4008
+        "http://13.39.81.126:4015/api/semiMaterials/create"); // 13.39.81.126:4008
     final request = MultipartRequest(
       'POST',
       url,
@@ -1233,7 +1233,7 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
     var idLabo = prefs.getString('idLabo');
 
     var url = Uri.parse(
-        "http://192.168.1.105:4015/api/laboratories/updateManufacturing"); //192.168.1.105 // 192.168.1.105 //192.168.1.105
+        "http://13.39.81.126:4015/api/laboratories/updateManufacturing"); //13.39.81.126 // 13.39.81.126 //13.39.81.126
     final request = MultipartRequest(
       'PATCH',
       url,

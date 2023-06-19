@@ -11,6 +11,7 @@ class GetDataUserFuture extends ChangeNotifier {
   List<User> listAllUsers = [];
   List<User> listManager = [];
   List<User> listEmploye = [];
+  List<User> listLaborantin = [];
   List<User> listComptable = [];
 
   GetDataUserFuture() {
@@ -25,7 +26,7 @@ class GetDataUserFuture extends ChangeNotifier {
 
     try {
       http.Response response = await http.get(
-        Uri.parse('http://192.168.1.105:4001/api/users/fetch/all'),
+        Uri.parse('http://13.39.81.126:4001/api/users/fetch/all'),
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',
@@ -49,6 +50,8 @@ class GetDataUserFuture extends ChangeNotifier {
               listEmploye.add(User.fromJson(data[i]));
             } else if (data[i]['role'] == 'COMPTABLE') {
               listComptable.add(User.fromJson(data[i]));
+            } else if (data[i]['role'] == 'LABORANTIN') {
+              listLaborantin.add(User.fromJson(data[i]));
             }
           }
         }

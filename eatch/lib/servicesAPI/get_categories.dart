@@ -25,8 +25,8 @@ class GetDataCategoriesFuture extends ChangeNotifier {
     try {
       http.Response response = await http.get(
         Uri.parse(
-            // 'http://192.168.1.105:4005/api/categories/fetch/restaurant/$restaurantid'), //4002
-            'http://192.168.1.105:4003/api/products/fetch/categories/$restaurantid'),
+            // 'http://13.39.81.126:4005/api/categories/fetch/restaurant/$restaurantid'), //4002
+            'http://13.39.81.126:4003/api/products/fetch/categories/$restaurantid'),
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',
@@ -167,7 +167,7 @@ class GetDataCategoriesFuture extends ChangeNotifier {
     try {
       http.Response response = await http.get(
         Uri.parse(
-            'http://192.168.1.105:4005/api/categories/fetch/restaurant/$restaurantId'), //192.168.1.105 //192.168.1.105:4008 //restaurant/$restaurantId
+            'http://13.39.81.126:4005/api/categories/fetch/restaurant/$restaurantId'), //13.39.81.126 //13.39.81.126:4008 //restaurant/$restaurantId
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',
@@ -285,7 +285,7 @@ class GetDataCategoriesFuture extends ChangeNotifier {
     try {
       http.Response response = await http.get(
         Uri.parse(
-            'http://192.168.1.105:4003/api/products/fetch/categories/$restaurantId'), //4002 //products/fetch/categories/$restaurantId
+            'http://13.39.81.126:4003/api/products/fetch/categories/$restaurantId'), //4002 //products/fetch/categories/$restaurantId
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',

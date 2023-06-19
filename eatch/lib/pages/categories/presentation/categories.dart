@@ -1132,7 +1132,7 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
     var token = prefs.getString('token');
 
     var url = Uri.parse(
-        "http://192.168.1.105:4005/api/categories/create"); //13.39.81.126
+        "http://13.39.81.126:4005/api/categories/create"); //13.39.81.126
     final request = MultipartRequest(
       'POST',
       url,
@@ -1170,6 +1170,9 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
         await response.stream.bytesToString().then((value) {
           print(value);
         });
+        setState(() {
+          _showContent = false;
+        });
         //stopMessage();
         //finishWorking();
 
@@ -1177,7 +1180,7 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
           Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.green,
-            message: "Restaurant Modifié",
+            message: "Catégorie créée avec succès",
           ),
         );
         ref.refresh(getDataCategoriesFuture);
@@ -1202,7 +1205,7 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
       var userdelete = prefs.getString('IdUser').toString();
       var token = prefs.getString('token');
       var restaurantId = prefs.getString('idRestaurant').toString();
-      String urlDelete = "http://192.168.1.105:4005/api/categories/delete/$id";
+      String urlDelete = "http://13.39.81.126:4005/api/categories/delete/$id";
       //13.39.81.126
 
       var json = {

@@ -951,7 +951,7 @@ class SortieMatiereState extends ConsumerState<SortieMatiere> {
     //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.1.105:4015/api/laboratories/validateRequesting"); //$adressUrl
+        "http://13.39.81.126:4015/api/laboratories/validateRequesting"); //$adressUrl
     final request = MultipartRequest(
       'PATCH',
       url,

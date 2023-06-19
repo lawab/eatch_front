@@ -871,7 +871,7 @@ class _MenuState extends ConsumerState<Menu> {
     //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.1.105:4009/api/menus/create"); // 192.168.1.105:4009
+        "http://13.39.81.126:4009/api/menus/create"); // 13.39.81.126:4009
     final request = MultipartRequest(
       'POST',
       url,
@@ -956,7 +956,7 @@ class _MenuState extends ConsumerState<Menu> {
 
       var token = prefs.getString('token');
       String urlDelete =
-          "http://192.168.1.105:4009/api/menus/delete/$idMenu"; // 192.168.1.105:4008 //$adressUrl
+          "http://13.39.81.126:4009/api/menus/delete/$idMenu"; // 13.39.81.126:4008 //$adressUrl
       //var json = {'_creator': id};
 
       //var body = jsonEncode(json);

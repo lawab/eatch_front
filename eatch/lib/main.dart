@@ -14,6 +14,7 @@ import 'package:eatch/pages/restaurantAccueil.dart';
 import 'package:eatch/pages/users/presentation/users.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,6 +38,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en'),
+          Locale('fr')
+        ],
         debugShowCheckedModeBanner: false,
         scrollBehavior: ScrollConfiguration.of(context).copyWith(
           dragDevices: {

@@ -107,7 +107,7 @@ class _MenuCardState extends ConsumerState<MenuCard> {
                   Radius.circular(10.0),
                 ),
                 child: Image.network(
-                  "http://192.168.1.105:4009${widget.imageUrl}",
+                  "http://13.39.81.126:4009${widget.imageUrl}",
                 ),
               ),
             ),
@@ -182,9 +182,9 @@ class _MenuCardState extends ConsumerState<MenuCard> {
                   ),
                   child: Image.network(
 <<<<<<< HEAD
-                    "http://192.168.1.105:4009${widget.imageUrl}",
+                    "http://13.39.81.126:4009${widget.imageUrl}",
 =======
-                    "http://192.168.1.105:4009${widget.imageUrl}",
+                    "http://13.39.81.126:4009${widget.imageUrl}",
 >>>>>>> c78a703a07353bfdfbc2c15ab4d3750b5f3eab1b
                   ),
                 ),

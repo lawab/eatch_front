@@ -429,7 +429,7 @@ class MatiereLaboAfficheState extends ConsumerState<MatiereLaboAffiche> {
     //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.1.105:4002/api/restaurants/requestMaterial"); //$adressUrl
+        "http://13.39.81.126:4002/api/restaurants/requestMaterial"); //$adressUrl
     final request = MultipartRequest(
       'PATCH',
       url,

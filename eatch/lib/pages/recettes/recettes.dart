@@ -152,14 +152,35 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
       );
     } else {
       _formkey.currentState!.save();
-
+      print(
+          '----------------------------------------------------rrrrrrrrrrrrrrr');
       for (int i = 0; i < _matierePremieres.length; i++) {
-        ingredientsList.add(Ingredient(
-          material: _matierePremieres[i].text,
-          grammage: _quantite[i].text,
-          unity: _uniteDeMesure[i].text,
-        ));
+        if (choix[i] == SingingCharacter.laboratoire) {
+          ingredientsList.add(Ingredient(
+            type: 'raw_material',
+            rawmaterial: _matierePremieres[i].text,
+            grammage: _quantite[i].text,
+            unity: _uniteDeMesure[i].text,
+          ));
+        } else {
+          ingredientsList.add(Ingredient(
+            type: 'material',
+            material: _matierePremieres[i].text,
+            grammage: _quantite[i].text,
+            unity: _uniteDeMesure[i].text,
+          ));
+        }
       }
+      print('----------------------------------------------------');
+      print(jsonEncode(ingredientsList));
+      for (int i = 0; i < ingredientsList.length; i++) {
+        if (ingredientsList[i].material != null) {
+          print(ingredientsList[i].material);
+        } else {
+          print(ingredientsList[i].rawmaterial);
+        }
+      }
+      print('----------------------------------------------------ZZZZZZZZZZ');
       creationRecette(
         context,
         _titreRecette.text,
@@ -170,9 +191,8 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
       );
       print(_titreRecette.text);
       print(_descriptionRecette.text);
-      print(ingredientsList);
+      //print(ingredientsList);
 
-      _clear();
       setState(() {
         _selectFile = false;
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -375,8 +395,6 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return "Le titre de la recette est obligatoire !";
-                                  } else if (value.length < 50) {
-                                    return "Entrez au moins 50 caractères !";
                                   }
                                   return null;
                                 },
@@ -1230,7 +1248,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                                           Radius.circular(15),
                                                     ),
                                                     child: Image.network(
-                                                      'http://192.168.1.105:4010${recette.image}',
+                                                      'http://13.39.81.126:4010${recette.image}',
                                                       height: 180,
                                                       width: double.infinity,
                                                       fit: BoxFit.cover,
@@ -1564,7 +1582,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
     var restaurantid = prefs.getString('idRestaurant');
     String adressUrl = prefs.getString('ipport').toString();
     var url = Uri.parse(
-        "http://192.168.1.105:4010/api/recettes/create"); //13.39.81.126
+        "http://13.39.81.126:4010/api/recettes/create"); //13.39.81.126
     print(url);
     final request = MultipartRequest(
       'POST',
@@ -1574,11 +1592,11 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
         print('progress: $progress ($bytes/$total)');
       },
     );
-    var ingredient = jsonEncode(ingredientsList).toString();
+    //var ingredient = jsonEncode(ingredientsList).toString();
     var json = {
       'title': title,
       'description': description,
-      'engredients': ingredient,
+      'engredients': ingredientsList,
       '_creator': id,
       'restaurant': restaurantid!.trim(),
     };
@@ -1590,9 +1608,11 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
 
     request.fields['form_key'] = 'form_value';
     request.headers['authorization'] = 'Bearer $token';
-    request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
-        contentType: MediaType('application', 'octet-stream'),
-        filename: result.files.first.name));
+    if (result != null) {
+      request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
+          contentType: MediaType('application', 'octet-stream'),
+          filename: result.files.first.name));
+    }
 
     print("RESPENSE SEND STEAM FILE REQ");
     //var responseString = await streamedResponse.stream.bytesToString();
@@ -1605,6 +1625,10 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
       if (response.statusCode == 200 || response.statusCode == 201) {
         await response.stream.bytesToString().then((value) {
           print(value);
+        });
+        setState(() {
+          _clear();
+          _showContent = false;
         });
         //stopMessage();
         //finishWorking();
@@ -1697,7 +1721,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userdelete = prefs.getString('IdUser').toString();
       var token = prefs.getString('token');
-      String urlDelete = "http://192.168.1.105:4010/api/recettes/delete/$id";
+      String urlDelete = "http://13.39.81.126:4010/api/recettes/delete/$id";
       var json = {
         '_creator': userdelete,
       };
@@ -1729,26 +1753,34 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
 
 class Ingredient {
   String? material;
+  String? rawmaterial;
   String? grammage;
   String? unity;
+  String? type;
 
   Ingredient({
     this.material,
+    this.rawmaterial,
     this.grammage,
     this.unity,
+    this.type,
   });
 
   Ingredient.fromJson(Map<String, dynamic> json) {
     material = json['material'];
+    rawmaterial = json['raw_material'];
     grammage = json['grammage'];
     unity = json['unity'];
+    type = json['type'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['material'] = material;
+    data['raw_material'] = rawmaterial;
     data['grammage'] = grammage;
     data['unity'] = unity;
+    data['type'] = type;
     return data;
   }
 }

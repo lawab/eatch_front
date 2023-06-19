@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:js_interop';
 
+import 'package:eatch/pages/users/presentation/userLaborantin.dart';
 import 'package:eatch/servicesAPI/getLabo.dart';
 import 'package:eatch/servicesAPI/getRestaurant.dart' as g;
 import 'package:eatch/servicesAPI/get_role.dart';
@@ -602,7 +603,7 @@ class _UsersState extends ConsumerState<Users> {
                       ),
                     )
                   : DefaultTabController(
-                      length: 4,
+                      length: 5,
                       child: Column(
                         children: [
                           const TabBar(
@@ -626,6 +627,10 @@ class _UsersState extends ConsumerState<Users> {
                                 text: "Comptables",
                                 icon: Icon(Icons.monetization_on_sharp),
                               ),
+                              Tab(
+                                text: "Laborantins",
+                                icon: Icon(Icons.tune),
+                              ),
                             ],
                           ),
                           SizedBox(
@@ -636,6 +641,7 @@ class _UsersState extends ConsumerState<Users> {
                                 ManagerUsers(),
                                 EmployerUsers(),
                                 ComptableUsers(),
+                                LaborantinUsers(),
                               ],
                             ),
                           ),
@@ -1014,7 +1020,7 @@ class _UsersState extends ConsumerState<Users> {
     print(token);
     print("Restaurant id $restaurantid");
 
-    var url = Uri.parse("http://192.168.1.105:4001/api/users/create");
+    var url = Uri.parse("http://13.39.81.126:4001/api/users/create");
     final request = MultipartRequest(
       'POST',
       url,
@@ -1135,7 +1141,7 @@ class _UsersState extends ConsumerState<Users> {
     print(token);
     print("Restaurant id $restaurantid");
 
-    var url = Uri.parse("http://192.168.1.105:4001/api/users/create/role");
+    var url = Uri.parse("http://13.39.81.126:4001/api/users/create/role");
     final request = MultipartRequest(
       'POST',
       url,

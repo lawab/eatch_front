@@ -167,7 +167,7 @@ class LaboAccueilState extends ConsumerState<LaboAccueil> {
 
                                             image: DecorationImage(
                                                 image: NetworkImage(
-                                                    'http://192.168.1.105:4015${viewModel.listLabo[index].image.toString()}'), //192.168.1.105:4002 //192.168.1.105
+                                                    'http://13.39.81.126:4015${viewModel.listLabo[index].image.toString()}'), //13.39.81.126:4002 //13.39.81.126
                                                 //image: AssetImage('Logo_Eatch_png.png'),
                                                 fit: BoxFit.fill),
                                           ),
@@ -533,7 +533,7 @@ class LaboAccueilState extends ConsumerState<LaboAccueil> {
     var token = prefs.getString('token');
 
     var url = Uri.parse(
-        "http://192.168.1.105:4015/api/laboratories/create"); //192.168.1.105 // 192.168.1.105 //192.168.1.105
+        "http://13.39.81.126:4015/api/laboratories/create"); //13.39.81.126 // 13.39.81.126 //13.39.81.126
     final request = MultipartRequest(
       'POST',
       url,

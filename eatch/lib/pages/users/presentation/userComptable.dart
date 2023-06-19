@@ -344,10 +344,10 @@ class ComptableUsersState extends ConsumerState<ComptableUsers> {
                                                     ? UserSearch[index]
                                                             .laboratory
                                                             .isNull
-                                                        ? UserSearch[index]
+                                                        ? ''
+                                                        : UserSearch[index]
                                                             .laboratory!
                                                             .laboName!
-                                                        : ''
                                                     : UserSearch[index]
                                                         .restaurant!
                                                         .sId!,

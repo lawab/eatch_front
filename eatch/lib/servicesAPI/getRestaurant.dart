@@ -25,7 +25,7 @@ class GetDataRsetaurantFuture extends ChangeNotifier {
     try {
       http.Response response = await http.get(
         Uri.parse(
-            'http://192.168.1.105:4002/api/restaurants/fetch/all'), //4002 //192.168.1.105:4002
+            'http://13.39.81.126:4002/api/restaurants/fetch/all'), //4002 //13.39.81.126:4002
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',
