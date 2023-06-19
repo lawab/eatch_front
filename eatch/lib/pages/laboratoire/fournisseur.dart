@@ -129,7 +129,21 @@ class FournisseurPageState extends ConsumerState<FournisseurPage> {
                                       height: 100,
                                       alignment: Alignment.center,
                                       child: Image.network(
-                                          'http://13.39.81.126:4015${fournisseurLIST[index].image}')),
+                                        'http://13.39.81.126:4015${fournisseurLIST[index].image}',
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return Container(
+                                            color: Colors.black,
+                                            child: const Center(
+                                              child: Text(
+                                                "Pas d'image",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      )),
                                 ),
                                 Expanded(
                                   flex: 5,
@@ -282,7 +296,21 @@ class FournisseurPageState extends ConsumerState<FournisseurPage> {
                                       height: 100,
                                       alignment: Alignment.center,
                                       child: Image.network(
-                                          'http://13.39.81.126:4015${fournisseurLIST[index].image}')),
+                                        'http://13.39.81.126:4015${fournisseurLIST[index].image}',
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return Container(
+                                            color: Colors.black,
+                                            child: const Center(
+                                              child: Text(
+                                                "Pas d'image",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      )),
                                 ),
                                 Expanded(
                                   flex: 5,

@@ -85,10 +85,20 @@ class MatiereLaboAfficheState extends ConsumerState<MatiereLaboAffiche> {
                             Container(
                               height: 198,
                               width: 300,
-                              decoration: const BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage('emballage.jpeg'),
-                                ),
+                              child: Image.network(
+                                "http://13.39.81.126:4015${matiere[index].image}",
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    color: Colors.black,
+                                    child: const Center(
+                                      child: Text(
+                                        "Pas d'image",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                fit: BoxFit.cover,
                               ),
                             ),
                             const SizedBox(
@@ -196,10 +206,20 @@ class MatiereLaboAfficheState extends ConsumerState<MatiereLaboAffiche> {
                             Container(
                               height: 198,
                               width: 300,
-                              decoration: const BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage('emballage.jpeg'),
-                                ),
+                              child: Image.network(
+                                "http://13.39.81.126:4015${matiere[index].image}",
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    color: Colors.black,
+                                    child: const Center(
+                                      child: Text(
+                                        "Pas d'image",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                fit: BoxFit.cover,
                               ),
                             ),
                             const SizedBox(

@@ -1252,6 +1252,20 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                                       height: 180,
                                                       width: double.infinity,
                                                       fit: BoxFit.cover,
+                                                      errorBuilder: (context,
+                                                          error, stackTrace) {
+                                                        return Container(
+                                                          color: Colors.black,
+                                                          child: const Center(
+                                                            child: Text(
+                                                              "Pas d'image",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .white),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
                                                     ),
                                                   ),
                                                   Container(
@@ -1461,6 +1475,23 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                                             width:
                                                                 double.infinity,
                                                             fit: BoxFit.cover,
+                                                            errorBuilder:
+                                                                (context, error,
+                                                                    stackTrace) {
+                                                              return Container(
+                                                                color: Colors
+                                                                    .black,
+                                                                child:
+                                                                    const Center(
+                                                                  child: Text(
+                                                                    "Pas d'image",
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .white),
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            },
                                                           ),
                                                         ),
                                                         Container(

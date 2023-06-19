@@ -108,6 +108,17 @@ class _MenuCardState extends ConsumerState<MenuCard> {
                 ),
                 child: Image.network(
                   "http://13.39.81.126:4009${widget.imageUrl}",
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.black,
+                      child: const Center(
+                        child: Text(
+                          "Pas d'image",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ),

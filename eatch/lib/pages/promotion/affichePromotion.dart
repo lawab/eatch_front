@@ -159,6 +159,20 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                                 ),
                                                 child: Image.network(
                                                   "http://13.39.81.126:5005${viewModel.listPromotion[index].image}",
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) {
+                                                    return Container(
+                                                      color: Colors.black,
+                                                      child: const Center(
+                                                        child: Text(
+                                                          "Pas d'image",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -526,6 +540,20 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                                 child: Image.network(
                                                   "http://13.39.81.126:5005${viewModel.listPromotion[index].image}",
                                                   fit: BoxFit.cover,
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) {
+                                                    return Container(
+                                                      color: Colors.black,
+                                                      child: const Center(
+                                                        child: Text(
+                                                          "Pas d'image",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
                                                 ),
                                               ),
                                             ),

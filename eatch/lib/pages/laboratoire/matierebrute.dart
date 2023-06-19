@@ -70,6 +70,8 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
 
   bool ajoutbrute = false;
   bool ajoutfourni = false;
+  bool modif = false;
+  String idBrute = "";
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(getDataFournisseurFuture);
@@ -92,7 +94,7 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
   }
 
   Widget horizontalView(double height, double width, contextt,
-      List<Fournisseur> fournisseur, List<MatiereBrute> listMatiereBrute) {
+      List<Fournisseur> fournisseurr, List<MatiereBrute> listMatiereBrute) {
     return Scaffold(
       body: AppLayout(
         content: Container(
@@ -119,9 +121,25 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
                                       borderRadius: BorderRadius.circular(10)),
                                   minimumSize: const Size(180, 50)),
                               onPressed: () {
-                                setState(() {
-                                  ajoutbrute = false;
-                                });
+                                if (modif == false) {
+                                  setState(() {
+                                    ajoutbrute = false;
+                                    modif = false;
+                                  });
+                                } else {
+                                  setState(() {
+                                    idBrute = '';
+                                    titleController.clear();
+                                    quantiteController.clear();
+                                    idFournisseur = '';
+                                    fournisseur = listfournisseurrr.first;
+                                    unite = listOfUnite.first;
+                                    image = '';
+                                    modif = false;
+
+                                    ajoutbrute = false;
+                                  });
+                                }
                               },
                               icon: const Icon(Icons.backspace),
                               label: const Text('Retour'),
@@ -172,7 +190,7 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
                 ),
                 ajoutbrute == true
                     ? Container(
-                        child: creation(fournisseur),
+                        child: creation(fournisseurr, idBrute),
                       )
                     : Container(
                         height: height - 222,
@@ -197,10 +215,27 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
                                       Container(
                                         height: 200,
                                         width: 300,
-                                        decoration: const BoxDecoration(
+                                        /*decoration: const BoxDecoration(
                                           image: DecorationImage(
                                             image: AssetImage('emballage.jpeg'),
                                           ),
+                                        ),*/
+                                        child: Image.network(
+                                          "http://13.39.81.126:4015${listMatiereBrute[index].image}",
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return Container(
+                                              color: Colors.black,
+                                              child: const Center(
+                                                child: Text(
+                                                  "Pas d'image",
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          fit: BoxFit.cover,
                                         ),
                                       ),
                                       const SizedBox(
@@ -233,7 +268,35 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
                                                   alignment: Alignment.center,
                                                   splashColor:
                                                       Palette.greenColors,
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      idBrute =
+                                                          listMatiereBrute[
+                                                                  index]
+                                                              .sId!;
+                                                      titleController.text =
+                                                          listMatiereBrute[
+                                                                  index]
+                                                              .title!;
+                                                      quantiteController.text =
+                                                          listMatiereBrute[
+                                                                  index]
+                                                              .available
+                                                              .toString();
+                                                      idFournisseur =
+                                                          listMatiereBrute[
+                                                                  index]
+                                                              .provider!;
+                                                      unite = listMatiereBrute[
+                                                              index]
+                                                          .unit!;
+                                                      image = listMatiereBrute[
+                                                              index]
+                                                          .image!;
+                                                      modif = true;
+                                                      ajoutbrute = true;
+                                                    });
+                                                  },
                                                   icon: const Icon(
                                                     Icons.edit,
                                                     size: 30,
@@ -327,7 +390,7 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
   }
 
   Widget verticalView(double height, double width, contextt,
-      List<Fournisseur> fournisseur, List<MatiereBrute> listMatiereBrute) {
+      List<Fournisseur> fournisseurr, List<MatiereBrute> listMatiereBrute) {
     return Scaffold(
       body: AppLayout(
         content: Container(
@@ -354,9 +417,25 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
                                       borderRadius: BorderRadius.circular(10)),
                                   minimumSize: const Size(180, 40)),
                               onPressed: () {
-                                setState(() {
-                                  ajoutbrute = false;
-                                });
+                                if (modif == false) {
+                                  setState(() {
+                                    ajoutbrute = false;
+                                    modif = false;
+                                  });
+                                } else {
+                                  setState(() {
+                                    idBrute = '';
+                                    titleController.clear();
+                                    quantiteController.clear();
+                                    idFournisseur = '';
+                                    fournisseur = listfournisseurrr.first;
+                                    unite = listOfUnite.first;
+                                    image = '';
+                                    modif = false;
+
+                                    ajoutbrute = false;
+                                  });
+                                }
                               },
                               icon: const Icon(Icons.backspace),
                               label: const Text('Retour'),
@@ -409,7 +488,7 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
                 ajoutbrute == true
                     ? Container(
                         height: height - 232,
-                        child: creation(fournisseur),
+                        child: creation(fournisseurr, ''),
                       )
                     : Container(
                         height: height - 232,
@@ -434,10 +513,25 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
                                       Container(
                                         height: 180,
                                         width: 300,
-                                        decoration: const BoxDecoration(
-                                          image: DecorationImage(
-                                            image: AssetImage('emballage.jpeg'),
-                                          ),
+                                        /*decoration:  BoxDecoration(
+                                          image:
+                                        ),*/
+                                        child: Image.network(
+                                          "http://13.39.81.126:4015${listMatiereBrute[index].image}",
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return Container(
+                                              color: Colors.black,
+                                              child: const Center(
+                                                child: Text(
+                                                  "Pas d'image",
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          fit: BoxFit.cover,
                                         ),
                                       ),
                                       const SizedBox(
@@ -478,7 +572,35 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
                                                   alignment: Alignment.center,
                                                   splashColor:
                                                       Palette.greenColors,
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      idBrute =
+                                                          listMatiereBrute[
+                                                                  index]
+                                                              .sId!;
+                                                      titleController.text =
+                                                          listMatiereBrute[
+                                                                  index]
+                                                              .title!;
+                                                      quantiteController.text =
+                                                          listMatiereBrute[
+                                                                  index]
+                                                              .available
+                                                              .toString();
+                                                      idFournisseur =
+                                                          listMatiereBrute[
+                                                                  index]
+                                                              .provider!;
+                                                      unite = listMatiereBrute[
+                                                              index]
+                                                          .unit!;
+                                                      image = listMatiereBrute[
+                                                              index]
+                                                          .image!;
+                                                      modif = true;
+                                                      ajoutbrute = true;
+                                                    });
+                                                  },
                                                   icon: const Icon(
                                                     Icons.edit,
                                                     size: 30,
@@ -571,15 +693,23 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
     );
   }
 
+  String image = '';
   bool vertical = false;
   var idFournisseur = '';
+  List<String> listfournisseurrr = ['Fournisseur *'];
   Widget creation(
     List<Fournisseur> fournisseurLIST,
+    String id,
   ) {
-    List<String> listfournisseurrr = [];
     for (int i = 0; i < fournisseurLIST.length; i++) {
       listfournisseurrr.add(
           '${fournisseurLIST[i].firstName!} ${fournisseurLIST[i].lastName!}');
+      if (modif == true) {
+        if (idFournisseur == fournisseurLIST[i].sId) {
+          fournisseur =
+              '${fournisseurLIST[i].firstName!} ${fournisseurLIST[i].lastName!}';
+        }
+      }
     }
 
     return SingleChildScrollView(
@@ -837,63 +967,143 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
           const SizedBox(
             height: 20,
           ),
-          Container(
-            width: vertical == false
-                ? MediaQuery.of(context).size.width / 2
-                : MediaQuery.of(context).size.width - 100,
-            padding: const EdgeInsets.only(right: 70),
-            color: Palette.secondaryBackgroundColor,
-            alignment: Alignment.centerRight,
-            child: GestureDetector(
-              onTap: () async {
-                result1 = await FilePicker.platform
-                    .pickFiles(type: FileType.custom, allowedExtensions: [
-                  "png",
-                  "jpg",
-                  "jpeg",
-                ]);
-                if (result1 != null) {
-                  setState(() {
-                    file1 = result1!.files.single;
+          modif == true
+              ? Container(
+                  width: vertical == false
+                      ? MediaQuery.of(context).size.width / 2
+                      : MediaQuery.of(context).size.width - 100,
+                  padding: const EdgeInsets.only(right: 70),
+                  color: Palette.secondaryBackgroundColor,
+                  alignment: Alignment.centerRight,
+                  child: Container(
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: InkWell(
+                      onTap: () async {
+                        /////////////////////
+                        result = await FilePicker.platform.pickFiles(
+                            type: FileType.custom,
+                            allowedExtensions: [
+                              "png",
+                              "jpg",
+                              "jpeg",
+                            ]);
+                        if (result != null) {
+                          file = result!.files.single;
 
-                    Uint8List fileBytes =
-                        result1!.files.single.bytes as Uint8List;
-
-                    _selectedFile1 = fileBytes;
-
-                    filee1 = true;
-
-                    selectedImageInBytes1 = result1!.files.first.bytes;
-                    _selectFile1 = true;
-                  });
-                }
-              },
-              child: Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: 4,
-                    color: Palette.greenColors,
+                          Uint8List fileBytes =
+                              result!.files.single.bytes as Uint8List;
+                          //print(base64Encode(fileBytes));
+                          //List<int>
+                          _selectedFile = fileBytes;
+                          setState(() {
+                            _selectFile = true;
+                            selectedImageInBytes = result!.files.first.bytes;
+                          });
+                        } else {
+                          setState(() {
+                            _selectFile = false;
+                          });
+                        }
+                        ////////////////////
+                      },
+                      //splashColor: Colors.brown.withOpacity(0.5),
+                      child: _selectFile == true
+                          ? Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 3,
+                                    color: Palette.violetColor,
+                                  ),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  color: Colors.white,
+                                  image: DecorationImage(
+                                    image: MemoryImage(
+                                      selectedImageInBytes!,
+                                      //fit: BoxFit.fill,
+                                    ),
+                                  )),
+                              child: const Icon(
+                                Icons.camera_alt_outlined,
+                                color: Palette.violetColor,
+                                size: 40,
+                              ),
+                            )
+                          : Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 3,
+                                  color: Palette.greenColors,
+                                ),
+                              ),
+                              child: Image.network(
+                                  'http://13.39.81.126:4015$image'),
+                            ),
+                    ),
                   ),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: _selectFile1 == false
-                      ? const Icon(
-                          Icons.camera_alt_outlined,
+                )
+              : Container(
+                  width: vertical == false
+                      ? MediaQuery.of(context).size.width / 2
+                      : MediaQuery.of(context).size.width - 100,
+                  padding: const EdgeInsets.only(right: 70),
+                  color: Palette.secondaryBackgroundColor,
+                  alignment: Alignment.centerRight,
+                  child: GestureDetector(
+                    onTap: () async {
+                      result1 = await FilePicker.platform
+                          .pickFiles(type: FileType.custom, allowedExtensions: [
+                        "png",
+                        "jpg",
+                        "jpeg",
+                      ]);
+                      if (result1 != null) {
+                        setState(() {
+                          file1 = result1!.files.single;
+
+                          Uint8List fileBytes =
+                              result1!.files.single.bytes as Uint8List;
+
+                          _selectedFile1 = fileBytes;
+
+                          filee1 = true;
+
+                          selectedImageInBytes1 = result1!.files.first.bytes;
+                          _selectFile1 = true;
+                        });
+                      }
+                    },
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 4,
                           color: Palette.greenColors,
-                          size: 40,
-                        )
-                      : Image.memory(
-                          selectedImageInBytes1!,
-                          fit: BoxFit.fill,
                         ),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: _selectFile1 == false
+                            ? const Icon(
+                                Icons.camera_alt_outlined,
+                                color: Palette.greenColors,
+                                size: 40,
+                              )
+                            : Image.memory(
+                                selectedImageInBytes1!,
+                                fit: BoxFit.fill,
+                              ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
           SizedBox(
             height: vertical == false ? 100 : 50,
           ),
@@ -908,14 +1118,28 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
                 ElevatedButton(
                   onPressed: (() {
                     if (idFournisseur != '') {
-                      creationMatiereBrute(
+                      if (modif == false) {
+                        creationMatiereBrute(
                           context,
                           titleController.text,
                           quantiteController.text,
                           idFournisseur,
                           unite!,
                           _selectedFile1,
-                          result1);
+                          result1,
+                        );
+                      } else {
+                        modificationBrute(
+                          context,
+                          titleController.text,
+                          quantiteController.text,
+                          idFournisseur,
+                          unite!,
+                          _selectedFile,
+                          result,
+                          id,
+                        );
+                      }
                     } else {
                       showTopSnackBar(
                         Overlay.of(context),
@@ -939,7 +1163,27 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
                   width: 20,
                 ),
                 ElevatedButton(
-                  onPressed: (() {}),
+                  onPressed: (() {
+                    if (modif == false) {
+                      setState(() {
+                        ajoutbrute = false;
+                        modif = false;
+                      });
+                    } else {
+                      setState(() {
+                        idBrute = '';
+                        titleController.clear();
+                        quantiteController.clear();
+                        idFournisseur = '';
+                        fournisseur = listfournisseurrr.first;
+                        unite = listOfUnite.first;
+                        image = '';
+                        modif = false;
+
+                        ajoutbrute = false;
+                      });
+                    }
+                  }),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Palette.secondaryBackgroundColor,
                     minimumSize: const Size(150, 50),
@@ -997,7 +1241,7 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
                 ),
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                 onPressed: () {
-                  //deleteFournisseur(contextt, id);
+                  deleteMatiereBrute(contextt, id);
                   Navigator.pop(co);
                 },
                 label: const Text("Supprimer."))
@@ -1005,10 +1249,11 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
           content: StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
             return Container(
-                alignment: Alignment.center,
-                color: Colors.white,
-                height: 170,
-                child: Text('Voulez vous supprimer  $nom?'));
+              alignment: Alignment.center,
+              color: Colors.white,
+              height: 170,
+              child: Text('Voulez vous supprimer  $nom?'),
+            );
           }),
         );
       },
@@ -1515,6 +1760,98 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
     }
   }
 
+  Future<void> modificationBrute(
+      contextt,
+      String titre,
+      String gram,
+      String provider,
+      String unit,
+      selectedFile,
+      result,
+      String idUpdate) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var id = prefs.getString('IdUser').toString();
+    var token = prefs.getString('token');
+    var idLabo = prefs.getString('idLabo');
+    print(id);
+    print(token);
+
+    var url = Uri.parse("http://13.39.81.126:4015/api/raws/update/$idUpdate");
+    final request = MultipartRequest(
+      'PATCH',
+      url,
+      onProgress: (int bytes, int total) {
+        final progress = bytes / total;
+        print('progress: $progress ($bytes/$total)');
+      },
+    );
+    print(url);
+    var json = {
+      'title': titre,
+      'available': gram,
+      'unit': unit,
+      'laboratoryId': idLabo,
+      'providerId': provider,
+      '_creator': id,
+    };
+    var body = jsonEncode(json);
+
+    request.headers.addAll({
+      "body": body,
+    });
+    request.headers['authorization'] = 'Bearer $token';
+    if (result != null) {
+      request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
+          contentType: MediaType('application', 'octet-stream'),
+          filename: result.files.first.name));
+    }
+    print("RESPENSE SEND STEAM FILE REQ");
+    var response = await request.send();
+    print("Upload Response$response");
+    print(response.statusCode);
+    print(request.headers);
+
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        await response.stream.bytesToString().then((value) {
+          print(value);
+        });
+        setState(() {
+          idBrute = '';
+          titleController.clear();
+          quantiteController.clear();
+          idFournisseur = '';
+          fournisseur = listfournisseurrr.first;
+          unite = listOfUnite.first;
+          image = '';
+          modif = false;
+
+          ajoutbrute = false;
+        });
+        showTopSnackBar(
+          Overlay.of(contextt),
+          const CustomSnackBar.info(
+            backgroundColor: Colors.green,
+            message: "La matière a été modifié",
+          ),
+        );
+
+        ref.refresh(getDataMatiereBruteFuture);
+      } else {
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.error(
+            backgroundColor: Colors.red,
+            message: "Erreur de modification",
+          ),
+        );
+        print("Error Create Programme  !!!");
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> ajoutMatiereBrute(
     contextt,
     String rawId,
@@ -1683,6 +2020,49 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
       }
     } catch (e) {
       rethrow;
+    }
+  }
+
+  Future<http.Response> deleteMatiereBrute(contextt, String id) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token');
+      //String adress_url = prefs.getString('ipport').toString();
+      String urlDelete = "http://13.39.81.126:4015/api/raws/delete/$id";
+      print(urlDelete);
+      final http.Response response = await http.patch(
+        Uri.parse(urlDelete),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'Accept': 'application/json',
+          'authorization': 'Bearer $token',
+        },
+      );
+
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        showTopSnackBar(
+          Overlay.of(contextt),
+          const CustomSnackBar.success(
+            backgroundColor: Colors.green,
+            message: "Matière brute supprimée",
+          ),
+        );
+        // ignore: unused_result
+        ref.refresh(getDataMatiereBruteFuture);
+        return response;
+      } else {
+        showTopSnackBar(
+          Overlay.of(contextt),
+          const CustomSnackBar.error(
+            backgroundColor: Colors.red,
+            message: "Erreur de suppression",
+          ),
+        );
+        return Future.error("Server Error");
+      }
+    } catch (e) {
+      return Future.error(e);
     }
   }
 }

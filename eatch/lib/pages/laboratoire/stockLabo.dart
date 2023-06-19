@@ -134,11 +134,22 @@ class SotckLaboState extends ConsumerState<SotckLabo> {
                                         Container(
                                           height: 200,
                                           width: 300,
-                                          decoration: const BoxDecoration(
-                                            image: DecorationImage(
-                                              image:
-                                                  AssetImage('emballage.jpeg'),
-                                            ),
+                                          child: Image.network(
+                                            "http://13.39.81.126:4015${listMatiereBrute[index].image}",
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Container(
+                                                color: Colors.black,
+                                                child: const Center(
+                                                  child: Text(
+                                                    "Pas d'image",
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
                                         const SizedBox(
@@ -214,11 +225,22 @@ class SotckLaboState extends ConsumerState<SotckLabo> {
                                         Container(
                                           height: 200,
                                           width: 300,
-                                          decoration: const BoxDecoration(
-                                            image: DecorationImage(
-                                              image:
-                                                  AssetImage('emballage.jpeg'),
-                                            ),
+                                          child: Image.network(
+                                            "http://13.39.81.126:4015${listMatiereFini[index].image}",
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Container(
+                                                color: Colors.black,
+                                                child: const Center(
+                                                  child: Text(
+                                                    "Pas d'image",
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
                                         const SizedBox(
