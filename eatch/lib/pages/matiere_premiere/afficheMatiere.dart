@@ -174,7 +174,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                             image: DecorationImage(
                                 opacity: 50,
                                 image: NetworkImage(
-                                    "http://192.168.1.105:4008${matiere[index].image!}"), //192.168.1.105
+                                    "http://13.39.81.126:4008${matiere[index].image!}"), //13.39.81.126
                                 fit: BoxFit.cover),
                           ),
                           child: Column(
@@ -694,7 +694,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                             image: DecorationImage(
                                 opacity: 50,
                                 image: NetworkImage(
-                                    "http://192.168.1.105:4008${matiere[index].image!}"), //192.168.1.105
+                                    "http://13.39.81.126:4008${matiere[index].image!}"), //13.39.81.126
                                 fit: BoxFit.cover),
                           ),
                           child: Column(
@@ -981,7 +981,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
     //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.1.105:4008/api/materials/create"); // 192.168.1.105:4008
+        "http://13.39.81.126:4008/api/materials/create"); // 13.39.81.126:4008
     final request = MultipartRequest(
       'POST',
       url,
@@ -1060,7 +1060,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
 
       var token = prefs.getString('token');
       String urlDelete =
-          "http://192.168.1.105:4008/api/materials/delete/$idMatierePremiere"; // 192.168.1.105:4008 //$adressUrl
+          "http://13.39.81.126:4008/api/materials/delete/$idMatierePremiere"; // 13.39.81.126:4008 //$adressUrl
 
       final http.Response response =
           await http.delete(Uri.parse(urlDelete), headers: {
@@ -1117,7 +1117,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
     //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.1.105:4008/api/materials/update/$idModifMatiere"); //$adressUrl
+        "http://13.39.81.126:4008/api/materials/update/$idModifMatiere"); //$adressUrl
     final request = MultipartRequest(
       'PUT',
       url,

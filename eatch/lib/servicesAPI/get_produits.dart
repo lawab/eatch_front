@@ -18,12 +18,11 @@ class GetDataProduitFuture extends ChangeNotifier {
   Future getData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
-    //String adressUrl = prefs.getString('ipport').toString();
+    var urlProduit = prefs.getString('url_produit');
     var restaurantid = prefs.getString('idRestaurant');
     try {
       http.Response response = await http.get(
-        Uri.parse(
-            'http://192.168.1.105:4003/api/products/fetch/categories/$restaurantid'),
+        Uri.parse('$urlProduit/api/products/fetch/categories/$restaurantid'),
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',

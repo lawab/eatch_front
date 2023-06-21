@@ -22,13 +22,13 @@ class GetDataMenuFuture extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     var restaurantId = prefs.getString('idRestaurant').toString();
-
+    var urlMenu = prefs.getString('url_menu');
     listMenus = [];
 
     try {
       http.Response response = await http.get(
         Uri.parse(
-            'http://192.168.1.105:4009/api/menus/fetch/restaurant/$restaurantId'), //192.168.1.105 //192.168.1.105:4008
+            '$urlMenu/api/menus/fetch/restaurant/$restaurantId'), //13.39.81.126 //13.39.81.126:4008
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',

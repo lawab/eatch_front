@@ -392,7 +392,7 @@ class CreationRestaurantState extends ConsumerState<CreationRestaurant> {
     var token = prefs.getString('token');
 
     var url = Uri.parse(
-        "http://192.168.1.105:4002/api/restaurants/create"); //13.39.81.126 // 192.168.1.105 //192.168.1.105
+        "http://13.39.81.126:4002/api/restaurants/create"); //13.39.81.126 // 13.39.81.126 //13.39.81.126
     final request = MultipartRequest(
       'POST',
       url,

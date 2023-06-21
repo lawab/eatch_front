@@ -21,11 +21,12 @@ class GetDataUserFuture extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     var restaurantid = prefs.getString('idRestaurant');
+    var urlUser = prefs.getString('url_user');
     listAllUsers = [];
 
     try {
       http.Response response = await http.get(
-        Uri.parse('http://192.168.1.105:4001/api/users/fetch/all'),
+        Uri.parse('$urlUser/api/users/fetch/all'),
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',
@@ -37,9 +38,6 @@ class GetDataUserFuture extends ChangeNotifier {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         for (int i = 0; i < data.length; i++) {
-          /*print('ppppppppppppppppppppppppppppp');
-          print(data[i]['restaurant']);
-          print('ppppppppppppppppppppppppppppp');*/
           if (data[i]['deletedAt'] == null) {
             listAllUsers.add(User.fromJson(data[i]));
 

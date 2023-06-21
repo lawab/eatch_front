@@ -495,7 +495,7 @@ class ModificationMenuState extends ConsumerState<ModificationMenu> {
                         image: DecorationImage(
                             opacity: 100,
                             image: NetworkImage(
-                                'http://192.168.1.105:4009${widget.imageUrl}'), //13.39.81.126
+                                'http://13.39.81.126:4009${widget.imageUrl}'), //13.39.81.126
                             fit: BoxFit.cover),
                       ),
                       child: const Text(
@@ -575,7 +575,7 @@ class ModificationMenuState extends ConsumerState<ModificationMenu> {
     //print(idMenu);
 
     var url = Uri.parse(
-        "http://192.168.1.105:4009/api/menus/update/$idMenu"); //$adressUrl
+        "http://13.39.81.126:4009/api/menus/update/$idMenu"); //$adressUrl
     final request = MultipartRequest(
       'PUT',
       url,

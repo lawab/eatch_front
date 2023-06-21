@@ -157,7 +157,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                                   Radius.circular(10.0),
                                                 ),
                                                 child: Image.network(
-                                                  "http://192.168.1.105:5005${viewModel.listPromotion[index].image}",
+                                                  "http://13.39.81.126:5005${viewModel.listPromotion[index].image}",
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -523,7 +523,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                                   Radius.circular(10.0),
                                                 ),
                                                 child: Image.network(
-                                                  "http://192.168.1.105:5005${viewModel.listPromotion[index].image}",
+                                                  "http://13.39.81.126:5005${viewModel.listPromotion[index].image}",
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -729,7 +729,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                                   Radius.circular(10.0),
                                                 ),
                                                 child: Image.network(
-                                                  "http://192.168.1.105:5005${viewModel.listPromotion[index].image}",
+                                                  "http://13.39.81.126:5005${viewModel.listPromotion[index].image}",
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -1095,7 +1095,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                                   Radius.circular(10.0),
                                                 ),
                                                 child: Image.network(
-                                                  "http://192.168.1.105:5005${viewModel.listPromotion[index].image}",
+                                                  "http://13.39.81.126:5005${viewModel.listPromotion[index].image}",
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -1734,7 +1734,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
     //String adressUrl = prefs.getString('ipport').toString();
 
     var url = Uri.parse(
-        "http://192.168.1.105:5005/api/promotions/create"); // 192.168.1.105:4009
+        "http://13.39.81.126:5005/api/promotions/create"); // 13.39.81.126:4009
     final request = MultipartRequest(
       'POST',
       url,
@@ -1819,7 +1819,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
 
       var token = prefs.getString('token');
       String urlDelete =
-          "http://192.168.1.105:5005/api/promotions/delete/$idPromotion"; // 192.168.1.105:4008 //$adressUrl
+          "http://13.39.81.126:5005/api/promotions/delete/$idPromotion"; // 13.39.81.126:4008 //$adressUrl
 
       var json = {
         '_creator': id,

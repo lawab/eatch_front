@@ -21,6 +21,7 @@ class GetDataPromotionFuture extends ChangeNotifier {
   Future getData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
+    var urlPromotion = prefs.get('url_promotion');
     var restaurantId = prefs.getString('idRestaurant').toString();
 
     listPromotion = [];
@@ -28,7 +29,7 @@ class GetDataPromotionFuture extends ChangeNotifier {
     try {
       http.Response response = await http.get(
         Uri.parse(
-            'http://192.168.1.105:5005/api/promotions/fetch/restaurant/$restaurantId'), //192.168.1.105 //192.168.1.105:4008
+            '$urlPromotion/api/promotions/fetch/restaurant/$restaurantId'), //13.39.81.126 //13.39.81.126:4008
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',

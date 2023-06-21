@@ -647,11 +647,25 @@ class AuthentificationState extends State<Authentification> {
 
     final String response = await rootBundle.loadString('assets/server.json');
     final data = await json.decode(response);
-    String adressUrl = data['ip'] + ":" + data['port'];
 
-    prefs.setString('ipport', adressUrl);
-    String url =
-        "http://192.168.1.105:4001/api/users/login"; //192.168.1.105:4001 //192.168.1.105:4001 // $adress_url
+    String urlUser = data['adresse'] + ":" + data['port'][0]['user'];
+    String urlCategorie = data['adresse'] + ":" + data['port'][1]['categorie'];
+    String urlProduit = data['adresse'] + ":" + data['port'][2]['produit'];
+    String urlRecette = data['adresse'] + ":" + data['port'][3]['recette'];
+    String urlMatierePremiere =
+        data['adresse'] + ":" + data['port'][4]['matiere_premiere'];
+    String urlMenu = data['adresse'] + ":" + data['port'][5]['menu'];
+    String urlPromotion = data['adresse'] + ":" + data['port'][6]['promotion'];
+
+    prefs.setString('url_user', urlUser);
+    prefs.setString('url_categorie', urlCategorie);
+    prefs.setString('url_produit', urlProduit);
+    prefs.setString('url_recette', urlRecette);
+    prefs.setString('url_matierePremiere', urlMatierePremiere);
+    prefs.setString('url_menu', urlMenu);
+    prefs.setString('url_promotion', urlPromotion);
+
+    String url = "$urlUser/api/users/login";
     print(url);
     print(email);
     print(pass);

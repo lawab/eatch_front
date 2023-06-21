@@ -1230,7 +1230,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                                           Radius.circular(15),
                                                     ),
                                                     child: Image.network(
-                                                      'http://192.168.1.105:4010${recette.image}',
+                                                      'http://13.39.81.126:4010${recette.image}',
                                                       height: 180,
                                                       width: double.infinity,
                                                       fit: BoxFit.cover,
@@ -1564,7 +1564,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
     var restaurantid = prefs.getString('idRestaurant');
     String adressUrl = prefs.getString('ipport').toString();
     var url = Uri.parse(
-        "http://192.168.1.105:4010/api/recettes/create"); //13.39.81.126
+        "http://13.39.81.126:4010/api/recettes/create"); //13.39.81.126
     print(url);
     final request = MultipartRequest(
       'POST',
@@ -1697,7 +1697,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userdelete = prefs.getString('IdUser').toString();
       var token = prefs.getString('token');
-      String urlDelete = "http://192.168.1.105:4010/api/recettes/delete/$id";
+      String urlDelete = "http://13.39.81.126:4010/api/recettes/delete/$id";
       var json = {
         '_creator': userdelete,
       };

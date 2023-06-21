@@ -20,12 +20,11 @@ class GetDataProduitFuture extends ChangeNotifier {
 
     var token = prefs.getString('token');
     var restaurantId = prefs.getString('idRestaurant').toString();
+    var urlProduit = prefs.getString('url_produit');
 
-    //String adressUrl = prefs.getString('ipport').toString();
     try {
       http.Response response = await http.get(
-        Uri.parse(
-            'http://192.168.1.105:4005/api/products/fetch/restaurant/$restaurantId'),
+        Uri.parse('$urlProduit/api/products/fetch/restaurant/$restaurantId'),
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',

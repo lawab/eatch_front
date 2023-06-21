@@ -438,7 +438,7 @@ class _ModificationUserState extends ConsumerState<ModificationUser> {
                                   borderRadius: BorderRadius.circular(16),
                                   child: _selectFile == false
                                       ? Image.network(
-                                          'http://192.168.1.105:4001${widget.avatar}',
+                                          'http://13.39.81.126:4001${widget.avatar}',
                                           fit: BoxFit.fill,
                                         )
                                       : isLoading
@@ -850,7 +850,7 @@ class _ModificationUserState extends ConsumerState<ModificationUser> {
     print("Restaurant id $restaurantid");
 
     var url =
-        Uri.parse("http://192.168.1.105:4001/api/users/update/${widget.sId}");
+        Uri.parse("http://13.39.81.126:4001/api/users/update/${widget.sId}");
     final request = MultipartRequest(
       'PUT',
       url,
@@ -948,7 +948,7 @@ class _ModificationUserState extends ConsumerState<ModificationUser> {
     print(token);
     print("Restaurant id $restaurantid");
 
-    var url = Uri.parse("http://192.168.1.105:4001/api/users/create/role");
+    var url = Uri.parse("http://13.39.81.126:4001/api/users/create/role");
     final request = MultipartRequest(
       'POST',
       url,
