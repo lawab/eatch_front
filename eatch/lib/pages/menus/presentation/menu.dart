@@ -548,7 +548,7 @@ class _MenuState extends ConsumerState<Menu> {
               padding: EdgeInsets.all(10),
               child: Column(
                 children: [
-                  Text('Produits par catégories'),
+                  const Text('Produits par catégories'),
                   const SizedBox(
                     height: 5,
                   ),

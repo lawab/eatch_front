@@ -86,7 +86,6 @@ class ModificationMenuState extends ConsumerState<ModificationMenu> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(getDataCategoriesFuture);
-
     return AppLayout(
       content: SizedBox(
         child: Container(
@@ -348,109 +347,134 @@ class ModificationMenuState extends ConsumerState<ModificationMenu> {
                   ],
                 ),
 
-                ///
                 const SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
 
-                ///
-                SizedBox(
-                  height: 150,
-                  child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 500,
-                            childAspectRatio: 3 / 2,
-                            crossAxisSpacing: 20,
-                            mainAxisSpacing: 20,
-                            mainAxisExtent: 50),
-                    itemCount: viewModel.listCategories.length,
-                    itemBuilder: (context, index) {
-                      List<String> listProduits = [];
-                      String? produit;
-                      final inputController = TextEditingController();
-                      _controllerInput.add(inputController);
-                      for (int i = 0;
-                          i < viewModel.listCategories[index].products!.length;
-                          i++) {
-                        listProduits.add(viewModel
-                            .listCategories[index].products![i].productName!);
-                      }
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      const Text('Produits par catégories'),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Palette.yellowColor),
+                        ),
+                        //width: width - 50,
+                        height: 150,
+                        child: GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithMaxCrossAxisExtent(
+                                  maxCrossAxisExtent: 500,
+                                  childAspectRatio: 3 / 2,
+                                  crossAxisSpacing: 20,
+                                  mainAxisSpacing: 20,
+                                  mainAxisExtent: 50),
+                          itemCount: viewModel.listCategories.length,
+                          itemBuilder: (context, index) {
+                            List<String> listProduits = [];
+                            String? produit;
+                            final inputController = TextEditingController();
+                            _controllerInput.add(inputController);
+                            for (int i = 0;
+                                i <
+                                    viewModel
+                                        .listCategories[index].products!.length;
+                                i++) {
+                              listProduits.add(viewModel.listCategories[index]
+                                  .products![i].productName!);
+                            }
 
-                      return SizedBox(
-                        height: 50,
-                        child: DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            hoverColor: Palette.primaryBackgroundColor,
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 42, vertical: 20),
-                            filled: true,
-                            fillColor: Palette.primaryBackgroundColor,
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(
-                                  color: Palette.secondaryBackgroundColor),
-                              gapPadding: 10,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(
-                                  color: Palette.secondaryBackgroundColor),
-                              gapPadding: 10,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(
-                                  color: Palette.secondaryBackgroundColor),
-                              gapPadding: 10,
-                            ),
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                          value: produit,
-                          hint: Text(viewModel.listCategories[index].title!),
-                          isExpanded: true,
-                          onChanged: (value) {
-                            setState(
-                              () {
-                                produit = value!;
-                                print('Valeur : ${produit}');
-                                ////////////////////////////
+                            // print(listProduits);
 
-                                for (int j = 0; j < listProduits.length; j++) {
-                                  if (produit == listProduits[j]) {
-                                    listProdId.add(viewModel
-                                        .listCategories[index]
-                                        .products![j]
-                                        .sId!);
-                                  }
-                                }
-                                print(listProdId);
-                                /////////////////////////////////
+                            return SizedBox(
+                              height: 50,
+                              child: DropdownButtonFormField(
+                                decoration: InputDecoration(
+                                  hoverColor: Palette.primaryBackgroundColor,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 42, vertical: 20),
+                                  filled: true,
+                                  fillColor: Palette.primaryBackgroundColor,
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: const BorderSide(
+                                        color:
+                                            Palette.secondaryBackgroundColor),
+                                    gapPadding: 10,
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: const BorderSide(
+                                        color:
+                                            Palette.secondaryBackgroundColor),
+                                    gapPadding: 10,
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: const BorderSide(
+                                        color:
+                                            Palette.secondaryBackgroundColor),
+                                    gapPadding: 10,
+                                  ),
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.always,
+                                ),
+                                value: produit,
+                                hint: Text(
+                                  viewModel.listCategories[index].title!,
+                                ),
+                                isExpanded: true,
+                                onChanged: (value) {
+                                  setState(
+                                    () {
+                                      produit = value!;
+                                      print('Valeur : ${produit}');
+                                      ////////////////////////////
 
-                                inputController.text = value;
-                              },
-                            );
-                          },
-                          onSaved: (value) {
-                            setState(() {
-                              produit = value;
-                            });
-                          },
-                          items: listProduits.map((String val) {
-                            return DropdownMenuItem(
-                              value: val,
-                              child: Text(
-                                val,
+                                      for (int j = 0;
+                                          j < listProduits.length;
+                                          j++) {
+                                        if (produit == listProduits[j]) {
+                                          listProdId.add(viewModel
+                                              .listCategories[index]
+                                              .products![j]
+                                              .sId!);
+                                        }
+                                      }
+                                      print(listProdId);
+                                      /////////////////////////////////
+
+                                      inputController.text = value;
+                                    },
+                                  );
+                                },
+                                onSaved: (value) {
+                                  setState(() {
+                                    produit = value;
+                                  });
+                                },
+                                items: listProduits.map((String val) {
+                                  return DropdownMenuItem(
+                                    value: val,
+                                    child: Text(
+                                      val,
+                                    ),
+                                  );
+                                }).toList(),
                               ),
                             );
-                          }).toList(),
+                          },
                         ),
-                      );
-                    },
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(
-                  height: 40,
+                  height: 20,
                 ),
                 /////////// - Ici se trouve le bouton pour l'image
 
