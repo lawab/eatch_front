@@ -21,13 +21,13 @@ class GetDataMatiereFuture extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     var restaurantId = prefs.getString('idRestaurant').toString();
-    var urlMatierePremiere = prefs.getString('url_matierePremiere');
+
     listMatiere = [];
 
     try {
       http.Response response = await http.get(
         Uri.parse(
-            '$urlMatierePremiere/api/materials/fetch/restaurant/$restaurantId'), //13.39.81.126 //13.39.81.126:4008
+            'http://13.39.81.126:4008/api/materials/fetch/restaurant/$restaurantId'), //13.39.81.126 //13.39.81.126:4008
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',

@@ -90,6 +90,7 @@ class ModificationMenuState extends ConsumerState<ModificationMenu> {
     return AppLayout(
       content: SizedBox(
         child: Container(
+          //height: heigth,
           color: Palette.secondaryBackgroundColor,
           child: SingleChildScrollView(
             child: Column(
@@ -97,7 +98,7 @@ class ModificationMenuState extends ConsumerState<ModificationMenu> {
                 Container(
                   alignment: Alignment.centerRight,
                   height: 80,
-                  color: const Color(0xFFFCEBD1),
+                  color: Palette.yellowColor,
                   child: Row(
                     children: [
                       const SizedBox(
@@ -107,7 +108,7 @@ class ModificationMenuState extends ConsumerState<ModificationMenu> {
                       Expanded(child: Container()),
                       ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: Palette.textsecondaryColor,
+                            backgroundColor: Palette.greenColors,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10)),
                             minimumSize: const Size(150, 50)),
@@ -452,69 +453,93 @@ class ModificationMenuState extends ConsumerState<ModificationMenu> {
                   height: 40,
                 ),
                 /////////// - Ici se trouve le bouton pour l'image
-                Container(
-                  height: 100,
-                  width: 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  child: InkWell(
-                    onTap: () async {
-                      /////////////////////
-                      result = await FilePicker.platform
-                          .pickFiles(type: FileType.custom, allowedExtensions: [
-                        "png",
-                        "jpg",
-                        "jpeg",
-                      ]);
-                      if (result != null) {
-                        file = result!.files.single;
 
-                        Uint8List fileBytes =
-                            result!.files.single.bytes as Uint8List;
-                        //print(base64Encode(fileBytes));
-                        //List<int>
-                        _selectedFile = fileBytes;
-                        setState(() {
-                          filee = true;
-                          selectedImageInBytes = result!.files.first.bytes;
-                        });
-                      } else {
-                        setState(() {
-                          filee = false;
-                        });
-                      }
-                      ////////////////////
-                    },
-                    //splashColor: Colors.brown.withOpacity(0.5),
-                    child: Container(
-                      alignment: Alignment.center,
+                ////////////////////////
+                SizedBox(
+                  height: 100,
+                  child: Row(children: [
+                    const SizedBox(
+                      width: 50,
+                    ),
+                    Container(
+                      height: 100,
+                      width: 100,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15.0),
-                        color: Palette.greenColors,
-                        image: DecorationImage(
-                            opacity: 100,
-                            image: NetworkImage(
-                                'http://13.39.81.126:4009${widget.imageUrl}'), //13.39.81.126
-                            fit: BoxFit.cover),
                       ),
-                      child: const Text(
-                        "Modifier",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: Colors.white),
+                      child: InkWell(
+                        onTap: () async {
+                          /////////////////////
+                          result = await FilePicker.platform.pickFiles(
+                              type: FileType.custom,
+                              allowedExtensions: [
+                                "png",
+                                "jpg",
+                                "jpeg",
+                              ]);
+                          if (result != null) {
+                            file = result!.files.single;
+
+                            Uint8List fileBytes =
+                                result!.files.single.bytes as Uint8List;
+                            //print(base64Encode(fileBytes));
+                            //List<int>
+                            _selectedFile = fileBytes;
+                            setState(() {
+                              filee = true;
+                              selectedImageInBytes = result!.files.first.bytes;
+                            });
+                          } else {
+                            setState(() {
+                              filee = false;
+                            });
+                          }
+                          ////////////////////
+                        },
+                        //splashColor: Colors.brown.withOpacity(0.5),
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15.0),
+                            color: Palette.greenColors,
+                            image: DecorationImage(
+                                opacity: 100,
+                                image: NetworkImage(
+                                    'http://13.39.81.126:4009${widget.imageUrl}'), //13.39.81.126
+                                fit: BoxFit.cover),
+                          ),
+                          child: const Text(
+                            "Modifier",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                color: Colors.white),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    filee == true
+                        ? Container(
+                            height: 100,
+                            width: 100,
+                            alignment: Alignment.center,
+                            child: Text(file!.name),
+                          )
+                        : const SizedBox(
+                            height: 100,
+                            width: 100,
+                          ),
+                  ]),
                 ),
-
-                const SizedBox(
-                  height: 80,
-                ),
+                //////////////////////////////////////////////
 
                 /// - fin du choix de l'image
-
+                const SizedBox(
+                  height: 40,
+                ),
                 ElevatedButton(
                   onPressed: (() {
                     for (int i = 0; i < _controllerInput.length; i++) {

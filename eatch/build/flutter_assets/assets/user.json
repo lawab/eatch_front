@@ -1,0 +1,40 @@
+[
+    {
+        "_id": "645531ebbc39291ce042a4ff",
+        "restaurant": {
+            "_id": "6447f9959c9ed555eea7915c"
+        },
+        "firstName": "Andre",
+        "lastName": "Hans",
+        "email": "Archad@wab.com",
+        "username": "Andre Hans",
+        "password": "U2FsdGVkX1+MseTSVFANEpKhIRQ/8b3WOmDs4LwCt2E=",
+        "role": "COMPTABLE",
+        "avatar": "/datas/eatch.jpg",
+        "isOnline": false,
+        "_creator": "6430738ecd325d368f6644f4",
+        "deletedAt": null,
+        "createdAt": "2023-05-05T16: 42: 19.298Z",
+        "updatedAt": "2023-05-05T16: 42: 19.298Z",
+        "__v": 0
+    },
+    {
+        "_id": "6458ca5f3a208a99e51a66aa",
+        "restaurant": {
+            "_id": "6447f9959c9ed555eea7915c"
+        },
+        "firstName": "Andre",
+        "lastName": "Archad",
+        "email": "Wabstage@stage.com",
+        "username": "Andre Archad",
+        "password": "U2FsdGVkX18zSsGCBuLZBlYsOhBukY9FvX9BLEpDMlY=",
+        "role": "EMPLOYEE",
+        "avatar": "/datas/eatch.jpg",
+        "isOnline": false,
+        "_creator": "6430738ecd325d368f6644f4",
+        "deletedAt": null,
+        "createdAt": "2023-05-08T10: 09: 35.241Z",
+        "updatedAt": "2023-05-08T10: 09: 35.241Z",
+        "__v": 0
+    }
+]

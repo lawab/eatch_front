@@ -50,6 +50,17 @@ class _ProductCardState extends State<ProductCard> {
                   width: double.infinity,
                   height: 95,
                   fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.black,
+                      child: const Center(
+                        child: Text(
+                          "Pas d'image",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
               Expanded(

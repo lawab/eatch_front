@@ -647,25 +647,11 @@ class AuthentificationState extends State<Authentification> {
 
     final String response = await rootBundle.loadString('assets/server.json');
     final data = await json.decode(response);
+    String adressUrl = data['ip'] + ":" + data['port'];
 
-    String urlUser = data['adresse'] + ":" + data['port'][0]['user'];
-    String urlCategorie = data['adresse'] + ":" + data['port'][1]['categorie'];
-    String urlProduit = data['adresse'] + ":" + data['port'][2]['produit'];
-    String urlRecette = data['adresse'] + ":" + data['port'][3]['recette'];
-    String urlMatierePremiere =
-        data['adresse'] + ":" + data['port'][4]['matiere_premiere'];
-    String urlMenu = data['adresse'] + ":" + data['port'][5]['menu'];
-    String urlPromotion = data['adresse'] + ":" + data['port'][6]['promotion'];
-
-    prefs.setString('url_user', urlUser);
-    prefs.setString('url_categorie', urlCategorie);
-    prefs.setString('url_produit', urlProduit);
-    prefs.setString('url_recette', urlRecette);
-    prefs.setString('url_matierePremiere', urlMatierePremiere);
-    prefs.setString('url_menu', urlMenu);
-    prefs.setString('url_promotion', urlPromotion);
-
-    String url = "$urlUser/api/users/login";
+    prefs.setString('ipport', adressUrl);
+    String url =
+        "http://13.39.81.126:4001/api/users/login"; //13.39.81.126:4001 //13.39.81.126:4001 // $adress_url
     print(url);
     print(email);
     print(pass);
@@ -697,8 +683,9 @@ class AuthentificationState extends State<Authentification> {
         if (data['user']['role'] == 'SUPER_ADMIN') {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => const Accueil()));
-        } else if (data['role'] == 'LABORANTIN') {
+        } else if (data['user']['role'] == 'LABORANTIN') {
           prefs.setInt('index', 9);
+          prefs.setBool('lab', true);
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => const AccuilLabo()));
         } else if (data['role'] == 'MANAGER') {

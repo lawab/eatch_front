@@ -1,0 +1,135 @@
+[
+    {
+        "_id": "64709b7e8df4a5afacae5d01",
+        "title": "Nouvelle categorie",
+        "_creator": {
+            "_id": "6433e8a9bd4f93d742bb0ee8",
+            "role": "SUPER_ADMIN",
+            "email": "wablearn@gmail.com",
+            "firstName": "SUPER",
+            "lastName": "ADMIN"
+        },
+        "restaurant": {
+            "_id": "64679d98d4843fd36e085a4c",
+            "restaurant_name": "restaurant 1",
+            "infos": {
+                "town": "agadir",
+                "address": "agadir rue 200 immeuble 20 appt1"
+            }
+        },
+        "deletedAt": "null",
+        "image": "/datas/1685101437988_Image.jpg",
+        "products": [
+            {
+                "_id": "64709c525458be8699521814",
+                "materials": [
+                    {
+                        "_id": "646f4a77035e10146f1699b1",
+                        "mp_name": "Fromage",
+                        "quantity": 36,
+                        "lifetime": "2023-07-11T23: 00: 00.000Z"
+                    }
+                ],
+                "restaurant": {
+                    "_id": "64679d98d4843fd36e085a4c",
+                    "restaurant_name": "restaurant 1",
+                    "infos": {
+                        "town": "agadir",
+                        "address": "agadir rue 200 immeuble 20 appt1"
+                    }
+                },
+                "category": {
+                    "_id": "64709b7e8df4a5afacae5d01",
+                    "title": "Nouvelle categorie",
+                    "image": "/datas/1685101437988_Image.jpg",
+                    "_creator": {
+                        "_id": "6433e8a9bd4f93d742bb0ee8",
+                        "role": "SUPER_ADMIN",
+                        "email": "wablearn@gmail.com",
+                        "firstName": "SUPER",
+                        "lastName": "ADMIN"
+                    },
+                    "restaurant": {
+                        "_id": "64679d98d4843fd36e085a4c"
+                    },
+                    "deletedAt": "null"
+                },
+                "price": 12,
+                "_creator": "6433e8a9bd4f93d742bb0ee8",
+                "productName": "Nouveau Produit",
+                "quantity": 13,
+                "promotion": false,
+                "devise": "MAD",
+                "image": "/datas/avatar.png",
+                "liked": 0,
+                "likedPersonCount": 0,
+                "deletedAt": "null",
+                "comments": [
+                    {
+                        "_id": "643ff2d3ae6c202ffbf7fa24",
+                        "client": {
+                            "_id": "6433e8a9bd4f93d742bb0ef8",
+                            "fisrtName": "karl",
+                            "lastName": "wilfred",
+                            "isOnline": true,
+                            "phoneNumber": "null"
+                        },
+                        "message": "I like your restaurant,it is very very good,thanks!!",
+                        "deletedAt": "2023-04-26T15:39:06.703Z",
+                        "createdAt": "2023-04-19T13:55:31.973Z",
+                        "updatedAt": "2023-04-26T15:39:06.705Z",
+                        "__v": 0,
+                        "_creator": "6433e8a9bd4f93d742bb0ee8"
+                    }
+                ],
+                "createdAt": "2023-05-26T11: 47: 30.955Z",
+                "updatedAt": "2023-05-26T11: 47: 30.955Z",
+                "__v": 0,
+                "recette":
+                    {
+                        "_id":"6474ac6645a52e481fac4932",
+                        "title":"recette 1",
+                        "image":"/datas/avatar.png",
+                        "description":"description 1",
+                        "engredients":
+                            [
+                                {
+                                    "unity":"g",
+                                    "material":
+                                        {
+                                            "restaurant":
+                                                {
+                                                    "infos":
+                                                        {
+                                                            "town":"casablanca",
+                                                            "address":"casablanca roudani immeuble 20 appt 2",
+                                                            "logo":"/datas/avatar.png"
+                                                        },
+                                                    "restaurant_name":"mon restaurant",
+                                                    "deletedAt":"null",
+                                                    "_id":"6436b51165f56ba483198d19"
+                                                },
+                                            "lifetime":"2023-04-12T13:52:40.266Z",
+                                            "mp_name":"viande",
+                                            "quantity":4,
+                                            "min_quantity":0,
+                                            "deletedAt":"null",
+                                            "_id":"6436b7a8756195df72d0fdfc"
+                                        },
+                                    "grammage":100,
+                                    "_id":"6474ac6645a52e481fac4933"
+                                }
+                            ],
+                        "_creator":"6433e8a9bd4f93d742bb0ee8",
+                        "deletedAt":"null",
+                        "createdAt":"2023-05-29T13:45:10.951Z",
+                        "updatedAt":"2023-05-29T13:45:10.951Z",
+                        "__v":0
+                    }
+                
+                
+
+            }
+        ]
+    }
+]

@@ -1,19 +1,22 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:eatch/utils/applayout.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 import '../../servicesAPI/getMenu.dart';
+import '../../servicesAPI/getProduit.dart';
 import '../../servicesAPI/get_promotion.dart';
 import '../../servicesAPI/multipart.dart';
 import '../../utils/palettes/palette.dart';
 import 'affichePromotion.dart';
-
-import 'package:eatch/servicesAPI/get_produits.dart' as p;
+import 'package:http/http.dart' as http;
 
 class ModificationPromotion extends ConsumerStatefulWidget {
   const ModificationPromotion({
@@ -58,6 +61,12 @@ class ModificationPromotionState extends ConsumerState<ModificationPromotion> {
     });
   }
 
+  List<int>? _selectedFile = [];
+  FilePickerResult? result;
+  bool filee = false;
+  PlatformFile? file;
+  Uint8List? selectedImageInBytes;
+
   String? menu;
   String? produit;
 
@@ -84,7 +93,7 @@ class ModificationPromotionState extends ConsumerState<ModificationPromotion> {
   @override
   Widget build(BuildContext context) {
     final viewModel1 = ref.watch(getDataMenuFuture);
-    final viewModel2 = ref.watch(p.getDataProduitFuture);
+    final viewModel2 = ref.watch(getDataProduitFuture);
     return AppLayout(
       content: SizedBox(
         child: Container(
@@ -414,20 +423,111 @@ class ModificationPromotionState extends ConsumerState<ModificationPromotion> {
                     ],
                   ),
                 ),
-                // fin --------------------------------------------
                 const SizedBox(
-                  height: 80,
+                  height: 30,
+                ),
+                // fin --------------------------------------------
+                /////////// - Ici se trouve le bouton pour l'image
+
+                ////////////////////////
+                SizedBox(
+                  height: 100,
+                  child: Row(children: [
+                    const SizedBox(
+                      width: 50,
+                    ),
+                    Container(
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      child: InkWell(
+                        onTap: () async {
+                          /////////////////////
+                          result = await FilePicker.platform.pickFiles(
+                              type: FileType.custom,
+                              allowedExtensions: [
+                                "png",
+                                "jpg",
+                                "jpeg",
+                              ]);
+                          if (result != null) {
+                            file = result!.files.single;
+
+                            Uint8List fileBytes =
+                                result!.files.single.bytes as Uint8List;
+                            //print(base64Encode(fileBytes));
+                            //List<int>
+                            _selectedFile = fileBytes;
+                            setState(() {
+                              filee = true;
+                              selectedImageInBytes = result!.files.first.bytes;
+                            });
+                          } else {
+                            setState(() {
+                              filee = false;
+                            });
+                          }
+                          ////////////////////
+                        },
+                        //splashColor: Colors.brown.withOpacity(0.5),
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15.0),
+                            color: Palette.greenColors,
+                            image: DecorationImage(
+                                opacity: 100,
+                                image: NetworkImage(
+                                    'http://13.39.81.126:5005${widget.imageUrl}'), //13.39.81.126
+                                fit: BoxFit.cover),
+                          ),
+                          child: const Text(
+                            "Modifier",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    filee == true
+                        ? Container(
+                            height: 100,
+                            width: 100,
+                            alignment: Alignment.center,
+                            child: Text(file!.name),
+                          )
+                        : const SizedBox(
+                            height: 100,
+                            width: 100,
+                          ),
+                  ]),
+                ),
+                //////////////////////////////////////////////
+
+                /// - fin du choix de l'image
+                const SizedBox(
+                  height: 40,
                 ),
                 ElevatedButton(
                   onPressed: (() {
                     modificationPromotion(
-                        context,
-                        nomController.text,
-                        descriptionPromo.text,
-                        menu,
-                        produit,
-                        date.toString(),
-                        widget.sId);
+                      context,
+                      nomController.text,
+                      descriptionPromo.text,
+                      menu,
+                      produit,
+                      date.toString(),
+                      widget.sId,
+                      _selectedFile!,
+                      result,
+                    );
                   }),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Palette.primaryColor,
@@ -458,8 +558,8 @@ class ModificationPromotionState extends ConsumerState<ModificationPromotion> {
     String? nomDuProduit,
     String endPromo,
     String idPromo,
-    // List<int> selectedFile,
-    // FilePickerResult? result,
+    List<int> selectedFile,
+    FilePickerResult? result,
   ) async {
     ////////////
 
@@ -499,13 +599,13 @@ class ModificationPromotionState extends ConsumerState<ModificationPromotion> {
 
     request.fields['form_key'] = 'form_value';
     request.headers['authorization'] = 'Bearer $token';
-    // if (result != null) {
-    //   request.files.add(
-    //     http.MultipartFile.fromBytes('file', selectedFile,
-    //         contentType: MediaType('application', 'octet-stream'),
-    //         filename: result.files.first.name),
-    //   );
-    // }
+    if (result != null) {
+      request.files.add(
+        http.MultipartFile.fromBytes('file', selectedFile,
+            contentType: MediaType('application', 'octet-stream'),
+            filename: result.files.first.name),
+      );
+    }
     print("RESPENSE SEND STEAM FILE REQ");
     //var responseString = await streamedResponse.stream.bytesToString();
     var response = await request.send();

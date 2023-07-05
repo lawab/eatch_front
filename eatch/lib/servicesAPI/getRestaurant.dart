@@ -21,7 +21,7 @@ class GetDataRsetaurantFuture extends ChangeNotifier {
   Future getData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
-    //String adressUrl = prefs.getString('ipport').toString();
+    String adressUrl = prefs.getString('ipport').toString();
     try {
       http.Response response = await http.get(
         Uri.parse(

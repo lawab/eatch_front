@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:eatch/pages/promotion/Modification_promotion.dart';
 import 'package:eatch/servicesAPI/getMenu.dart';
-import 'package:eatch/servicesAPI/get_produits.dart' as p;
+import 'package:eatch/servicesAPI/getProduit.dart';
 import 'package:eatch/utils/applayout.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:file_picker/file_picker.dart';
@@ -158,6 +158,20 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                                 ),
                                                 child: Image.network(
                                                   "http://13.39.81.126:5005${viewModel.listPromotion[index].image}",
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) {
+                                                    return Container(
+                                                      color: Colors.black,
+                                                      child: const Center(
+                                                        child: Text(
+                                                          "Pas d'image",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -525,6 +539,20 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                                 child: Image.network(
                                                   "http://13.39.81.126:5005${viewModel.listPromotion[index].image}",
                                                   fit: BoxFit.cover,
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) {
+                                                    return Container(
+                                                      color: Colors.black,
+                                                      child: const Center(
+                                                        child: Text(
+                                                          "Pas d'image",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
                                                 ),
                                               ),
                                             ),
@@ -645,14 +673,6 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                     color: Palette.secondaryBackgroundColor,
                     child: creation(listDesMenus, listDesProduits),
                   ),
-            // ajout == true
-            //     ? const Divider(
-            //         height: 5,
-            //         color: Palette.yellowColor,
-            //       )
-            //     : const SizedBox(
-            //         height: 5,
-            //       ),
           ],
         ),
       ),
@@ -730,6 +750,20 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                                 ),
                                                 child: Image.network(
                                                   "http://13.39.81.126:5005${viewModel.listPromotion[index].image}",
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) {
+                                                    return Container(
+                                                      color: Colors.black,
+                                                      child: const Center(
+                                                        child: Text(
+                                                          "Pas d'image",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -1097,6 +1131,20 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                                 child: Image.network(
                                                   "http://13.39.81.126:5005${viewModel.listPromotion[index].image}",
                                                   fit: BoxFit.cover,
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) {
+                                                    return Container(
+                                                      color: Colors.black,
+                                                      child: const Center(
+                                                        child: Text(
+                                                          "Pas d'image",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
                                                 ),
                                               ),
                                             ),
@@ -1225,8 +1273,8 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
 
   Widget creation(List<String> listDesMenus, List<String> listDesProduits) {
     final viewModel1 = ref.watch(getDataMenuFuture);
-    final viewModel2 = ref.watch(p.getDataProduitFuture);
-    print('Voici la liste des produits: ${viewModel2.listProduit.length}');
+    final viewModel2 = ref.watch(getDataProduitFuture);
+
     return Column(
       children: [
         Container(
@@ -1261,35 +1309,34 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                   keyboardType: TextInputType.emailAddress,
                   onChanged: (value) {},
                   decoration: InputDecoration(
-                    hoverColor: Palette.primaryBackgroundColor,
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 42, vertical: 20),
-                    filled: true,
-                    fillColor: Palette.primaryBackgroundColor,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: const BorderSide(
-                          color: Palette.secondaryBackgroundColor),
-                      gapPadding: 10,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: const BorderSide(
-                          color: Palette.secondaryBackgroundColor),
-                      gapPadding: 10,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: const BorderSide(
-                          color: Palette.secondaryBackgroundColor),
-                      gapPadding: 10,
-                    ),
-                    hintText: "Entrer le nom du type",
-                    // If  you are using latest version of flutter then lable text and hint text shown like this
-                    // if you r using flutter less then 1.20.* then maybe this is not working properly
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    suffixIcon: const Icon(Icons.food_bank),
-                  ),
+                      hoverColor: Palette.primaryBackgroundColor,
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 42, vertical: 20),
+                      filled: true,
+                      fillColor: Palette.primaryBackgroundColor,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(
+                            color: Palette.secondaryBackgroundColor),
+                        gapPadding: 10,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(
+                            color: Palette.secondaryBackgroundColor),
+                        gapPadding: 10,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(
+                            color: Palette.secondaryBackgroundColor),
+                        gapPadding: 10,
+                      ),
+                      hintText: "Entrer le nom du type",
+                      // If  you are using latest version of flutter then lable text and hint text shown like this
+                      // if you r using flutter less then 1.20.* then maybe this is not working properly
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      suffixIcon: const Icon(Icons.food_bank)),
                 ),
               ),
               const SizedBox(

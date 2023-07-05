@@ -1,0 +1,64 @@
+[
+    {
+        "id": "646f6a3c66b7a77572a1b29c",
+        "title": "newcate",
+        "products": [
+            {
+                "_id": "646fa3370717c8f3ac007732",
+                "materials": [
+                    {
+                        "_id": "646f4a77035e10146f1699b1",
+                        "mp_name": "Fromage",
+                        "quantity": 36,
+                        "lifetime": "2023-07-11T23: 00: 00.000Z"
+                    }
+                ],
+                "restaurant": {
+                    "_id": "64679d98d4843fd36e085a4c",
+                    "restaurant_name": "restaurant 1",
+                    "infos": {
+                        "town": "agadir",
+                        "address": "agadir rue 200 immeuble 20 appt1"
+                    }
+                },
+                "category": {
+                    "_id": "646f6a3c66b7a77572a1b29c",
+                    "title": "newcate",
+                    "image": "/datas/1685023291513_Image.jpg"
+                },
+                "price": 33,
+                "_creator": "6433e8a9bd4f93d742bb0ee8",
+                "productName": "ccdjdjdj12",
+                "quantity": 21,
+                "promotion": false,
+                "devise": "MAD",
+                "image": "/datas/avatar.png",
+                "liked": 0,
+                "likedPersonCount": 0,
+                "deletedAt": null,
+                "comments": [
+                    {
+                        "_id": "643ff2d3ae6c202ffbf7fa24",
+                        "client": {
+                            "_id": "6433e8a9bd4f93d742bb0ef8",
+                            "fisrtName": "karl",
+                            "lastName": "wilfred",
+                            "isOnline": true,
+                            "phoneNumber": null
+                        },
+                        "message": "I like your restaurant,it is very very good,thanks!!",
+                        "deletedAt": "2023-04-26T15:39:06.703Z",
+                        "createdAt": "2023-04-19T13:55:31.973Z",
+                        "updatedAt": "2023-04-26T15:39:06.705Z",
+                        "__v": 0,
+                        "_creator": "6433e8a9bd4f93d742bb0ee8"
+                    }
+                ],
+                "createdAt": "2023-05-25T18: 04: 39.838Z",
+                "updatedAt": "2023-05-25T18: 04: 39.838Z",
+                "__v": 0
+
+            }
+        ]
+    }
+]

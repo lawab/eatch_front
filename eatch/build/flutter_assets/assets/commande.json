@@ -1,0 +1,89 @@
+[
+    {
+        "id": "c1",
+        "imageUrl": "assets/tacosSUP/25752.png",
+        "title": "Tacos",
+        "nombreproduits": 30,
+        "produits": [
+            {
+                "id": "1",
+                "imageUrl": "assets/tacosSUP/istockphoto-1368799457-612x612.jpg",
+                "title": "Product 1",
+                "price": 13
+            },
+            {
+                "id": "2",
+                "imageUrl": "assets/tacosSUP/istockphoto-1415165488-612x612.jpg",
+                "title": "Product 2",
+                "price": 13
+            }
+        ]
+    },
+    {
+        "id": "c2",
+        "imageUrl": "assets/menuSUP/menu.png",
+        "title": "Menu",
+        "nombreproduits": 25,
+        "produits": [
+            {
+                "id": "4",
+                "imageUrl": "assets/menuSUP/menu2.jpg",
+                "title": "Product 4",
+                "price": 13
+            },
+            {
+                "id": "5",
+                "imageUrl": "assets/menuSUP/menu1.png",
+                "title": "Product 5",
+                "price": 13
+            },
+            {
+                "id": "6",
+                "imageUrl": "assets/menuSUP/menu4.jpg",
+                "title": "Product 6",
+                "price": 13
+            },
+            {
+                "id": "7",
+                "imageUrl": "assets/menuSUP/menu3.PNG",
+                "title": "Product 7",
+                "price": 13
+            }
+        ]
+    },
+    {
+        "id": "c3",
+        "imageUrl": "assets/boissonSUP/boisson.jpg",
+        "title": "Boisson",
+        "nombreproduits": 33,
+        "produits": [
+            {
+                "id": "8",
+                "imageUrl": "assets/boissonSUP/boisson1.png",
+                "title": "Product 8",
+                "price": 13
+            },
+            {
+                "id": "9",
+                "imageUrl": "assets/boissonSUP/boisson2.jpg",
+                "title": "Product 9",
+                "price": 13
+            },
+            {
+                "id": "10",
+                "imageUrl": "assets/boissonSUP/boisson3.png",
+                "title": "Product 10",
+                "price": 13
+            },
+            {
+                "id": "11",
+                "imageUrl": "assets/boissonSUP/boisson4.jpg",
+                "title": "Product 11",
+                "price": 13
+            }
+        ]
+    }
+    
+    
+   
+]

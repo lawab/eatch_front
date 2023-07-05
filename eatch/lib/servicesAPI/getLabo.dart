@@ -79,7 +79,7 @@ class Labo {
   List<Raws>? raws;
   List<Null>? providers;
   String? sCreator;
-  Null? deletedAt;
+  String? deletedAt;
   List<Materials>? materials;
   String? createdAt;
   String? updatedAt;
@@ -199,7 +199,7 @@ class Raws {
   String? image;
   String? laboratory;
   String? provider;
-  Null? deletedAt;
+  String? deletedAt;
   String? createdAt;
   String? updatedAt;
   int? iV;
@@ -256,7 +256,7 @@ class Materials {
   String? lifetime;
   String? image;
   String? laboratory;
-  Null? deletedAt;
+  String? deletedAt;
   String? createdAt;
   String? updatedAt;
   int? iV;

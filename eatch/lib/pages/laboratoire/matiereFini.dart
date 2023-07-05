@@ -36,6 +36,13 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
   bool filee1 = false;
   Uint8List? selectedImageInBytes1;
   bool _selectFile1 = false;
+  /////////
+  List<int> _selectedFile = [];
+  FilePickerResult? result;
+  PlatformFile? file;
+  bool filee = false;
+  Uint8List? selectedImageInBytes;
+  bool _selectFile = false;
   List<String> listOfQuantite = [
     "Mesure *",
     "kg",
@@ -63,6 +70,9 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
 
   bool vertical = false;
   bool ajoutFini = false;
+  bool modif = false;
+  var imagee = '';
+  var idFini = '';
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(getDataMatiereFiniFuture);
@@ -111,9 +121,22 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
                                       borderRadius: BorderRadius.circular(10)),
                                   minimumSize: const Size(180, 50)),
                               onPressed: () {
-                                setState(() {
-                                  ajoutFini = false;
-                                });
+                                if (modif == false) {
+                                  setState(() {
+                                    ajoutFini = false;
+                                    modif = false;
+                                  });
+                                } else {
+                                  setState(() {
+                                    modif = false;
+                                    titleController.clear();
+                                    quantiteController.clear();
+                                    dateinput.clear();
+                                    unite = listOfQuantite.first;
+                                    imagee = '';
+                                    ajoutFini = false;
+                                  });
+                                }
                               },
                               icon: const Icon(Icons.backspace),
                               label: const Text('Retour'),
@@ -165,7 +188,7 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
                 ),
                 ajoutFini == true
                     ? Container(
-                        child: creation(),
+                        child: creation(idFini),
                       )
                     : Container(
                         height: height - 222,
@@ -190,10 +213,22 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
                                       Container(
                                         height: 200,
                                         width: 300,
-                                        decoration: const BoxDecoration(
-                                          image: DecorationImage(
-                                            image: AssetImage('emballage.jpeg'),
-                                          ),
+                                        child: Image.network(
+                                          "http://13.39.81.126:4015${listFini[index].image}",
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return Container(
+                                              color: Colors.black,
+                                              child: const Center(
+                                                child: Text(
+                                                  "Pas d'image",
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          fit: BoxFit.cover,
                                         ),
                                       ),
                                       const SizedBox(
@@ -225,7 +260,27 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
                                                 alignment: Alignment.center,
                                                 splashColor:
                                                     Palette.greenColors,
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  setState(() {
+                                                    modif = true;
+                                                    titleController.text =
+                                                        listFini[index].title!;
+                                                    quantiteController.text =
+                                                        listFini[index]
+                                                            .quantity
+                                                            .toString();
+                                                    dateinput.text =
+                                                        listFini[index]
+                                                            .lifetime!;
+                                                    unite =
+                                                        listFini[index].unit!;
+                                                    imagee =
+                                                        listFini[index].image!;
+                                                    idFini =
+                                                        listFini[index].sId!;
+                                                    ajoutFini = true;
+                                                  });
+                                                },
                                                 icon: const Icon(
                                                   Icons.edit,
                                                   size: 30,
@@ -335,9 +390,22 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
                                       borderRadius: BorderRadius.circular(10)),
                                   minimumSize: const Size(180, 50)),
                               onPressed: () {
-                                setState(() {
-                                  ajoutFini = false;
-                                });
+                                if (modif == false) {
+                                  setState(() {
+                                    ajoutFini = false;
+                                    modif = false;
+                                  });
+                                } else {
+                                  setState(() {
+                                    modif = false;
+                                    titleController.clear();
+                                    quantiteController.clear();
+                                    dateinput.clear();
+                                    unite = listOfQuantite.first;
+                                    imagee = '';
+                                    ajoutFini = false;
+                                  });
+                                }
                               },
                               icon: const Icon(Icons.backspace),
                               label: const Text('Retour'),
@@ -390,7 +458,7 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
                 ajoutFini == true
                     ? Container(
                         height: height - 222,
-                        child: creation(),
+                        child: creation(idFini),
                       )
                     : Container(
                         height: height - 222,
@@ -415,10 +483,22 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
                                       Container(
                                         height: 180,
                                         width: 300,
-                                        decoration: const BoxDecoration(
-                                          image: DecorationImage(
-                                            image: AssetImage('emballage.jpeg'),
-                                          ),
+                                        child: Image.network(
+                                          "http://13.39.81.126:4015${listFini[index].image}",
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return Container(
+                                              color: Colors.black,
+                                              child: const Center(
+                                                child: Text(
+                                                  "Pas d'image",
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          fit: BoxFit.cover,
                                         ),
                                       ),
                                       const SizedBox(
@@ -459,7 +539,27 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
                                                 alignment: Alignment.center,
                                                 splashColor:
                                                     Palette.greenColors,
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  setState(() {
+                                                    modif = true;
+                                                    titleController.text =
+                                                        listFini[index].title!;
+                                                    quantiteController.text =
+                                                        listFini[index]
+                                                            .quantity
+                                                            .toString();
+                                                    dateinput.text =
+                                                        listFini[index]
+                                                            .lifetime!;
+                                                    unite =
+                                                        listFini[index].unit!;
+                                                    imagee =
+                                                        listFini[index].image!;
+                                                    idFini =
+                                                        listFini[index].sId!;
+                                                    ajoutFini = true;
+                                                  });
+                                                },
                                                 icon: const Icon(
                                                   Icons.edit,
                                                   size: 30,
@@ -541,7 +641,7 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
     );
   }
 
-  Widget creation() {
+  Widget creation(String id) {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -764,61 +864,139 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
           const SizedBox(
             height: 20,
           ),
-          Container(
-            width: MediaQuery.of(context).size.width / 2,
-            padding: const EdgeInsets.only(right: 70),
-            color: Palette.secondaryBackgroundColor,
-            alignment: Alignment.centerRight,
-            child: GestureDetector(
-              onTap: () async {
-                result1 = await FilePicker.platform
-                    .pickFiles(type: FileType.custom, allowedExtensions: [
-                  "png",
-                  "jpg",
-                  "jpeg",
-                ]);
-                if (result1 != null) {
-                  setState(() {
-                    file1 = result1!.files.single;
+          modif == false
+              ? Container(
+                  width: MediaQuery.of(context).size.width / 2,
+                  padding: const EdgeInsets.only(right: 70),
+                  color: Palette.secondaryBackgroundColor,
+                  alignment: Alignment.centerRight,
+                  child: GestureDetector(
+                    onTap: () async {
+                      result1 = await FilePicker.platform
+                          .pickFiles(type: FileType.custom, allowedExtensions: [
+                        "png",
+                        "jpg",
+                        "jpeg",
+                      ]);
+                      if (result1 != null) {
+                        setState(() {
+                          file1 = result1!.files.single;
 
-                    Uint8List fileBytes =
-                        result1!.files.single.bytes as Uint8List;
+                          Uint8List fileBytes =
+                              result1!.files.single.bytes as Uint8List;
 
-                    _selectedFile1 = fileBytes;
+                          _selectedFile1 = fileBytes;
 
-                    filee1 = true;
+                          filee1 = true;
 
-                    selectedImageInBytes1 = result1!.files.first.bytes;
-                    _selectFile1 = true;
-                  });
-                }
-              },
-              child: Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: 4,
-                    color: Palette.greenColors,
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: _selectFile1 == false
-                      ? const Icon(
-                          Icons.camera_alt_outlined,
+                          selectedImageInBytes1 = result1!.files.first.bytes;
+                          _selectFile1 = true;
+                        });
+                      }
+                    },
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 4,
                           color: Palette.greenColors,
-                          size: 40,
-                        )
-                      : Image.memory(
-                          selectedImageInBytes1!,
-                          fit: BoxFit.fill,
                         ),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: _selectFile1 == false
+                            ? const Icon(
+                                Icons.camera_alt_outlined,
+                                color: Palette.greenColors,
+                                size: 40,
+                              )
+                            : Image.memory(
+                                selectedImageInBytes1!,
+                                fit: BoxFit.fill,
+                              ),
+                      ),
+                    ),
+                  ),
+                )
+              : Container(
+                  width: MediaQuery.of(context).size.width / 2,
+                  padding: const EdgeInsets.only(right: 70),
+                  color: Palette.secondaryBackgroundColor,
+                  alignment: Alignment.centerRight,
+                  child: Container(
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: InkWell(
+                      onTap: () async {
+                        /////////////////////
+                        result = await FilePicker.platform.pickFiles(
+                            type: FileType.custom,
+                            allowedExtensions: [
+                              "png",
+                              "jpg",
+                              "jpeg",
+                            ]);
+                        if (result != null) {
+                          file = result!.files.single;
+
+                          Uint8List fileBytes =
+                              result!.files.single.bytes as Uint8List;
+                          //print(base64Encode(fileBytes));
+                          //List<int>
+                          _selectedFile = fileBytes;
+                          setState(() {
+                            _selectFile = true;
+                            selectedImageInBytes = result!.files.first.bytes;
+                          });
+                        } else {
+                          setState(() {
+                            _selectFile = false;
+                          });
+                        }
+                        ////////////////////
+                      },
+                      //splashColor: Colors.brown.withOpacity(0.5),
+                      child: _selectFile == true
+                          ? Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 3,
+                                    color: Palette.violetColor,
+                                  ),
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  color: Colors.white,
+                                  image: DecorationImage(
+                                    image: MemoryImage(
+                                      selectedImageInBytes!,
+                                      //fit: BoxFit.fill,
+                                    ),
+                                  )),
+                              child: const Icon(
+                                Icons.camera_alt_outlined,
+                                color: Palette.violetColor,
+                                size: 40,
+                              ),
+                            )
+                          : Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 3,
+                                  color: Palette.greenColors,
+                                ),
+                              ),
+                              child: Image.network(
+                                  'http://13.39.81.126:4015$imagee'),
+                            ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
           SizedBox(
             height: vertical == false ? 100 : 50,
           ),
@@ -832,14 +1010,27 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
                 ),
                 ElevatedButton(
                   onPressed: (() {
-                    creationMatiereSemiFini(
-                        context,
-                        titleController.text,
-                        quantiteController.text,
-                        dateinput.text,
-                        _selectedFile1,
-                        result1,
-                        unite!);
+                    if (modif == false) {
+                      creationMatiereSemiFini(
+                          context,
+                          titleController.text,
+                          quantiteController.text,
+                          dateinput.text,
+                          _selectedFile1,
+                          result1,
+                          unite!);
+                    } else {
+                      modificationMatiereFini(
+                          context,
+                          titleController.text,
+                          quantiteController.text,
+                          dateinput.text,
+                          _selectedFile,
+                          result,
+                          unite!,
+                          id);
+                    }
+
                     dateinput.clear();
                   }),
                   style: ElevatedButton.styleFrom(
@@ -855,7 +1046,24 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
                   width: 20,
                 ),
                 ElevatedButton(
-                  onPressed: (() {}),
+                  onPressed: (() {
+                    if (modif == false) {
+                      setState(() {
+                        ajoutFini = false;
+                        modif = false;
+                      });
+                    } else {
+                      setState(() {
+                        modif = false;
+                        titleController.clear();
+                        quantiteController.clear();
+                        dateinput.clear();
+                        unite = listOfQuantite.first;
+                        imagee = '';
+                        ajoutFini = false;
+                      });
+                    }
+                  }),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Palette.secondaryBackgroundColor,
                     minimumSize: const Size(150, 50),
@@ -1112,7 +1320,7 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
                 ),
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                 onPressed: () {
-                  //deleteFournisseur(contextt, id);
+                  deleteMatiereSemiFini(contextt, id);
                   Navigator.pop(co);
                 },
                 label: const Text("Supprimer."))
@@ -1221,6 +1429,96 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
     }
   }
 
+  Future<void> modificationMatiereFini(
+      BuildContext context,
+      String nomMatierePremiere,
+      String quantite,
+      String peremption,
+      List<int> selectedFile,
+      FilePickerResult? result,
+      String unit,
+      String idUpdate) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var id = prefs.getString('IdUser').toString();
+    var token = prefs.getString('token');
+    var idLabo = prefs.getString('idLabo');
+    print(id);
+    print(token);
+
+    var url = Uri.parse(
+        "http://13.39.81.126:4015/api/semiMaterials/update/$idUpdate");
+    final request = MultipartRequest(
+      'PATCH',
+      url,
+      onProgress: (int bytes, int total) {
+        final progress = bytes / total;
+        print('progress: $progress ($bytes/$total)');
+      },
+    );
+    print(url);
+    var json = {
+      'unit': unit,
+      'laboratoryId': idLabo,
+      'title': nomMatierePremiere,
+      'quantity': quantite,
+      'lifetime': peremption,
+      '_creator': id,
+    };
+    var body = jsonEncode(json);
+
+    request.headers.addAll({
+      "body": body,
+    });
+    request.headers['authorization'] = 'Bearer $token';
+    if (result != null) {
+      request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
+          contentType: MediaType('application', 'octet-stream'),
+          filename: result.files.first.name));
+    }
+    print("RESPENSE SEND STEAM FILE REQ");
+    var response = await request.send();
+    print("Upload Response$response");
+    print(response.statusCode);
+    print(request.headers);
+
+    try {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        await response.stream.bytesToString().then((value) {
+          print(value);
+        });
+        setState(() {
+          modif = false;
+          titleController.clear();
+          quantiteController.clear();
+          dateinput.clear();
+          unite = listOfQuantite.first;
+          imagee = '';
+          ajoutFini = false;
+        });
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.info(
+            backgroundColor: Colors.green,
+            message: "La matière a été modifié",
+          ),
+        );
+
+        ref.refresh(getDataMatiereFiniFuture);
+      } else {
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.error(
+            backgroundColor: Colors.red,
+            message: "Erreur de modification",
+          ),
+        );
+        print("Error Create Programme  !!!");
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> ajoutMatiereFini(
     contextt,
     String materialId,
@@ -1298,6 +1596,50 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
       }
     } catch (e) {
       rethrow;
+    }
+  }
+
+  Future<http.Response> deleteMatiereSemiFini(contextt, String id) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var token = prefs.getString('token');
+      //String adress_url = prefs.getString('ipport').toString();
+      String urlDelete =
+          "http://13.39.81.126:4015/api/semiMaterials/delete/$id";
+      print(urlDelete);
+      final http.Response response = await http.patch(
+        Uri.parse(urlDelete),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'Accept': 'application/json',
+          'authorization': 'Bearer $token',
+        },
+      );
+
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        showTopSnackBar(
+          Overlay.of(contextt),
+          const CustomSnackBar.success(
+            backgroundColor: Colors.green,
+            message: "Matière Semi Fini supprimée",
+          ),
+        );
+        // ignore: unused_result
+        ref.refresh(getDataMatiereFiniFuture);
+        return response;
+      } else {
+        showTopSnackBar(
+          Overlay.of(contextt),
+          const CustomSnackBar.error(
+            backgroundColor: Colors.red,
+            message: "Erreur de suppression",
+          ),
+        );
+        return Future.error("Server Error");
+      }
+    } catch (e) {
+      return Future.error(e);
     }
   }
 }

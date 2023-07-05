@@ -1170,6 +1170,9 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
         await response.stream.bytesToString().then((value) {
           print(value);
         });
+        setState(() {
+          _showContent = false;
+        });
         //stopMessage();
         //finishWorking();
 
@@ -1177,7 +1180,7 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
           Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.green,
-            message: "La catégorie a été crée avec succès",
+            message: "Catégorie créée avec succès",
           ),
         );
         ref.refresh(getDataCategoriesFuture);
@@ -1186,7 +1189,7 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
           Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.red,
-            message: "La catégorie n'a pas été crée avec succès",
+            message: "Erreur de création",
           ),
         );
         print("Error Create Programme  !!!");

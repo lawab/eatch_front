@@ -1,0 +1,204 @@
+[
+    {
+        "_id": "643815987616a879d6789447",
+        "restaurant": {
+            "infos": {
+                "town": "casablanca",
+                "address": "address",
+                "_id": "6438274f97d6703e0692da16",
+                "logo": "/datas/avatar.png"
+            },
+            "_id": "6433e8a9bd4f93d742bb0ee8",
+            "restaurant_name": "kfc"
+        },
+        "category": {
+            "_id": "6433e8a9bd4f93d742bb0ee8",
+            "title": "Second category"
+        },
+        "price": 50,
+        "ids_MP": [
+            "6433e8a9bd4f93d742bb0ee8",
+            "6433e8a9bd4f93d742bb0ee8"
+        ],
+        "_creator": "6433e8a9bd4f93d742bb0ee8",
+        "productName": "bugger king",
+        "quantity": 2,
+        "promotion": false,
+        "devise": "MAD",
+        "image": "/datas/avatar.png",
+        "liked": 0,
+        "likedPersonCount": 0,
+        "deletedAt": null,
+        "comments": [
+            {
+                "_id": "643ff2d3ae6c202ffbf7fa24",
+                "client": {
+                    "_id": "6433e8a9bd4f93d742bb0ef8",
+                    "fisrtName": "karl",
+                    "lastName": "wilfred",
+                    "isOnline": true,
+                    "phoneNumber": null
+                },
+                "message": "I like your restaurant,it is very very good,thanks!!",
+                "deletedAt": "2023-04-26T15:39:06.703Z",
+                "createdAt": "2023-04-19T13:55:31.973Z",
+                "updatedAt": "2023-04-26T15:39:06.705Z",
+                "__v": 0,
+                "_creator": "6433e8a9bd4f93d742bb0ee8"
+            }
+        ],
+        "createdAt": "2023-04-13T14:45:45.005Z",
+        "updatedAt": "2023-04-13T16:01:19.651Z",
+        "__v": 0,
+        "materials": [
+            {
+                "image": "/datas/avatar.png",
+                "consumer_quantity": 0,
+                "current_quantity": 0,
+                "unity": "g",
+                "_id": "6436b51165f56ba483198d18",
+                "restaurant": {
+                    "infos": {
+                        "town": "fes",
+                        "address": "fes gare immeuble 20 appt 3",
+                        "_id": "64382db91a75438468e26367",
+                        "logo": "/datas/avatar.png"
+                    },
+                    "_id": "6433e8a9bd4f93d742bb0ee7",
+                    "restaurant_name": "bugger king"
+                },
+                "_creator": "6433e8a9bd4f93d742bb0ee8",
+                "mp_name": "legumes",
+                "quantity": 4,
+                "min_quantity": 0,
+                "deletedAt": "2023-04-12T18:13:13.098Z",
+                "lifetime": "2023-04-12T13:41:37.304Z",
+                "createdAt": "2023-04-12T13:41:37.315Z",
+                "updatedAt": "2023-04-13T16:28:41.644Z",
+                "__v": 0
+            }
+        ],
+        "recette":[
+            {
+                "_id":"6474ac6645a52e481fac4932",
+                "title":"recette 1",
+                "image":"/datas/avatar.png",
+                "description":"description 1",
+                "engredients":
+                    [
+                        {
+                            "unity":"g",
+                            "material":
+                                {
+                                    "restaurant":
+                                        {
+                                            "infos":
+                                                {
+                                                    "town":"casablanca",
+                                                    "address":"casablanca roudani immeuble 20 appt 2",
+                                                    "logo":"/datas/avatar.png"
+                                                },
+                                            "restaurant_name":"mon restaurant",
+                                            "deletedAt":"null",
+                                            "_id":"6436b51165f56ba483198d19"
+                                        },
+                                    "lifetime":"2023-04-12T13:52:40.266Z",
+                                    "mp_name":"viande",
+                                    "quantity":4,
+                                    "min_quantity":0,
+                                    "deletedAt":"null",
+                                    "_id":"6436b7a8756195df72d0fdfc"
+                                },
+                            "grammage":100,
+                            "_id":"6474ac6645a52e481fac4933"
+                        }
+                    ],
+                "_creator":"6433e8a9bd4f93d742bb0ee8",
+                "deletedAt":"null",
+                "createdAt":"2023-05-29T13:45:10.951Z",
+                "updatedAt":"2023-05-29T13:45:10.951Z",
+                "__v":0
+            }
+        ]
+    },
+    {
+        "_id": "64382842810f3614b638e903",
+        "materials": [
+            {
+                "_id": "6436b51165f56ba483198d18",
+                "mp_name": "legumes",
+                "quantity": 4,
+                "lifetime": "2023-04-12T 13: 41: 37.304Z"
+            }
+        ],
+        "restaurant": {
+            "infos": {
+                "town": "agadir",
+                "address": "agadir rue 200 immeuble 20 appt1",
+                "logo": "/datas/avatar.png"
+            },
+            "_id": "6433e8a9bd4f93d742bb0ee8",
+            "restaurant_name": "restaurant1"
+        },
+        "category": {
+            "_id": "6433e8a9bd4f93d742bb0ee6",
+            "title": "thirdcategory"
+        },
+        "price": 90,
+        "_creator": "6433e8a9bd4f93d742bb0ee8",
+        "productName": "Tacos the morroco",
+        "quantity": 2,
+        "promotion": false,
+        "devise": "MAD",
+        "image": "/datas/avatar.png",
+        "liked": 0,
+        "likedPersonCount": 0,
+        "deletedAt": "2023-05-23T11: 04: 25.688Z",
+        "comments": [],
+        "createdAt": "2023-04-13T16: 05: 22.272Z",
+        "updatedAt": "2023-05-23T11: 04: 25.760Z",
+        "__v": 1,
+        "recette":[
+            {
+                "_id":"6474ac6645a52e481fac4932",
+                "title":"recette 1",
+                "image":"/datas/avatar.png",
+                "description":"description 1",
+                "engredients":
+                    [
+                        {
+                            "unity":"g",
+                            "material":
+                                {
+                                    "restaurant":
+                                        {
+                                            "infos":
+                                                {
+                                                    "town":"casablanca",
+                                                    "address":"casablanca roudani immeuble 20 appt 2",
+                                                    "logo":"/datas/avatar.png"
+                                                },
+                                            "restaurant_name":"mon restaurant",
+                                            "deletedAt":"null",
+                                            "_id":"6436b51165f56ba483198d19"
+                                        },
+                                    "lifetime":"2023-04-12T13:52:40.266Z",
+                                    "mp_name":"viande",
+                                    "quantity":4,
+                                    "min_quantity":0,
+                                    "deletedAt":"null",
+                                    "_id":"6436b7a8756195df72d0fdfc"
+                                },
+                            "grammage":100,
+                            "_id":"6474ac6645a52e481fac4933"
+                        }
+                    ],
+                "_creator":"6433e8a9bd4f93d742bb0ee8",
+                "deletedAt":"null",
+                "createdAt":"2023-05-29T13:45:10.951Z",
+                "updatedAt":"2023-05-29T13:45:10.951Z",
+                "__v":0
+            }
+        ]
+    }
+]

@@ -91,7 +91,7 @@ class RestaurantModificationState
                     Expanded(child: Container()),
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Palette.textsecondaryColor,
+                          backgroundColor: Palette.greenColors,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),

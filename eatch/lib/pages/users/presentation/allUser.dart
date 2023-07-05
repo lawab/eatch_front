@@ -147,319 +147,324 @@ class AllUsersState extends ConsumerState<AllUsers> {
               ? Container(
                   height: MediaQuery.of(context).size.height - 437,
                   child: ListView.builder(
-                    itemCount: viewModel.listAllUsers.length,
-                    itemBuilder: ((context, index) {
-                      return Card(
-                        child: Container(
-                          height: 50,
-                          child: Row(children: [
-                            Expanded(
+                      itemCount: viewModel.listAllUsers.length,
+                      itemBuilder: ((context, index) {
+                        return Card(
+                          child: Container(
+                            height: 50,
+                            child: Row(children: [
+                              Expanded(
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
                                 child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                              ),
-                              child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      viewModel.listAllUsers[index].lastName!,
+                                      overflow: TextOverflow.fade,
+                                      maxLines: 1,
+                                      softWrap: false,
+                                    ),
+                                  ),
+                                ),
+                              )),
+                              Expanded(
+                                  child: Padding(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 10,
                                 ),
                                 child: Center(
                                   child: Text(
-                                    viewModel.listAllUsers[index].lastName!,
+                                    viewModel.listAllUsers[index].firstName!,
                                     overflow: TextOverflow.fade,
                                     maxLines: 1,
                                     softWrap: false,
                                   ),
                                 ),
-                              ),
-                            )),
-                            Expanded(
-                                child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  viewModel.listAllUsers[index].firstName!,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                  softWrap: false,
+                              )),
+                              Expanded(
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
                                 ),
-                              ),
-                            )),
-                            Expanded(
-                                child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  viewModel.listAllUsers[index].username!,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                  softWrap: false,
+                                child: Center(
+                                  child: Text(
+                                    viewModel.listAllUsers[index].username!,
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
                                 ),
-                              ),
-                            )),
-                            Expanded(
-                                child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  viewModel.listAllUsers[index].email!,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                  softWrap: false,
+                              )),
+                              Expanded(
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
                                 ),
-                              ),
-                            )),
-                            Expanded(
-                                child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  viewModel.listAllUsers[index].role!,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                  softWrap: false,
+                                child: Center(
+                                  child: Text(
+                                    viewModel.listAllUsers[index].email!,
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
                                 ),
-                              ),
-                            )),
-                            Container(
-                              width: 100,
-                              child: Center(
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        child: IconButton(
-                                      icon: const Icon(Icons.edit),
-                                      onPressed: () {
-                                        print("WWWWWWWWWOOOOOOOWWWWWWWWWWWW");
-                                        print(viewModel
-                                            .listAllUsers[index].email);
-                                        print(viewModel
-                                            .listAllUsers[index].firstName);
-                                        print(viewModel
-                                            .listAllUsers[index].lastName);
-                                        print(
-                                            viewModel.listAllUsers[index].role);
-                                        print(
-                                            viewModel.listAllUsers[index].sId);
-                                        print(viewModel
-                                            .listAllUsers[index].username);
-                                        print(viewModel
-                                            .listAllUsers[index].avatar!);
-                                        /*print(viewModel.listAllUsers[index]
+                              )),
+                              Expanded(
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    viewModel.listAllUsers[index].role!,
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
+                                ),
+                              )),
+                              Container(
+                                width: 100,
+                                child: Center(
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                          child: IconButton(
+                                        icon: const Icon(Icons.edit),
+                                        onPressed: () {
+                                          print("WWWWWWWWWOOOOOOOWWWWWWWWWWWW");
+                                          print(viewModel
+                                              .listAllUsers[index].email);
+                                          print(viewModel
+                                              .listAllUsers[index].firstName);
+                                          print(viewModel
+                                              .listAllUsers[index].lastName);
+                                          print(viewModel
+                                              .listAllUsers[index].role);
+                                          print(viewModel
+                                              .listAllUsers[index].sId);
+                                          print(viewModel
+                                              .listAllUsers[index].username);
+                                          print(viewModel
+                                              .listAllUsers[index].avatar!);
+                                          /*print(viewModel.listAllUsers[index]
                                               .restaurant!.sId!);*/
-                                        print('ppppppppppppppppppppppooo');
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) {
-                                            return ModificationUser(
-                                              avatar: viewModel
-                                                  .listAllUsers[index].avatar!,
-                                              email: viewModel
-                                                  .listAllUsers[index].email!,
-                                              firstName: viewModel
-                                                  .listAllUsers[index]
-                                                  .firstName!,
-                                              lastName: viewModel
-                                                  .listAllUsers[index]
-                                                  .lastName!,
-                                              role: viewModel
-                                                  .listAllUsers[index].role!,
-                                              sId: viewModel
-                                                  .listAllUsers[index].sId!,
-                                              id: viewModel.listAllUsers[index]
-                                                      .restaurant.isNull
-                                                  ? viewModel
-                                                          .listAllUsers[index]
-                                                          .laboratory
-                                                          .isNull
-                                                      ? ''
-                                                      : viewModel
-                                                          .listAllUsers[index]
-                                                          .laboratory!
-                                                          .sId!
-                                                  : viewModel
-                                                      .listAllUsers[index]
-                                                      .restaurant!
-                                                      .sId!,
-                                            );
-                                          }),
-                                        );
-                                        print('object');
-                                      },
-                                    )),
-                                    Expanded(
-                                        child: IconButton(
-                                      icon: const Icon(
-                                        Icons.delete,
-                                        color: Palette.deleteColors,
-                                      ),
-                                      onPressed: () {
-                                        dialogDelete(
-                                          viewModel.listAllUsers[index].lastName
-                                              .toString(),
-                                          viewModel.listAllUsers[index].sId!,
-                                        );
-                                      },
-                                    ))
-                                  ],
+                                          print('ppppppppppppppppppppppooo');
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                              return ModificationUser(
+                                                avatar: viewModel
+                                                    .listAllUsers[index]
+                                                    .avatar!,
+                                                email: viewModel
+                                                    .listAllUsers[index].email!,
+                                                firstName: viewModel
+                                                    .listAllUsers[index]
+                                                    .firstName!,
+                                                lastName: viewModel
+                                                    .listAllUsers[index]
+                                                    .lastName!,
+                                                role: viewModel
+                                                    .listAllUsers[index].role!,
+                                                sId: viewModel
+                                                    .listAllUsers[index].sId!,
+                                                id: viewModel
+                                                        .listAllUsers[index]
+                                                        .restaurant
+                                                        .isNull
+                                                    ? viewModel
+                                                            .listAllUsers[index]
+                                                            .laboratory
+                                                            .isNull
+                                                        ? ''
+                                                        : viewModel
+                                                            .listAllUsers[index]
+                                                            .laboratory!
+                                                            .sId!
+                                                    : viewModel
+                                                        .listAllUsers[index]
+                                                        .restaurant!
+                                                        .sId!,
+                                              );
+                                            }),
+                                          );
+                                          print('object');
+                                        },
+                                      )),
+                                      Expanded(
+                                          child: IconButton(
+                                        icon: const Icon(
+                                          Icons.delete,
+                                          color: Palette.deleteColors,
+                                        ),
+                                        onPressed: () {
+                                          dialogDelete(
+                                            viewModel
+                                                .listAllUsers[index].lastName
+                                                .toString(),
+                                            viewModel.listAllUsers[index].sId!,
+                                          );
+                                        },
+                                      ))
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ]),
-                        ),
-                      );
-                    }),
-                  ),
+                            ]),
+                          ),
+                        );
+                      })),
                 )
               : Container(
                   height: MediaQuery.of(context).size.height - 437,
                   child: ListView.builder(
-                    itemCount: UserSearch.length,
-                    itemBuilder: ((context, index) {
-                      return Card(
-                        child: Container(
-                          height: 50,
-                          child: Row(children: [
-                            Expanded(
-                                child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  UserSearch[index].lastName!,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                  softWrap: false,
+                      itemCount: UserSearch.length,
+                      itemBuilder: ((context, index) {
+                        return Card(
+                          child: Container(
+                            height: 50,
+                            child: Row(children: [
+                              Expanded(
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    UserSearch[index].lastName!,
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
+                                ),
+                              )),
+                              Expanded(
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    UserSearch[index].firstName!,
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
+                                ),
+                              )),
+                              Expanded(
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    UserSearch[index].username!,
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
+                                ),
+                              )),
+                              Expanded(
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    UserSearch[index].email!,
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
+                                ),
+                              )),
+                              Expanded(
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    UserSearch[index].role!,
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
+                                ),
+                              )),
+                              Container(
+                                width: 100,
+                                child: Center(
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                          child: IconButton(
+                                        icon: const Icon(Icons.edit),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                              return ModificationUser(
+                                                avatar:
+                                                    UserSearch[index].avatar!,
+                                                email: UserSearch[index].email!,
+                                                firstName: UserSearch[index]
+                                                    .firstName!,
+                                                lastName:
+                                                    UserSearch[index].lastName!,
+                                                role: UserSearch[index].role!,
+                                                sId: UserSearch[index].sId!,
+                                                id: UserSearch[index]
+                                                        .restaurant!
+                                                        .isNull
+                                                    ? UserSearch[index]
+                                                            .laboratory
+                                                            .isNull
+                                                        ? UserSearch[index]
+                                                            .laboratory!
+                                                            .laboName!
+                                                        : ''
+                                                    : UserSearch[index]
+                                                        .restaurant!
+                                                        .sId!,
+                                                // username:
+                                                //     UserSearch[index].username!,
+                                              );
+                                            }),
+                                          );
+                                        },
+                                      )),
+                                      Expanded(
+                                          child: IconButton(
+                                        icon: const Icon(
+                                          Icons.delete,
+                                          color: Palette.deleteColors,
+                                        ),
+                                        onPressed: () {
+                                          dialogDelete(
+                                            UserSearch[index].lastName!,
+                                            UserSearch[index].sId!,
+                                          );
+                                        },
+                                      ))
+                                    ],
+                                  ),
                                 ),
                               ),
-                            )),
-                            Expanded(
-                                child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  UserSearch[index].firstName!,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                  softWrap: false,
-                                ),
-                              ),
-                            )),
-                            Expanded(
-                                child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  UserSearch[index].username!,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                  softWrap: false,
-                                ),
-                              ),
-                            )),
-                            Expanded(
-                                child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  UserSearch[index].email!,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                  softWrap: false,
-                                ),
-                              ),
-                            )),
-                            Expanded(
-                                child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  UserSearch[index].role!,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                  softWrap: false,
-                                ),
-                              ),
-                            )),
-                            Container(
-                              width: 100,
-                              child: Center(
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        child: IconButton(
-                                      icon: const Icon(Icons.edit),
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) {
-                                            return ModificationUser(
-                                              avatar: UserSearch[index].avatar!,
-                                              email: UserSearch[index].email!,
-                                              firstName:
-                                                  UserSearch[index].firstName!,
-                                              lastName:
-                                                  UserSearch[index].lastName!,
-                                              role: UserSearch[index].role!,
-                                              sId: UserSearch[index].sId!,
-                                              id: UserSearch[index]
-                                                      .restaurant!
-                                                      .isNull
-                                                  ? UserSearch[index]
-                                                          .laboratory
-                                                          .isNull
-                                                      ? UserSearch[index]
-                                                          .laboratory!
-                                                          .laboName!
-                                                      : ''
-                                                  : UserSearch[index]
-                                                      .restaurant!
-                                                      .sId!,
-                                              // username:
-                                              //     UserSearch[index].username!,
-                                            );
-                                          }),
-                                        );
-                                      },
-                                    )),
-                                    Expanded(
-                                        child: IconButton(
-                                      icon: const Icon(
-                                        Icons.delete,
-                                        color: Palette.deleteColors,
-                                      ),
-                                      onPressed: () {
-                                        dialogDelete(
-                                          UserSearch[index].lastName!,
-                                          UserSearch[index].sId!,
-                                        );
-                                      },
-                                    ))
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ]),
-                        ),
-                      );
-                    }),
-                  ),
+                            ]),
+                          ),
+                        );
+                      })),
                 ),
         ],
       ),

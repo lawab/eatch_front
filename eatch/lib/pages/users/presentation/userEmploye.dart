@@ -265,113 +265,114 @@ class EmployerUsersState extends ConsumerState<EmployerUsers> {
               : SizedBox(
                   height: MediaQuery.of(context).size.height - 437,
                   child: ListView.builder(
-                    itemCount: UserSearch.length,
-                    itemBuilder: ((context, index) {
-                      return Card(
-                        child: SizedBox(
-                          height: 50,
-                          child: Row(children: [
-                            Expanded(
+                      itemCount: UserSearch.length,
+                      itemBuilder: ((context, index) {
+                        return Card(
+                          child: SizedBox(
+                            height: 50,
+                            child: Row(children: [
+                              Expanded(
+                                  child: Center(
+                                child: Text(
+                                  UserSearch[index].lastName!,
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
+                              )),
+                              Expanded(
+                                  child: Center(
+                                child: Text(
+                                  UserSearch[index].firstName!,
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
+                              )),
+                              Expanded(
+                                  child: Center(
+                                child: Text(
+                                  UserSearch[index].username!,
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
+                              )),
+                              Expanded(
+                                  child: Center(
+                                child: Text(
+                                  UserSearch[index].email!,
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
+                              )),
+                              Expanded(
+                                  child: Center(
+                                child: Text(UserSearch[index].role!),
+                              )),
+                              SizedBox(
+                                width: 100,
                                 child: Center(
-                              child: Text(
-                                UserSearch[index].lastName!,
-                                overflow: TextOverflow.fade,
-                                maxLines: 1,
-                                softWrap: false,
-                              ),
-                            )),
-                            Expanded(
-                                child: Center(
-                              child: Text(
-                                UserSearch[index].firstName!,
-                                overflow: TextOverflow.fade,
-                                maxLines: 1,
-                                softWrap: false,
-                              ),
-                            )),
-                            Expanded(
-                                child: Center(
-                              child: Text(
-                                UserSearch[index].username!,
-                                overflow: TextOverflow.fade,
-                                maxLines: 1,
-                                softWrap: false,
-                              ),
-                            )),
-                            Expanded(
-                                child: Center(
-                              child: Text(
-                                UserSearch[index].email!,
-                                overflow: TextOverflow.fade,
-                                maxLines: 1,
-                                softWrap: false,
-                              ),
-                            )),
-                            Expanded(
-                                child: Center(
-                              child: Text(UserSearch[index].role!),
-                            )),
-                            SizedBox(
-                              width: 100,
-                              child: Center(
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        child: IconButton(
-                                      icon: const Icon(Icons.edit),
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) {
-                                            return ModificationUser(
-                                              avatar: UserSearch[index].avatar!,
-                                              email: UserSearch[index].email!,
-                                              firstName:
-                                                  UserSearch[index].firstName!,
-                                              lastName:
-                                                  UserSearch[index].lastName!,
-                                              role: UserSearch[index].role!,
-                                              sId: UserSearch[index].sId!,
-                                              id: UserSearch[index]
-                                                      .restaurant!
-                                                      .isNull
-                                                  ? UserSearch[index]
-                                                          .laboratory
-                                                          .isNull
-                                                      ? UserSearch[index]
-                                                          .laboratory!
-                                                          .laboName!
-                                                      : ''
-                                                  : UserSearch[index]
-                                                      .restaurant!
-                                                      .sId!,
-                                              // username:
-                                              //     UserSearch[index].username!,
-                                            );
-                                          }),
-                                        );
-                                      },
-                                    )),
-                                    Expanded(
-                                        child: IconButton(
-                                      icon: const Icon(
-                                        Icons.delete,
-                                        color: Palette.deleteColors,
-                                      ),
-                                      onPressed: () {
-                                        dialogDelete(
-                                            UserSearch[index].lastName!);
-                                      },
-                                    ))
-                                  ],
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                          child: IconButton(
+                                        icon: const Icon(Icons.edit),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                              return ModificationUser(
+                                                avatar:
+                                                    UserSearch[index].avatar!,
+                                                email: UserSearch[index].email!,
+                                                firstName: UserSearch[index]
+                                                    .firstName!,
+                                                lastName:
+                                                    UserSearch[index].lastName!,
+                                                role: UserSearch[index].role!,
+                                                sId: UserSearch[index].sId!,
+                                                id: UserSearch[index]
+                                                        .restaurant!
+                                                        .isNull
+                                                    ? UserSearch[index]
+                                                            .laboratory
+                                                            .isNull
+                                                        ? UserSearch[index]
+                                                            .laboratory!
+                                                            .laboName!
+                                                        : ''
+                                                    : UserSearch[index]
+                                                        .restaurant!
+                                                        .sId!,
+                                                // username:
+                                                //     UserSearch[index].username!,
+                                              );
+                                            }),
+                                          );
+                                        },
+                                      )),
+                                      Expanded(
+                                          child: IconButton(
+                                        icon: const Icon(
+                                          Icons.delete,
+                                          color: Palette.deleteColors,
+                                        ),
+                                        onPressed: () {
+                                          dialogDelete(
+                                              UserSearch[index].lastName!);
+                                        },
+                                      ))
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ]),
-                        ),
-                      );
-                    }),
-                  ),
+                            ]),
+                          ),
+                        );
+                      })),
                 ),
         ],
       ),

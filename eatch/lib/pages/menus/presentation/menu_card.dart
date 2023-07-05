@@ -108,7 +108,17 @@ class _MenuCardState extends ConsumerState<MenuCard> {
                 ),
                 child: Image.network(
                   "http://13.39.81.126:4009${widget.imageUrl}",
-                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.black,
+                      child: const Center(
+                        child: Text(
+                          "Pas d'image",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
@@ -182,7 +192,11 @@ class _MenuCardState extends ConsumerState<MenuCard> {
                     Radius.circular(10.0),
                   ),
                   child: Image.network(
+<<<<<<< HEAD
                     "http://13.39.81.126:4009${widget.imageUrl}",
+=======
+                    "http://13.39.81.126:4009${widget.imageUrl}",
+>>>>>>> c78a703a07353bfdfbc2c15ab4d3750b5f3eab1b
                   ),
                 ),
               ),

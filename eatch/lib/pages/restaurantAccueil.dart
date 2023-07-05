@@ -193,6 +193,7 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
                                           viewModel.listRsetaurant[index].sId
                                               .toString());
                                       prefs.setBool('lab', false);
+                                      prefs.setInt('index', 0);
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(

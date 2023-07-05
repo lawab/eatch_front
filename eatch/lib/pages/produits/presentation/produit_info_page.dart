@@ -70,6 +70,17 @@ class _ProduitpageState extends ConsumerState<Produitpage> {
                     child: Image.network(
                       widget.imageUrl,
                       fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.black,
+                          child: const Center(
+                            child: Text(
+                              "Pas d'image",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),

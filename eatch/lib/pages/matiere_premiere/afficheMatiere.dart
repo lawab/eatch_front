@@ -5,6 +5,7 @@ import 'package:eatch/utils/applayout.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -100,6 +101,8 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
     final viewModel = ref.watch(getDataMatiereFuture);
 
     return MaterialApp(
+      localizationsDelegates: [GlobalMaterialLocalizations.delegate],
+      supportedLocales: const [Locale('en'), Locale('fr')],
       debugShowCheckedModeBanner: false,
       home: LayoutBuilder(
         builder: (context, constraints) {
@@ -116,7 +119,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
   }
 
   Widget horizontalView(
-      double height, double width, context, List<Matiere> matiere) {
+      double height, double width, contextt, List<Matiere> matiere) {
     return Scaffold(
       body: Column(
         children: [
@@ -453,7 +456,26 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                         initialDate: DateTime.now(),
                         firstDate: DateTime(
                             2000), //DateTime.now() - not to allow to choose before today.
-                        lastDate: DateTime(2101));
+                        lastDate: DateTime(2101),
+                        //locale: const Locale("fr", "FR"),
+                        builder: (BuildContext context, child) {
+                          return Theme(
+                            data: Theme.of(context).copyWith(
+                              colorScheme: ColorScheme.light(
+                                primary: Palette.greenColors, // <-- SEE HERE
+                                onPrimary: Colors.white, // <-- SEE HERE
+                                onSurface: Colors.black, // <-- SEE HERE
+                              ),
+                              textButtonTheme: TextButtonThemeData(
+                                style: TextButton.styleFrom(
+                                  backgroundColor:
+                                      Colors.white, // button text color
+                                ),
+                              ),
+                            ),
+                            child: child!,
+                          );
+                        });
 
                     if (pickedDate != null) {
                       print(

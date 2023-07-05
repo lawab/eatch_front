@@ -556,7 +556,7 @@ class CreationProduitState extends ConsumerState<CreationProduit> {
           Overlay.of(context),
           const CustomSnackBar.info(
             backgroundColor: Colors.green,
-            message: "Produit Crée",
+            message: "Produit Crée avec succès.",
           ),
         );
 
