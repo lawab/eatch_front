@@ -140,6 +140,8 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                             minimumSize: const Size(180, 50)),
                         onPressed: () {
                           setState(() {
+                            _selectedFile!.clear();
+                            result = null;
                             ajout = true;
                           });
                         },
@@ -157,7 +159,8 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                   height: height,
                   color: Palette.secondaryBackgroundColor,
                   child: creation())
-              : SizedBox(
+              : Container(
+                  padding: EdgeInsets.only(right: 20, left: 20, bottom: 20),
                   height: height - 375,
                   width: width - 20,
                   child: GridView.builder(
@@ -531,12 +534,124 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
         ),
 
         const SizedBox(
-          height: 10,
+          height: 50,
+        ),
+        Container(
+          padding: EdgeInsets.only(right: 20, left: 20),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              // Creation du bouton qui reécupere l'image
+              Container(
+                padding: const EdgeInsets.only(right: 70),
+                color: Palette.secondaryBackgroundColor,
+                alignment: Alignment.centerRight,
+                child: GestureDetector(
+                  onTap: () async {
+                    result = await FilePicker.platform
+                        .pickFiles(type: FileType.custom, allowedExtensions: [
+                      "png",
+                      "jpg",
+                      "jpeg",
+                    ]);
+                    if (result != null) {
+                      setState(() {
+                        file = result!.files.single;
+
+                        Uint8List fileBytes =
+                            result!.files.single.bytes as Uint8List;
+
+                        _selectedFile = fileBytes;
+
+                        filee = true;
+
+                        selectedImageInBytes = result!.files.first.bytes;
+                        _selectFile = true;
+                      });
+                    }
+                  },
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: 4,
+                        color: Palette.greenColors,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: _selectFile == false
+                          ? const Icon(
+                              Icons.camera_alt_outlined,
+                              color: Palette.greenColors,
+                              size: 40,
+                            )
+                          : Image.memory(
+                              selectedImageInBytes!,
+                              fit: BoxFit.fill,
+                            ),
+                    ),
+                  ),
+                ),
+              ),
+              const Spacer(),
+              ElevatedButton(
+                onPressed: (() {
+                  creationMatierePremiere(
+                    context,
+                    nomController.text,
+                    stockController.text,
+                    dateinput.text,
+                    _selectedFile!,
+                    result,
+                  );
+                  setState(() {
+                    ajout = false;
+                    _clear();
+                  });
+                  //setState(() {});
+                }),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Palette.primaryColor,
+                  minimumSize: const Size(150, 50),
+                  maximumSize: const Size(200, 70),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+                child: const Text('Enregistrer'),
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              ElevatedButton(
+                onPressed: (() {
+                  setState(() {
+                    ajout = false;
+                    _clear();
+                  });
+                }),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Palette.secondaryBackgroundColor,
+                  minimumSize: const Size(150, 50),
+                  maximumSize: const Size(200, 70),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+                child: const Text(
+                  'Annuler',
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+            ],
+          ),
         ),
 
         // fin --------------------------------------------
         // Creation du bouton qui reécupere l'image
-        Container(
+        /*Container(
           padding: const EdgeInsets.only(right: 70),
           color: Palette.secondaryBackgroundColor,
           alignment: Alignment.centerRight,
@@ -652,7 +767,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
               ),
             ]),
           ),
-        ),
+        ),*/
       ],
     );
   }
@@ -679,6 +794,8 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                             minimumSize: const Size(180, 50)),
                         onPressed: () {
                           setState(() {
+                            _selectedFile!.clear();
+                            result = null;
                             ajout = true;
                           });
                         },
@@ -699,101 +816,113 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
               : SizedBox(
                   height: height - 375,
                   width: width - 20,
-                  child: GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                              maxCrossAxisExtent: 200,
-                              childAspectRatio: 3 / 2,
-                              crossAxisSpacing: 20,
-                              mainAxisSpacing: 50,
-                              mainAxisExtent: 300),
-                      itemCount: matiere.length,
-                      itemBuilder: (BuildContext ctx, index) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(15.0),
-                            image: DecorationImage(
-                                opacity: 50,
-                                image: NetworkImage(
-                                    "http://13.39.81.126:4008${matiere[index].image!}"), //13.39.81.126
-                                fit: BoxFit.cover),
+                  child: matiere.isEmpty
+                      ? const Center(
+                          child: Text(
+                            "Aucune matière première",
+                            style: TextStyle(
+                                fontSize: 30,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.normal),
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                matiere[index].mpName!,
-                                style: GoogleFonts.raleway().copyWith(
-                                    fontSize: 30,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.normal),
+                        )
+                      : GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithMaxCrossAxisExtent(
+                                  maxCrossAxisExtent: 200,
+                                  childAspectRatio: 3 / 2,
+                                  crossAxisSpacing: 20,
+                                  mainAxisSpacing: 50,
+                                  mainAxisExtent: 300),
+                          itemCount: matiere.length,
+                          itemBuilder: (BuildContext ctx, index) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(15.0),
+                                image: DecorationImage(
+                                    opacity: 50,
+                                    image: NetworkImage(
+                                        "http://13.39.81.126:4008${matiere[index].image!}"), //13.39.81.126
+                                    fit: BoxFit.cover),
                               ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                'Initiale: ${matiere[index].quantity.toString()} ${matiere[index].unity!}',
-                                style: GoogleFonts.raleway().copyWith(
-                                    fontSize: 15,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                              Text(
-                                'Consommation: ${matiere[index].consumerQuantity.toString()} ${matiere[index].unity!}',
-                                style: GoogleFonts.raleway().copyWith(
-                                    fontSize: 15,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                              Text(
-                                'Reste: ${(matiere[index].quantity! - matiere[index].consumerQuantity!).toString()} ${matiere[index].unity!}',
-                                style: GoogleFonts.raleway().copyWith(
-                                    fontSize: 15,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                              Expanded(child: Container()),
-                              SizedBox(
-                                height: 100,
-                                child: Column(
-                                  children: [
-                                    ElevatedButton.icon(
-                                      style: ElevatedButton.styleFrom(
-                                        minimumSize: Size(width, 50),
-                                        backgroundColor: Palette.secondaryColor,
-                                      ),
-                                      onPressed: (() {
-                                        dialogModif(
-                                            context,
-                                            matiere[index].mpName!,
-                                            matiere[index].quantity!,
-                                            matiere[index].unity!,
-                                            matiere[index].sId!);
-                                      }),
-                                      icon: const Icon(Icons.edit),
-                                      label: const Text('Modifier'),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    matiere[index].mpName!,
+                                    style: GoogleFonts.raleway().copyWith(
+                                        fontSize: 30,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.normal),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    'Initiale: ${matiere[index].quantity.toString()} ${matiere[index].unity!}',
+                                    style: GoogleFonts.raleway().copyWith(
+                                        fontSize: 15,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.normal),
+                                  ),
+                                  Text(
+                                    'Consommation: ${matiere[index].consumerQuantity.toString()} ${matiere[index].unity!}',
+                                    style: GoogleFonts.raleway().copyWith(
+                                        fontSize: 15,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.normal),
+                                  ),
+                                  Text(
+                                    'Reste: ${(matiere[index].quantity! - matiere[index].consumerQuantity!).toString()} ${matiere[index].unity!}',
+                                    style: GoogleFonts.raleway().copyWith(
+                                        fontSize: 15,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.normal),
+                                  ),
+                                  Expanded(child: Container()),
+                                  SizedBox(
+                                    height: 100,
+                                    child: Column(
+                                      children: [
+                                        ElevatedButton.icon(
+                                          style: ElevatedButton.styleFrom(
+                                            minimumSize: Size(width, 50),
+                                            backgroundColor:
+                                                Palette.secondaryColor,
+                                          ),
+                                          onPressed: (() {
+                                            dialogModif(
+                                                context,
+                                                matiere[index].mpName!,
+                                                matiere[index].quantity!,
+                                                matiere[index].unity!,
+                                                matiere[index].sId!);
+                                          }),
+                                          icon: const Icon(Icons.edit),
+                                          label: const Text('Modifier'),
+                                        ),
+                                        ElevatedButton.icon(
+                                          onPressed: (() {
+                                            dialogDelete(matiere[index].mpName!,
+                                                matiere[index].sId!);
+                                          }),
+                                          icon: const Icon(Icons.delete),
+                                          label: const Text('Supprimer'),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                Palette.deleteColors,
+                                            minimumSize: Size(width, 50),
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                    ElevatedButton.icon(
-                                      onPressed: (() {
-                                        dialogDelete(matiere[index].mpName!,
-                                            matiere[index].sId!);
-                                      }),
-                                      icon: const Icon(Icons.delete),
-                                      label: const Text('Supprimer'),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Palette.deleteColors,
-                                        minimumSize: Size(width, 50),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        );
-                      }),
+                                  )
+                                ],
+                              ),
+                            );
+                          }),
                 ),
         ],
       ),
@@ -1083,15 +1212,17 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
       var token = prefs.getString('token');
       String urlDelete =
           "http://13.39.81.126:4008/api/materials/delete/$idMatierePremiere"; // 13.39.81.126:4008 //$adressUrl
-
-      final http.Response response =
-          await http.delete(Uri.parse(urlDelete), headers: {
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        'Accept': 'application/json',
-        'authorization': 'Bearer $token',
-      }, body: {
-        '_creator': id
-      });
+      var json = {'_creator': id};
+      var body = jsonEncode(json);
+      final http.Response response = await http.delete(
+        Uri.parse(urlDelete),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'Accept': 'application/json',
+          'authorization': 'Bearer $token',
+          'body': body
+        },
+      );
 
       print(response.statusCode);
       print(response.body);
@@ -1111,7 +1242,7 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
           Overlay.of(context),
           const CustomSnackBar.info(
             backgroundColor: Palette.deleteColors,
-            message: "La matière première n'a pas été supprimée succès",
+            message: "La matière première n'a pas été supprimée",
           ),
         );
         return Future.error("Server Error");

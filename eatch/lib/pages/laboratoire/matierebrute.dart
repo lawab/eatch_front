@@ -72,6 +72,10 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
   bool ajoutfourni = false;
   bool modif = false;
   String idBrute = "";
+  String image = '';
+  bool vertical = false;
+  var idFournisseur = '';
+  List<String> listfournisseurrr = ['Fournisseur ***'];
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(getDataFournisseurFuture);
@@ -128,6 +132,8 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
                                   });
                                 } else {
                                   setState(() {
+                                    print('listfournisseurrr.first');
+                                    print(listfournisseurrr.first);
                                     idBrute = '';
                                     titleController.clear();
                                     quantiteController.clear();
@@ -190,193 +196,218 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
                 ),
                 ajoutbrute == true
                     ? Container(
+                        height: height - 222,
                         child: creation(fournisseurr, idBrute),
                       )
                     : Container(
                         height: height - 222,
-                        child: GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithMaxCrossAxisExtent(
-                                    maxCrossAxisExtent: 300,
-                                    childAspectRatio: 3 / 2,
-                                    crossAxisSpacing: 20,
-                                    mainAxisSpacing: 50,
-                                    mainAxisExtent: 400),
-                            itemCount: listMatiereBrute.length,
-                            itemBuilder: (context, index) {
-                              return Card(
-                                elevation: 10,
-                                child: Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        height: 200,
-                                        width: 300,
-                                        /*decoration: const BoxDecoration(
+                        child: listMatiereBrute.isEmpty
+                            ? const Center(
+                                child: Text(
+                                  "Aucune matière brute",
+                                  style: TextStyle(
+                                      fontSize: 30,
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.normal),
+                                ),
+                              )
+                            : GridView.builder(
+                                gridDelegate:
+                                    const SliverGridDelegateWithMaxCrossAxisExtent(
+                                        maxCrossAxisExtent: 300,
+                                        childAspectRatio: 3 / 2,
+                                        crossAxisSpacing: 20,
+                                        mainAxisSpacing: 50,
+                                        mainAxisExtent: 400),
+                                itemCount: listMatiereBrute.length,
+                                itemBuilder: (context, index) {
+                                  return Card(
+                                    elevation: 10,
+                                    child: Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            height: 200,
+                                            width: 300,
+                                            /*decoration: const BoxDecoration(
                                           image: DecorationImage(
                                             image: AssetImage('emballage.jpeg'),
                                           ),
                                         ),*/
-                                        child: Image.network(
-                                          "http://13.39.81.126:4015${listMatiereBrute[index].image}",
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                            return Container(
-                                              color: Colors.black,
-                                              child: const Center(
-                                                child: Text(
-                                                  "Pas d'image",
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 35,
-                                      ),
-                                      Text(
-                                          'Nom : ${listMatiereBrute[index].title}'),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                          'Quantité : ${listMatiereBrute[index].available} ${listMatiereBrute[index].unit}'),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                          'Dernière date : ${listMatiereBrute[index].updatedAt}'),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                          'Date de création : ${listMatiereBrute[index].createdAt}'),
-                                      Container(
-                                          alignment: Alignment.center,
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                flex: 2,
-                                                child: IconButton(
-                                                  alignment: Alignment.center,
-                                                  splashColor:
-                                                      Palette.greenColors,
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      idBrute =
-                                                          listMatiereBrute[
-                                                                  index]
-                                                              .sId!;
-                                                      titleController.text =
-                                                          listMatiereBrute[
-                                                                  index]
-                                                              .title!;
-                                                      quantiteController.text =
-                                                          listMatiereBrute[
-                                                                  index]
-                                                              .available
-                                                              .toString();
-                                                      idFournisseur =
-                                                          listMatiereBrute[
-                                                                  index]
-                                                              .provider!;
-                                                      unite = listMatiereBrute[
-                                                              index]
-                                                          .unit!;
-                                                      image = listMatiereBrute[
-                                                              index]
-                                                          .image!;
-                                                      modif = true;
-                                                      ajoutbrute = true;
-                                                    });
-                                                  },
-                                                  icon: const Icon(
-                                                    Icons.edit,
-                                                    size: 30,
-                                                    color: Palette.greenColors,
+                                            child: Image.network(
+                                              "http://13.39.81.126:4015${listMatiereBrute[index].image}",
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
+                                                return Container(
+                                                  color: Colors.black,
+                                                  child: const Center(
+                                                    child: Text(
+                                                      "Pas d'image",
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    ),
                                                   ),
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Expanded(
-                                                  flex: 5,
-                                                  child: Container(
-                                                    height: 60,
-                                                    width: 60,
-                                                    alignment: Alignment.center,
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.black,
-                                                        shape: BoxShape.circle),
+                                                );
+                                              },
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 20,
+                                          ),
+                                          Text(
+                                              'Nom : ${listMatiereBrute[index].title}'),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                              'Quantité : ${listMatiereBrute[index].available} ${listMatiereBrute[index].unit}'),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                              'Dernière date : ${listMatiereBrute[index].updatedAt}'),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                              'Date de création : ${listMatiereBrute[index].createdAt}'),
+                                          Container(
+                                              height: 60,
+                                              alignment: Alignment.center,
+                                              child: Row(
+                                                children: [
+                                                  Expanded(
+                                                    flex: 2,
                                                     child: IconButton(
+                                                      alignment:
+                                                          Alignment.center,
                                                       splashColor:
                                                           Palette.greenColors,
                                                       onPressed: () {
-                                                        dialogAjout(
-                                                            contextt,
-                                                            listMatiereBrute[
-                                                                    index]
-                                                                .available!,
-                                                            listMatiereBrute[
-                                                                    index]
-                                                                .title!,
-                                                            listMatiereBrute[
-                                                                    index]
-                                                                .unit!,
-                                                            listMatiereBrute[
-                                                                    index]
-                                                                .sId!,
-                                                            listMatiereBrute[
-                                                                    index]
-                                                                .provider!);
+                                                        setState(() {
+                                                          idBrute =
+                                                              listMatiereBrute[
+                                                                      index]
+                                                                  .sId!;
+                                                          titleController.text =
+                                                              listMatiereBrute[
+                                                                      index]
+                                                                  .title!;
+                                                          quantiteController
+                                                                  .text =
+                                                              listMatiereBrute[
+                                                                      index]
+                                                                  .available
+                                                                  .toString();
+                                                          idFournisseur =
+                                                              listMatiereBrute[
+                                                                      index]
+                                                                  .provider!;
+                                                          unite =
+                                                              listMatiereBrute[
+                                                                      index]
+                                                                  .unit!;
+                                                          image =
+                                                              listMatiereBrute[
+                                                                      index]
+                                                                  .image!;
+                                                          modif = true;
+                                                          ajoutbrute = true;
+                                                        });
                                                       },
-                                                      iconSize: 30,
                                                       icon: const Icon(
-                                                        Icons.add_box,
+                                                        Icons.edit,
+                                                        size: 30,
                                                         color:
                                                             Palette.greenColors,
                                                       ),
                                                     ),
-                                                  )),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Expanded(
-                                                flex: 2,
-                                                child: IconButton(
-                                                  alignment: Alignment.center,
-                                                  splashColor: Colors.red,
-                                                  onPressed: () {
-                                                    dialogDelete(
-                                                      context,
-                                                      listMatiereBrute[index]
-                                                          .sId!,
-                                                      listMatiereBrute[index]
-                                                          .title!,
-                                                    );
-                                                  },
-                                                  icon: const Icon(
-                                                    Icons.delete,
-                                                    size: 30,
-                                                    color: Colors.red,
                                                   ),
-                                                ),
-                                              ),
-                                            ],
-                                          )),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Expanded(
+                                                      flex: 5,
+                                                      child: Container(
+                                                        height: 60,
+                                                        width: 60,
+                                                        alignment:
+                                                            Alignment.center,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                                color: Colors
+                                                                    .black,
+                                                                shape: BoxShape
+                                                                    .circle),
+                                                        child: IconButton(
+                                                          splashColor: Palette
+                                                              .greenColors,
+                                                          onPressed: () {
+                                                            dialogAjout(
+                                                                contextt,
+                                                                listMatiereBrute[
+                                                                        index]
+                                                                    .available!,
+                                                                listMatiereBrute[
+                                                                        index]
+                                                                    .title!,
+                                                                listMatiereBrute[
+                                                                        index]
+                                                                    .unit!,
+                                                                listMatiereBrute[
+                                                                        index]
+                                                                    .sId!,
+                                                                listMatiereBrute[
+                                                                        index]
+                                                                    .provider!);
+                                                          },
+                                                          iconSize: 30,
+                                                          icon: const Icon(
+                                                            Icons.add_box,
+                                                            color: Palette
+                                                                .greenColors,
+                                                          ),
+                                                        ),
+                                                      )),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Expanded(
+                                                    flex: 2,
+                                                    child: IconButton(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      splashColor: Colors.red,
+                                                      onPressed: () {
+                                                        dialogDelete(
+                                                          context,
+                                                          listMatiereBrute[
+                                                                  index]
+                                                              .sId!,
+                                                          listMatiereBrute[
+                                                                  index]
+                                                              .title!,
+                                                        );
+                                                      },
+                                                      icon: const Icon(
+                                                        Icons.delete,
+                                                        size: 30,
+                                                        color: Colors.red,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }),
                       ),
                 const SizedBox(
                   height: 10,
@@ -492,195 +523,218 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
                       )
                     : Container(
                         height: height - 232,
-                        child: GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithMaxCrossAxisExtent(
-                                    maxCrossAxisExtent: 300,
-                                    childAspectRatio: 3 / 2,
-                                    crossAxisSpacing: 20,
-                                    mainAxisSpacing: 50,
-                                    mainAxisExtent: 380),
-                            itemCount: listMatiereBrute.length,
-                            itemBuilder: (context, index) {
-                              return Card(
-                                elevation: 10,
-                                child: Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        height: 180,
-                                        width: 300,
-                                        /*decoration:  BoxDecoration(
+                        child: listMatiereBrute.isEmpty
+                            ? const Center(
+                                child: Text(
+                                  "Aucune matière brute",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.normal),
+                                ),
+                              )
+                            : GridView.builder(
+                                gridDelegate:
+                                    const SliverGridDelegateWithMaxCrossAxisExtent(
+                                        maxCrossAxisExtent: 300,
+                                        childAspectRatio: 3 / 2,
+                                        crossAxisSpacing: 20,
+                                        mainAxisSpacing: 50,
+                                        mainAxisExtent: 380),
+                                itemCount: listMatiereBrute.length,
+                                itemBuilder: (context, index) {
+                                  return Card(
+                                    elevation: 10,
+                                    child: Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            height: 180,
+                                            width: 300,
+                                            /*decoration:  BoxDecoration(
                                           image:
                                         ),*/
-                                        child: Image.network(
-                                          "http://13.39.81.126:4015${listMatiereBrute[index].image}",
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                            return Container(
-                                              color: Colors.black,
-                                              child: const Center(
-                                                child: Text(
-                                                  "Pas d'image",
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 35,
-                                      ),
-                                      Text(
-                                        'Nom : ${listMatiereBrute[index].title}',
-                                        style: TextStyle(fontSize: 12),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        'Quantité : ${listMatiereBrute[index].available} ${listMatiereBrute[index].unit}',
-                                        style: TextStyle(fontSize: 12),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        'Dernière date : ${listMatiereBrute[index].updatedAt}',
-                                        style: TextStyle(fontSize: 12),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        'Date de création : ${listMatiereBrute[index].createdAt}',
-                                        style: TextStyle(fontSize: 12),
-                                      ),
-                                      Container(
-                                          alignment: Alignment.center,
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                flex: 2,
-                                                child: IconButton(
-                                                  alignment: Alignment.center,
-                                                  splashColor:
-                                                      Palette.greenColors,
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      idBrute =
-                                                          listMatiereBrute[
-                                                                  index]
-                                                              .sId!;
-                                                      titleController.text =
-                                                          listMatiereBrute[
-                                                                  index]
-                                                              .title!;
-                                                      quantiteController.text =
-                                                          listMatiereBrute[
-                                                                  index]
-                                                              .available
-                                                              .toString();
-                                                      idFournisseur =
-                                                          listMatiereBrute[
-                                                                  index]
-                                                              .provider!;
-                                                      unite = listMatiereBrute[
-                                                              index]
-                                                          .unit!;
-                                                      image = listMatiereBrute[
-                                                              index]
-                                                          .image!;
-                                                      modif = true;
-                                                      ajoutbrute = true;
-                                                    });
-                                                  },
-                                                  icon: const Icon(
-                                                    Icons.edit,
-                                                    size: 30,
-                                                    color: Palette.greenColors,
+                                            child: Image.network(
+                                              "http://13.39.81.126:4015${listMatiereBrute[index].image}",
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
+                                                return Container(
+                                                  color: Colors.black,
+                                                  child: const Center(
+                                                    child: Text(
+                                                      "Pas d'image",
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    ),
                                                   ),
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Expanded(
-                                                  flex: 5,
-                                                  child: Container(
-                                                    height: 50,
-                                                    width: 50,
-                                                    alignment: Alignment.center,
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.black,
-                                                        shape: BoxShape.circle),
+                                                );
+                                              },
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 35,
+                                          ),
+                                          Text(
+                                            'Nom : ${listMatiereBrute[index].title}',
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            'Quantité : ${listMatiereBrute[index].available} ${listMatiereBrute[index].unit}',
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            'Dernière date : ${listMatiereBrute[index].updatedAt}',
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            'Date de création : ${listMatiereBrute[index].createdAt}',
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                          Container(
+                                              alignment: Alignment.center,
+                                              child: Row(
+                                                children: [
+                                                  Expanded(
+                                                    flex: 2,
                                                     child: IconButton(
+                                                      alignment:
+                                                          Alignment.center,
                                                       splashColor:
                                                           Palette.greenColors,
                                                       onPressed: () {
-                                                        dialogAjout(
-                                                            contextt,
-                                                            listMatiereBrute[
-                                                                    index]
-                                                                .available!,
-                                                            listMatiereBrute[
-                                                                    index]
-                                                                .title!,
-                                                            listMatiereBrute[
-                                                                    index]
-                                                                .unit!,
-                                                            listMatiereBrute[
-                                                                    index]
-                                                                .sId!,
-                                                            listMatiereBrute[
-                                                                    index]
-                                                                .provider!);
+                                                        setState(() {
+                                                          idBrute =
+                                                              listMatiereBrute[
+                                                                      index]
+                                                                  .sId!;
+                                                          titleController.text =
+                                                              listMatiereBrute[
+                                                                      index]
+                                                                  .title!;
+                                                          quantiteController
+                                                                  .text =
+                                                              listMatiereBrute[
+                                                                      index]
+                                                                  .available
+                                                                  .toString();
+                                                          idFournisseur =
+                                                              listMatiereBrute[
+                                                                      index]
+                                                                  .provider!;
+                                                          unite =
+                                                              listMatiereBrute[
+                                                                      index]
+                                                                  .unit!;
+                                                          image =
+                                                              listMatiereBrute[
+                                                                      index]
+                                                                  .image!;
+                                                          modif = true;
+                                                          ajoutbrute = true;
+                                                        });
                                                       },
-                                                      iconSize: 30,
                                                       icon: const Icon(
-                                                        Icons.add_box,
+                                                        Icons.edit,
+                                                        size: 30,
                                                         color:
                                                             Palette.greenColors,
                                                       ),
                                                     ),
-                                                  )),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Expanded(
-                                                flex: 2,
-                                                child: IconButton(
-                                                  alignment: Alignment.center,
-                                                  splashColor: Colors.red,
-                                                  onPressed: () {
-                                                    dialogDelete(
-                                                      context,
-                                                      listMatiereBrute[index]
-                                                          .sId!,
-                                                      listMatiereBrute[index]
-                                                          .title!,
-                                                    );
-                                                  },
-                                                  icon: const Icon(
-                                                    Icons.delete,
-                                                    size: 30,
-                                                    color: Colors.red,
                                                   ),
-                                                ),
-                                              ),
-                                            ],
-                                          )),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Expanded(
+                                                      flex: 5,
+                                                      child: Container(
+                                                        height: 50,
+                                                        width: 50,
+                                                        alignment:
+                                                            Alignment.center,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                                color: Colors
+                                                                    .black,
+                                                                shape: BoxShape
+                                                                    .circle),
+                                                        child: IconButton(
+                                                          splashColor: Palette
+                                                              .greenColors,
+                                                          onPressed: () {
+                                                            dialogAjout(
+                                                                contextt,
+                                                                listMatiereBrute[
+                                                                        index]
+                                                                    .available!,
+                                                                listMatiereBrute[
+                                                                        index]
+                                                                    .title!,
+                                                                listMatiereBrute[
+                                                                        index]
+                                                                    .unit!,
+                                                                listMatiereBrute[
+                                                                        index]
+                                                                    .sId!,
+                                                                listMatiereBrute[
+                                                                        index]
+                                                                    .provider!);
+                                                          },
+                                                          iconSize: 30,
+                                                          icon: const Icon(
+                                                            Icons.add_box,
+                                                            color: Palette
+                                                                .greenColors,
+                                                          ),
+                                                        ),
+                                                      )),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Expanded(
+                                                    flex: 2,
+                                                    child: IconButton(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      splashColor: Colors.red,
+                                                      onPressed: () {
+                                                        dialogDelete(
+                                                          context,
+                                                          listMatiereBrute[
+                                                                  index]
+                                                              .sId!,
+                                                          listMatiereBrute[
+                                                                  index]
+                                                              .title!,
+                                                        );
+                                                      },
+                                                      icon: const Icon(
+                                                        Icons.delete,
+                                                        size: 30,
+                                                        color: Colors.red,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }),
                       ),
                 const SizedBox(
                   height: 10,
@@ -693,22 +747,25 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
     );
   }
 
-  String image = '';
-  bool vertical = false;
-  var idFournisseur = '';
-  List<String> listfournisseurrr = ['Fournisseur *'];
+  bool deja = false;
   Widget creation(
     List<Fournisseur> fournisseurLIST,
     String id,
   ) {
-    for (int i = 0; i < fournisseurLIST.length; i++) {
-      listfournisseurrr.add(
-          '${fournisseurLIST[i].firstName!} ${fournisseurLIST[i].lastName!}');
-      if (modif == true) {
-        if (idFournisseur == fournisseurLIST[i].sId) {
-          fournisseur =
-              '${fournisseurLIST[i].firstName!} ${fournisseurLIST[i].lastName!}';
+    print('fournisseur');
+    print(fournisseur);
+    if (deja == false) {
+      for (int i = 0; i < fournisseurLIST.length; i++) {
+        listfournisseurrr.add(
+            '${fournisseurLIST[i].firstName!} ${fournisseurLIST[i].lastName!}');
+        if (modif == true) {
+          if (idFournisseur == fournisseurLIST[i].sId) {
+            fournisseur =
+                '${fournisseurLIST[i].firstName!} ${fournisseurLIST[i].lastName!}';
+          }
         }
+
+        deja = true;
       }
     }
 
@@ -717,7 +774,7 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
         children: [
           Container(
             width: vertical == false
-                ? MediaQuery.of(context).size.width / 4
+                ? MediaQuery.of(context).size.width / 3
                 : MediaQuery.of(context).size.width - 100,
             child: Row(
               children: [
@@ -757,6 +814,7 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
                     isExpanded: true,
                     onChanged: (value) {
                       setState(() {
+                        //value = fournisseur;
                         fournisseur = value;
                         for (int i = 0; i < fournisseurLIST.length; i++) {
                           if (fournisseur ==
@@ -766,11 +824,11 @@ class MatiereBruteeState extends ConsumerState<MatiereBrutee> {
                         }
                       });
                     },
-                    onSaved: (value) {
+                    /*onSaved: (value) {
                       setState(() {
                         fournisseur = value;
                       });
-                    },
+                    },*/
                     validator: (String? value) {
                       if (value == null) {
                         return "Le fournisseur est obligatoire.";

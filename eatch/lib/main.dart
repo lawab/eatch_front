@@ -16,6 +16,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
@@ -65,11 +66,26 @@ class MyApp extends StatelessWidget {
 
   Widget displayPage() {
     Widget widget = CircularProgressIndicator();
+    int jour = 0;
+    if (prefs!.getString('token') != null) {
+      String yourToken = prefs!.getString('token').toString();
+      DateTime expirationDate = JwtDecoder.getExpirationDate(yourToken);
+      print('expirationDate');
+      print(expirationDate);
 
-    if (login == true) {
-      //String role = prefs!.getString("role").toString();
+      DateTime bb = DateTime.now();
 
-      //////
+      expirationDate = DateTime(
+          expirationDate.year, expirationDate.month, expirationDate.day);
+      bb = DateTime(bb.year, bb.month, bb.day);
+      print('jour');
+      print((bb.difference(expirationDate).inHours / 24).round());
+      jour = (expirationDate.difference(bb).inHours / 24).round();
+      print(jour);
+    } else {}
+
+//&& jour<>/////////////&& jour > 0
+    if (login == true && jour > 0) {
       if (prefs!.getInt('index')!.toInt() == 0) {
         widget = const DashboardManager();
       } else if (prefs!.getInt('index')!.toInt() == 1) {
@@ -100,7 +116,8 @@ class MyApp extends StatelessWidget {
 
       //////
     } else {
-      widget = Authentification();
+      prefs!.setString("isLogin", 'false');
+      widget = const Authentification();
     }
     return widget;
   }

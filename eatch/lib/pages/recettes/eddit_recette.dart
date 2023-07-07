@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:js_interop';
 
 import 'package:eatch/pages/recettes/recettes.dart';
 import 'package:eatch/servicesAPI/getMatiere.dart';
 import 'package:eatch/servicesAPI/get_recettes.dart';
+
 import 'package:eatch/servicesAPI/multipart.dart';
 import 'package:eatch/utils/applayout.dart';
 import 'package:eatch/utils/default_button/default_button.dart';
@@ -23,7 +25,7 @@ class EdditRecette extends ConsumerStatefulWidget {
   final String description;
   final String image;
   final String sId;
-  final List/*<Engredients>*/ ingredients;
+  final List<Engredients> ingredients;
   const EdditRecette({
     super.key,
     required this.title,
@@ -141,14 +143,14 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
     setState(() {
       // ingredientsListold.addAll(widget.ingredients);
       // ingredientsList.addAll(ingredientsListold);
-
-      for (int i = 0; i < widget.ingredients.length; i++) {
+      ingredientsList.addAll(widget.ingredients);
+      /* for (int i = 0; i < widget.ingredients.length; i++) {
         ingredientsList.add(Ingredient(
           material: widget.ingredients[i].material!.sId!,
           grammage: widget.ingredients[i].grammage.toString(),
           unity: widget.ingredients[i].unity.toString(),
         ));
-      }
+      }*/
     });
     final isValid = _formkey.currentState!.validate();
     if (!isValid) {
@@ -224,7 +226,8 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(getDataMatiereFuture);
-
+    print(viewModel.listMatiere);
+    print(jsonEncode(widget.ingredients));
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: LayoutBuilder(
@@ -321,8 +324,6 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "Le titre de la recette est obligatoire !";
-                        } else if (value.length < 10) {
-                          return "Entrez au moins 50 caractères !";
                         }
                         return null;
                       },
@@ -376,8 +377,16 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
                                       child: Container(
                                         color: Palette.secondaryBackgroundColor,
                                         child: DropdownButtonFormField(
-                                          hint: Text(widget.ingredients[j]
-                                              .material!.mpName!),
+                                          hint: Text(
+                                            widget.ingredients[j].material
+                                                    .isNull
+                                                ? widget.ingredients[j]
+                                                    .rowMaterial!.title
+                                                    .toString()
+                                                : widget.ingredients[j]
+                                                    .material!.mpName
+                                                    .toString(),
+                                          ),
                                           decoration: InputDecoration(
                                             enabled: false,
                                             border: OutlineInputBorder(
@@ -408,8 +417,13 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
                                       padding: const EdgeInsets.all(2),
                                       child: TextFormField(
                                         initialValue: widget
-                                            .ingredients[j].grammage
-                                            .toString(),
+                                                .ingredients[j].material.isNull
+                                            ? widget.ingredients[j].rowMaterial!
+                                                .grammage
+                                                .toString()
+                                            : widget.ingredients[j].material!
+                                                .grammage
+                                                .toString(),
                                         enabled: false,
                                         keyboardType: TextInputType.number,
                                         // validator: (value) {
@@ -443,7 +457,13 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
                                       color: Palette.secondaryBackgroundColor,
                                       child: DropdownButtonFormField(
                                         hint: Text(
-                                          widget.ingredients[j].unity!,
+                                          widget.ingredients[j].material.isNull
+                                              ? widget.ingredients[j]
+                                                  .rowMaterial!.unity
+                                                  .toString()
+                                              : widget.ingredients[j].material!
+                                                  .unity
+                                                  .toString(),
                                         ),
                                         // validator: (value) {
                                         //   if (value == null) {
@@ -478,6 +498,7 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
                           ),
                       ],
                     ),
+                    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                     /* ENSEMBLE DES ANCIENS INGRÉDIENTS */
                     /*
@@ -1027,6 +1048,8 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
             message: "Recette modifiée avec succès",
           ),
         );
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const RecettesPage()));
       } else {
         showTopSnackBar(
           Overlay.of(context),

@@ -12,16 +12,19 @@ class _PieChartState extends State<PieChart> {
   @override
   Widget build(BuildContext context) {
     final List<ChartData> chartData = [
-      ChartData('David', 25),
-      ChartData('Steve', 38),
-      ChartData('Jack', 34),
-      ChartData('Others', 52)
+      ChartData('Lundi', 9),
+      ChartData('Mardi', 11),
+      ChartData('Mercredi', 10),
+      ChartData('Jeudi', 12),
+      ChartData('Vendredi', 8),
+      ChartData('Samedi', 25),
+      ChartData('Dimanche', 25)
     ];
 
     return SafeArea(
       child: SizedBox(
         child: SfCircularChart(
-          title: ChartTitle(text: "Pie"),
+          title: ChartTitle(text: "Affluence par jour"),
           legend: Legend(
             isVisible: true,
             overflowMode: LegendItemOverflowMode.wrap,

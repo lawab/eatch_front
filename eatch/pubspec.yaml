@@ -48,6 +48,7 @@ dependencies:
   flutter_layout_grid: ^2.0.3
   top_snackbar_flutter: ^3.0.0+1
   syncfusion_flutter_charts: ^21.2.4
+  jwt_decoder: ^2.0.1
   flutter_localizations:
     sdk: flutter  
 

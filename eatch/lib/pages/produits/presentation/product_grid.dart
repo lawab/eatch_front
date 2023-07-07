@@ -56,9 +56,9 @@ class ProductsGridState extends ConsumerState<ProductsGrid> {
                     price: widget.filterproductsList[index].price!,
                     title: widget.filterproductsList[index].productName!,
                     sId: widget.filterproductsList[index].sId!,
-                    category: widget.filterproductsList[index].category!.sId!,
+                    category: widget.filterproductsList[index].category!,
                     quantity: widget.filterproductsList[index].quantity!,
-                    recette: widget.filterproductsList[index].recette!.sId!,
+                    recette: widget.filterproductsList[index].recette!,
                   ),
                 ),
               );

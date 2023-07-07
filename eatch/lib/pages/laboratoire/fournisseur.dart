@@ -112,104 +112,117 @@ class FournisseurPageState extends ConsumerState<FournisseurPage> {
             ),
             Container(
               height: height - 300,
-              child: ListView.builder(
-                  itemCount: fournisseurLIST.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                        elevation: 10,
-                        child: InkWell(
-                          child: Container(
-                            height: 100,
-                            alignment: Alignment.center,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                      height: 100,
-                                      alignment: Alignment.center,
-                                      child: Image.network(
-                                        'http://13.39.81.126:4015${fournisseurLIST[index].image}',
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                          return Container(
-                                            color: Colors.black,
-                                            child: const Center(
-                                              child: Text(
-                                                "Pas d'image",
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      )),
-                                ),
-                                Expanded(
-                                  flex: 5,
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                        '${fournisseurLIST[index].firstName!} ${fournisseurLIST[index].lastName!}'),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: CircleAvatar(
-                                    maxRadius: 20,
-                                    backgroundColor: Colors.black,
-                                    child: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          modif = true;
-                                          firstNameController.text =
-                                              fournisseurLIST[index].firstName!;
-                                          lasttNameController.text =
-                                              fournisseurLIST[index].lastName!;
-                                          emailController.text =
-                                              fournisseurLIST[index].email!;
-                                          adressController.text =
-                                              fournisseurLIST[index].adresse!;
-                                          phoneController.text =
-                                              fournisseurLIST[index].phone!;
-                                        });
-                                        dialog(context,
-                                            fournisseurLIST[index].sId!);
-                                      },
-                                      icon: const Icon(
-                                        Icons.edit,
-                                        color: Colors.white,
+              child: fournisseurLIST.isEmpty
+                  ? const Center(
+                      child: Text(
+                        "Aucun fournisseur",
+                        style: TextStyle(
+                            fontSize: 30,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.normal),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: fournisseurLIST.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                            elevation: 10,
+                            child: InkWell(
+                              child: Container(
+                                height: 100,
+                                alignment: Alignment.center,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                          height: 100,
+                                          alignment: Alignment.center,
+                                          child: Image.network(
+                                            'http://13.39.81.126:4015${fournisseurLIST[index].image}',
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Container(
+                                                color: Colors.black,
+                                                child: const Center(
+                                                  child: Text(
+                                                    "Pas d'image",
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          )),
+                                    ),
+                                    Expanded(
+                                      flex: 5,
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                            '${fournisseurLIST[index].firstName!} ${fournisseurLIST[index].lastName!}'),
                                       ),
                                     ),
-                                  ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: CircleAvatar(
+                                        maxRadius: 20,
+                                        backgroundColor: Colors.black,
+                                        child: IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              modif = true;
+                                              firstNameController.text =
+                                                  fournisseurLIST[index]
+                                                      .firstName!;
+                                              lasttNameController.text =
+                                                  fournisseurLIST[index]
+                                                      .lastName!;
+                                              emailController.text =
+                                                  fournisseurLIST[index].email!;
+                                              adressController.text =
+                                                  fournisseurLIST[index]
+                                                      .adresse!;
+                                              phoneController.text =
+                                                  fournisseurLIST[index].phone!;
+                                            });
+                                            dialog(context,
+                                                fournisseurLIST[index].sId!);
+                                          },
+                                          icon: const Icon(
+                                            Icons.edit,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: CircleAvatar(
+                                        maxRadius: 20,
+                                        backgroundColor: Colors.red,
+                                        child: IconButton(
+                                            onPressed: () {
+                                              dialogDelete(
+                                                  context,
+                                                  fournisseurLIST[index].sId!,
+                                                  fournisseurLIST[index]
+                                                      .firstName!);
+                                            },
+                                            icon: const Icon(
+                                              Icons.delete,
+                                              color: Colors.white,
+                                            )),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Expanded(
-                                  flex: 1,
-                                  child: CircleAvatar(
-                                    maxRadius: 20,
-                                    backgroundColor: Colors.red,
-                                    child: IconButton(
-                                        onPressed: () {
-                                          dialogDelete(
-                                              context,
-                                              fournisseurLIST[index].sId!,
-                                              fournisseurLIST[index]
-                                                  .firstName!);
-                                        },
-                                        icon: const Icon(
-                                          Icons.delete,
-                                          color: Colors.white,
-                                        )),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          onTap: () {
-                            //dialogSortie(context);
-                          },
-                        ));
-                  }),
+                              ),
+                              onTap: () {
+                                //dialogSortie(context);
+                              },
+                            ));
+                      }),
             ),
             const SizedBox(
               height: 50,
@@ -279,104 +292,117 @@ class FournisseurPageState extends ConsumerState<FournisseurPage> {
             ),
             Container(
               height: height - 242,
-              child: ListView.builder(
-                  itemCount: fournisseurLIST.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                        elevation: 10,
-                        child: InkWell(
-                          child: Container(
-                            height: 100,
-                            alignment: Alignment.center,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                      height: 100,
-                                      alignment: Alignment.center,
-                                      child: Image.network(
-                                        'http://13.39.81.126:4015${fournisseurLIST[index].image}',
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                          return Container(
-                                            color: Colors.black,
-                                            child: const Center(
-                                              child: Text(
-                                                "Pas d'image",
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      )),
-                                ),
-                                Expanded(
-                                  flex: 5,
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                        '${fournisseurLIST[index].firstName!} ${fournisseurLIST[index].lastName!}'),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: CircleAvatar(
-                                    maxRadius: 20,
-                                    backgroundColor: Colors.black,
-                                    child: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          modif = true;
-                                          firstNameController.text =
-                                              fournisseurLIST[index].firstName!;
-                                          lasttNameController.text =
-                                              fournisseurLIST[index].lastName!;
-                                          emailController.text =
-                                              fournisseurLIST[index].email!;
-                                          adressController.text =
-                                              fournisseurLIST[index].adresse!;
-                                          phoneController.text =
-                                              fournisseurLIST[index].phone!;
-                                        });
-                                        dialog(context,
-                                            fournisseurLIST[index].sId!);
-                                      },
-                                      icon: const Icon(
-                                        Icons.edit,
-                                        color: Colors.white,
+              child: fournisseurLIST.isEmpty
+                  ? const Center(
+                      child: Text(
+                        "Aucun fournisseur",
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.normal),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: fournisseurLIST.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                            elevation: 10,
+                            child: InkWell(
+                              child: Container(
+                                height: 100,
+                                alignment: Alignment.center,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                          height: 100,
+                                          alignment: Alignment.center,
+                                          child: Image.network(
+                                            'http://13.39.81.126:4015${fournisseurLIST[index].image}',
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Container(
+                                                color: Colors.black,
+                                                child: const Center(
+                                                  child: Text(
+                                                    "Pas d'image",
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          )),
+                                    ),
+                                    Expanded(
+                                      flex: 5,
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                            '${fournisseurLIST[index].firstName!} ${fournisseurLIST[index].lastName!}'),
                                       ),
                                     ),
-                                  ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: CircleAvatar(
+                                        maxRadius: 20,
+                                        backgroundColor: Colors.black,
+                                        child: IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              modif = true;
+                                              firstNameController.text =
+                                                  fournisseurLIST[index]
+                                                      .firstName!;
+                                              lasttNameController.text =
+                                                  fournisseurLIST[index]
+                                                      .lastName!;
+                                              emailController.text =
+                                                  fournisseurLIST[index].email!;
+                                              adressController.text =
+                                                  fournisseurLIST[index]
+                                                      .adresse!;
+                                              phoneController.text =
+                                                  fournisseurLIST[index].phone!;
+                                            });
+                                            dialog(context,
+                                                fournisseurLIST[index].sId!);
+                                          },
+                                          icon: const Icon(
+                                            Icons.edit,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: CircleAvatar(
+                                        maxRadius: 20,
+                                        backgroundColor: Colors.red,
+                                        child: IconButton(
+                                            onPressed: () {
+                                              dialogDelete(
+                                                  context,
+                                                  fournisseurLIST[index].sId!,
+                                                  fournisseurLIST[index]
+                                                      .firstName!);
+                                            },
+                                            icon: const Icon(
+                                              Icons.delete,
+                                              color: Colors.white,
+                                            )),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Expanded(
-                                  flex: 1,
-                                  child: CircleAvatar(
-                                    maxRadius: 20,
-                                    backgroundColor: Colors.red,
-                                    child: IconButton(
-                                        onPressed: () {
-                                          dialogDelete(
-                                              context,
-                                              fournisseurLIST[index].sId!,
-                                              fournisseurLIST[index]
-                                                  .firstName!);
-                                        },
-                                        icon: const Icon(
-                                          Icons.delete,
-                                          color: Colors.white,
-                                        )),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          onTap: () {
-                            //dialogSortie(context);
-                          },
-                        ));
-                  }),
+                              ),
+                              onTap: () {
+                                //dialogSortie(context);
+                              },
+                            ));
+                      }),
             ),
             const SizedBox(
               height: 20,

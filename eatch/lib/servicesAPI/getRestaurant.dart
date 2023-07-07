@@ -59,6 +59,61 @@ class GetDataRsetaurantFuture extends ChangeNotifier {
   }
 }
 
+final getDataRestaurantOneFuture =
+    ChangeNotifierProvider<GetDataRestaurantOneFuture>(
+        (ref) => GetDataRestaurantOneFuture());
+
+class GetDataRestaurantOneFuture extends ChangeNotifier {
+  List<Restaurant> listRsetaurant = [];
+
+  List<Providings> listApprovisionnement = [];
+
+  GetDataRestaurantOneFuture() {
+    getData();
+  }
+  //RÔLE_Manager
+
+  Future getData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('token');
+    var restaurantid = prefs.getString('idRestaurant');
+    String adressUrl = prefs.getString('ipport').toString();
+    try {
+      http.Response response = await http.get(
+        Uri.parse(
+            'http://13.39.81.126:4002/api/restaurants/fetch/One/$restaurantid'), //4002 //13.39.81.126:4002
+        headers: <String, String>{
+          'Context-Type': 'application/json;charSet=UTF-8',
+          'Authorization': 'Bearer $token ',
+        },
+      );
+      print('get ONE restaurant');
+      print(response.statusCode);
+      print(response.body);
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+
+        for (int i = 0; i < data.length; i++) {
+          if (data['deletedAt'] == null) {
+            //listRsetaurant.add(Restaurant.fromJson(data[i]));
+
+            listApprovisionnement
+                .add(Providings.fromJson(data['providings'][i]));
+          }
+        }
+      } else {
+        return Future.error(" server erreur");
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+
+    //print(listDataModel.length);
+    notifyListeners();
+  }
+}
+
 class Restaurant {
   Infos? infos;
   String? sId;

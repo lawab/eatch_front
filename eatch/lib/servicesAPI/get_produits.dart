@@ -56,7 +56,7 @@ class Products {
   Restaurant? restaurant;
   Category? category;
   int? price;
-  String? sCreator;
+  Creator? sCreator;
   String? productName;
   int? quantity;
   bool? promotion;
@@ -105,7 +105,9 @@ class Products {
         ? new Category.fromJson(json['category'])
         : null;
     price = json['price'];
-    sCreator = json['_creator'];
+    sCreator = json['_creator'] != null
+        ? new Creator.fromJson(json['_creator'])
+        : null;
     productName = json['productName'];
     quantity = json['quantity'];
     promotion = json['promotion'];
@@ -138,7 +140,9 @@ class Products {
       data['category'] = this.category!.toJson();
     }
     data['price'] = this.price;
-    data['_creator'] = this.sCreator;
+    if (this.sCreator != null) {
+      data['_creator'] = this.sCreator!.toJson();
+    }
     data['productName'] = this.productName;
     data['quantity'] = this.quantity;
     data['promotion'] = this.promotion;
@@ -153,6 +157,34 @@ class Products {
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
     data['__v'] = this.iV;
+    return data;
+  }
+}
+
+class Creator {
+  String? sId;
+  String? role;
+  String? email;
+  String? firstName;
+  String? lastName;
+
+  Creator({this.sId, this.role, this.email, this.firstName, this.lastName});
+
+  Creator.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    role = json['role'];
+    email = json['email'];
+    firstName = json['firstName'];
+    lastName = json['lastName'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_id'] = this.sId;
+    data['role'] = this.role;
+    data['email'] = this.email;
+    data['firstName'] = this.firstName;
+    data['lastName'] = this.lastName;
     return data;
   }
 }

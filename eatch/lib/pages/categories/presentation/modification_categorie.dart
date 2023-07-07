@@ -96,6 +96,7 @@ class _ModificationCategorieState extends ConsumerState<ModificationCategorie> {
           ),
           color: Palette.secondaryBackgroundColor,
           child: Column(
+            //'http://13.39.81.126:4005${widget.imageUrl}',
             children: [
               /**
                 !PREMIERE LIGNE 
@@ -119,57 +120,6 @@ class _ModificationCategorieState extends ConsumerState<ModificationCategorie> {
                       nomCategorie(),
                       const SizedBox(height: 20),
 
-                      Container(
-                        color: Palette.secondaryBackgroundColor,
-                        child: GestureDetector(
-                          onTap: () async {
-                            result = await FilePicker.platform.pickFiles(
-                                type: FileType.custom,
-                                allowedExtensions: [
-                                  "png",
-                                  "jpg",
-                                  "jpeg",
-                                ]);
-                            if (result != null) {
-                              setState(() {
-                                Uint8List fileBytes =
-                                    result!.files.single.bytes as Uint8List;
-
-                                _selectedFile = fileBytes;
-                                selectedImageInBytes =
-                                    result!.files.first.bytes;
-                                _selectFile = true;
-                              });
-                            }
-                          },
-                          child: Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 1,
-                                color: const Color(0xFFDCE0E0),
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(16),
-                              child: _selectFile == false
-                                  ? Image.network(
-                                      'http://13.39.81.126:4005${widget.imageUrl}',
-                                      fit: BoxFit.fill,
-                                    )
-                                  : isLoading
-                                      ? const CircularProgressIndicator()
-                                      : Image.memory(
-                                          selectedImageInBytes!,
-                                          fit: BoxFit.fill,
-                                        ),
-                            ),
-                          ),
-                        ),
-                      ),
-
                       const SizedBox(
                         height: 30,
                       ),
@@ -178,7 +128,59 @@ class _ModificationCategorieState extends ConsumerState<ModificationCategorie> {
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
+                          Container(
+                            color: Palette.secondaryBackgroundColor,
+                            child: GestureDetector(
+                              onTap: () async {
+                                result = await FilePicker.platform.pickFiles(
+                                    type: FileType.custom,
+                                    allowedExtensions: [
+                                      "png",
+                                      "jpg",
+                                      "jpeg",
+                                    ]);
+                                if (result != null) {
+                                  setState(() {
+                                    Uint8List fileBytes =
+                                        result!.files.single.bytes as Uint8List;
+
+                                    _selectedFile = fileBytes;
+                                    selectedImageInBytes =
+                                        result!.files.first.bytes;
+                                    _selectFile = true;
+                                  });
+                                }
+                              },
+                              child: Container(
+                                width: 100,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 4,
+                                    color: Palette.greenColors,
+                                  ),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: _selectFile == false
+                                      ? Image.network(
+                                          'http://13.39.81.126:4005${widget.imageUrl}',
+                                          fit: BoxFit.fill,
+                                        )
+                                      : isLoading
+                                          ? const CircularProgressIndicator()
+                                          : Image.memory(
+                                              selectedImageInBytes!,
+                                              fit: BoxFit.fill,
+                                            ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const Spacer(),
                           SizedBox(
                             width: 200,
                             child: DefaultButton(
@@ -254,7 +256,7 @@ class _ModificationCategorieState extends ConsumerState<ModificationCategorie> {
     var json = {
       'title': title,
       'restaurant_id': restaurantId,
-      'user_id': id,
+      '_creator': id,
     };
     var body = jsonEncode(json);
 
@@ -289,16 +291,17 @@ class _ModificationCategorieState extends ConsumerState<ModificationCategorie> {
           Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.green,
-            message: "Restaurant Modifié",
+            message: "Catégorie Modifié avec succès",
           ),
         );
         ref.refresh(getDataCategoriesFuture);
+        Navigator.pop(context);
       } else {
         showTopSnackBar(
           Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.red,
-            message: "Erreur de création",
+            message: "Erreur de modification",
           ),
         );
         print("Error Create Programme  !!!");

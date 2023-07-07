@@ -11,6 +11,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import '../../../servicesAPI/get_user.dart';
 import '../../../utils/applayout.dart';
 import '../../../utils/default_button/default_button.dart';
@@ -425,12 +427,12 @@ class _ModificationUserState extends ConsumerState<ModificationUser> {
                                 }
                               },
                               child: Container(
-                                width: SizeConfig.screenWidth * 0.05,
-                                height: SizeConfig.screenWidth * 0.05,
+                                width: 100,
+                                height: 100,
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                    width: 1,
-                                    color: const Color(0xFFDCE0E0),
+                                    width: 4,
+                                    color: Palette.greenColors,
                                   ),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
@@ -896,13 +898,22 @@ class _ModificationUserState extends ConsumerState<ModificationUser> {
           ref.refresh(getDataUserFuture);
         });
 
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Utilisateur crée"),
-        ));
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.success(
+            backgroundColor: Colors.green,
+            message: "Utilisateur modifié avec succès",
+          ),
+        );
+        Navigator.pop(context);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Erreur de serveur"),
-        ));
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.error(
+            backgroundColor: Colors.red,
+            message: "Erreur de serveur",
+          ),
+        );
         print("Error Create Programme  !!!");
       }
     } catch (e) {

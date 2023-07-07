@@ -142,314 +142,345 @@ class SortieMatiereState extends ConsumerState<SortieMatiere> {
             ),
             Container(
               height: height - 180,
-              child: ListView.builder(
-                  itemCount: listRequest.length,
-                  itemBuilder: (context, index) {
-                    var dateA = '';
-                    if (listRequest[index].dateValidated.toString() == 'null') {
-                      dateA = 'null';
-                    } else {
-                      DateTime a = DateTime.parse(
-                          listRequest[index].dateValidated.toString());
-                      final DateFormat formattera =
-                          DateFormat('dd.MM.yyyy  hh:mm');
-                      dateA = formattera.format(a);
-                    }
+              child: listRequest.isEmpty
+                  ? const Center(
+                      child: Text(
+                        "Aucun demande reçue",
+                        style: TextStyle(
+                            fontSize: 30,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.normal),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: listRequest.length,
+                      itemBuilder: (context, index) {
+                        var dateA = '';
+                        if (listRequest[index].dateValidated.toString() ==
+                            'null') {
+                          dateA = 'null';
+                        } else {
+                          DateTime a = DateTime.parse(
+                              listRequest[index].dateValidated.toString());
+                          final DateFormat formattera =
+                              DateFormat('dd.MM.yyyy  hh:mm');
+                          dateA = formattera.format(a);
+                        }
 
-                    DateTime b = DateTime.parse(
-                        listRequest[index].dateProviding.toString() == ''
-                            ? '2023-01-01'
-                            : listRequest[index].dateProviding.toString()); //
-                    final DateFormat formatterb =
-                        DateFormat('dd.MM.yyyy  hh:mm');
-                    var datep = formatterb.format(b);
-                    return Card(
-                      elevation: 10,
-                      child: InkWell(
-                        child: Container(
-                          height: 110,
-                          alignment: Alignment.center,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    listRequest[index].material!.title!,
-                                    style: const TextStyle(
-                                        fontFamily: 'Allerta',
-                                        fontSize: 20,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
+                        DateTime b = DateTime.parse(
+                            listRequest[index].dateProviding.toString() == ''
+                                ? '2023-01-01'
+                                : listRequest[index]
+                                    .dateProviding
+                                    .toString()); //
+                        final DateFormat formatterb =
+                            DateFormat('dd.MM.yyyy  hh:mm');
+                        var datep = formatterb.format(b);
+                        return Card(
+                          elevation: 10,
+                          child: InkWell(
+                            child: Container(
+                              height: 110,
+                              alignment: Alignment.center,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        listRequest[index].material!.title!,
+                                        style: const TextStyle(
+                                            fontFamily: 'Allerta',
+                                            fontSize: 20,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                              VerticalDivider(
-                                color: Colors.black,
-                                width: 10,
-                              ),
-                              Expanded(
-                                flex: 5,
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      RichText(
-                                        text: TextSpan(children: [
-                                          const TextSpan(
-                                            text: "Restaurant: ",
-                                            style: TextStyle(
-                                                fontFamily: 'Allerta',
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold),
+                                  VerticalDivider(
+                                    color: Colors.black,
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    flex: 5,
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          RichText(
+                                            text: TextSpan(children: [
+                                              const TextSpan(
+                                                text: "Restaurant: ",
+                                                style: TextStyle(
+                                                    fontFamily: 'Allerta',
+                                                    fontSize: 12,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              TextSpan(
+                                                text: listRequest[index]
+                                                    .restaurant!
+                                                    .restaurantName!,
+                                                style: const TextStyle(
+                                                    fontFamily: 'Allerta',
+                                                    fontSize: 12,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                              )
+                                            ]),
                                           ),
-                                          TextSpan(
-                                            text: listRequest[index]
-                                                .restaurant!
-                                                .restaurantName!,
-                                            style: const TextStyle(
-                                                fontFamily: 'Allerta',
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.normal),
-                                          )
-                                        ]),
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      RichText(
-                                        text: TextSpan(children: [
-                                          const TextSpan(
-                                            text: "Date de demande: ",
-                                            style: TextStyle(
-                                                fontFamily: 'Allerta',
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold),
+                                          const SizedBox(
+                                            height: 5,
                                           ),
-                                          TextSpan(
-                                            text: '$datep PM',
-                                            style: const TextStyle(
-                                                fontFamily: 'Allerta',
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.normal),
-                                          )
-                                        ]),
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      RichText(
-                                        text: TextSpan(children: [
-                                          const TextSpan(
-                                            text: "Date d'acceptation: ",
-                                            style: TextStyle(
-                                                fontFamily: 'Allerta',
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold),
+                                          RichText(
+                                            text: TextSpan(children: [
+                                              const TextSpan(
+                                                text: "Date de demande: ",
+                                                style: TextStyle(
+                                                    fontFamily: 'Allerta',
+                                                    fontSize: 12,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              TextSpan(
+                                                text: '$datep PM',
+                                                style: const TextStyle(
+                                                    fontFamily: 'Allerta',
+                                                    fontSize: 12,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                              )
+                                            ]),
                                           ),
-                                          TextSpan(
-                                            text: dateA == 'null'
-                                                ? 'En attente'
-                                                : '$dateA PM',
-                                            style: const TextStyle(
-                                                fontFamily: 'Allerta',
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.normal),
-                                          )
-                                        ]),
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      RichText(
-                                        text: TextSpan(children: [
-                                          const TextSpan(
-                                            text: "Quantité demandée: ",
-                                            style: TextStyle(
-                                                fontFamily: 'Allerta',
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold),
+                                          const SizedBox(
+                                            height: 5,
                                           ),
-                                          TextSpan(
-                                            text:
-                                                '${listRequest[index].qte.toString()} ${listRequest[index].material!.unit.toString()}',
-                                            style: const TextStyle(
-                                                fontFamily: 'Allerta',
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.normal),
-                                          )
-                                        ]),
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Container(
-                                        width: 120,
-                                        child: Row(
-                                          children: [
-                                            const Text(
-                                              'STATUS : ',
-                                              style: TextStyle(
-                                                  fontFamily: 'Allerta',
-                                                  fontSize: 12,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            const SizedBox(
-                                              width: 10,
-                                            ),
-                                            listRequest[index].dateValidated ==
-                                                        null &&
-                                                    listRequest[index]
-                                                            .validated ==
-                                                        false
-                                                ? const CircleAvatar(
-                                                    maxRadius: 15,
-                                                    backgroundColor:
-                                                        Colors.amber,
-                                                    child: Icon(
-                                                      Icons.watch,
-                                                      color: Colors.white,
-                                                    ),
-                                                  )
-                                                : listRequest[index]
-                                                            .validated ==
-                                                        false
+                                          RichText(
+                                            text: TextSpan(children: [
+                                              const TextSpan(
+                                                text: "Date d'acceptation: ",
+                                                style: TextStyle(
+                                                    fontFamily: 'Allerta',
+                                                    fontSize: 12,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              TextSpan(
+                                                text: dateA == 'null'
+                                                    ? 'En attente'
+                                                    : '$dateA PM',
+                                                style: const TextStyle(
+                                                    fontFamily: 'Allerta',
+                                                    fontSize: 12,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                              )
+                                            ]),
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          RichText(
+                                            text: TextSpan(children: [
+                                              const TextSpan(
+                                                text: "Quantité demandée: ",
+                                                style: TextStyle(
+                                                    fontFamily: 'Allerta',
+                                                    fontSize: 12,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              TextSpan(
+                                                text:
+                                                    '${listRequest[index].qte.toString()} ${listRequest[index].material!.unit.toString()}',
+                                                style: const TextStyle(
+                                                    fontFamily: 'Allerta',
+                                                    fontSize: 12,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                              )
+                                            ]),
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Container(
+                                            width: 120,
+                                            child: Row(
+                                              children: [
+                                                const Text(
+                                                  'STATUS : ',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Allerta',
+                                                      fontSize: 12,
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                listRequest[index]
+                                                                .dateValidated ==
+                                                            null &&
+                                                        listRequest[index]
+                                                                .validated ==
+                                                            false
                                                     ? const CircleAvatar(
                                                         maxRadius: 15,
                                                         backgroundColor:
-                                                            Colors.red,
+                                                            Colors.amber,
                                                         child: Icon(
-                                                          Icons.close,
+                                                          Icons.watch,
                                                           color: Colors.white,
                                                         ),
                                                       )
-                                                    : const CircleAvatar(
-                                                        maxRadius: 15,
-                                                        backgroundColor:
-                                                            Colors.green,
-                                                        child: Icon(
-                                                          Icons.done,
-                                                          color: Colors.white,
-                                                        ),
-                                                      ),
-                                          ],
-                                        ),
+                                                    : listRequest[index]
+                                                                .validated ==
+                                                            false
+                                                        ? const CircleAvatar(
+                                                            maxRadius: 15,
+                                                            backgroundColor:
+                                                                Colors.red,
+                                                            child: Icon(
+                                                              Icons.close,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          )
+                                                        : const CircleAvatar(
+                                                            maxRadius: 15,
+                                                            backgroundColor:
+                                                                Colors.green,
+                                                            child: Icon(
+                                                              Icons.done,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                              VerticalDivider(
-                                color: Colors.black,
-                                width: 10,
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    CircleAvatar(
-                                      maxRadius: 20,
-                                      backgroundColor: Colors.black,
-                                      child: IconButton(
-                                        icon: Icon(
-                                          Icons.close,
-                                          color: Colors.white,
+                                  VerticalDivider(
+                                    color: Colors.black,
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        CircleAvatar(
+                                          maxRadius: 20,
+                                          backgroundColor: Colors.black,
+                                          child: IconButton(
+                                            icon: Icon(
+                                              Icons.close,
+                                              color: Colors.white,
+                                            ),
+                                            onPressed: () {
+                                              if (listRequest[index]
+                                                      .validated ==
+                                                  false) {
+                                                reponseMatiere(
+                                                    context,
+                                                    listRequest[index]
+                                                        .requestId!,
+                                                    'refused',
+                                                    listRequest[index]
+                                                        .restaurant!
+                                                        .sId!,
+                                                    listRequest[index]
+                                                        .material!
+                                                        .sId!,
+                                                    listRequest[index]
+                                                        .qte
+                                                        .toString());
+                                              } else {
+                                                dialogRefus2(context);
+                                              }
+                                            },
+                                          ),
                                         ),
-                                        onPressed: () {
-                                          if (listRequest[index].validated ==
-                                              false) {
-                                            reponseMatiere(
-                                                context,
-                                                listRequest[index].requestId!,
-                                                'refused',
-                                                listRequest[index]
-                                                    .restaurant!
-                                                    .sId!,
-                                                listRequest[index]
-                                                    .material!
-                                                    .sId!,
-                                                listRequest[index]
-                                                    .qte
-                                                    .toString());
-                                          } else {
-                                            dialogRefus2(context);
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 20,
-                                    ),
-                                    CircleAvatar(
-                                      maxRadius: 20,
-                                      backgroundColor: Colors.black,
-                                      child: IconButton(
-                                        icon: Icon(
-                                          Icons.done,
-                                          color: Colors.white,
+                                        const SizedBox(
+                                          width: 20,
                                         ),
-                                        onPressed: () {
-                                          if (listRequest[index]
-                                                  .material!
-                                                  .quantity! >
-                                              listRequest[index].qte!) {
-                                            reponseMatiere(
-                                                context,
-                                                listRequest[index].requestId!,
-                                                'accepted',
-                                                listRequest[index]
-                                                    .restaurant!
-                                                    .sId!,
-                                                listRequest[index]
-                                                    .material!
-                                                    .sId!,
-                                                listRequest[index]
-                                                    .qte
-                                                    .toString());
-                                          } else {
-                                            dialogRefus(
-                                                context,
-                                                listRequest[index]
-                                                    .material!
-                                                    .title!,
-                                                listRequest[index]
-                                                    .material!
-                                                    .quantity!,
-                                                listRequest[index].qte!,
-                                                listRequest[index]
-                                                    .material!
-                                                    .unit!);
-                                          }
-                                        },
-                                      ),
+                                        CircleAvatar(
+                                          maxRadius: 20,
+                                          backgroundColor: Colors.black,
+                                          child: IconButton(
+                                            icon: Icon(
+                                              Icons.done,
+                                              color: Colors.white,
+                                            ),
+                                            onPressed: () {
+                                              if (listRequest[index]
+                                                      .material!
+                                                      .quantity! >
+                                                  listRequest[index].qte!) {
+                                                reponseMatiere(
+                                                    context,
+                                                    listRequest[index]
+                                                        .requestId!,
+                                                    'accepted',
+                                                    listRequest[index]
+                                                        .restaurant!
+                                                        .sId!,
+                                                    listRequest[index]
+                                                        .material!
+                                                        .sId!,
+                                                    listRequest[index]
+                                                        .qte
+                                                        .toString());
+                                              } else {
+                                                dialogRefus(
+                                                    context,
+                                                    listRequest[index]
+                                                        .material!
+                                                        .title!,
+                                                    listRequest[index]
+                                                        .material!
+                                                        .quantity!,
+                                                    listRequest[index].qte!,
+                                                    listRequest[index]
+                                                        .material!
+                                                        .unit!);
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
+                            onTap: () {
+                              //dialogSortie(context);
+                            },
                           ),
-                        ),
-                        onTap: () {
-                          //dialogSortie(context);
-                        },
-                      ),
-                    );
-                  }),
+                        );
+                      }),
             ),
           ],
         ),
@@ -499,314 +530,345 @@ class SortieMatiereState extends ConsumerState<SortieMatiere> {
             ),
             Container(
               height: height - 180,
-              child: ListView.builder(
-                  itemCount: listRequest.length,
-                  itemBuilder: (context, index) {
-                    var dateA = '';
-                    if (listRequest[index].dateValidated.toString() == 'null') {
-                      dateA = 'null';
-                    } else {
-                      DateTime a = DateTime.parse(
-                          listRequest[index].dateValidated.toString());
-                      final DateFormat formattera =
-                          DateFormat('dd.MM.yyyy  hh:mm');
-                      dateA = formattera.format(a);
-                    }
+              child: listRequest.isEmpty
+                  ? const Center(
+                      child: Text(
+                        "Aucun demande reçue",
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.normal),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: listRequest.length,
+                      itemBuilder: (context, index) {
+                        var dateA = '';
+                        if (listRequest[index].dateValidated.toString() ==
+                            'null') {
+                          dateA = 'null';
+                        } else {
+                          DateTime a = DateTime.parse(
+                              listRequest[index].dateValidated.toString());
+                          final DateFormat formattera =
+                              DateFormat('dd.MM.yyyy  hh:mm');
+                          dateA = formattera.format(a);
+                        }
 
-                    DateTime b = DateTime.parse(
-                        listRequest[index].dateProviding.toString() == ''
-                            ? '2023-01-01'
-                            : listRequest[index].dateProviding.toString()); //
-                    final DateFormat formatterb =
-                        DateFormat('dd.MM.yyyy  hh:mm');
-                    var datep = formatterb.format(b);
-                    return Card(
-                      elevation: 10,
-                      child: InkWell(
-                        child: Container(
-                          height: 110,
-                          alignment: Alignment.center,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    listRequest[index].material!.title!,
-                                    style: const TextStyle(
-                                        fontFamily: 'Allerta',
-                                        fontSize: 20,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
+                        DateTime b = DateTime.parse(
+                            listRequest[index].dateProviding.toString() == ''
+                                ? '2023-01-01'
+                                : listRequest[index]
+                                    .dateProviding
+                                    .toString()); //
+                        final DateFormat formatterb =
+                            DateFormat('dd.MM.yyyy  hh:mm');
+                        var datep = formatterb.format(b);
+                        return Card(
+                          elevation: 10,
+                          child: InkWell(
+                            child: Container(
+                              height: 110,
+                              alignment: Alignment.center,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        listRequest[index].material!.title!,
+                                        style: const TextStyle(
+                                            fontFamily: 'Allerta',
+                                            fontSize: 20,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                              VerticalDivider(
-                                color: Colors.black,
-                                width: 10,
-                              ),
-                              Expanded(
-                                flex: 5,
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      RichText(
-                                        text: TextSpan(children: [
-                                          const TextSpan(
-                                            text: "Restaurant: ",
-                                            style: TextStyle(
-                                                fontFamily: 'Allerta',
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold),
+                                  VerticalDivider(
+                                    color: Colors.black,
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    flex: 5,
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          RichText(
+                                            text: TextSpan(children: [
+                                              const TextSpan(
+                                                text: "Restaurant: ",
+                                                style: TextStyle(
+                                                    fontFamily: 'Allerta',
+                                                    fontSize: 12,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              TextSpan(
+                                                text: listRequest[index]
+                                                    .restaurant!
+                                                    .restaurantName!,
+                                                style: const TextStyle(
+                                                    fontFamily: 'Allerta',
+                                                    fontSize: 12,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                              )
+                                            ]),
                                           ),
-                                          TextSpan(
-                                            text: listRequest[index]
-                                                .restaurant!
-                                                .restaurantName!,
-                                            style: const TextStyle(
-                                                fontFamily: 'Allerta',
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.normal),
-                                          )
-                                        ]),
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      RichText(
-                                        text: TextSpan(children: [
-                                          const TextSpan(
-                                            text: "Date de demande: ",
-                                            style: TextStyle(
-                                                fontFamily: 'Allerta',
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold),
+                                          const SizedBox(
+                                            height: 5,
                                           ),
-                                          TextSpan(
-                                            text: '$datep PM',
-                                            style: const TextStyle(
-                                                fontFamily: 'Allerta',
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.normal),
-                                          )
-                                        ]),
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      RichText(
-                                        text: TextSpan(children: [
-                                          const TextSpan(
-                                            text: "Date d'acceptation: ",
-                                            style: TextStyle(
-                                                fontFamily: 'Allerta',
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold),
+                                          RichText(
+                                            text: TextSpan(children: [
+                                              const TextSpan(
+                                                text: "Date de demande: ",
+                                                style: TextStyle(
+                                                    fontFamily: 'Allerta',
+                                                    fontSize: 12,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              TextSpan(
+                                                text: '$datep PM',
+                                                style: const TextStyle(
+                                                    fontFamily: 'Allerta',
+                                                    fontSize: 12,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                              )
+                                            ]),
                                           ),
-                                          TextSpan(
-                                            text: dateA == 'null'
-                                                ? 'En attente'
-                                                : '$dateA PM',
-                                            style: const TextStyle(
-                                                fontFamily: 'Allerta',
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.normal),
-                                          )
-                                        ]),
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      RichText(
-                                        text: TextSpan(children: [
-                                          const TextSpan(
-                                            text: "Quantité demandée: ",
-                                            style: TextStyle(
-                                                fontFamily: 'Allerta',
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold),
+                                          const SizedBox(
+                                            height: 5,
                                           ),
-                                          TextSpan(
-                                            text:
-                                                '${listRequest[index].qte.toString()} ${listRequest[index].material!.unit.toString()}',
-                                            style: const TextStyle(
-                                                fontFamily: 'Allerta',
-                                                fontSize: 12,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.normal),
-                                          )
-                                        ]),
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Container(
-                                        width: 120,
-                                        child: Row(
-                                          children: [
-                                            const Text(
-                                              'STATUS : ',
-                                              style: TextStyle(
-                                                  fontFamily: 'Allerta',
-                                                  fontSize: 12,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            const SizedBox(
-                                              width: 10,
-                                            ),
-                                            listRequest[index].dateValidated ==
-                                                        null &&
-                                                    listRequest[index]
-                                                            .validated ==
-                                                        false
-                                                ? const CircleAvatar(
-                                                    maxRadius: 15,
-                                                    backgroundColor:
-                                                        Colors.amber,
-                                                    child: Icon(
-                                                      Icons.watch,
-                                                      color: Colors.white,
-                                                    ),
-                                                  )
-                                                : listRequest[index]
-                                                            .validated ==
-                                                        false
+                                          RichText(
+                                            text: TextSpan(children: [
+                                              const TextSpan(
+                                                text: "Date d'acceptation: ",
+                                                style: TextStyle(
+                                                    fontFamily: 'Allerta',
+                                                    fontSize: 12,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              TextSpan(
+                                                text: dateA == 'null'
+                                                    ? 'En attente'
+                                                    : '$dateA PM',
+                                                style: const TextStyle(
+                                                    fontFamily: 'Allerta',
+                                                    fontSize: 12,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                              )
+                                            ]),
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          RichText(
+                                            text: TextSpan(children: [
+                                              const TextSpan(
+                                                text: "Quantité demandée: ",
+                                                style: TextStyle(
+                                                    fontFamily: 'Allerta',
+                                                    fontSize: 12,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              TextSpan(
+                                                text:
+                                                    '${listRequest[index].qte.toString()} ${listRequest[index].material!.unit.toString()}',
+                                                style: const TextStyle(
+                                                    fontFamily: 'Allerta',
+                                                    fontSize: 12,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                              )
+                                            ]),
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Container(
+                                            width: 120,
+                                            child: Row(
+                                              children: [
+                                                const Text(
+                                                  'STATUS : ',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Allerta',
+                                                      fontSize: 12,
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                listRequest[index]
+                                                                .dateValidated ==
+                                                            null &&
+                                                        listRequest[index]
+                                                                .validated ==
+                                                            false
                                                     ? const CircleAvatar(
                                                         maxRadius: 15,
                                                         backgroundColor:
-                                                            Colors.red,
+                                                            Colors.amber,
                                                         child: Icon(
-                                                          Icons.close,
+                                                          Icons.watch,
                                                           color: Colors.white,
                                                         ),
                                                       )
-                                                    : const CircleAvatar(
-                                                        maxRadius: 15,
-                                                        backgroundColor:
-                                                            Colors.green,
-                                                        child: Icon(
-                                                          Icons.done,
-                                                          color: Colors.white,
-                                                        ),
-                                                      ),
-                                          ],
-                                        ),
+                                                    : listRequest[index]
+                                                                .validated ==
+                                                            false
+                                                        ? const CircleAvatar(
+                                                            maxRadius: 15,
+                                                            backgroundColor:
+                                                                Colors.red,
+                                                            child: Icon(
+                                                              Icons.close,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          )
+                                                        : const CircleAvatar(
+                                                            maxRadius: 15,
+                                                            backgroundColor:
+                                                                Colors.green,
+                                                            child: Icon(
+                                                              Icons.done,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                              VerticalDivider(
-                                color: Colors.black,
-                                width: 10,
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    CircleAvatar(
-                                      maxRadius: 20,
-                                      backgroundColor: Colors.black,
-                                      child: IconButton(
-                                        icon: Icon(
-                                          Icons.close,
-                                          color: Colors.white,
+                                  VerticalDivider(
+                                    color: Colors.black,
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        CircleAvatar(
+                                          maxRadius: 20,
+                                          backgroundColor: Colors.black,
+                                          child: IconButton(
+                                            icon: Icon(
+                                              Icons.close,
+                                              color: Colors.white,
+                                            ),
+                                            onPressed: () {
+                                              if (listRequest[index]
+                                                      .validated ==
+                                                  false) {
+                                                reponseMatiere(
+                                                    context,
+                                                    listRequest[index]
+                                                        .requestId!,
+                                                    'refused',
+                                                    listRequest[index]
+                                                        .restaurant!
+                                                        .sId!,
+                                                    listRequest[index]
+                                                        .material!
+                                                        .sId!,
+                                                    listRequest[index]
+                                                        .qte
+                                                        .toString());
+                                              } else {
+                                                dialogRefus2(context);
+                                              }
+                                            },
+                                          ),
                                         ),
-                                        onPressed: () {
-                                          if (listRequest[index].validated ==
-                                              false) {
-                                            reponseMatiere(
-                                                context,
-                                                listRequest[index].requestId!,
-                                                'refused',
-                                                listRequest[index]
-                                                    .restaurant!
-                                                    .sId!,
-                                                listRequest[index]
-                                                    .material!
-                                                    .sId!,
-                                                listRequest[index]
-                                                    .qte
-                                                    .toString());
-                                          } else {
-                                            dialogRefus2(context);
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 20,
-                                    ),
-                                    CircleAvatar(
-                                      maxRadius: 20,
-                                      backgroundColor: Colors.black,
-                                      child: IconButton(
-                                        icon: Icon(
-                                          Icons.done,
-                                          color: Colors.white,
+                                        const SizedBox(
+                                          width: 20,
                                         ),
-                                        onPressed: () {
-                                          if (listRequest[index]
-                                                  .material!
-                                                  .quantity! >
-                                              listRequest[index].qte!) {
-                                            reponseMatiere(
-                                                context,
-                                                listRequest[index].requestId!,
-                                                'accepted',
-                                                listRequest[index]
-                                                    .restaurant!
-                                                    .sId!,
-                                                listRequest[index]
-                                                    .material!
-                                                    .sId!,
-                                                listRequest[index]
-                                                    .qte
-                                                    .toString());
-                                          } else {
-                                            dialogRefus(
-                                                context,
-                                                listRequest[index]
-                                                    .material!
-                                                    .title!,
-                                                listRequest[index]
-                                                    .material!
-                                                    .quantity!,
-                                                listRequest[index].qte!,
-                                                listRequest[index]
-                                                    .material!
-                                                    .unit!);
-                                          }
-                                        },
-                                      ),
+                                        CircleAvatar(
+                                          maxRadius: 20,
+                                          backgroundColor: Colors.black,
+                                          child: IconButton(
+                                            icon: Icon(
+                                              Icons.done,
+                                              color: Colors.white,
+                                            ),
+                                            onPressed: () {
+                                              if (listRequest[index]
+                                                      .material!
+                                                      .quantity! >
+                                                  listRequest[index].qte!) {
+                                                reponseMatiere(
+                                                    context,
+                                                    listRequest[index]
+                                                        .requestId!,
+                                                    'accepted',
+                                                    listRequest[index]
+                                                        .restaurant!
+                                                        .sId!,
+                                                    listRequest[index]
+                                                        .material!
+                                                        .sId!,
+                                                    listRequest[index]
+                                                        .qte
+                                                        .toString());
+                                              } else {
+                                                dialogRefus(
+                                                    context,
+                                                    listRequest[index]
+                                                        .material!
+                                                        .title!,
+                                                    listRequest[index]
+                                                        .material!
+                                                        .quantity!,
+                                                    listRequest[index].qte!,
+                                                    listRequest[index]
+                                                        .material!
+                                                        .unit!);
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
+                            onTap: () {
+                              //dialogSortie(context);
+                            },
                           ),
-                        ),
-                        onTap: () {
-                          //dialogSortie(context);
-                        },
-                      ),
-                    );
-                  }),
+                        );
+                      }),
             ),
           ],
         ),

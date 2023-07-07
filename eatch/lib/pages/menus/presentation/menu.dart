@@ -150,88 +150,102 @@ class _MenuState extends ConsumerState<Menu> {
                     height: height - 145,
                     padding: const EdgeInsets.all(10),
                     child: SingleChildScrollView(
-                      child: GridView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: menus.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithMaxCrossAxisExtent(
-                                maxCrossAxisExtent: 500,
-                                childAspectRatio: 3 / 2,
-                                crossAxisSpacing: 20,
-                                mainAxisSpacing: 30,
-                                mainAxisExtent: 200),
-                        itemBuilder: (context, index) {
-                          return Column(
-                            children: [
-                              MenuCard(
-                                description: menus[index].description!,
-                                imageUrl: menus[index].image!,
-                                price: menus[index].price!,
-                                title: menus[index].menuTitle!,
-                                sId: menus[index].sId!,
-                                prod: menus[index].products!,
-                                index: index,
+                      child: menus.isEmpty
+                          ? const Center(
+                              child: Text(
+                                "Aucun menu",
+                                style: TextStyle(
+                                    fontSize: 30,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.normal),
                               ),
-                              const SizedBox(height: 1),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                ModificationMenu(
-                                              description:
-                                                  menus[index].description!,
-                                              imageUrl: menus[index].image!,
-                                              price: menus[index].price!,
-                                              sId: menus[index].sId!,
-                                              title: menus[index].menuTitle!,
-                                              products: menus[index].products!,
+                            )
+                          : GridView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: menus.length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithMaxCrossAxisExtent(
+                                      maxCrossAxisExtent: 500,
+                                      childAspectRatio: 3 / 2,
+                                      crossAxisSpacing: 20,
+                                      mainAxisSpacing: 30,
+                                      mainAxisExtent: 200),
+                              itemBuilder: (context, index) {
+                                return Column(
+                                  children: [
+                                    MenuCard(
+                                      description: menus[index].description!,
+                                      imageUrl: menus[index].image!,
+                                      price: menus[index].price!,
+                                      title: menus[index].menuTitle!,
+                                      sId: menus[index].sId!,
+                                      prod: menus[index].products!,
+                                      index: index,
+                                    ),
+                                    const SizedBox(height: 1),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: InkWell(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ModificationMenu(
+                                                    description: menus[index]
+                                                        .description!,
+                                                    imageUrl:
+                                                        menus[index].image!,
+                                                    price: menus[index].price!,
+                                                    sId: menus[index].sId!,
+                                                    title:
+                                                        menus[index].menuTitle!,
+                                                    products:
+                                                        menus[index].products!,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: Container(
+                                              height: 30,
+                                              decoration: BoxDecoration(
+                                                color: Palette.secondaryColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              alignment: Alignment.center,
+                                              child: const Text("Modifier"),
                                             ),
                                           ),
-                                        );
-                                      },
-                                      child: Container(
-                                        height: 30,
-                                        decoration: BoxDecoration(
-                                          color: Palette.secondaryColor,
-                                          borderRadius:
-                                              BorderRadius.circular(8),
                                         ),
-                                        alignment: Alignment.center,
-                                        child: const Text("Modifier"),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 0.5),
-                                  Expanded(
-                                    child: InkWell(
-                                      onTap: () {
-                                        dialogDelete(menus[index].menuTitle!,
-                                            menus[index].sId!);
-                                      },
-                                      child: Container(
-                                        height: 30,
-                                        decoration: BoxDecoration(
-                                          color: Palette.deleteColors,
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        alignment: Alignment.center,
-                                        child: const Text("Supprimer"),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              )
-                            ],
-                          );
-                        },
-                      ),
+                                        const SizedBox(height: 0.5),
+                                        Expanded(
+                                          child: InkWell(
+                                            onTap: () {
+                                              dialogDelete(
+                                                  menus[index].menuTitle!,
+                                                  menus[index].sId!);
+                                            },
+                                            child: Container(
+                                              height: 30,
+                                              decoration: BoxDecoration(
+                                                color: Palette.deleteColors,
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              alignment: Alignment.center,
+                                              child: const Text("Supprimer"),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                );
+                              },
+                            ),
                     ),
                   ),
           ],
@@ -287,87 +301,100 @@ class _MenuState extends ConsumerState<Menu> {
             SizedBox(
               height: ajout == false ? height - 216 : height - 536,
               child: SingleChildScrollView(
-                child: GridView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: menus.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 500,
-                            childAspectRatio: 3 / 2,
-                            crossAxisSpacing: 20,
-                            mainAxisSpacing: 50,
-                            mainAxisExtent: 200),
-                    itemBuilder: (context, index) {
-                      return Container(
-                        child: Column(
-                          children: [
-                            MenuCard(
-                              description: menus[index].description!,
-                              imageUrl: menus[index].image!,
-                              price: menus[index].price!,
-                              title: menus[index].menuTitle!,
-                              sId: menus[index].sId!,
-                              prod: menus[index].products!,
-                              index: index,
-                            ),
-                            const SizedBox(height: 1),
-                            Row(
+                child: menus.isEmpty
+                    ? const Center(
+                        child: Text(
+                          "Aucun menu",
+                          style: TextStyle(
+                              fontSize: 30,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.normal),
+                        ),
+                      )
+                    : GridView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: menus.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                                maxCrossAxisExtent: 500,
+                                childAspectRatio: 3 / 2,
+                                crossAxisSpacing: 20,
+                                mainAxisSpacing: 50,
+                                mainAxisExtent: 200),
+                        itemBuilder: (context, index) {
+                          return Container(
+                            child: Column(
                               children: [
-                                Expanded(
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              ModificationMenu(
-                                            description:
-                                                menus[index].description!,
-                                            imageUrl: menus[index].image!,
-                                            price: menus[index].price!,
-                                            sId: menus[index].sId!,
-                                            title: menus[index].menuTitle!,
-                                            products: menus[index].products!,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    child: Container(
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        color: Palette.secondaryColor,
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      alignment: Alignment.center,
-                                      child: const Text("Modifier"),
-                                    ),
-                                  ),
+                                MenuCard(
+                                  description: menus[index].description!,
+                                  imageUrl: menus[index].image!,
+                                  price: menus[index].price!,
+                                  title: menus[index].menuTitle!,
+                                  sId: menus[index].sId!,
+                                  prod: menus[index].products!,
+                                  index: index,
                                 ),
-                                const SizedBox(height: 0.5),
-                                Expanded(
-                                  child: InkWell(
-                                    onTap: () {
-                                      dialogDelete(menus[index].menuTitle!,
-                                          menus[index].sId!);
-                                    },
-                                    child: Container(
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        color: Palette.deleteColors,
-                                        borderRadius: BorderRadius.circular(8),
+                                const SizedBox(height: 1),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ModificationMenu(
+                                                description:
+                                                    menus[index].description!,
+                                                imageUrl: menus[index].image!,
+                                                price: menus[index].price!,
+                                                sId: menus[index].sId!,
+                                                title: menus[index].menuTitle!,
+                                                products:
+                                                    menus[index].products!,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: Container(
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            color: Palette.secondaryColor,
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          alignment: Alignment.center,
+                                          child: const Text("Modifier"),
+                                        ),
                                       ),
-                                      alignment: Alignment.center,
-                                      child: const Text("Supprimer"),
                                     ),
-                                  ),
+                                    const SizedBox(height: 0.5),
+                                    Expanded(
+                                      child: InkWell(
+                                        onTap: () {
+                                          dialogDelete(menus[index].menuTitle!,
+                                              menus[index].sId!);
+                                        },
+                                        child: Container(
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            color: Palette.deleteColors,
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          alignment: Alignment.center,
+                                          child: const Text("Supprimer"),
+                                        ),
+                                      ),
+                                    )
+                                  ],
                                 )
                               ],
-                            )
-                          ],
-                        ),
-                      );
-                    }),
+                            ),
+                          );
+                        }),
               ),
             ),
           ],
@@ -665,70 +692,67 @@ class _MenuState extends ConsumerState<Menu> {
             ),
             /////////// - Ici se trouve le bouton pour l'image
             Container(
-              padding: const EdgeInsets.only(right: 70),
-              color: Palette.secondaryBackgroundColor,
-              alignment: Alignment.centerRight,
-              child: GestureDetector(
-                onTap: () async {
-                  result = await FilePicker.platform
-                      .pickFiles(type: FileType.custom, allowedExtensions: [
-                    "png",
-                    "jpg",
-                    "jpeg",
-                  ]);
-                  if (result != null) {
-                    setState(() {
-                      file = result!.files.single;
+              padding: EdgeInsets.only(right: 20, left: 20),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.only(right: 70),
+                    color: Palette.secondaryBackgroundColor,
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: () async {
+                        result = await FilePicker.platform.pickFiles(
+                            type: FileType.custom,
+                            allowedExtensions: [
+                              "png",
+                              "jpg",
+                              "jpeg",
+                            ]);
+                        if (result != null) {
+                          setState(() {
+                            file = result!.files.single;
 
-                      Uint8List fileBytes =
-                          result!.files.single.bytes as Uint8List;
+                            Uint8List fileBytes =
+                                result!.files.single.bytes as Uint8List;
 
-                      _selectedFile = fileBytes;
+                            _selectedFile = fileBytes;
 
-                      filee = true;
+                            filee = true;
 
-                      selectedImageInBytes = result!.files.first.bytes;
-                      _selectFile = true;
-                    });
-                  }
-                },
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 4,
-                      color: Palette.greenColors,
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: _selectFile == false
-                        ? const Icon(
-                            Icons.camera_alt_outlined,
+                            selectedImageInBytes = result!.files.first.bytes;
+                            _selectFile = true;
+                          });
+                        }
+                      },
+                      child: Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 4,
                             color: Palette.greenColors,
-                            size: 40,
-                          )
-                        : Image.memory(
-                            selectedImageInBytes!,
-                            fit: BoxFit.fill,
                           ),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: _selectFile == false
+                              ? const Icon(
+                                  Icons.camera_alt_outlined,
+                                  color: Palette.greenColors,
+                                  size: 40,
+                                )
+                              : Image.memory(
+                                  selectedImageInBytes!,
+                                  fit: BoxFit.fill,
+                                ),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 20,
-            ),
-
-            /// - fin du choix de l'image
-            Container(
-              alignment: Alignment.centerRight,
-              child: SizedBox(
-                width: 420,
-                child: Row(children: [
+                  const Spacer(),
                   SizedBox(
                     width: 200,
                     child: DefaultButton(
@@ -776,7 +800,7 @@ class _MenuState extends ConsumerState<Menu> {
                       },
                     ),
                   ),
-                ]),
+                ],
               ),
             ),
 
@@ -957,18 +981,19 @@ class _MenuState extends ConsumerState<Menu> {
       var token = prefs.getString('token');
       String urlDelete =
           "http://13.39.81.126:4009/api/menus/delete/$idMenu"; // 13.39.81.126:4008 //$adressUrl
-      //var json = {'_creator': id};
+      var json = {'_creator': id};
 
-      //var body = jsonEncode(json);
+      var body = jsonEncode(json);
 
-      final http.Response response =
-          await http.delete(Uri.parse(urlDelete), headers: {
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        'Accept': 'application/json',
-        'authorization': 'Bearer $token',
-      }, body: {
-        '_creator': id
-      });
+      final http.Response response = await http.delete(
+        Uri.parse(urlDelete),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'Accept': 'application/json',
+          'authorization': 'Bearer $token',
+          'body': body
+        },
+      );
 
       print(response.statusCode);
       print(response.body);

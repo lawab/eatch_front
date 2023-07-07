@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:eatch/utils/default_button/default_button.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
@@ -32,7 +33,8 @@ class RestaurantModificationState
   }
 
   String adress_url = '';
-
+  bool isLoading = false;
+  bool _selectFile = false;
   void donne() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -280,107 +282,94 @@ class RestaurantModificationState
               ),
               SizedBox(
                 height: 100,
-                child: Row(children: [
-                  const SizedBox(
-                    width: 50,
-                  ),
-                  Container(
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: InkWell(
-                      onTap: () async {
-                        /////////////////////
-                        result = await FilePicker.platform.pickFiles(
-                            type: FileType.custom,
-                            allowedExtensions: [
-                              "png",
-                              "jpg",
-                              "jpeg",
-                            ]);
-                        if (result != null) {
-                          file = result!.files.single;
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Container(
+                      color: Palette.secondaryBackgroundColor,
+                      child: GestureDetector(
+                        onTap: () async {
+                          result = await FilePicker.platform.pickFiles(
+                              type: FileType.custom,
+                              allowedExtensions: [
+                                "png",
+                                "jpg",
+                                "jpeg",
+                              ]);
+                          if (result != null) {
+                            setState(() {
+                              Uint8List fileBytes =
+                                  result!.files.single.bytes as Uint8List;
 
-                          Uint8List fileBytes =
-                              result!.files.single.bytes as Uint8List;
-                          //print(base64Encode(fileBytes));
-                          //List<int>
-                          _selectedFile = fileBytes;
-                          setState(() {
-                            filee = true;
-                            selectedImageInBytes = result!.files.first.bytes;
-                          });
-                        } else {
-                          setState(() {
-                            filee = false;
-                          });
-                        }
-                        ////////////////////
-                      },
-                      //splashColor: Colors.brown.withOpacity(0.5),
-                      child: Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15.0),
-                          color: Palette.greenColors,
-                          image: DecorationImage(
-                              opacity: 100,
-                              image: NetworkImage(
-                                  'http://13.39.81.126:4002${widget.restaurant.infos!.logo.toString()}'), //13.39.81.126
-                              fit: BoxFit.cover),
-                        ),
-                        child: const Text(
-                          "Modifier",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: Colors.white),
+                              _selectedFile = fileBytes;
+                              selectedImageInBytes = result!.files.first.bytes;
+                              _selectFile = true;
+                            });
+                          }
+                        },
+                        child: Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 4,
+                              color: Palette.greenColors,
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: _selectFile == false
+                                ? Image.network(
+                                    'http://13.39.81.126:4002${widget.restaurant.infos!.logo.toString()}',
+                                    fit: BoxFit.fill,
+                                  )
+                                : isLoading
+                                    ? const CircularProgressIndicator()
+                                    : Image.memory(
+                                        selectedImageInBytes!,
+                                        fit: BoxFit.fill,
+                                      ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  filee == true
-                      ? Container(
-                          height: 100,
-                          width: 100,
-                          alignment: Alignment.center,
-                          child: Text(file!.name),
-                        )
-                      : const SizedBox(
-                          height: 100,
-                          width: 100,
-                        ),
-                ]),
-              ),
-              const SizedBox(
-                height: 80,
-              ),
-              ElevatedButton(
-                onPressed: (() {
-                  modificationRestaurant(
-                      context,
-                      nomController.text,
-                      villeController.text,
-                      adresseController.text,
-                      _selectedFile,
-                      result,
-                      widget.restaurant.sId.toString());
-                }),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Palette.primaryColor,
-                  minimumSize: const Size(150, 50),
-                  maximumSize: const Size(200, 70),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+                    const Spacer(),
+                    SizedBox(
+                      width: 200,
+                      child: DefaultButton(
+                        color: Palette.primaryColor,
+                        foreground: Colors.red,
+                        text: 'MODIFIER',
+                        textcolor: Palette.primaryBackgroundColor,
+                        onPressed: (() {
+                          modificationRestaurant(
+                              context,
+                              nomController.text,
+                              villeController.text,
+                              adresseController.text,
+                              _selectedFile,
+                              result,
+                              widget.restaurant.sId.toString());
+                        }),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    SizedBox(
+                      width: 200,
+                      child: DefaultButton(
+                        color: Palette.secondaryBackgroundColor,
+                        foreground: Colors.red,
+                        text: 'ANNULER',
+                        textcolor: Palette.textsecondaryColor,
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-                child: const Text('Modifier'),
-              )
+              ),
             ],
           ),
         ),

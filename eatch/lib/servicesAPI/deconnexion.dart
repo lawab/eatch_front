@@ -20,7 +20,7 @@ Future<http.Response> deconnexionUser(contextt) async {
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
         'Accept': 'application/json',
         //'Context-Type': 'application/json;charSet=UTF-8',
-        'Authorization': 'Bearer $token ',
+        //'Authorization': 'Bearer $token ',
       },
     );
 

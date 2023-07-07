@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:eatch/pages/recettes/eddit_recette.dart';
 import 'package:eatch/pages/recettes/grid.dart';
+import 'package:eatch/pages/recettes/recetteDetail.dart';
 import 'package:eatch/servicesAPI/getLabo.dart';
 import 'package:eatch/servicesAPI/getMatiere.dart';
 import 'package:eatch/servicesAPI/get_categories.dart';
@@ -139,6 +140,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
 
 /*LA METHODE QUI PERMET DE SOUMETTRE LE CONTENU DU FORMULAIRE */
   void _submit() {
+    ingredientsList.clear();
     final isValid = _formkey.currentState!.validate();
     if (!isValid) {
       return;
@@ -193,12 +195,12 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
       print(_descriptionRecette.text);
       //print(ingredientsList);
 
-      setState(() {
+      /*setState(() {
         _selectFile = false;
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
           _addFiel();
         });
-      });
+      });*/
     }
   }
 
@@ -1084,8 +1086,8 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                         height: 100,
                                         decoration: BoxDecoration(
                                           border: Border.all(
-                                            width: 1,
-                                            color: const Color(0xFFDCE0E0),
+                                            width: 4,
+                                            color: Palette.greenColors,
                                           ),
                                           borderRadius:
                                               BorderRadius.circular(20),
@@ -1096,7 +1098,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                           child: _selectFile == false
                                               ? const Icon(
                                                   Icons.camera_alt_outlined,
-                                                  color: Color(0xFFDCE0E0),
+                                                  color: Palette.greenColors,
                                                   size: 40,
                                                 )
                                               : isLoading
@@ -1326,7 +1328,26 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                                             .primaryColor,
                                                       ),
                                                       child: InkWell(
-                                                        onTap: () {},
+                                                        onTap: () {
+                                                          Navigator
+                                                              .pushReplacement(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (BuildContext
+                                                                              context) =>
+                                                                          RecettePage(
+                                                                            title:
+                                                                                viewRecetteModel.listRecette[index].title!,
+                                                                            image:
+                                                                                viewRecetteModel.listRecette[index].image!,
+                                                                            sId:
+                                                                                viewRecetteModel.listRecette[index].sId!,
+                                                                            ingredients:
+                                                                                viewRecetteModel.listRecette[index].engredients!,
+                                                                            description:
+                                                                                viewRecetteModel.listRecette[index].description!,
+                                                                          )));
+                                                        },
                                                         child: const Icon(
                                                           Icons
                                                               .remove_red_eye_outlined,

@@ -112,71 +112,82 @@ class SotckLaboState extends ConsumerState<SotckLabo> {
                         ),
                         Container(
                           height: height - 210,
-                          child: GridView.builder(
-                              gridDelegate:
-                                  const SliverGridDelegateWithMaxCrossAxisExtent(
-                                      maxCrossAxisExtent: 300,
-                                      childAspectRatio: 3 / 2,
-                                      crossAxisSpacing: 20,
-                                      mainAxisSpacing: 50,
-                                      mainAxisExtent: 400),
-                              itemCount: listMatiereBrute.length,
-                              itemBuilder: (context, index) {
-                                return Card(
-                                  elevation: 10,
-                                  child: Container(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          height: 200,
-                                          width: 300,
-                                          child: Image.network(
-                                            "http://13.39.81.126:4015${listMatiereBrute[index].image}",
-                                            errorBuilder:
-                                                (context, error, stackTrace) {
-                                              return Container(
-                                                color: Colors.black,
-                                                child: const Center(
-                                                  child: Text(
-                                                    "Pas d'image",
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 35,
-                                        ),
-                                        Text(
-                                            'Nom : ${listMatiereBrute[index].title}'),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
-                                            'Quantité : ${listMatiereBrute[index].available} ${listMatiereBrute[index].unit}'),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
-                                            'Dernière date : ${listMatiereBrute[index].updatedAt}'),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
-                                            'Date de création : ${listMatiereBrute[index].createdAt}'),
-                                      ],
-                                    ),
+                          child: listMatiereBrute.isEmpty
+                              ? const Center(
+                                  child: Text(
+                                    "Aucune matière brute disponibles",
+                                    style: TextStyle(
+                                        fontSize: 30,
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.normal),
                                   ),
-                                );
-                              }),
+                                )
+                              : GridView.builder(
+                                  gridDelegate:
+                                      const SliverGridDelegateWithMaxCrossAxisExtent(
+                                          maxCrossAxisExtent: 300,
+                                          childAspectRatio: 3 / 2,
+                                          crossAxisSpacing: 20,
+                                          mainAxisSpacing: 50,
+                                          mainAxisExtent: 400),
+                                  itemCount: listMatiereBrute.length,
+                                  itemBuilder: (context, index) {
+                                    return Card(
+                                      elevation: 10,
+                                      child: Container(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              height: 200,
+                                              width: 300,
+                                              child: Image.network(
+                                                "http://13.39.81.126:4015${listMatiereBrute[index].image}",
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  return Container(
+                                                    color: Colors.black,
+                                                    child: const Center(
+                                                      child: Text(
+                                                        "Pas d'image",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 35,
+                                            ),
+                                            Text(
+                                                'Nom : ${listMatiereBrute[index].title}'),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                                'Quantité : ${listMatiereBrute[index].available} ${listMatiereBrute[index].unit}'),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                                'Dernière date : ${listMatiereBrute[index].updatedAt}'),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                                'Date de création : ${listMatiereBrute[index].createdAt}'),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }),
                         ),
                       ],
                     ),
@@ -203,71 +214,82 @@ class SotckLaboState extends ConsumerState<SotckLabo> {
                         ),
                         Container(
                           height: height - 210,
-                          child: GridView.builder(
-                              gridDelegate:
-                                  const SliverGridDelegateWithMaxCrossAxisExtent(
-                                      maxCrossAxisExtent: 300,
-                                      childAspectRatio: 3 / 2,
-                                      crossAxisSpacing: 20,
-                                      mainAxisSpacing: 50,
-                                      mainAxisExtent: 400),
-                              itemCount: listMatiereFini.length,
-                              itemBuilder: (context, index) {
-                                return Card(
-                                  elevation: 10,
-                                  child: Container(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          height: 200,
-                                          width: 300,
-                                          child: Image.network(
-                                            "http://13.39.81.126:4015${listMatiereFini[index].image}",
-                                            errorBuilder:
-                                                (context, error, stackTrace) {
-                                              return Container(
-                                                color: Colors.black,
-                                                child: const Center(
-                                                  child: Text(
-                                                    "Pas d'image",
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 40,
-                                        ),
-                                        Text(
-                                            'Nom : ${listMatiereFini[index].title}'),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
-                                            'Quantité : ${listMatiereFini[index].quantity}'),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
-                                            'Dernière date : ${listMatiereFini[index].updatedAt}'),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
-                                            'Date de création : ${listMatiereFini[index].createdAt}'),
-                                      ],
-                                    ),
+                          child: listMatiereFini.isEmpty
+                              ? const Center(
+                                  child: Text(
+                                    "Aucune matière finie disponibles",
+                                    style: TextStyle(
+                                        fontSize: 30,
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.normal),
                                   ),
-                                );
-                              }),
+                                )
+                              : GridView.builder(
+                                  gridDelegate:
+                                      const SliverGridDelegateWithMaxCrossAxisExtent(
+                                          maxCrossAxisExtent: 300,
+                                          childAspectRatio: 3 / 2,
+                                          crossAxisSpacing: 20,
+                                          mainAxisSpacing: 50,
+                                          mainAxisExtent: 400),
+                                  itemCount: listMatiereFini.length,
+                                  itemBuilder: (context, index) {
+                                    return Card(
+                                      elevation: 10,
+                                      child: Container(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              height: 200,
+                                              width: 300,
+                                              child: Image.network(
+                                                "http://13.39.81.126:4015${listMatiereFini[index].image}",
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  return Container(
+                                                    color: Colors.black,
+                                                    child: const Center(
+                                                      child: Text(
+                                                        "Pas d'image",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 40,
+                                            ),
+                                            Text(
+                                                'Nom : ${listMatiereFini[index].title}'),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                                'Quantité : ${listMatiereFini[index].quantity}'),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                                'Dernière date : ${listMatiereFini[index].updatedAt}'),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                                'Date de création : ${listMatiereFini[index].createdAt}'),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }),
                         ),
                       ],
                     ),
@@ -343,60 +365,82 @@ class SotckLaboState extends ConsumerState<SotckLabo> {
                         ),
                         Container(
                           height: height - 210,
-                          child: GridView.builder(
-                              gridDelegate:
-                                  const SliverGridDelegateWithMaxCrossAxisExtent(
-                                      maxCrossAxisExtent: 300,
-                                      childAspectRatio: 3 / 2,
-                                      crossAxisSpacing: 20,
-                                      mainAxisSpacing: 50,
-                                      mainAxisExtent: 400),
-                              itemCount: listMatiereBrute.length,
-                              itemBuilder: (context, index) {
-                                return Card(
-                                  elevation: 10,
-                                  child: Container(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          height: 200,
-                                          width: 300,
-                                          decoration: const BoxDecoration(
-                                            image: DecorationImage(
-                                              image:
-                                                  AssetImage('emballage.jpeg'),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 35,
-                                        ),
-                                        Text(
-                                            'Nom : ${listMatiereBrute[index].title}'),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
-                                            'Quantité : ${listMatiereBrute[index].available} ${listMatiereBrute[index].unit}'),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
-                                            'Dernière date : ${listMatiereBrute[index].updatedAt}'),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
-                                            'Date de création : ${listMatiereBrute[index].createdAt}'),
-                                      ],
-                                    ),
+                          child: listMatiereBrute.isEmpty
+                              ? const Center(
+                                  child: Text(
+                                    "Aucune matière brute disponibles",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.normal),
                                   ),
-                                );
-                              }),
+                                )
+                              : GridView.builder(
+                                  gridDelegate:
+                                      const SliverGridDelegateWithMaxCrossAxisExtent(
+                                          maxCrossAxisExtent: 300,
+                                          childAspectRatio: 3 / 2,
+                                          crossAxisSpacing: 20,
+                                          mainAxisSpacing: 50,
+                                          mainAxisExtent: 400),
+                                  itemCount: listMatiereBrute.length,
+                                  itemBuilder: (context, index) {
+                                    return Card(
+                                      elevation: 10,
+                                      child: Container(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              height: 200,
+                                              width: 300,
+                                              child: Image.network(
+                                                "http://13.39.81.126:4015${listMatiereBrute[index].image}",
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  return Container(
+                                                    color: Colors.black,
+                                                    child: const Center(
+                                                      child: Text(
+                                                        "Pas d'image",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 35,
+                                            ),
+                                            Text(
+                                                'Nom : ${listMatiereBrute[index].title}'),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                                'Quantité : ${listMatiereBrute[index].available} ${listMatiereBrute[index].unit}'),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                                'Dernière date : ${listMatiereBrute[index].updatedAt}'),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                                'Date de création : ${listMatiereBrute[index].createdAt}'),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }),
                         ),
                       ],
                     ),
@@ -423,60 +467,82 @@ class SotckLaboState extends ConsumerState<SotckLabo> {
                           ),
                           Container(
                             height: height - 210,
-                            child: GridView.builder(
-                                gridDelegate:
-                                    const SliverGridDelegateWithMaxCrossAxisExtent(
-                                        maxCrossAxisExtent: 300,
-                                        childAspectRatio: 3 / 2,
-                                        crossAxisSpacing: 20,
-                                        mainAxisSpacing: 50,
-                                        mainAxisExtent: 400),
-                                itemCount: listMatiereFini.length,
-                                itemBuilder: (context, index) {
-                                  return Card(
-                                    elevation: 10,
-                                    child: Container(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            height: 200,
-                                            width: 300,
-                                            decoration: const BoxDecoration(
-                                              image: DecorationImage(
-                                                image: AssetImage(
-                                                    'emballage.jpeg'),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 40,
-                                          ),
-                                          Text(
-                                              'Nom : ${listMatiereFini[index].title}'),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Text(
-                                              'Quantité : ${listMatiereFini[index].quantity}'),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Text(
-                                              'Dernière date : ${listMatiereFini[index].updatedAt}'),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Text(
-                                              'Date de création : ${listMatiereFini[index].createdAt}'),
-                                        ],
-                                      ),
+                            child: listMatiereFini.isEmpty
+                                ? const Center(
+                                    child: Text(
+                                      "Aucune matière finie disponibles",
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.normal),
                                     ),
-                                  );
-                                }),
+                                  )
+                                : GridView.builder(
+                                    gridDelegate:
+                                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                                            maxCrossAxisExtent: 300,
+                                            childAspectRatio: 3 / 2,
+                                            crossAxisSpacing: 20,
+                                            mainAxisSpacing: 50,
+                                            mainAxisExtent: 400),
+                                    itemCount: listMatiereFini.length,
+                                    itemBuilder: (context, index) {
+                                      return Card(
+                                        elevation: 10,
+                                        child: Container(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                height: 200,
+                                                width: 300,
+                                                child: Image.network(
+                                                  "http://13.39.81.126:4015${listMatiereFini[index].image}",
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) {
+                                                    return Container(
+                                                      color: Colors.black,
+                                                      child: const Center(
+                                                        child: Text(
+                                                          "Pas d'image",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 40,
+                                              ),
+                                              Text(
+                                                  'Nom : ${listMatiereFini[index].title}'),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              Text(
+                                                  'Quantité : ${listMatiereFini[index].quantity}'),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              Text(
+                                                  'Dernière date : ${listMatiereFini[index].updatedAt}'),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              Text(
+                                                  'Date de création : ${listMatiereFini[index].createdAt}'),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    }),
                           ),
                         ],
                       ),

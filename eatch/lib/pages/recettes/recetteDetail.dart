@@ -1,45 +1,38 @@
 import 'dart:convert';
+import 'dart:js_interop';
 
-import 'package:eatch/pages/categories/presentation/categories.dart';
-import 'package:eatch/pages/produits/presentation/modification_produit.dart';
-import 'package:eatch/servicesAPI/getProduit.dart';
-import 'package:eatch/servicesAPI/get_categories.dart' as get_categories;
+import 'package:eatch/pages/recettes/eddit_recette.dart';
+import 'package:eatch/pages/recettes/recettes.dart';
+import 'package:eatch/servicesAPI/get_recettes.dart';
 import 'package:eatch/utils/applayout.dart';
 import 'package:eatch/utils/default_button/default_button.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:eatch/utils/size/size.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-import 'package:top_snackbar_flutter/top_snack_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class Produitpage extends ConsumerStatefulWidget {
-  const Produitpage({
+class RecettePage extends ConsumerStatefulWidget {
+  final String title;
+  final String description;
+  final String image;
+  final String sId;
+  final List<Engredients> ingredients;
+  const RecettePage({
     super.key,
     required this.title,
-    required this.price,
-    required this.quantity,
+    required this.description,
+    required this.image,
     required this.sId,
-    required this.imageUrl,
-    required this.recette,
-    required this.category,
+    required this.ingredients,
   });
-  final String title;
-  final get_categories.Recette recette;
-  final get_categories.Category category;
-  final String imageUrl;
-  final String sId;
-  final int price;
-  final int quantity;
 
   @override
-  ConsumerState<Produitpage> createState() => _ProduitpageState();
+  ConsumerState<RecettePage> createState() => _RecettePageState();
 }
 
-class _ProduitpageState extends ConsumerState<Produitpage> {
+class _RecettePageState extends ConsumerState<RecettePage> {
   @override
   void initState() {
     server();
@@ -49,11 +42,11 @@ class _ProduitpageState extends ConsumerState<Produitpage> {
   void server() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      url_produit = prefs.getString("url_produit")!;
+      url_recette = prefs.getString("url_recette")!;
     });
   }
 
-  var url_produit = "";
+  var url_recette = "";
   MediaQueryData mediaQueryData(BuildContext context) {
     return MediaQuery.of(context);
   }
@@ -109,7 +102,7 @@ class _ProduitpageState extends ConsumerState<Produitpage> {
                   const SizedBox(
                     width: 50,
                   ),
-                  const Text("INFORMATIONS SUR LE PRODUIT"),
+                  const Text("INFORMATIONS SUR LA RECETTE"),
                   Expanded(child: Container()),
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
@@ -121,7 +114,7 @@ class _ProduitpageState extends ConsumerState<Produitpage> {
                     onPressed: () {
                       Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
-                              builder: (context) => const CategoriesPage()),
+                              builder: (context) => const RecettesPage()),
                           (Route<dynamic> route) => false);
                     },
                     icon: const Icon(Icons.backspace),
@@ -154,7 +147,7 @@ class _ProduitpageState extends ConsumerState<Produitpage> {
                           child: SizedBox.fromSize(
                             size: const Size.fromRadius(100),
                             child: Image.network(
-                              'http://13.39.81.126:4003${widget.imageUrl}',
+                              'http://13.39.81.126:4010${widget.image}',
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -183,58 +176,21 @@ class _ProduitpageState extends ConsumerState<Produitpage> {
                                       ),
                                     ),
                                     const SizedBox(height: 10),
-                                    Text(
-                                      NumberFormat.simpleCurrency(name: "MAD ")
-                                          .format(widget.price),
-                                      style: const TextStyle(
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Palette.primaryColor,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
+                                    // Text(
+                                    //   NumberFormat.simpleCurrency(name: "MAD ")
+                                    //       .format(widget.price),
+                                    //   style: const TextStyle(
+                                    //     fontSize: 15.0,
+                                    //     fontWeight: FontWeight.bold,
+                                    //     color: Palette.primaryColor,
+                                    //   ),
+                                    // ),
+                                    // const SizedBox(height: 10),
                                     const Divider(
                                       thickness: 2,
                                       height: 5,
                                     ),
                                     const SizedBox(height: 10),
-                                    Text(
-                                      widget.category.title!,
-                                      textAlign: TextAlign.center,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      style: const TextStyle(
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.bold,
-                                        color: Palette.textPrimaryColor,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Text(
-                                      widget.recette.title!,
-                                      style: const TextStyle(
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Palette.primaryColor,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    const Divider(
-                                      thickness: 2,
-                                      height: 5,
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Text(
-                                      widget.quantity.toString(),
-                                      textAlign: TextAlign.center,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      style: const TextStyle(
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.bold,
-                                        color: Palette.textPrimaryColor,
-                                      ),
-                                    ),
                                   ],
                                 ),
                               ),
@@ -242,6 +198,77 @@ class _ProduitpageState extends ConsumerState<Produitpage> {
                           ),
                         ],
                       )
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Column(
+                    children: [
+                      for (int i = 0; i < widget.ingredients.length; i++)
+                        Card(
+                          child: SizedBox(
+                            height: 50,
+                            child: Row(children: [
+                              Expanded(
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    widget.ingredients[i].material.isNull
+                                        ? widget.ingredients[i].rowMaterial!
+                                            .grammage
+                                            .toString()
+                                        : widget
+                                            .ingredients[i].material!.grammage
+                                            .toString(),
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
+                                ),
+                              )),
+                              Expanded(
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    widget.ingredients[i].material.isNull
+                                        ? widget
+                                            .ingredients[i].rowMaterial!.unity
+                                            .toString()
+                                        : widget.ingredients[i].material!.unity
+                                            .toString(),
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
+                                ),
+                              )),
+                              Expanded(
+                                  child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    widget.ingredients[i].material.isNull
+                                        ? widget
+                                            .ingredients[i].rowMaterial!.title
+                                            .toString()
+                                        : widget.ingredients[i].material!.mpName
+                                            .toString(),
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
+                                ),
+                              )),
+                            ]),
+                          ),
+                        ),
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -257,9 +284,8 @@ class _ProduitpageState extends ConsumerState<Produitpage> {
                           textcolor: Palette.primaryBackgroundColor,
                           onPressed: () {
                             dialogDelete(
-                              context,
-                              widget.title,
-                              widget.sId,
+                              recetteTitle: widget.title,
+                              recetteId: widget.sId,
                             );
                           },
                         ),
@@ -273,20 +299,17 @@ class _ProduitpageState extends ConsumerState<Produitpage> {
                           text: 'MODIFIER',
                           textcolor: Palette.textsecondaryColor,
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) {
-                                return ModificationProduit(
-                                  imageUrl: widget.imageUrl,
-                                  price: widget.price,
-                                  title: widget.title,
-                                  category: widget.category.sId!,
-                                  quantity: widget.quantity,
-                                  recette: widget.recette.sId!,
-                                  sId: widget.sId,
-                                );
-                              }),
-                            );
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        EdditRecette(
+                                          title: widget.title,
+                                          image: widget.image,
+                                          sId: widget.sId,
+                                          ingredients: widget.ingredients,
+                                          description: widget.description,
+                                        )));
                           },
                         ),
                       ),
@@ -315,7 +338,7 @@ class _ProduitpageState extends ConsumerState<Produitpage> {
                   const SizedBox(
                     width: 50,
                   ),
-                  const Text("INFORMATIONS SUR LE PRODUIT"),
+                  const Text("INFORMATIONS SUR LA RECETTE"),
                   Expanded(child: Container()),
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
@@ -327,7 +350,7 @@ class _ProduitpageState extends ConsumerState<Produitpage> {
                     onPressed: () {
                       Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
-                              builder: (context) => const CategoriesPage()),
+                              builder: (context) => const RecettesPage()),
                           (Route<dynamic> route) => false);
                     },
                     icon: const Icon(Icons.backspace),
@@ -360,7 +383,7 @@ class _ProduitpageState extends ConsumerState<Produitpage> {
                           child: SizedBox.fromSize(
                             size: const Size.fromRadius(100),
                             child: Image.network(
-                              '$url_produit${widget.imageUrl}',
+                              '$url_recette${widget.image}',
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -389,58 +412,6 @@ class _ProduitpageState extends ConsumerState<Produitpage> {
                                       ),
                                     ),
                                     const SizedBox(height: 10),
-                                    Text(
-                                      NumberFormat.simpleCurrency(name: "MAD ")
-                                          .format(widget.price),
-                                      style: const TextStyle(
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Palette.primaryColor,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    const Divider(
-                                      thickness: 2,
-                                      height: 5,
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Text(
-                                      widget.category.title!,
-                                      textAlign: TextAlign.center,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      style: const TextStyle(
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.bold,
-                                        color: Palette.textPrimaryColor,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Text(
-                                      widget.recette.title!,
-                                      style: const TextStyle(
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Palette.primaryColor,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    const Divider(
-                                      thickness: 2,
-                                      height: 5,
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Text(
-                                      widget.quantity.toString(),
-                                      textAlign: TextAlign.center,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      style: const TextStyle(
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.bold,
-                                        color: Palette.textPrimaryColor,
-                                      ),
-                                    ),
                                   ],
                                 ),
                               ),
@@ -451,6 +422,60 @@ class _ProduitpageState extends ConsumerState<Produitpage> {
                     ],
                   ),
                   const SizedBox(height: 20),
+                  Column(
+                    children: [
+                      for (int i = 0; i < widget.ingredients.length; i++)
+                        Card(
+                          child: SizedBox(
+                            height: 50,
+                            child: Row(children: [
+                              Expanded(
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    i.toString(),
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
+                                ),
+                              )),
+                              Expanded(
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    i.toString(),
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
+                                ),
+                              )),
+                              Expanded(
+                                  child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    i.toString(),
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
+                                ),
+                              )),
+                            ]),
+                          ),
+                        ),
+                    ],
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -463,9 +488,8 @@ class _ProduitpageState extends ConsumerState<Produitpage> {
                           textcolor: Palette.primaryBackgroundColor,
                           onPressed: () {
                             dialogDelete(
-                              context,
-                              widget.title,
-                              widget.sId,
+                              recetteTitle: widget.title,
+                              recetteId: widget.sId,
                             );
                           },
                         ),
@@ -479,20 +503,17 @@ class _ProduitpageState extends ConsumerState<Produitpage> {
                           text: 'MODIFIER',
                           textcolor: Palette.textsecondaryColor,
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) {
-                                return ModificationProduit(
-                                  imageUrl: widget.imageUrl,
-                                  price: widget.price,
-                                  title: widget.title,
-                                  category: widget.category.sId!,
-                                  quantity: widget.quantity,
-                                  recette: widget.recette.sId!,
-                                  sId: widget.sId,
-                                );
-                              }),
-                            );
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        EdditRecette(
+                                          title: widget.title,
+                                          image: widget.image,
+                                          sId: widget.sId,
+                                          ingredients: widget.ingredients,
+                                          description: widget.description,
+                                        )));
                           },
                         ),
                       ),
@@ -507,73 +528,74 @@ class _ProduitpageState extends ConsumerState<Produitpage> {
     );
   }
 
-  Future dialogDelete(BuildContext context, String productName, productId) {
+  Future dialogDelete({
+    required String recetteTitle,
+    required String recetteId,
+  }) {
     return showDialog(
-      context: context,
-      builder: (_) {
-        return AlertDialog(
-            backgroundColor: Colors.white,
-            title: const Center(
-              child: Text(
-                "Confirmez la suppression",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
+        context: context,
+        builder: (con) {
+          return AlertDialog(
+              backgroundColor: Colors.white,
+              title: const Center(
+                child: Text(
+                  "Confirmez la suppression",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-            actions: [
-              ElevatedButton.icon(
+              actions: [
+                ElevatedButton.icon(
+                    icon: const Icon(
+                      Icons.close,
+                      size: 14,
+                    ),
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.grey),
+                    onPressed: () {
+                      Navigator.of(context, rootNavigator: true).pop();
+                    },
+                    label: const Text("Quitter   ")),
+                const SizedBox(
+                  width: 20,
+                ),
+                ElevatedButton.icon(
                   icon: const Icon(
-                    Icons.close,
+                    Icons.delete,
                     size: 14,
                   ),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Palette.deleteColors),
                   onPressed: () {
-                    Navigator.of(context, rootNavigator: true).pop();
+                    deleteRecette(context, recetteId);
+                    Navigator.pop(con);
                   },
-                  label: const Text("Quitter   ")),
-              const SizedBox(
-                width: 20,
-              ),
-              ElevatedButton.icon(
-                icon: const Icon(
-                  Icons.delete,
-                  size: 14,
-                ),
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Palette.deleteColors),
-                onPressed: () {
-                  Navigator.of(context, rootNavigator: true).pop();
-                  deleteProduct(context, productId);
-                },
-                label: const Text("Supprimer."),
-              )
-            ],
-            content: Container(
-                alignment: Alignment.center,
-                color: Colors.white,
-                height: 150,
-                child: Text(
-                  "Voulez vous supprimer le produit $productName ?",
-                  style: const TextStyle(
-                    color: Colors.black,
-                  ),
-                )));
-      },
-    );
+                  label: const Text("Supprimer."),
+                )
+              ],
+              content: Container(
+                  alignment: Alignment.center,
+                  color: Colors.white,
+                  height: 150,
+                  child: Text(
+                    "Voulez vous supprimer le recette $recetteTitle ?",
+                    style: const TextStyle(
+                      color: Colors.black,
+                    ),
+                  )));
+        });
   }
 
-  Future<http.Response> deleteProduct(BuildContext context, String id) async {
+  Future<http.Response> deleteRecette(BuildContext context, String id) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userdelete = prefs.getString('IdUser').toString();
-      var restaurantId = prefs.getString('idRestaurant').toString();
       var token = prefs.getString('token');
-      String urlDelete = "$url_produit/api/products/delete/$id";
+      String urlDelete = "$url_recette/api/recettes/delete/$id";
       var json = {
         '_creator': userdelete,
-        'restaurant': restaurantId,
       };
       var body = jsonEncode(json);
 
@@ -589,21 +611,8 @@ class _ProduitpageState extends ConsumerState<Produitpage> {
 
       print(response.statusCode);
       if (response.statusCode == 200) {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => const CategoriesPage()),
-            (Route<dynamic> route) => false);
+        ref.refresh(getDataRecettesFuture);
 
-        showTopSnackBar(
-          Overlay.of(context),
-          const CustomSnackBar.info(
-            backgroundColor: Colors.green,
-            message: "Produit supprimé avec succès.",
-          ),
-        );
-        setState(() {
-          ref.refresh(get_categories.getDataCategoriesFuture);
-          ref.refresh(GetDataProduitFuture as Refreshable);
-        });
         return response;
       } else {
         return Future.error("Server Error");

@@ -31,7 +31,8 @@ class GetDataProduitFuture extends ChangeNotifier {
           'Authorization': 'Bearer $token ',
         },
       );
-      print('get produit');
+      print(
+          'get produit...........................................................................');
       print(response.statusCode);
       print(response.body);
 
@@ -40,6 +41,9 @@ class GetDataProduitFuture extends ChangeNotifier {
         for (int i = 0; i < data.length; i++) {
           if (data[i]['deletedAt'] == null) {
             listProduit.add(Produit.fromJson(data[i]));
+            /*for (int j = 0; j < data[i]['products'].length; j++) {
+              listProduit.add(Produit.fromJson(data[i]['products'][j]));
+            }*/
           }
         }
       } else {

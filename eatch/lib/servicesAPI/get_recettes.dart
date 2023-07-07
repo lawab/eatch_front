@@ -111,18 +111,23 @@ class Recette {
   }
 }
 
-class Engredients {
+/*class Engredients {
   String? unity;
   Material? material;
+  RawMaterial? rowMaterial;
   int? grammage;
   String? sId;
 
-  Engredients(param0, {this.unity, this.material, this.grammage, this.sId});
+  Engredients(param0,
+      {this.unity, this.material, this.rowMaterial, this.grammage, this.sId});
 
   Engredients.fromJson(Map<String, dynamic> json) {
     unity = json['unity'];
     material = json['material'] != null
         ? new Material.fromJson(json['material'])
+        : null;
+    rowMaterial = json['raw_material'] != null
+        ? new RawMaterial.fromJson(json['raw_material'])
         : null;
     grammage = json['grammage'];
     sId = json['_id'];
@@ -134,8 +139,88 @@ class Engredients {
     if (this.material != null) {
       data['material'] = this.material!.toJson();
     }
+    if (this.rowMaterial != null) {
+      data['raw_material'] = this.rowMaterial!.toJson();
+    }
     data['grammage'] = this.grammage;
     data['_id'] = this.sId;
+    return data;
+  }
+}*/
+class Engredients {
+  Material? material;
+  RawMaterial? rowMaterial;
+
+  Engredients(param0, {this.material, this.rowMaterial});
+
+  Engredients.fromJson(Map<String, dynamic> json) {
+    material = json['material'] != null
+        ? new Material.fromJson(json['material'])
+        : null;
+    rowMaterial = json['raw_material'] != null
+        ? new RawMaterial.fromJson(json['raw_material'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    if (this.material != null) {
+      data['material'] = this.material!.toJson();
+    }
+    if (this.rowMaterial != null) {
+      data['raw_material'] = this.rowMaterial!.toJson();
+    }
+
+    return data;
+  }
+}
+
+class RawMaterial {
+  String? sId;
+  String? title;
+  int? quantity;
+  String? unit;
+  String? lifetime;
+  String? image;
+  String? laboratory;
+  int? grammage;
+  String? unity;
+
+  RawMaterial(
+      {this.sId,
+      this.title,
+      this.quantity,
+      this.unit,
+      this.lifetime,
+      this.image,
+      this.laboratory,
+      this.grammage,
+      this.unity});
+
+  RawMaterial.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    title = json['title'];
+    quantity = json['quantity'];
+    unit = json['unit'];
+    lifetime = json['lifetime'];
+    image = json['image'];
+    laboratory = json['laboratory'];
+    grammage = json['grammage'];
+    unity = json['unity'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_id'] = this.sId;
+    data['title'] = this.title;
+    data['quantity'] = this.quantity;
+    data['unit'] = this.unit;
+    data['lifetime'] = this.lifetime;
+    data['image'] = this.image;
+    data['laboratory'] = this.laboratory;
+    data['grammage'] = this.grammage;
+    data['unity'] = this.unity;
     return data;
   }
 }
@@ -148,6 +233,8 @@ class Material {
   int? minQuantity;
   String? deletedAt;
   String? sId;
+  int? grammage;
+  String? unity;
 
   Material(
       {this.restaurant,
@@ -156,7 +243,9 @@ class Material {
       this.quantity,
       this.minQuantity,
       this.deletedAt,
-      this.sId});
+      this.sId,
+      this.grammage,
+      this.unity});
 
   Material.fromJson(Map<String, dynamic> json) {
     restaurant = json['restaurant'] != null
@@ -168,6 +257,8 @@ class Material {
     minQuantity = json['min_quantity'];
     deletedAt = json['deletedAt'];
     sId = json['_id'];
+    grammage = json['grammage'];
+    unity = json['unity'];
   }
 
   Map<String, dynamic> toJson() {
@@ -181,6 +272,8 @@ class Material {
     data['min_quantity'] = this.minQuantity;
     data['deletedAt'] = this.deletedAt;
     data['_id'] = this.sId;
+    data['grammage'] = this.grammage;
+    data['unity'] = this.unity;
     return data;
   }
 }

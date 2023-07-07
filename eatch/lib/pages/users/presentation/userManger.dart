@@ -49,338 +49,377 @@ class ManagerUsersState extends ConsumerState<ManagerUsers> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(getDataUserFuture);
-    return Container(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 20,
-            ),
-            child: SizedBox(
-              width: 300,
-              child: TextField(
-                // onChanged: (value) => onSearch(value.toLowerCase()),
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 14,
-                ),
-                onChanged: (value) {
-                  filterSearchResults(value);
-                },
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Palette.fourthColor,
-                  contentPadding: const EdgeInsets.all(0),
-                  prefixIcon:
-                      const Icon(Icons.search, color: Palette.primaryColor),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50),
-                    borderSide: BorderSide.none,
-                  ),
-                  hintStyle: TextStyle(
+    return SingleChildScrollView(
+      child: Container(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 20,
+              ),
+              child: SizedBox(
+                width: 300,
+                child: TextField(
+                  // onChanged: (value) => onSearch(value.toLowerCase()),
+                  style: const TextStyle(
+                    color: Colors.black,
                     fontSize: 14,
-                    color: Colors.grey.shade500,
                   ),
-                  hintText: "Rechercher d'utilisateurs ...",
+                  onChanged: (value) {
+                    filterSearchResults(value);
+                  },
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Palette.fourthColor,
+                    contentPadding: const EdgeInsets.all(0),
+                    prefixIcon:
+                        const Icon(Icons.search, color: Palette.primaryColor),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50),
+                      borderSide: BorderSide.none,
+                    ),
+                    hintStyle: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey.shade500,
+                    ),
+                    hintText: "Rechercher de managers ...",
+                  ),
                 ),
               ),
             ),
-          ),
-          Card(
-            child: SizedBox(
-              height: 50,
-              child: Row(children: const [
-                Expanded(
-                    child: Center(
-                  child: Text(
-                    'Nom',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                )),
-                Expanded(
-                    child: Center(
-                  child: Text(
-                    'Prénom',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                )),
-                Expanded(
-                    child: Center(
-                  child: Text(
-                    "Nom d'utilisateur",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                )),
-                Expanded(
-                    child: Center(
-                  child: Text(
-                    'Email',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                )),
-                Expanded(
-                    child: Center(
-                  child: Text(
-                    'Role',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                )),
-                SizedBox(
-                  width: 100,
-                  child: Center(
+            Card(
+              child: SizedBox(
+                height: 50,
+                child: Row(children: const [
+                  Expanded(
+                      child: Center(
                     child: Text(
-                      'Actions',
+                      'Nom',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
+                  )),
+                  Expanded(
+                      child: Center(
+                    child: Text(
+                      'Prénom',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  )),
+                  Expanded(
+                      child: Center(
+                    child: Text(
+                      "Nom d'utilisateur",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  )),
+                  Expanded(
+                      child: Center(
+                    child: Text(
+                      'Email',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  )),
+                  Expanded(
+                      child: Center(
+                    child: Text(
+                      'Role',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  )),
+                  SizedBox(
+                    width: 100,
+                    child: Center(
+                      child: Text(
+                        'Actions',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
-                ),
-              ]),
+                ]),
+              ),
             ),
-          ),
-          search == false
-              ? SizedBox(
-                  height: MediaQuery.of(context).size.height - 403,
-                  child: ListView.builder(
-                      itemCount: viewModel.listManager.length,
-                      itemBuilder: ((context, index) {
-                        return Card(
-                          child: SizedBox(
-                            height: 50,
-                            child: Row(children: [
-                              Expanded(
-                                  child: Center(
-                                child: Text(
-                                  viewModel.listManager[index].lastName!,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                  softWrap: false,
-                                ),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text(
-                                  viewModel.listManager[index].firstName!,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                  softWrap: false,
-                                ),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text(
-                                  viewModel.listManager[index].username!,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                  softWrap: false,
-                                ),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text(
-                                  viewModel.listManager[index].email!,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                  softWrap: false,
-                                ),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text(
-                                  viewModel.listManager[index].role!,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                  softWrap: false,
-                                ),
-                              )),
-                              SizedBox(
-                                width: 100,
-                                child: Center(
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                          child: IconButton(
-                                        icon: const Icon(Icons.edit),
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                              return ModificationUser(
-                                                avatar: viewModel
-                                                    .listManager[index].avatar!,
-                                                email: viewModel
-                                                    .listManager[index].email!,
-                                                firstName: viewModel
+            search == false
+                ? SizedBox(
+                    height: MediaQuery.of(context).size.height - 403,
+                    child: viewModel.listManager.isEmpty
+                        ? const Center(
+                            child: Text(
+                              "Aucun manager",
+                              style: TextStyle(
+                                  fontSize: 30,
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                          )
+                        : ListView.builder(
+                            itemCount: viewModel.listManager.length,
+                            itemBuilder: ((context, index) {
+                              return Card(
+                                child: SizedBox(
+                                  height: 50,
+                                  child: Row(children: [
+                                    Expanded(
+                                        child: Center(
+                                      child: Text(
+                                        viewModel.listManager[index].lastName!,
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                        softWrap: false,
+                                      ),
+                                    )),
+                                    Expanded(
+                                        child: Center(
+                                      child: Text(
+                                        viewModel.listManager[index].firstName!,
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                        softWrap: false,
+                                      ),
+                                    )),
+                                    Expanded(
+                                        child: Center(
+                                      child: Text(
+                                        viewModel.listManager[index].username!,
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                        softWrap: false,
+                                      ),
+                                    )),
+                                    Expanded(
+                                        child: Center(
+                                      child: Text(
+                                        viewModel.listManager[index].email!,
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                        softWrap: false,
+                                      ),
+                                    )),
+                                    Expanded(
+                                        child: Center(
+                                      child: Text(
+                                        viewModel.listManager[index].role!,
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                        softWrap: false,
+                                      ),
+                                    )),
+                                    SizedBox(
+                                      width: 100,
+                                      child: Center(
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                                child: IconButton(
+                                              icon: const Icon(Icons.edit),
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                                    return ModificationUser(
+                                                      avatar: viewModel
+                                                          .listManager[index]
+                                                          .avatar!,
+                                                      email: viewModel
+                                                          .listManager[index]
+                                                          .email!,
+                                                      firstName: viewModel
+                                                          .listManager[index]
+                                                          .firstName!,
+                                                      lastName: viewModel
+                                                          .listManager[index]
+                                                          .lastName!,
+                                                      role: viewModel
+                                                          .listManager[index]
+                                                          .role!,
+                                                      sId: viewModel
+                                                          .listManager[index]
+                                                          .sId!,
+                                                      id: viewModel
+                                                              .listManager[
+                                                                  index]
+                                                              .restaurant!
+                                                              .isNull
+                                                          ? viewModel
+                                                                  .listManager[
+                                                                      index]
+                                                                  .laboratory
+                                                                  .isNull
+                                                              ? viewModel
+                                                                  .listManager[
+                                                                      index]
+                                                                  .laboratory!
+                                                                  .laboName!
+                                                              : ''
+                                                          : viewModel
+                                                              .listManager[
+                                                                  index]
+                                                              .restaurant!
+                                                              .sId!,
+                                                      // username: viewModel
+                                                      //     .listManager[index]
+                                                      //     .username!,
+                                                    );
+                                                  }),
+                                                );
+                                              },
+                                            )),
+                                            Expanded(
+                                                child: IconButton(
+                                              icon: const Icon(
+                                                Icons.delete,
+                                                color: Palette.deleteColors,
+                                              ),
+                                              onPressed: () {
+                                                dialogDelete(viewModel
                                                     .listManager[index]
-                                                    .firstName!,
-                                                lastName: viewModel
-                                                    .listManager[index]
-                                                    .lastName!,
-                                                role: viewModel
-                                                    .listManager[index].role!,
-                                                sId: viewModel
-                                                    .listManager[index].sId!,
-                                                id: viewModel.listManager[index]
-                                                        .restaurant!.isNull
-                                                    ? viewModel
-                                                            .listManager[index]
-                                                            .laboratory
-                                                            .isNull
-                                                        ? viewModel
-                                                            .listManager[index]
-                                                            .laboratory!
-                                                            .laboName!
-                                                        : ''
-                                                    : viewModel
-                                                        .listManager[index]
-                                                        .restaurant!
-                                                        .sId!,
-                                                // username: viewModel
-                                                //     .listManager[index]
-                                                //     .username!,
-                                              );
-                                            }),
-                                          );
-                                        },
-                                      )),
-                                      Expanded(
-                                          child: IconButton(
-                                        icon: const Icon(
-                                          Icons.delete,
-                                          color: Palette.deleteColors,
+                                                    .lastName!);
+                                              },
+                                            ))
+                                          ],
                                         ),
-                                        onPressed: () {
-                                          dialogDelete(viewModel
-                                              .listManager[index].lastName!);
-                                        },
-                                      ))
-                                    ],
-                                  ),
+                                      ),
+                                    ),
+                                  ]),
                                 ),
-                              ),
-                            ]),
-                          ),
-                        );
-                      })),
-                )
-              : SizedBox(
-                  height: MediaQuery.of(context).size.height - 403,
-                  child: ListView.builder(
-                      itemCount: UserSearch.length,
-                      itemBuilder: ((context, index) {
-                        return Card(
-                          child: SizedBox(
-                            height: 50,
-                            child: Row(children: [
-                              Expanded(
-                                  child: Center(
-                                child: Text(
-                                  UserSearch[index].lastName!,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                  softWrap: false,
-                                ),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text(
-                                  UserSearch[index].firstName!,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                  softWrap: false,
-                                ),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text(
-                                  UserSearch[index].username!,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                  softWrap: false,
-                                ),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text(
-                                  UserSearch[index].email!,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                  softWrap: false,
-                                ),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text(
-                                  UserSearch[index].role!,
-                                  overflow: TextOverflow.fade,
-                                  maxLines: 1,
-                                  softWrap: false,
-                                ),
-                              )),
-                              SizedBox(
-                                width: 100,
-                                child: Center(
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                          child: IconButton(
-                                        icon: const Icon(Icons.edit),
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                              return ModificationUser(
-                                                avatar:
-                                                    UserSearch[index].avatar!,
-                                                email: UserSearch[index].email!,
-                                                firstName: UserSearch[index]
-                                                    .firstName!,
-                                                lastName:
-                                                    UserSearch[index].lastName!,
-                                                role: UserSearch[index].role!,
-                                                sId: UserSearch[index].sId!,
-                                                id: UserSearch[index]
-                                                        .restaurant!
-                                                        .isNull
-                                                    ? UserSearch[index]
-                                                            .laboratory
-                                                            .isNull
-                                                        ? UserSearch[index]
-                                                            .laboratory!
-                                                            .laboName!
-                                                        : ''
-                                                    : UserSearch[index]
-                                                        .restaurant!
-                                                        .sId!,
-                                                // username:
-                                                //     UserSearch[index].username!,
-                                              );
-                                            }),
-                                          );
-                                        },
-                                      )),
-                                      Expanded(
-                                          child: IconButton(
-                                        icon: const Icon(
-                                          Icons.delete,
-                                          color: Palette.deleteColors,
+                              );
+                            })),
+                  )
+                : SizedBox(
+                    height: MediaQuery.of(context).size.height - 403,
+                    child: UserSearch.isEmpty
+                        ? const Center(
+                            child: Text(
+                              "Aucun manager trouvé",
+                              style: TextStyle(
+                                  fontSize: 30,
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                          )
+                        : ListView.builder(
+                            itemCount: UserSearch.length,
+                            itemBuilder: ((context, index) {
+                              return Card(
+                                child: SizedBox(
+                                  height: 50,
+                                  child: Row(children: [
+                                    Expanded(
+                                        child: Center(
+                                      child: Text(
+                                        UserSearch[index].lastName!,
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                        softWrap: false,
+                                      ),
+                                    )),
+                                    Expanded(
+                                        child: Center(
+                                      child: Text(
+                                        UserSearch[index].firstName!,
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                        softWrap: false,
+                                      ),
+                                    )),
+                                    Expanded(
+                                        child: Center(
+                                      child: Text(
+                                        UserSearch[index].username!,
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                        softWrap: false,
+                                      ),
+                                    )),
+                                    Expanded(
+                                        child: Center(
+                                      child: Text(
+                                        UserSearch[index].email!,
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                        softWrap: false,
+                                      ),
+                                    )),
+                                    Expanded(
+                                        child: Center(
+                                      child: Text(
+                                        UserSearch[index].role!,
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                        softWrap: false,
+                                      ),
+                                    )),
+                                    SizedBox(
+                                      width: 100,
+                                      child: Center(
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                                child: IconButton(
+                                              icon: const Icon(Icons.edit),
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                                    return ModificationUser(
+                                                      avatar: UserSearch[index]
+                                                          .avatar!,
+                                                      email: UserSearch[index]
+                                                          .email!,
+                                                      firstName:
+                                                          UserSearch[index]
+                                                              .firstName!,
+                                                      lastName:
+                                                          UserSearch[index]
+                                                              .lastName!,
+                                                      role: UserSearch[index]
+                                                          .role!,
+                                                      sId: UserSearch[index]
+                                                          .sId!,
+                                                      id: UserSearch[index]
+                                                              .restaurant!
+                                                              .isNull
+                                                          ? UserSearch[index]
+                                                                  .laboratory
+                                                                  .isNull
+                                                              ? UserSearch[
+                                                                      index]
+                                                                  .laboratory!
+                                                                  .laboName!
+                                                              : ''
+                                                          : UserSearch[index]
+                                                              .restaurant!
+                                                              .sId!,
+                                                      // username:
+                                                      //     UserSearch[index].username!,
+                                                    );
+                                                  }),
+                                                );
+                                              },
+                                            )),
+                                            Expanded(
+                                                child: IconButton(
+                                              icon: const Icon(
+                                                Icons.delete,
+                                                color: Palette.deleteColors,
+                                              ),
+                                              onPressed: () {
+                                                dialogDelete(UserSearch[index]
+                                                    .lastName!);
+                                              },
+                                            ))
+                                          ],
                                         ),
-                                        onPressed: () {
-                                          dialogDelete(
-                                              UserSearch[index].lastName!);
-                                        },
-                                      ))
-                                    ],
-                                  ),
+                                      ),
+                                    ),
+                                  ]),
                                 ),
-                              ),
-                            ]),
-                          ),
-                        );
-                      })),
-                ),
-        ],
+                              );
+                            })),
+                  ),
+          ],
+        ),
       ),
     );
   }

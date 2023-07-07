@@ -34,6 +34,8 @@ class GetDataPromotionFuture extends ChangeNotifier {
           'Authorization': 'Bearer $token ',
         },
       );
+      print(
+          '*******************************************************getPromotion');
 
       print(response.statusCode);
 

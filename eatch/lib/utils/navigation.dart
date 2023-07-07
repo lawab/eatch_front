@@ -284,27 +284,30 @@ class _NavigationState extends State<Navigation> {
                   );
                 },
               ),
-        NavigationButton(
-          axis: widget.orientation,
-          index: index,
-          text: "LABORATOIRE",
-          selectedIndex: 9,
-          onPress: () async {
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            setState(
-              () {
-                index = 9;
-                prefs.setInt('index', index);
-              },
-            );
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => const AccuilLabo(),
+        lab == false
+            ? Container()
+            : NavigationButton(
+                axis: widget.orientation,
+                index: index,
+                text: "LABORATOIRE",
+                selectedIndex: 9,
+                onPress: () async {
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  setState(
+                    () {
+                      index = 9;
+                      prefs.setInt('index', index);
+                    },
+                  );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => const AccuilLabo(),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
 
         NavigationButton(
           axis: widget.orientation,

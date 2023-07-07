@@ -12,17 +12,17 @@ class _LineChartState extends State<LineChart> {
   @override
   Widget build(BuildContext context) {
     final List<SalesData> chartData = [
-      SalesData(2010, 35),
-      SalesData(2011, 28),
-      SalesData(2012, 34),
-      SalesData(2013, 32),
-      SalesData(2014, 40)
+      SalesData(2021, 35),
+      SalesData(2022, 28),
+      SalesData(2023, 34),
+      /*SalesData(2013, 32),
+      SalesData(2014, 40)*/
     ];
 
     return SafeArea(
       child: SizedBox(
         child: SfCartesianChart(
-          title: ChartTitle(text: "Line"),
+          title: ChartTitle(text: "Chiffre par année"),
           legend: Legend(
             isVisible: true,
             overflowMode: LegendItemOverflowMode.wrap,

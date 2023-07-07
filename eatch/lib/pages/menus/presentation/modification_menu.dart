@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:eatch/servicesAPI/get_categories.dart';
 import 'package:eatch/utils/applayout.dart';
+import 'package:eatch/utils/default_button/default_button.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -82,11 +83,16 @@ class ModificationMenuState extends ConsumerState<ModificationMenu> {
   bool isLoading = false;
   bool _selectFile = false;
   String? menuImage;
-
+  bool check = false;
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(getDataCategoriesFuture);
-
+    if (check == false) {
+      for (int i = 0; i < widget.products.length; i++) {
+        listProdId.add(widget.products[i].sId!);
+        check = true;
+      }
+    }
     return AppLayout(
       content: SizedBox(
         child: Container(
@@ -98,7 +104,7 @@ class ModificationMenuState extends ConsumerState<ModificationMenu> {
                 Container(
                   alignment: Alignment.centerRight,
                   height: 80,
-                  color: const Color(0xFFFCEBD1),
+                  color: Palette.yellowColor,
                   child: Row(
                     children: [
                       const SizedBox(
@@ -108,7 +114,7 @@ class ModificationMenuState extends ConsumerState<ModificationMenu> {
                       Expanded(child: Container()),
                       ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: Palette.textsecondaryColor,
+                            backgroundColor: Palette.greenColors,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10)),
                             minimumSize: const Size(150, 50)),
@@ -348,202 +354,241 @@ class ModificationMenuState extends ConsumerState<ModificationMenu> {
                   ],
                 ),
 
-                ///
+                const SizedBox(
+                  height: 10,
+                ),
+
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      const Text('Produits par catégories'),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Palette.yellowColor),
+                        ),
+                        //width: width - 50,
+                        height: 150,
+                        child: GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithMaxCrossAxisExtent(
+                                  maxCrossAxisExtent: 500,
+                                  childAspectRatio: 3 / 2,
+                                  crossAxisSpacing: 20,
+                                  mainAxisSpacing: 20,
+                                  mainAxisExtent: 50),
+                          itemCount: viewModel.listCategories.length,
+                          itemBuilder: (context, index) {
+                            List<String> listProduits = [];
+                            String? produit;
+                            final inputController = TextEditingController();
+                            _controllerInput.add(inputController);
+                            for (int i = 0;
+                                i <
+                                    viewModel
+                                        .listCategories[index].products!.length;
+                                i++) {
+                              listProduits.add(viewModel.listCategories[index]
+                                  .products![i].productName!);
+                            }
+
+                            // print(listProduits);
+
+                            return SizedBox(
+                              height: 50,
+                              child: DropdownButtonFormField(
+                                decoration: InputDecoration(
+                                  hoverColor: Palette.primaryBackgroundColor,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 42, vertical: 20),
+                                  filled: true,
+                                  fillColor: Palette.primaryBackgroundColor,
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: const BorderSide(
+                                        color:
+                                            Palette.secondaryBackgroundColor),
+                                    gapPadding: 10,
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: const BorderSide(
+                                        color:
+                                            Palette.secondaryBackgroundColor),
+                                    gapPadding: 10,
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: const BorderSide(
+                                        color:
+                                            Palette.secondaryBackgroundColor),
+                                    gapPadding: 10,
+                                  ),
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.always,
+                                ),
+                                value: produit,
+                                hint: Text(
+                                  viewModel.listCategories[index].title!,
+                                ),
+                                isExpanded: true,
+                                onChanged: (value) {
+                                  setState(
+                                    () {
+                                      produit = value!;
+                                      print('Valeur : ${produit}');
+                                      ////////////////////////////
+
+                                      for (int j = 0;
+                                          j < listProduits.length;
+                                          j++) {
+                                        if (produit == listProduits[j]) {
+                                          listProdId.add(viewModel
+                                              .listCategories[index]
+                                              .products![j]
+                                              .sId!);
+                                        }
+                                      }
+                                      print(listProdId);
+                                      /////////////////////////////////
+
+                                      inputController.text = value;
+                                    },
+                                  );
+                                },
+                                onSaved: (value) {
+                                  setState(() {
+                                    produit = value;
+                                  });
+                                },
+                                items: listProduits.map((String val) {
+                                  return DropdownMenuItem(
+                                    value: val,
+                                    child: Text(
+                                      val,
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 const SizedBox(
                   height: 20,
                 ),
-
-                ///
-                SizedBox(
-                  height: 150,
-                  child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 500,
-                            childAspectRatio: 3 / 2,
-                            crossAxisSpacing: 20,
-                            mainAxisSpacing: 20,
-                            mainAxisExtent: 50),
-                    itemCount: viewModel.listCategories.length,
-                    itemBuilder: (context, index) {
-                      List<String> listProduits = [];
-                      String? produit;
-                      final inputController = TextEditingController();
-                      _controllerInput.add(inputController);
-                      for (int i = 0;
-                          i < viewModel.listCategories[index].products!.length;
-                          i++) {
-                        listProduits.add(viewModel
-                            .listCategories[index].products![i].productName!);
-                      }
-
-                      return SizedBox(
-                        height: 50,
-                        child: DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            hoverColor: Palette.primaryBackgroundColor,
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 42, vertical: 20),
-                            filled: true,
-                            fillColor: Palette.primaryBackgroundColor,
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(
-                                  color: Palette.secondaryBackgroundColor),
-                              gapPadding: 10,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(
-                                  color: Palette.secondaryBackgroundColor),
-                              gapPadding: 10,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(
-                                  color: Palette.secondaryBackgroundColor),
-                              gapPadding: 10,
-                            ),
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                          value: produit,
-                          hint: Text(viewModel.listCategories[index].title!),
-                          isExpanded: true,
-                          onChanged: (value) {
-                            setState(
-                              () {
-                                produit = value!;
-                                print('Valeur : ${produit}');
-                                ////////////////////////////
-
-                                for (int j = 0; j < listProduits.length; j++) {
-                                  if (produit == listProduits[j]) {
-                                    listProdId.add(viewModel
-                                        .listCategories[index]
-                                        .products![j]
-                                        .sId!);
-                                  }
-                                }
-                                print(listProdId);
-                                /////////////////////////////////
-
-                                inputController.text = value;
-                              },
-                            );
-                          },
-                          onSaved: (value) {
-                            setState(() {
-                              produit = value;
-                            });
-                          },
-                          items: listProduits.map((String val) {
-                            return DropdownMenuItem(
-                              value: val,
-                              child: Text(
-                                val,
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(
-                  height: 40,
-                ),
                 /////////// - Ici se trouve le bouton pour l'image
+
+                ////////////////////////
                 Container(
+                  padding: EdgeInsets.only(right: 20, left: 20),
                   height: 100,
-                  width: 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  child: InkWell(
-                    onTap: () async {
-                      /////////////////////
-                      result = await FilePicker.platform
-                          .pickFiles(type: FileType.custom, allowedExtensions: [
-                        "png",
-                        "jpg",
-                        "jpeg",
-                      ]);
-                      if (result != null) {
-                        file = result!.files.single;
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Container(
+                        color: Palette.secondaryBackgroundColor,
+                        child: GestureDetector(
+                          onTap: () async {
+                            result = await FilePicker.platform.pickFiles(
+                                type: FileType.custom,
+                                allowedExtensions: [
+                                  "png",
+                                  "jpg",
+                                  "jpeg",
+                                ]);
+                            if (result != null) {
+                              setState(() {
+                                Uint8List fileBytes =
+                                    result!.files.single.bytes as Uint8List;
 
-                        Uint8List fileBytes =
-                            result!.files.single.bytes as Uint8List;
-                        //print(base64Encode(fileBytes));
-                        //List<int>
-                        _selectedFile = fileBytes;
-                        setState(() {
-                          filee = true;
-                          selectedImageInBytes = result!.files.first.bytes;
-                        });
-                      } else {
-                        setState(() {
-                          filee = false;
-                        });
-                      }
-                      ////////////////////
-                    },
-                    //splashColor: Colors.brown.withOpacity(0.5),
-                    child: Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15.0),
-                        color: Palette.greenColors,
-                        image: DecorationImage(
-                            opacity: 100,
-                            image: NetworkImage(
-                                'http://13.39.81.126:4009${widget.imageUrl}'), //13.39.81.126
-                            fit: BoxFit.cover),
+                                _selectedFile = fileBytes;
+                                selectedImageInBytes =
+                                    result!.files.first.bytes;
+                                _selectFile = true;
+                              });
+                            }
+                          },
+                          child: Container(
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 4,
+                                color: Palette.greenColors,
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: _selectFile == false
+                                  ? Image.network(
+                                      'http://13.39.81.126:4009${widget.imageUrl}',
+                                      fit: BoxFit.fill,
+                                    )
+                                  : isLoading
+                                      ? const CircularProgressIndicator()
+                                      : Image.memory(
+                                          selectedImageInBytes!,
+                                          fit: BoxFit.fill,
+                                        ),
+                            ),
+                          ),
+                        ),
                       ),
-                      child: const Text(
-                        "Modifier",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: Colors.white),
+                      const Spacer(),
+                      SizedBox(
+                        width: 200,
+                        child: DefaultButton(
+                          color: Palette.primaryColor,
+                          foreground: Colors.red,
+                          text: 'MODIFIER',
+                          textcolor: Palette.primaryBackgroundColor,
+                          onPressed: (() {
+                            for (int i = 0; i < _controllerInput.length; i++) {
+                              //print(i);
+                              if (_controllerInput[i].text.isNotEmpty) {
+                                print(_controllerInput[i].text);
+                              }
+                            }
+                            print("Je suis là");
+                            modificationMenu(
+                              context,
+                              nomcontroller.text,
+                              descriptioncontroller.text,
+                              prixcontroller.text,
+                              listProdId,
+                              _selectedFile!,
+                              result,
+                              widget.sId,
+                            );
+                          }),
+                        ),
                       ),
-                    ),
+                      const SizedBox(width: 20),
+                      SizedBox(
+                        width: 200,
+                        child: DefaultButton(
+                          color: Palette.secondaryBackgroundColor,
+                          foreground: Colors.red,
+                          text: 'ANNULER',
+                          textcolor: Palette.textsecondaryColor,
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-
                 const SizedBox(
-                  height: 80,
-                ),
-
-                /// - fin du choix de l'image
-
-                ElevatedButton(
-                  onPressed: (() {
-                    for (int i = 0; i < _controllerInput.length; i++) {
-                      //print(i);
-                      if (_controllerInput[i].text.isNotEmpty) {
-                        print(_controllerInput[i].text);
-                      }
-                    }
-                    print("Je suis là");
-                    modificationMenu(
-                      context,
-                      nomcontroller.text,
-                      descriptioncontroller.text,
-                      prixcontroller.text,
-                      listProdId,
-                      _selectedFile!,
-                      result,
-                      widget.sId,
-                    );
-                  }),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Palette.primaryColor,
-                    minimumSize: const Size(150, 50),
-                    maximumSize: const Size(200, 70),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                  ),
-                  child: const Text('Modifier'),
+                  height: 10,
                 ),
               ],
             ),
@@ -587,16 +632,13 @@ class ModificationMenuState extends ConsumerState<ModificationMenu> {
       },
     );
 
-    //print('la liste : ${listProdId}');
-    var dd = jsonEncode(idProduits);
-
     var json = {
       'restaurant': restaurantId,
       'menu_title': nomMenu,
       'description': descriptionMenu,
       'price': prixMenu,
       '_creator': id,
-      'products': dd,
+      'products': idProduits,
     };
     var body = jsonEncode(json);
 

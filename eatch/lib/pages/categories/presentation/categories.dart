@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_function_literals_in_foreach_calls, unused_field, prefer_final_fields
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -34,6 +35,22 @@ class CategoriesPage extends ConsumerStatefulWidget {
 
 class CategoriesPageState extends ConsumerState<CategoriesPage> {
   final _controller = TextEditingController();
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    ad();
+    Future.delayed(const Duration(milliseconds: 0))
+        .then((_) => timer?.cancel());
+
+    super.initState();
+  }
+
+  Timer? timer;
+  Future ad() async {
+    timer = Timer(const Duration(seconds: 1), ad);
+    return ref.refresh(getDataCategoriesFuture);
+  }
 
   ////////////////
   List<int>? _selectedFile = [];
@@ -158,6 +175,7 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
     return AppLayout(
       content: SingleChildScrollView(
         child: Container(
+          height: MediaQuery.of(context).size.height,
           color: Palette.secondaryBackgroundColor,
           child: Column(children: [
             /**
@@ -225,63 +243,6 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
 
                           ////////////// - Image(début)
 
-                          Container(
-                            padding: const EdgeInsets.only(right: 70),
-                            color: Palette.secondaryBackgroundColor,
-                            alignment: Alignment.centerRight,
-                            child: GestureDetector(
-                              onTap: () async {
-                                result = await FilePicker.platform.pickFiles(
-                                    type: FileType.custom,
-                                    allowedExtensions: [
-                                      "png",
-                                      "jpg",
-                                      "jpeg",
-                                    ]);
-                                if (result != null) {
-                                  setState(() {
-                                    file = result!.files.single;
-
-                                    Uint8List fileBytes =
-                                        result!.files.single.bytes as Uint8List;
-
-                                    _selectedFile = fileBytes;
-
-                                    filee = true;
-
-                                    selectedImageInBytes =
-                                        result!.files.first.bytes;
-                                    _selectFile = true;
-                                  });
-                                }
-                              },
-                              child: Container(
-                                width: 100,
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    width: 4,
-                                    color: Palette.greenColors,
-                                  ),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(16),
-                                  child: _selectFile == false
-                                      ? const Icon(
-                                          Icons.camera_alt_outlined,
-                                          color: Palette.greenColors,
-                                          size: 40,
-                                        )
-                                      : Image.memory(
-                                          selectedImageInBytes!,
-                                          fit: BoxFit.fill,
-                                        ),
-                                ),
-                              ),
-                            ),
-                          ),
-
                           const SizedBox(
                             height: 30,
                           ),
@@ -290,7 +251,66 @@ class CategoriesPageState extends ConsumerState<CategoriesPage> {
 
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
+                              Container(
+                                padding: const EdgeInsets.only(right: 70),
+                                color: Palette.secondaryBackgroundColor,
+                                alignment: Alignment.centerRight,
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    result = await FilePicker.platform
+                                        .pickFiles(
+                                            type: FileType.custom,
+                                            allowedExtensions: [
+                                          "png",
+                                          "jpg",
+                                          "jpeg",
+                                        ]);
+                                    if (result != null) {
+                                      setState(() {
+                                        file = result!.files.single;
+
+                                        Uint8List fileBytes = result!
+                                            .files.single.bytes as Uint8List;
+
+                                        _selectedFile = fileBytes;
+
+                                        filee = true;
+
+                                        selectedImageInBytes =
+                                            result!.files.first.bytes;
+                                        _selectFile = true;
+                                      });
+                                    }
+                                  },
+                                  child: Container(
+                                    width: 100,
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        width: 4,
+                                        color: Palette.greenColors,
+                                      ),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: _selectFile == false
+                                          ? const Icon(
+                                              Icons.camera_alt_outlined,
+                                              color: Palette.greenColors,
+                                              size: 40,
+                                            )
+                                          : Image.memory(
+                                              selectedImageInBytes!,
+                                              fit: BoxFit.fill,
+                                            ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const Spacer(),
                               SizedBox(
                                 width: 200,
                                 child: DefaultButton(

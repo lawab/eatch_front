@@ -19,7 +19,7 @@ class Palette {
   static const textsecondaryColor = Color(0xFF8D8F9B);
 
   static const primaryBackgroundColor = Color(0xFFFFFFFF);
-
+  //static const secondaryBackgroundColor = Color.fromARGB(255, 250, 245, 234);
   static const secondaryBackgroundColor = Color(0xFFF9F6F6);
 
   static const colorShadow = Color(0xFFABABAB);

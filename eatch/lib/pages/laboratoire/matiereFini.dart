@@ -188,171 +188,191 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
                 ),
                 ajoutFini == true
                     ? Container(
+                        height: height - 222,
                         child: creation(idFini),
                       )
                     : Container(
                         height: height - 222,
-                        child: GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithMaxCrossAxisExtent(
-                                    maxCrossAxisExtent: 300,
-                                    childAspectRatio: 3 / 2,
-                                    crossAxisSpacing: 20,
-                                    mainAxisSpacing: 50,
-                                    mainAxisExtent: 400),
-                            itemCount: listFini.length,
-                            itemBuilder: (context, index) {
-                              return Card(
-                                elevation: 10,
-                                child: Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        height: 200,
-                                        width: 300,
-                                        child: Image.network(
-                                          "http://13.39.81.126:4015${listFini[index].image}",
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                            return Container(
-                                              color: Colors.black,
-                                              child: const Center(
-                                                child: Text(
-                                                  "Pas d'image",
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 35,
-                                      ),
-                                      Text('Nom : ${listFini[index].title}'),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                          'Quantité : ${listFini[index].quantity} ${listFini[index].unit}'),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                          'Dernière date : ${listFini[index].updatedAt}'),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                          'Date de création : ${listFini[index].createdAt}'),
-                                      Container(
-                                        alignment: Alignment.center,
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 2,
-                                              child: IconButton(
-                                                alignment: Alignment.center,
-                                                splashColor:
-                                                    Palette.greenColors,
-                                                onPressed: () {
-                                                  setState(() {
-                                                    modif = true;
-                                                    titleController.text =
-                                                        listFini[index].title!;
-                                                    quantiteController.text =
-                                                        listFini[index]
-                                                            .quantity
-                                                            .toString();
-                                                    dateinput.text =
-                                                        listFini[index]
-                                                            .lifetime!;
-                                                    unite =
-                                                        listFini[index].unit!;
-                                                    imagee =
-                                                        listFini[index].image!;
-                                                    idFini =
-                                                        listFini[index].sId!;
-                                                    ajoutFini = true;
-                                                  });
-                                                },
-                                                icon: const Icon(
-                                                  Icons.edit,
-                                                  size: 30,
-                                                  color: Palette.greenColors,
-                                                ),
-                                              ),
+                        child: listFini.isEmpty
+                            ? const Center(
+                                child: Text(
+                                  "Aucune matière finie disponibles",
+                                  style: TextStyle(
+                                      fontSize: 30,
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.normal),
+                                ),
+                              )
+                            : GridView.builder(
+                                gridDelegate:
+                                    const SliverGridDelegateWithMaxCrossAxisExtent(
+                                        maxCrossAxisExtent: 300,
+                                        childAspectRatio: 3 / 2,
+                                        crossAxisSpacing: 20,
+                                        mainAxisSpacing: 50,
+                                        mainAxisExtent: 400),
+                                itemCount: listFini.length,
+                                itemBuilder: (context, index) {
+                                  return Card(
+                                    elevation: 10,
+                                    child: Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            height: 200,
+                                            width: 300,
+                                            child: Image.network(
+                                              "http://13.39.81.126:4015${listFini[index].image}",
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
+                                                return Container(
+                                                  color: Colors.black,
+                                                  child: const Center(
+                                                    child: Text(
+                                                      "Pas d'image",
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              fit: BoxFit.cover,
                                             ),
-                                            const SizedBox(
-                                              width: 10,
-                                            ),
-                                            Expanded(
-                                                flex: 5,
-                                                child: Container(
-                                                  height: 60,
-                                                  width: 60,
-                                                  alignment: Alignment.center,
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                          color: Colors.black,
-                                                          shape:
-                                                              BoxShape.circle),
+                                          ),
+                                          const SizedBox(
+                                            height: 35,
+                                          ),
+                                          Text(
+                                              'Nom : ${listFini[index].title}'),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                              'Quantité : ${listFini[index].quantity} ${listFini[index].unit}'),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                              'Dernière date : ${listFini[index].updatedAt}'),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                              'Date de création : ${listFini[index].createdAt}'),
+                                          Container(
+                                            alignment: Alignment.center,
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  flex: 2,
                                                   child: IconButton(
+                                                    alignment: Alignment.center,
                                                     splashColor:
                                                         Palette.greenColors,
                                                     onPressed: () {
-                                                      dialogAjout(
-                                                          contextt,
-                                                          listFini[index].sId!,
-                                                          'Steak',
-                                                          listFini[index]
-                                                              .title!,
-                                                          listFini[index]
-                                                              .quantity
-                                                              .toString());
+                                                      setState(() {
+                                                        modif = true;
+                                                        titleController.text =
+                                                            listFini[index]
+                                                                .title!;
+                                                        quantiteController
+                                                                .text =
+                                                            listFini[index]
+                                                                .quantity
+                                                                .toString();
+                                                        dateinput.text =
+                                                            listFini[index]
+                                                                .lifetime!;
+                                                        unite = listFini[index]
+                                                            .unit!;
+                                                        imagee = listFini[index]
+                                                            .image!;
+                                                        idFini = listFini[index]
+                                                            .sId!;
+                                                        ajoutFini = true;
+                                                      });
                                                     },
-                                                    iconSize: 30,
                                                     icon: const Icon(
-                                                      Icons.add_box,
+                                                      Icons.edit,
+                                                      size: 30,
                                                       color:
                                                           Palette.greenColors,
                                                     ),
                                                   ),
-                                                )),
-                                            const SizedBox(
-                                              width: 10,
-                                            ),
-                                            Expanded(
-                                              flex: 2,
-                                              child: IconButton(
-                                                alignment: Alignment.center,
-                                                splashColor: Colors.red,
-                                                onPressed: () {
-                                                  dialogDelete(
-                                                      context,
-                                                      listFini[index].sId!,
-                                                      listFini[index].title!);
-                                                },
-                                                icon: const Icon(
-                                                  Icons.delete,
-                                                  size: 30,
-                                                  color: Colors.red,
                                                 ),
-                                              ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Expanded(
+                                                    flex: 5,
+                                                    child: Container(
+                                                      height: 60,
+                                                      width: 60,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                              color:
+                                                                  Colors.black,
+                                                              shape: BoxShape
+                                                                  .circle),
+                                                      child: IconButton(
+                                                        splashColor:
+                                                            Palette.greenColors,
+                                                        onPressed: () {
+                                                          dialogAjout(
+                                                              contextt,
+                                                              listFini[index]
+                                                                  .sId!,
+                                                              'Steak',
+                                                              listFini[index]
+                                                                  .title!,
+                                                              listFini[index]
+                                                                  .quantity
+                                                                  .toString());
+                                                        },
+                                                        iconSize: 30,
+                                                        icon: const Icon(
+                                                          Icons.add_box,
+                                                          color: Palette
+                                                              .greenColors,
+                                                        ),
+                                                      ),
+                                                    )),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Expanded(
+                                                  flex: 2,
+                                                  child: IconButton(
+                                                    alignment: Alignment.center,
+                                                    splashColor: Colors.red,
+                                                    onPressed: () {
+                                                      dialogDelete(
+                                                          context,
+                                                          listFini[index].sId!,
+                                                          listFini[index]
+                                                              .title!);
+                                                    },
+                                                    icon: const Icon(
+                                                      Icons.delete,
+                                                      size: 30,
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }),
+                                    ),
+                                  );
+                                }),
                       ),
               ],
             ),
@@ -462,176 +482,194 @@ class MatiereFiniPageState extends ConsumerState<MatiereFiniPage> {
                       )
                     : Container(
                         height: height - 222,
-                        child: GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithMaxCrossAxisExtent(
-                                    maxCrossAxisExtent: 300,
-                                    childAspectRatio: 3 / 2,
-                                    crossAxisSpacing: 20,
-                                    mainAxisSpacing: 50,
-                                    mainAxisExtent: 380),
-                            itemCount: listFini.length,
-                            itemBuilder: (context, index) {
-                              return Card(
-                                elevation: 10,
-                                child: Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        height: 180,
-                                        width: 300,
-                                        child: Image.network(
-                                          "http://13.39.81.126:4015${listFini[index].image}",
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                            return Container(
-                                              color: Colors.black,
-                                              child: const Center(
-                                                child: Text(
-                                                  "Pas d'image",
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 15,
-                                      ),
-                                      Text(
-                                        'Nom : ${listFini[index].title}',
-                                        style: TextStyle(fontSize: 12),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        'Quantité : ${listFini[index].quantity} ${listFini[index].unit}',
-                                        style: TextStyle(fontSize: 12),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        'Dernière date : ${listFini[index].updatedAt}',
-                                        style: TextStyle(fontSize: 12),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        'Date de création : ${listFini[index].createdAt}',
-                                        style: TextStyle(fontSize: 12),
-                                      ),
-                                      Container(
-                                        alignment: Alignment.center,
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 2,
-                                              child: IconButton(
-                                                alignment: Alignment.center,
-                                                splashColor:
-                                                    Palette.greenColors,
-                                                onPressed: () {
-                                                  setState(() {
-                                                    modif = true;
-                                                    titleController.text =
-                                                        listFini[index].title!;
-                                                    quantiteController.text =
-                                                        listFini[index]
-                                                            .quantity
-                                                            .toString();
-                                                    dateinput.text =
-                                                        listFini[index]
-                                                            .lifetime!;
-                                                    unite =
-                                                        listFini[index].unit!;
-                                                    imagee =
-                                                        listFini[index].image!;
-                                                    idFini =
-                                                        listFini[index].sId!;
-                                                    ajoutFini = true;
-                                                  });
-                                                },
-                                                icon: const Icon(
-                                                  Icons.edit,
-                                                  size: 30,
-                                                  color: Palette.greenColors,
-                                                ),
-                                              ),
+                        child: listFini.isEmpty
+                            ? const Center(
+                                child: Text(
+                                  "Aucune matière finie disponibles",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.normal),
+                                ),
+                              )
+                            : GridView.builder(
+                                gridDelegate:
+                                    const SliverGridDelegateWithMaxCrossAxisExtent(
+                                        maxCrossAxisExtent: 300,
+                                        childAspectRatio: 3 / 2,
+                                        crossAxisSpacing: 20,
+                                        mainAxisSpacing: 50,
+                                        mainAxisExtent: 380),
+                                itemCount: listFini.length,
+                                itemBuilder: (context, index) {
+                                  return Card(
+                                    elevation: 10,
+                                    child: Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            height: 180,
+                                            width: 300,
+                                            child: Image.network(
+                                              "http://13.39.81.126:4015${listFini[index].image}",
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
+                                                return Container(
+                                                  color: Colors.black,
+                                                  child: const Center(
+                                                    child: Text(
+                                                      "Pas d'image",
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              fit: BoxFit.cover,
                                             ),
-                                            const SizedBox(
-                                              width: 10,
-                                            ),
-                                            Expanded(
-                                                flex: 5,
-                                                child: Container(
-                                                  height: 50,
-                                                  width: 50,
-                                                  alignment: Alignment.center,
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                          color: Colors.black,
-                                                          shape:
-                                                              BoxShape.circle),
+                                          ),
+                                          const SizedBox(
+                                            height: 15,
+                                          ),
+                                          Text(
+                                            'Nom : ${listFini[index].title}',
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            'Quantité : ${listFini[index].quantity} ${listFini[index].unit}',
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            'Dernière date : ${listFini[index].updatedAt}',
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            'Date de création : ${listFini[index].createdAt}',
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                          Container(
+                                            alignment: Alignment.center,
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  flex: 2,
                                                   child: IconButton(
+                                                    alignment: Alignment.center,
                                                     splashColor:
                                                         Palette.greenColors,
                                                     onPressed: () {
-                                                      dialogAjout(
-                                                          contextt,
-                                                          listFini[index].sId!,
-                                                          'Steak',
-                                                          listFini[index]
-                                                              .title!,
-                                                          listFini[index]
-                                                              .quantity
-                                                              .toString());
+                                                      setState(() {
+                                                        modif = true;
+                                                        titleController.text =
+                                                            listFini[index]
+                                                                .title!;
+                                                        quantiteController
+                                                                .text =
+                                                            listFini[index]
+                                                                .quantity
+                                                                .toString();
+                                                        dateinput.text =
+                                                            listFini[index]
+                                                                .lifetime!;
+                                                        unite = listFini[index]
+                                                            .unit!;
+                                                        imagee = listFini[index]
+                                                            .image!;
+                                                        idFini = listFini[index]
+                                                            .sId!;
+                                                        ajoutFini = true;
+                                                      });
                                                     },
-                                                    iconSize: 30,
                                                     icon: const Icon(
-                                                      Icons.add_box,
+                                                      Icons.edit,
+                                                      size: 30,
                                                       color:
                                                           Palette.greenColors,
                                                     ),
                                                   ),
-                                                )),
-                                            const SizedBox(
-                                              width: 10,
-                                            ),
-                                            Expanded(
-                                              flex: 2,
-                                              child: IconButton(
-                                                alignment: Alignment.center,
-                                                splashColor: Colors.red,
-                                                onPressed: () {
-                                                  dialogDelete(
-                                                      context,
-                                                      listFini[index].sId!,
-                                                      listFini[index].title!);
-                                                },
-                                                icon: const Icon(
-                                                  Icons.delete,
-                                                  size: 30,
-                                                  color: Colors.red,
                                                 ),
-                                              ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Expanded(
+                                                    flex: 5,
+                                                    child: Container(
+                                                      height: 50,
+                                                      width: 50,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                              color:
+                                                                  Colors.black,
+                                                              shape: BoxShape
+                                                                  .circle),
+                                                      child: IconButton(
+                                                        splashColor:
+                                                            Palette.greenColors,
+                                                        onPressed: () {
+                                                          dialogAjout(
+                                                              contextt,
+                                                              listFini[index]
+                                                                  .sId!,
+                                                              'Steak',
+                                                              listFini[index]
+                                                                  .title!,
+                                                              listFini[index]
+                                                                  .quantity
+                                                                  .toString());
+                                                        },
+                                                        iconSize: 30,
+                                                        icon: const Icon(
+                                                          Icons.add_box,
+                                                          color: Palette
+                                                              .greenColors,
+                                                        ),
+                                                      ),
+                                                    )),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Expanded(
+                                                  flex: 2,
+                                                  child: IconButton(
+                                                    alignment: Alignment.center,
+                                                    splashColor: Colors.red,
+                                                    onPressed: () {
+                                                      dialogDelete(
+                                                          context,
+                                                          listFini[index].sId!,
+                                                          listFini[index]
+                                                              .title!);
+                                                    },
+                                                    icon: const Icon(
+                                                      Icons.delete,
+                                                      size: 30,
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }),
+                                    ),
+                                  );
+                                }),
                       ),
               ],
             ),

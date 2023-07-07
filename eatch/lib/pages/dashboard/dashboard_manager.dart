@@ -1,3 +1,9 @@
+import 'dart:async';
+
+import 'package:eatch/pages/statistique/buble_chart.dart';
+import 'package:eatch/pages/statistique/diagram_chart.dart';
+import 'package:eatch/pages/statistique/line_chart.dart';
+import 'package:eatch/pages/statistique/pie_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -21,6 +27,23 @@ class DashboardManager extends ConsumerStatefulWidget {
 }
 
 class DashboardManagerState extends ConsumerState<DashboardManager> {
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    ad();
+    Future.delayed(const Duration(milliseconds: 0))
+        .then((_) => timer?.cancel());
+
+    super.initState();
+  }
+
+  Timer? timer;
+  Future ad() async {
+    timer = Timer(const Duration(seconds: 1), ad);
+    return ref.refresh(getDataCategoriesFuture);
+  }
+
   int selectedIndexCategorie = 0;
   final PageController _pageController = PageController();
   @override
@@ -40,7 +63,7 @@ class DashboardManagerState extends ConsumerState<DashboardManager> {
               /**
                 !PREMIERE LIGNE 
                                 **/
-              Row(
+              /*Row(
                 children: [
                   Expanded(
                     child: ManagerGrid(
@@ -54,6 +77,51 @@ class DashboardManagerState extends ConsumerState<DashboardManager> {
                       childAspectRatio: 1,
                     ),
                   ),
+                ],
+              ),*/
+              Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Card(
+                        elevation: 5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        shadowColor: Palette.fourthColor,
+                        child: const PieChart()),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Card(
+                        elevation: 5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        shadowColor: Palette.fourthColor,
+                        child: const LineChart()),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Card(
+                        elevation: 5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        shadowColor: Palette.fourthColor,
+                        child: const DiagramChart()),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Card(
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      shadowColor: Palette.fourthColor,
+                      child: BubleChart(),
+                    ),
+                  )
                 ],
               ),
               const SizedBox(height: 10),

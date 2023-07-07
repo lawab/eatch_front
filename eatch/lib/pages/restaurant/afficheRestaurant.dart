@@ -338,6 +338,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                   ),
                 )
               : SizedBox(
+                  height: height - 60,
                   child: creation(),
                 ),
           /*ajout == true
@@ -759,111 +760,107 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
               ),
             ),
             const SizedBox(
-              height: 30,
+              height: 40,
             ),
-            Container(
-              padding: const EdgeInsets.only(right: 70),
-              color: Palette.secondaryBackgroundColor,
-              alignment: Alignment.centerRight,
-              child: GestureDetector(
-                onTap: () async {
-                  result = await FilePicker.platform
-                      .pickFiles(type: FileType.custom, allowedExtensions: [
-                    "png",
-                    "jpg",
-                    "jpeg",
-                  ]);
-                  if (result != null) {
-                    setState(() {
-                      file = result!.files.single;
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(right: 70),
+                  color: Palette.secondaryBackgroundColor,
+                  alignment: Alignment.centerRight,
+                  child: GestureDetector(
+                    onTap: () async {
+                      result = await FilePicker.platform
+                          .pickFiles(type: FileType.custom, allowedExtensions: [
+                        "png",
+                        "jpg",
+                        "jpeg",
+                      ]);
+                      if (result != null) {
+                        setState(() {
+                          file = result!.files.single;
 
-                      Uint8List fileBytes =
-                          result!.files.single.bytes as Uint8List;
+                          Uint8List fileBytes =
+                              result!.files.single.bytes as Uint8List;
 
-                      _selectedFile = fileBytes;
+                          _selectedFile = fileBytes;
 
-                      filee = true;
+                          filee = true;
 
-                      selectedImageInBytes = result!.files.first.bytes;
-                      _selectFile = true;
-                    });
-                  }
-                },
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 4,
-                      color: Palette.greenColors,
+                          selectedImageInBytes = result!.files.first.bytes;
+                          _selectFile = true;
+                        });
+                      }
+                    },
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 4,
+                          color: Palette.greenColors,
+                        ),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: _selectFile == false
+                            ? const Icon(
+                                Icons.camera_alt_outlined,
+                                color: Palette.greenColors,
+                                size: 40,
+                              )
+                            : Image.memory(
+                                selectedImageInBytes!,
+                                fit: BoxFit.fill,
+                              ),
+                      ),
                     ),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: _selectFile == false
-                        ? const Icon(
-                            Icons.camera_alt_outlined,
-                            color: Palette.greenColors,
-                            size: 40,
-                          )
-                        : Image.memory(
-                            selectedImageInBytes!,
-                            fit: BoxFit.fill,
-                          ),
                   ),
                 ),
-              ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            Container(
-              alignment: Alignment.centerRight,
-              child: SizedBox(
-                width: 420,
-                child: Row(children: [
-                  SizedBox(
-                    width: 200,
-                    child: DefaultButton(
-                      color: Palette.primaryColor,
-                      foreground: Colors.red,
-                      text: 'ENREGISTRER',
-                      textcolor: Palette.primaryBackgroundColor,
-                      onPressed: () {
-                        creationRestaurant(
-                          context,
-                          nomController.text,
-                          villeController.text,
-                          adresseController.text,
-                          _selectedFile,
-                          result,
-                        );
-                        setState(() {
-                          ajout = false;
-                        });
-                      },
-                    ),
+                const Spacer(),
+                SizedBox(
+                  width: 200,
+                  child: DefaultButton(
+                    color: Palette.primaryColor,
+                    foreground: Colors.red,
+                    text: 'ENREGISTRER',
+                    textcolor: Palette.primaryBackgroundColor,
+                    onPressed: () {
+                      creationRestaurant(
+                        context,
+                        nomController.text,
+                        villeController.text,
+                        adresseController.text,
+                        _selectedFile,
+                        result,
+                      );
+                      setState(() {
+                        ajout = false;
+                      });
+                    },
                   ),
-                  const SizedBox(
-                    width: 20,
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                SizedBox(
+                  width: 200,
+                  child: DefaultButton(
+                    color: Palette.secondaryBackgroundColor,
+                    foreground: Colors.red,
+                    text: 'ANNULER',
+                    textcolor: Palette.textsecondaryColor,
+                    onPressed: () {
+                      setState(() {
+                        ajout = false;
+                      });
+                    },
                   ),
-                  SizedBox(
-                    width: 200,
-                    child: DefaultButton(
-                      color: Palette.secondaryBackgroundColor,
-                      foreground: Colors.red,
-                      text: 'ANNULER',
-                      textcolor: Palette.textsecondaryColor,
-                      onPressed: () {
-                        setState(() {
-                          ajout = false;
-                        });
-                      },
-                    ),
-                  ),
-                ]),
-              ),
+                ),
+              ],
             ),
             const SizedBox(
               height: 5,
@@ -910,9 +907,25 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
                     size: 14,
                   ),
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                  onPressed: () {
-                    deleteRestaurant(context, id);
-                    Navigator.pop(con);
+                  onPressed: () async {
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    var restaurantId =
+                        prefs.getString('idRestaurant').toString();
+                    if (restaurantId != id) {
+                      deleteRestaurant(context, id);
+                      Navigator.pop(con);
+                    } else {
+                      Navigator.pop(con);
+                      showTopSnackBar(
+                        Overlay.of(context),
+                        CustomSnackBar.info(
+                          backgroundColor: Colors.amber,
+                          message:
+                              "Impossible de supprimer le restaurant $nom car vous etes actuellement sur ce restaurant",
+                        ),
+                      );
+                    }
                   },
                   label: const Text("Supprimer."))
             ],
@@ -993,7 +1006,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
         //finishWorking();
 
         showTopSnackBar(
-          Overlay.of(contextt)!,
+          Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.green,
             message: "Restaurant Modifié",
@@ -1002,7 +1015,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
         ref.refresh(getDataRsetaurantFuture);
       } else {
         showTopSnackBar(
-          Overlay.of(contextt)!,
+          Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.red,
             message: "Erreur de création",
@@ -1020,22 +1033,28 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var token = prefs.getString('token');
+      var idUser = prefs.getString('IdUser').toString();
+      print(token);
       String urlDelete = "http://13.39.81.126:4002/api/restaurants/delete/$id";
       //13.39.81.126
-
-      final http.Response response =
-          await http.put(Uri.parse(urlDelete), headers: {
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        'Accept': 'application/json',
-        'authorization': 'Bearer $token',
-      }, body: {
-        '_creator': id
-      });
+      var json = {
+        '_creator': idUser,
+      };
+      var body = jsonEncode(json);
+      final http.Response response = await http.put(
+        Uri.parse(urlDelete),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'Accept': 'application/json',
+          'authorization': 'Bearer $token',
+          'body': body
+        },
+      );
 
       print(response.statusCode);
       if (response.statusCode == 200) {
         showTopSnackBar(
-          Overlay.of(contextt)!,
+          Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.green,
             message: "Restaurant supprimé",
@@ -1045,7 +1064,7 @@ class RestaurantAfficheState extends ConsumerState<RestaurantAffiche> {
         return response;
       } else {
         showTopSnackBar(
-          Overlay.of(contextt)!,
+          Overlay.of(contextt),
           const CustomSnackBar.info(
             backgroundColor: Colors.red,
             message: "Erreur de suppression",

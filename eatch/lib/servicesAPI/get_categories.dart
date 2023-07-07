@@ -281,7 +281,8 @@ class GetDataCategoriesFuture extends ChangeNotifier {
     var token = prefs.getString('token');
     var restaurantId = prefs.getString('idRestaurant').toString();
     //String adressUrl = prefs.getString('ipport').toString();
-
+    print('restaurantId');
+    print(restaurantId);
     try {
       http.Response response = await http.get(
         Uri.parse(
