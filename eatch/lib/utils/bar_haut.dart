@@ -1,4 +1,5 @@
 import 'package:eatch/pages/accueil.dart';
+import 'package:eatch/pages/authentification/authentification.dart';
 import 'package:eatch/pages/laboAccueil.dart';
 import 'package:eatch/pages/restaurantAccueil.dart';
 import 'package:flutter/material.dart';
@@ -6,11 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'palettes/palette.dart';
 
-enum SampleItem {
-  itemOne,
-  itemTwo,
-  itemThree,
-}
+enum SampleItem { itemOne, itemTwo, itemThree, itemFour }
 
 class BarreHaute extends StatefulWidget {
   const BarreHaute({
@@ -29,10 +26,12 @@ class BarreHauteState extends State<BarreHaute> {
   }
 
   var nom = '';
+  var nomRestaut = '';
   void rr() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       nom = prefs.getString('UserName')!;
+      nomRestaut = prefs.getString('NomRestaurant')!;
     });
   }
 
@@ -43,6 +42,29 @@ class BarreHauteState extends State<BarreHaute> {
       color: Palette.primaryBackgroundColor,
       child: Row(
         children: [
+          const Spacer(),
+          RichText(
+            text: TextSpan(
+              children: [
+                const TextSpan(
+                  text: "Restaurant : ",
+                  style: TextStyle(
+                      fontFamily: 'Bevan',
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
+                ),
+                TextSpan(
+                  text: nomRestaut,
+                  style: const TextStyle(
+                      fontFamily: 'Bevan',
+                      fontSize: 20,
+                      color: Palette.yellowColor,
+                      fontWeight: FontWeight.normal),
+                ),
+              ],
+            ),
+          ),
           const Spacer(),
           Container(
             width: 180.0,
@@ -102,9 +124,17 @@ class BarreHauteState extends State<BarreHaute> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => RestaurantAccueil()));
-                } else {
+                } else if (item == SampleItem.itemThree) {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => LaboAccueil()));
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          const Authentification(),
+                    ),
+                  );
                 }
               },
               child: Image.asset(
@@ -124,6 +154,10 @@ class BarreHauteState extends State<BarreHaute> {
                 const PopupMenuItem<SampleItem>(
                   value: SampleItem.itemThree,
                   child: Text('Accueil Laboratoire'),
+                ),
+                const PopupMenuItem<SampleItem>(
+                  value: SampleItem.itemFour,
+                  child: Text('Déconnexion'),
                 ),
               ],
             ),

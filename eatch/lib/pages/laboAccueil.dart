@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:eatch/pages/dashboard/dashboard_manager.dart';
 import 'package:eatch/pages/laboratoire/accuielLabo.dart';
+import 'package:eatch/servicesAPI/getFournisseur.dart';
 import 'package:eatch/servicesAPI/getLabo.dart';
-import 'package:eatch/servicesAPI/getRestaurant.dart';
+import 'package:eatch/servicesAPI/getMatiereFini.dart';
+import 'package:eatch/servicesAPI/getMatierebrute.dart';
 import 'package:eatch/servicesAPI/multipart.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:file_picker/file_picker.dart';
@@ -196,6 +197,10 @@ class LaboAccueilState extends ConsumerState<LaboAccueil> {
                                               .toString());
                                       prefs.setBool('lab', true);
                                       prefs.setInt('index', 9);
+                                      ref.refresh(getDataFournisseurFuture);
+                                      ref.refresh(getDataMatiereBruteFuture);
+                                      ref.refresh(getDataMatiereFiniFuture);
+                                      ref.refresh(getDataLaboratoriesFuture);
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(

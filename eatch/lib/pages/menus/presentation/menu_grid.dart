@@ -55,8 +55,8 @@ class MenuGrid extends ConsumerStatefulWidget {
     super.key,
     this.crossAxisCount = 1,
     this.mainAxisSpacing = 10,
-    this.crossAxisSpacing = 00,
-    this.childAspectRatio = 3.1,
+    this.crossAxisSpacing = 0,
+    this.childAspectRatio = 1,
   });
   final int crossAxisCount;
   final double mainAxisSpacing;

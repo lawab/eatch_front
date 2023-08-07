@@ -96,7 +96,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
         child: Column(
           children: [
             ajout == false
-                ? Container(
+                ? SizedBox(
                     height: height - 65,
                     child: Column(
                       children: [
@@ -156,171 +156,144 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                           mainAxisExtent: 350),
                                   itemCount: viewModel.listPromotion.length,
                                   itemBuilder: ((context, index) {
-                                    return index % 2 == 0
-                                        ? Card(
-                                            elevation: 10,
-                                            child: Container(
+                                    return
+                                        // index % 2 == 0
+                                        // ?
+                                        Container(
+                                      // height: 500,
+                                      width: 160.0,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                              top: 10.0,
+                                            ),
+                                            height: 150.0,
+                                            // width: 130.0,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0),
+                                              image: DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: NetworkImage(
+                                                  "http://13.39.81.126:5005${viewModel.listPromotion[index].image}",
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Flexible(
+                                            child: SizedBox(
                                               child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
                                                 children: [
-                                                  Expanded(
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          const BorderRadius
-                                                              .all(
-                                                        Radius.circular(10.0),
-                                                      ),
-                                                      child: Image.network(
-                                                        "http://13.39.81.126:5005${viewModel.listPromotion[index].image}",
-                                                        errorBuilder: (context,
-                                                            error, stackTrace) {
-                                                          return Container(
-                                                            color: Colors.black,
-                                                            child: const Center(
-                                                              child: Text(
-                                                                "Pas d'image",
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .white),
-                                                              ),
-                                                            ),
-                                                          );
-                                                        },
-                                                        fit: BoxFit.cover,
+                                                  Flexible(
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 10.0),
+                                                      child: Text(
+                                                        viewModel
+                                                            .listPromotion[
+                                                                index]
+                                                            .promotionName!,
                                                       ),
                                                     ),
                                                   ),
-                                                  Expanded(
+                                                  Flexible(
                                                     child: Container(
-                                                      color: Colors.white,
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 10.0),
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
                                                                 .start,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
                                                         children: [
-                                                          const SizedBox(
-                                                            height: 10,
-                                                          ),
-                                                          Container(
+                                                          Flexible(
                                                             child: Row(
                                                               children: [
-                                                                Expanded(
-                                                                  child: Text(viewModel
-                                                                      .listPromotion[
-                                                                          index]
-                                                                      .promotionName!),
-                                                                ),
-                                                                const Expanded(
-                                                                  child: Text(
-                                                                    '100 DH',
-                                                                    style: TextStyle(
-                                                                        fontWeight:
-                                                                            FontWeight.bold),
-                                                                  ),
-                                                                ),
-                                                                Expanded(
-                                                                  child:
-                                                                      SizedBox(
-                                                                    height: 15,
-                                                                    width:
-                                                                        550 / 2,
-                                                                    child: ListView
-                                                                        .builder(
-                                                                      scrollDirection:
-                                                                          Axis.horizontal,
-                                                                      itemCount:
-                                                                          3,
-                                                                      itemBuilder:
-                                                                          ((context,
-                                                                              index) {
-                                                                        return const Icon(
-                                                                          Icons
-                                                                              .star,
-                                                                          color: Color.fromARGB(
-                                                                              255,
-                                                                              250,
-                                                                              230,
-                                                                              50),
-                                                                          size:
-                                                                              12,
-                                                                        );
-                                                                      }),
-                                                                    ),
-                                                                  ),
-                                                                )
+                                                                starIcon(Colors
+                                                                        .yellow[
+                                                                    700]!),
+                                                                starIcon(Colors
+                                                                        .yellow[
+                                                                    700]!),
+                                                                starIcon(Colors
+                                                                        .yellow[
+                                                                    700]!),
+                                                                starIcon(Colors
+                                                                        .yellow[
+                                                                    700]!),
+                                                                starIcon(
+                                                                    Colors.grey[
+                                                                        200]!),
                                                               ],
                                                             ),
                                                           ),
-                                                          const SizedBox(
-                                                            height: 15,
-                                                          ),
-                                                          Container(
-                                                            child: Row(
-                                                              children: [
-                                                                Container(
-                                                                  child: const Text(
-                                                                      'Nombre de Commandes :  '),
-                                                                ),
-                                                                const Expanded(
-                                                                  child: Text(
-                                                                      '158'),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                            height: 10,
-                                                          ),
-                                                          Text(
-                                                            viewModel
-                                                                .listPromotion[
-                                                                    index]
-                                                                .description!,
-                                                            textAlign:
-                                                                TextAlign.start,
-                                                          ),
-                                                          const SizedBox(
-                                                            height: 10,
-                                                          ),
-                                                          if (viewModel
-                                                                  .listPromotion[
-                                                                      index]
-                                                                  .menu !=
-                                                              null)
-                                                            Text(
-                                                              viewModel
-                                                                  .listPromotion[
-                                                                      index]
-                                                                  .menu!
-                                                                  .menuTitle!,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .start,
-                                                            ),
-                                                          const SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          if (viewModel
-                                                                  .listPromotion[
-                                                                      index]
-                                                                  .product !=
-                                                              null)
-                                                            Text(
-                                                              viewModel
-                                                                  .listPromotion[
-                                                                      index]
-                                                                  .product!
-                                                                  .productName!,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .start,
-                                                            )
                                                         ],
                                                       ),
                                                     ),
                                                   ),
-                                                  const SizedBox(
-                                                    height: 10,
+                                                  const Row(
+                                                    children: [
+                                                      Flexible(
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  left: 10.0),
+                                                          child: Text(
+                                                              'Nombre de Commandes: '),
+                                                        ),
+                                                      ),
+                                                      Flexible(
+                                                        child: Text('158'),
+                                                      ),
+                                                    ],
                                                   ),
+                                                  Flexible(
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 10.0),
+                                                      child: Text(
+                                                        viewModel
+                                                            .listPromotion[
+                                                                index]
+                                                            .description!,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  if (viewModel
+                                                          .listPromotion[index]
+                                                          .menu !=
+                                                      null)
+                                                    Flexible(
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 10.0),
+                                                        child: Text(
+                                                          viewModel
+                                                              .listPromotion[
+                                                                  index]
+                                                              .product!
+                                                              .productName!,
+                                                        ),
+                                                      ),
+                                                    ),
                                                   Row(
                                                     children: [
                                                       Expanded(
@@ -329,52 +302,44 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                                             Navigator.push(
                                                               context,
                                                               MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        ModificationPromotion(
-                                                                  description: viewModel
-                                                                      .listPromotion[
-                                                                          index]
-                                                                      .description!,
-                                                                  imageUrl: viewModel
-                                                                      .listPromotion[
-                                                                          index]
-                                                                      .image!,
-                                                                  menus: viewModel
-                                                                          .listPromotion[
-                                                                              index]
-                                                                          .menu
-                                                                          .isNull
-                                                                      ? ""
-                                                                      : viewModel
-                                                                          .listPromotion[
-                                                                              index]
-                                                                          .menu!
-                                                                          .sId!,
-                                                                  products: viewModel
-                                                                          .listPromotion[
-                                                                              index]
-                                                                          .product
-                                                                          .isNull
-                                                                      ? ""
-                                                                      : viewModel
-                                                                          .listPromotion[
-                                                                              index]
-                                                                          .product!
-                                                                          .sId!,
-                                                                  sId: viewModel
-                                                                      .listPromotion[
-                                                                          index]
-                                                                      .sId!,
-                                                                  title: viewModel
-                                                                      .listPromotion[
-                                                                          index]
-                                                                      .promotionName!,
-                                                                  date: viewModel
-                                                                      .listPromotion[
-                                                                          index]
-                                                                      .endDate!,
-                                                                ),
+                                                                builder: (context) => ModificationPromotion(
+                                                                    description: viewModel
+                                                                        .listPromotion[
+                                                                            index]
+                                                                        .description!,
+                                                                    imageUrl: viewModel
+                                                                        .listPromotion[
+                                                                            index]
+                                                                        .image!,
+                                                                    menus: viewModel.listPromotion[index].menu.isNull
+                                                                        ? ""
+                                                                        : viewModel
+                                                                            .listPromotion[
+                                                                                index]
+                                                                            .menu!
+                                                                            .sId!,
+                                                                    products: viewModel
+                                                                            .listPromotion[
+                                                                                index]
+                                                                            .product
+                                                                            .isNull
+                                                                        ? ""
+                                                                        : viewModel
+                                                                            .listPromotion[
+                                                                                index]
+                                                                            .product!
+                                                                            .sId!,
+                                                                    sId: viewModel
+                                                                        .listPromotion[
+                                                                            index]
+                                                                        .sId!,
+                                                                    title: viewModel
+                                                                        .listPromotion[
+                                                                            index]
+                                                                        .promotionName!,
+                                                                    date: viewModel
+                                                                        .listPromotion[index]
+                                                                        .endDate!),
                                                               ),
                                                             );
                                                           },
@@ -382,12 +347,22 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                                             height: 30,
                                                             decoration:
                                                                 BoxDecoration(
-                                                              color: Palette
-                                                                  .secondaryColor,
-                                                              borderRadius:
-                                                                  BorderRadius
+                                                              color: Colors
+                                                                  .yellow[600],
+                                                              borderRadius: const BorderRadius
+                                                                      .only(
+                                                                  topRight:
+                                                                      Radius.circular(
+                                                                          0.0),
+                                                                  bottomRight: Radius
                                                                       .circular(
-                                                                          8),
+                                                                          0.0),
+                                                                  topLeft: Radius
+                                                                      .circular(
+                                                                          00.0),
+                                                                  bottomLeft: Radius
+                                                                      .circular(
+                                                                          15.0)),
                                                             ),
                                                             alignment: Alignment
                                                                 .center,
@@ -414,13 +389,22 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                                           child: Container(
                                                             height: 30,
                                                             decoration:
-                                                                BoxDecoration(
+                                                                const BoxDecoration(
                                                               color: Palette
                                                                   .deleteColors,
-                                                              borderRadius:
-                                                                  BorderRadius
+                                                              borderRadius: BorderRadius.only(
+                                                                  topRight: Radius
                                                                       .circular(
-                                                                          8),
+                                                                          0.0),
+                                                                  bottomRight: Radius
+                                                                      .circular(
+                                                                          15.0),
+                                                                  topLeft: Radius
+                                                                      .circular(
+                                                                          00.0),
+                                                                  bottomLeft: Radius
+                                                                      .circular(
+                                                                          0.0)),
                                                             ),
                                                             alignment: Alignment
                                                                 .center,
@@ -430,12 +414,17 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                                         ),
                                                       )
                                                     ],
-                                                  )
+                                                  ),
                                                 ],
                                               ),
                                             ),
                                           )
-                                        : Card(
+                                        ],
+                                      ),
+                                    );
+                                    // :
+                                    /*
+                                        Card(
                                             elevation: 10,
                                             child: Container(
                                               child: Column(
@@ -705,6 +694,8 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                                               ),
                                             ),
                                           );
+                                  
+                                  */
                                   }),
                                 ),
                         ),
@@ -1511,7 +1502,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                 style: TextStyle(fontSize: 16),
               ),
               const SizedBox(width: 20),
-              Container(
+              SizedBox(
                 width: 200,
                 child: TextFormField(
                   controller: dateinput,
@@ -1529,7 +1520,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
                         builder: (BuildContext context, child) {
                           return Theme(
                             data: Theme.of(context).copyWith(
-                              colorScheme: ColorScheme.light(
+                              colorScheme: const ColorScheme.light(
                                 primary: Palette.greenColors, // <-- SEE HERE
                                 onPrimary: Colors.white, // <-- SEE HERE
                                 onSurface: Colors.black, // <-- SEE HERE
@@ -1604,7 +1595,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
         ),
 
         Container(
-          padding: EdgeInsets.only(right: 20, left: 20),
+          padding: const EdgeInsets.only(right: 20, left: 20),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.end,
@@ -1823,14 +1814,14 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
 
     request.fields['form_key'] = 'form_value';
     request.headers['authorization'] = 'Bearer $token';
-    request.files.add(await http.MultipartFile.fromBytes('file', selectedFile,
+    request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
         contentType: MediaType('application', 'octet-stream'),
         filename: result?.files.first.name));
 
     print("RESPENSE SEND STEAM FILE REQ");
     //var responseString = await streamedResponse.stream.bytesToString();
     var response = await request.send();
-    print("Upload Response" + response.toString());
+    print("Upload Response$response");
     print(response.statusCode);
     print(request.headers);
 
@@ -1863,7 +1854,7 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
         print("Error Create Programme  !!!");
       }
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 
@@ -1923,5 +1914,13 @@ class PromotionAfficheState extends ConsumerState<PromotionAffiche> {
     } catch (e) {
       return Future.error(e);
     }
+  }
+
+  Icon starIcon(Color color) {
+    return Icon(
+      Icons.star,
+      size: 15.0,
+      color: color,
+    );
   }
 }

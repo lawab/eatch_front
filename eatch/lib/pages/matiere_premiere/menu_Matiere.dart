@@ -4,7 +4,6 @@ import 'package:eatch/pages/matiere_premiere/creationMatiere.dart';
 import 'package:eatch/utils/applayout.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MatiereMenu extends ConsumerStatefulWidget {
@@ -42,7 +41,7 @@ class MatiereMenuState extends ConsumerState<MatiereMenu> {
                   ),
                 ],
               ),
-              title: Center(
+              title: const Center(
                 child: Text('MATIERES PREMIERES'),
               ),
             ),
@@ -51,7 +50,7 @@ class MatiereMenuState extends ConsumerState<MatiereMenu> {
                 child: Column(
               children: [
                 Container(
-                  height: MediaQuery.of(context).size.height,
+                  height: MediaQuery.of(context).size.height - 190,
                   width: MediaQuery.of(context).size.width,
                   child: const TabBarView(
                     children: [

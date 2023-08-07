@@ -166,11 +166,12 @@ class _MenuState extends ConsumerState<Menu> {
                               itemCount: menus.length,
                               gridDelegate:
                                   const SliverGridDelegateWithMaxCrossAxisExtent(
-                                      maxCrossAxisExtent: 500,
-                                      childAspectRatio: 3 / 2,
-                                      crossAxisSpacing: 20,
-                                      mainAxisSpacing: 30,
-                                      mainAxisExtent: 200),
+                                maxCrossAxisExtent: 500,
+                                childAspectRatio: 3 / 2,
+                                crossAxisSpacing: 20,
+                                mainAxisSpacing: 40,
+                                mainAxisExtent: 300,
+                              ),
                               itemBuilder: (context, index) {
                                 return Column(
                                   children: [
@@ -183,7 +184,6 @@ class _MenuState extends ConsumerState<Menu> {
                                       prod: menus[index].products!,
                                       index: index,
                                     ),
-                                    const SizedBox(height: 1),
                                     Row(
                                       children: [
                                         Expanded(
@@ -211,9 +211,17 @@ class _MenuState extends ConsumerState<Menu> {
                                             child: Container(
                                               height: 30,
                                               decoration: BoxDecoration(
-                                                color: Palette.secondaryColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
+                                                color: Colors.yellow[600],
+                                                borderRadius: const BorderRadius
+                                                        .only(
+                                                    topRight:
+                                                        Radius.circular(0.0),
+                                                    bottomRight:
+                                                        Radius.circular(0.0),
+                                                    topLeft:
+                                                        Radius.circular(00.0),
+                                                    bottomLeft:
+                                                        Radius.circular(15.0)),
                                               ),
                                               alignment: Alignment.center,
                                               child: const Text("Modifier"),
@@ -230,10 +238,17 @@ class _MenuState extends ConsumerState<Menu> {
                                             },
                                             child: Container(
                                               height: 30,
-                                              decoration: BoxDecoration(
+                                              decoration: const BoxDecoration(
                                                 color: Palette.deleteColors,
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
+                                                borderRadius: BorderRadius.only(
+                                                    topRight:
+                                                        Radius.circular(0.0),
+                                                    bottomRight:
+                                                        Radius.circular(15.0),
+                                                    topLeft:
+                                                        Radius.circular(00.0),
+                                                    bottomLeft:
+                                                        Radius.circular(0.0)),
                                               ),
                                               alignment: Alignment.center,
                                               child: const Text("Supprimer"),
@@ -241,7 +256,7 @@ class _MenuState extends ConsumerState<Menu> {
                                           ),
                                         )
                                       ],
-                                    )
+                                    ),
                                   ],
                                 );
                               },
@@ -335,7 +350,6 @@ class _MenuState extends ConsumerState<Menu> {
                                   prod: menus[index].products!,
                                   index: index,
                                 ),
-                                const SizedBox(height: 1),
                                 Row(
                                   children: [
                                     Expanded(
@@ -361,9 +375,17 @@ class _MenuState extends ConsumerState<Menu> {
                                         child: Container(
                                           height: 30,
                                           decoration: BoxDecoration(
-                                            color: Palette.secondaryColor,
+                                            color: Colors.yellow[600],
                                             borderRadius:
-                                                BorderRadius.circular(8),
+                                                const BorderRadius.only(
+                                                    topRight:
+                                                        Radius.circular(0.0),
+                                                    bottomRight:
+                                                        Radius.circular(0.0),
+                                                    topLeft:
+                                                        Radius.circular(00.0),
+                                                    bottomLeft:
+                                                        Radius.circular(15.0)),
                                           ),
                                           alignment: Alignment.center,
                                           child: const Text("Modifier"),
@@ -379,10 +401,15 @@ class _MenuState extends ConsumerState<Menu> {
                                         },
                                         child: Container(
                                           height: 30,
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                             color: Palette.deleteColors,
-                                            borderRadius:
-                                                BorderRadius.circular(8),
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(0.0),
+                                                bottomRight:
+                                                    Radius.circular(15.0),
+                                                topLeft: Radius.circular(00.0),
+                                                bottomLeft:
+                                                    Radius.circular(0.0)),
                                           ),
                                           alignment: Alignment.center,
                                           child: const Text("Supprimer"),
@@ -390,7 +417,7 @@ class _MenuState extends ConsumerState<Menu> {
                                       ),
                                     )
                                   ],
-                                )
+                                ),
                               ],
                             ),
                           );
@@ -572,10 +599,10 @@ class _MenuState extends ConsumerState<Menu> {
               height: 5,
             ),
             Container(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               child: Column(
                 children: [
-                  Text('Produits par catégories'),
+                  const Text('Produits par catégories'),
                   const SizedBox(
                     height: 5,
                   ),
@@ -647,7 +674,7 @@ class _MenuState extends ConsumerState<Menu> {
                               setState(
                                 () {
                                   produit = value!;
-                                  print('Valeur : ${produit}');
+                                  print('Valeur : $produit');
                                   ////////////////////////////
 
                                   for (int j = 0;
@@ -692,7 +719,7 @@ class _MenuState extends ConsumerState<Menu> {
             ),
             /////////// - Ici se trouve le bouton pour l'image
             Container(
-              padding: EdgeInsets.only(right: 20, left: 20),
+              padding: const EdgeInsets.only(right: 20, left: 20),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -925,14 +952,14 @@ class _MenuState extends ConsumerState<Menu> {
 
     request.fields['form_key'] = 'form_value';
     request.headers['authorization'] = 'Bearer $token';
-    request.files.add(await http.MultipartFile.fromBytes('file', selectedFile,
+    request.files.add(http.MultipartFile.fromBytes('file', selectedFile,
         contentType: MediaType('application', 'octet-stream'),
         filename: result?.files.first.name));
 
     print("RESPENSE SEND STEAM FILE REQ");
     //var responseString = await streamedResponse.stream.bytesToString();
     var response = await request.send();
-    print("Upload Response" + response.toString());
+    print("Upload Response$response");
     print(response.statusCode);
     print(request.headers);
 
@@ -965,7 +992,7 @@ class _MenuState extends ConsumerState<Menu> {
         print("Error Create Programme  !!!");
       }
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:eatch/servicesAPI/getLabo.dart';
 import 'package:eatch/servicesAPI/getRestaurant.dart';
@@ -20,6 +21,24 @@ class MatiereLaboAffiche extends ConsumerStatefulWidget {
 }
 
 class MatiereLaboAfficheState extends ConsumerState<MatiereLaboAffiche> {
+  @override
+  void initState() {
+    super.initState();
+
+    ad();
+
+    Future.delayed(const Duration(milliseconds: 0))
+        .then((_) => timer?.cancel());
+  }
+
+  var isAdmin = '';
+
+  Timer? timer;
+  Future ad() async {
+    timer = Timer(const Duration(seconds: 1), ad);
+    return ref.refresh(getDataLaboratoriesFuture);
+  }
+
   int count = 1;
   var nombrecontrol = TextEditingController();
   MediaQueryData mediaQueryData(BuildContext context) {
@@ -65,7 +84,8 @@ class MatiereLaboAfficheState extends ConsumerState<MatiereLaboAffiche> {
         child: Column(
           children: [
             Container(
-              height: height - 280,
+              height: height - 190,
+              padding: EdgeInsets.only(bottom: 5, right: 10, left: 10),
               child: GridView.builder(
                   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 300,
@@ -500,7 +520,7 @@ class MatiereLaboAfficheState extends ConsumerState<MatiereLaboAffiche> {
           ),
         );
 
-        ref.refresh(getDataRsetaurantFuture);
+        ref.refresh(getDataRestaurantOneFuture);
         ref.refresh(getDataLaboratoriesFuture);
       } else {
         showTopSnackBar(

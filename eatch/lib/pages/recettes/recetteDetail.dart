@@ -176,6 +176,17 @@ class _RecettePageState extends ConsumerState<RecettePage> {
                                       ),
                                     ),
                                     const SizedBox(height: 10),
+                                    Container(
+                                      width: 400,
+                                      child: Text(
+                                        widget.description,
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                          color: Palette.textPrimaryColor,
+                                        ),
+                                      ),
+                                    ),
+
                                     // Text(
                                     //   NumberFormat.simpleCurrency(name: "MAD ")
                                     //       .format(widget.price),

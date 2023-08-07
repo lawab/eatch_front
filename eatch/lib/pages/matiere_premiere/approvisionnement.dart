@@ -16,6 +16,10 @@ class ApprovisonnementState extends ConsumerState<Approvisonnement> {
   @override
   void initState() {
     startTimer();
+    /*WidgetsBinding.instance.addPostFrameCallback((_) async {
+      rRRR();
+    });*/
+
     // TODO: implement initState
     super.initState();
   }
@@ -31,7 +35,7 @@ class ApprovisonnementState extends ConsumerState<Approvisonnement> {
         if (_start == 0) {
           setState(() {
             timer.cancel();
-            ref.refresh(getDataRsetaurantFuture);
+            ref.refresh(getDataRestaurantOneFuture);
             print('refresh********************************************');
             _start = 120;
             startTimer();
@@ -69,46 +73,21 @@ class ApprovisonnementState extends ConsumerState<Approvisonnement> {
   }
 
   var nombrecontrol = TextEditingController();
-  bool filtre = false;
-  List<Providings> listdemande = [];
-  List<Providings> listdemandeS = [];
+
   @override
   Widget build(BuildContext context) {
     var view = ref.watch(getDataRestaurantOneFuture);
-    if (filtre == false) {
-      for (int i = 0; i < view.listApprovisionnement.length; i++) {
-        DateTime aa =
-            DateTime.parse(view.listApprovisionnement[i].dateProviding!);
-        DateTime bb = DateTime.now();
-
-        aa = DateTime(aa.year, aa.month, aa.day);
-        bb = DateTime(bb.year, bb.month, bb.day);
-
-        //print((bb.difference(aa).inHours / 24).round());
-        int jour = (aa.difference(bb).inHours / 24).round();
-
-        if (jour == 0) {
-          listdemande.add(view.listApprovisionnement[i]);
-        } else {
-          listdemandeS.add(view.listApprovisionnement[i]);
-        }
-      }
-      setState(() {
-        listdemande.addAll(listdemandeS);
-        filtre = true;
-      });
-    }
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: LayoutBuilder(
         builder: (context, constraints) {
           if (constraints.maxWidth >= 900) {
-            return horizontalView(
-                height(context), width(context), context, listdemande);
+            return horizontalView(height(context), width(context), context,
+                view.listApprovisionnement);
           } else {
-            return verticalView(
-                height(context), width(context), context, listdemande);
+            return verticalView(height(context), width(context), context,
+                view.listApprovisionnement);
           }
         },
       ),
@@ -120,13 +99,13 @@ class ApprovisonnementState extends ConsumerState<Approvisonnement> {
       double height, double width, contextt, List<Providings> demande) {
     return Scaffold(
       body: Container(
-        height: height,
+        height: height - 190,
         width: width,
         child: Column(
           children: [
             Container(
               padding: EdgeInsets.all(20),
-              height: height,
+              height: height - 190,
               child: demande.isEmpty
                   ? const Center(
                       child: Text(

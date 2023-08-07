@@ -1,7 +1,12 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:eatch/pages/dashboard/dashboard_manager.dart';
+import 'package:eatch/servicesAPI/getMatiere.dart';
+import 'package:eatch/servicesAPI/getMenu.dart';
 import 'package:eatch/servicesAPI/getRestaurant.dart';
+import 'package:eatch/servicesAPI/get_promotion.dart';
+import 'package:eatch/servicesAPI/get_recettes.dart';
+import 'package:eatch/servicesAPI/get_user.dart';
 import 'package:eatch/servicesAPI/multipart.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:file_picker/file_picker.dart';
@@ -192,8 +197,19 @@ class RestaurantAccueilState extends ConsumerState<RestaurantAccueil> {
                                           'idRestaurant',
                                           viewModel.listRsetaurant[index].sId
                                               .toString());
+                                      prefs.setString(
+                                          'NomRestaurant',
+                                          viewModel.listRsetaurant[index]
+                                              .restaurantName
+                                              .toString());
                                       prefs.setBool('lab', false);
                                       prefs.setInt('index', 0);
+                                      ref.refresh(getDataUserFuture);
+                                      ref.refresh(getDataMenuFuture);
+                                      ref.refresh(getDataPromotionFuture);
+                                      ref.refresh(getDataRecettesFuture);
+                                      ref.refresh(getDataMatiereFuture);
+
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(

@@ -160,8 +160,8 @@ class MatiereAfficheState extends ConsumerState<MatiereAffiche> {
                   color: Palette.secondaryBackgroundColor,
                   child: creation())
               : Container(
-                  padding: EdgeInsets.only(right: 20, left: 20, bottom: 20),
-                  height: height - 375,
+                  padding: EdgeInsets.only(right: 20, left: 20, bottom: 5),
+                  height: height - 270,
                   width: width - 20,
                   child: GridView.builder(
                       gridDelegate:

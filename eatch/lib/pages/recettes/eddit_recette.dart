@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:js_interop';
 
 import 'package:eatch/pages/recettes/recettes.dart';
+import 'package:eatch/servicesAPI/getLabo.dart';
 import 'package:eatch/servicesAPI/getMatiere.dart';
 import 'package:eatch/servicesAPI/get_recettes.dart';
 
@@ -19,6 +20,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:http/http.dart' as http;
+
+enum SingingCharacter { restaurant, laboratoire }
 
 class EdditRecette extends ConsumerStatefulWidget {
   final String title;
@@ -74,7 +77,7 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
 /* LA LISTE DE TOUS LES INGRÉDIENTS QUI SERONT CRÉÉS */
   List/*<Ingredient>*/ ingredientsList = [];
   List ingredientsListold = [];
-
+  final List<SingingCharacter> choix = [];
 /* LA LISTE DES UNITÉS DE MESURE */
   List<String> listOfUnities = [
     "g",
@@ -114,9 +117,11 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
       _matierePremieres.add(TextEditingController());
       _quantite.add(TextEditingController());
       _uniteDeMesure.add(TextEditingController());
+      choix.add(_character!);
     });
   }
 
+  SingingCharacter? _character = SingingCharacter.restaurant;
 /*LA METHODE QUI PERMET DE SUPPRIMER UN INGREDIENT */
   _removeItem(i) {
     setState(() {
@@ -143,14 +148,25 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
     setState(() {
       // ingredientsListold.addAll(widget.ingredients);
       // ingredientsList.addAll(ingredientsListold);
-      ingredientsList.addAll(widget.ingredients);
-      /* for (int i = 0; i < widget.ingredients.length; i++) {
-        ingredientsList.add(Ingredient(
-          material: widget.ingredients[i].material!.sId!,
-          grammage: widget.ingredients[i].grammage.toString(),
-          unity: widget.ingredients[i].unity.toString(),
-        ));
-      }*/
+      //ingredientsList.addAll(widget.ingredients);
+      for (int i = 0; i < widget.ingredients.length; i++) {
+        print('recette');
+        if (widget.ingredients[i].material != null) {
+          ingredientsList.add(Ingredient(
+            type: 'material',
+            material: widget.ingredients[i].material!.sId!,
+            grammage: widget.ingredients[i].material!.grammage.toString(),
+            unity: widget.ingredients[i].material!.unity.toString(),
+          ));
+        } else {
+          ingredientsList.add(Ingredient(
+            type: 'raw_material',
+            rawmaterial: widget.ingredients[i].rowMaterial!.sId!,
+            grammage: widget.ingredients[i].rowMaterial!.grammage.toString(),
+            unity: widget.ingredients[i].rowMaterial!.unity.toString(),
+          ));
+        }
+      }
     });
     final isValid = _formkey.currentState!.validate();
     if (!isValid) {
@@ -175,27 +191,47 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
     // }
 
     for (int i = 0; i < _matierePremieres.length; i++) {
+      if (choix[i] == SingingCharacter.laboratoire) {
+        ingredientsList.add(Ingredient(
+          type: 'raw_material',
+          rawmaterial: _matierePremieres[i].text,
+          grammage: _quantite[i].text,
+          unity: _uniteDeMesure[i].text,
+        ));
+      } else {
+        ingredientsList.add(Ingredient(
+          type: 'material',
+          material: _matierePremieres[i].text,
+          grammage: _quantite[i].text,
+          unity: _uniteDeMesure[i].text,
+        ));
+      }
+    }
+
+    /*for (int i = 0; i < _matierePremieres.length; i++) {
       ingredientsList.add(Ingredient(
         material: _matierePremieres[i].text,
         grammage: _quantite[i].text,
         unity: _uniteDeMesure[i].text,
       ));
-    }
+    }*/
 
     print("IMMMMMAGGAGAGAGAGAGAGAGAGAGA");
     print(_selectedFile);
-    print(result);
+    //print(result);
     print(_titreRecette.text);
     print(_descriptionRecette.text);
-    print(ingredientsList);
-    updateRecette(
+    print('iiiiiiiiiiiiiiiiiii');
+    print(jsonEncode(ingredientsList));
+    print('iiiiiiiiiiiiiiiiiii');
+    /*updateRecette(
       context,
       _selectedFile,
       result,
       _titreRecette.text,
       _descriptionRecette.text,
       ingredientsList,
-    );
+    );*/
 
     // _clear();
     setState(() {
@@ -251,7 +287,7 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
   Widget horizontalView(
       double height, double width, context, List<Matiere> listMatieres) {
     listmatiere.addAll(listMatieres);
-
+    final viewModelL = ref.watch(getDataLaboratoriesFuture);
     // final viewRecetteModel = ref.watch(getDataRecettesFuture);
 
     final viewModel = ref.watch(getDataMatiereFuture);
@@ -706,6 +742,41 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
                                 ],
                               ),
                               const SizedBox(height: 10),
+                              Container(
+                                width: MediaQuery.of(context).size.width / 4,
+                                child: Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: ListTile(
+                                        title: const Text('Restaurant'),
+                                        leading: Radio<SingingCharacter>(
+                                          value: SingingCharacter.restaurant,
+                                          groupValue: choix[i],
+                                          onChanged: (SingingCharacter? value) {
+                                            setState(() {
+                                              choix[i] = value!;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: ListTile(
+                                        title: const Text('Laboratoire'),
+                                        leading: Radio<SingingCharacter>(
+                                          value: SingingCharacter.laboratoire,
+                                          groupValue: choix[i],
+                                          onChanged: (SingingCharacter? value) {
+                                            setState(() {
+                                              choix[i] = value!;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
@@ -1024,9 +1095,11 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
             contentType: MediaType('application', 'octet-stream'),
             filename: result.files.first.name),
       );
+      print('imagggggggggggggggggggeeeeeeeeeeeeeee');
     }
 
-    print("RESPENSE SEND STEAM FILE REQ");
+    print(
+        "RESPENSE SEND STEAM FILE REQ *****************************************************");
     var response = await request.send();
     print("Upload Response$response");
     print(response.statusCode);
@@ -1154,26 +1227,34 @@ class _EdditRecetteState extends ConsumerState<EdditRecette> {
 
 class Ingredient {
   String? material;
+  String? rawmaterial;
   String? grammage;
   String? unity;
+  String? type;
 
   Ingredient({
     this.material,
+    this.rawmaterial,
     this.grammage,
     this.unity,
+    this.type,
   });
 
   Ingredient.fromJson(Map<String, dynamic> json) {
     material = json['material'];
+    rawmaterial = json['raw_material'];
     grammage = json['grammage'];
     unity = json['unity'];
+    type = json['type'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['material'] = material;
+    data['raw_material'] = rawmaterial;
     data['grammage'] = grammage;
     data['unity'] = unity;
+    data['type'] = type;
     return data;
   }
 }

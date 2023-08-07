@@ -1,6 +1,9 @@
+import 'dart:js';
+
 import 'package:eatch/pages/accueil.dart';
 import 'package:eatch/pages/authentification/authentification.dart';
 import 'package:eatch/pages/categories/presentation/categories.dart';
+import 'package:eatch/pages/commande/commandeCuisine/commandeCuisine.dart';
 import 'package:eatch/pages/dashboard/dashboard_comptable.dart';
 import 'package:eatch/pages/dashboard/dashboard_manager.dart';
 import 'package:eatch/pages/laboAccueil.dart';
@@ -12,6 +15,7 @@ import 'package:eatch/pages/recettes/recettes.dart';
 import 'package:eatch/pages/restaurant/afficheRestaurant.dart';
 import 'package:eatch/pages/restaurantAccueil.dart';
 import 'package:eatch/pages/users/presentation/users.dart';
+import 'package:eatch/servicesAPI/deconnexion.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -106,6 +110,8 @@ class MyApp extends StatelessWidget {
         widget = const RecettesPage();
       } else if (prefs!.getInt('index')!.toInt() == 9) {
         widget = const AccuilLabo();
+      } else if (prefs!.getInt('index')!.toInt() == 11) {
+        widget = const CommandeCuisineS();
       } else if (prefs!.getInt('index')!.toInt() == 20) {
         widget = const Accueil();
       } else if (prefs!.getInt('index')!.toInt() == 30) {

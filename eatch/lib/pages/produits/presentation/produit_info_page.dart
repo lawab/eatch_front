@@ -251,7 +251,7 @@ class _ProduitpageState extends ConsumerState<Produitpage> {
                       SizedBox(
                         width: 200,
                         child: DefaultButton(
-                          color: Palette.primaryColor,
+                          color: Colors.red,
                           foreground: Colors.red,
                           text: 'SUPPRIMER',
                           textcolor: Palette.primaryBackgroundColor,
@@ -268,10 +268,10 @@ class _ProduitpageState extends ConsumerState<Produitpage> {
                       SizedBox(
                         width: 200,
                         child: DefaultButton(
-                          color: Palette.secondaryBackgroundColor,
+                          color: Palette.greenColors,
                           foreground: Colors.red,
                           text: 'MODIFIER',
-                          textcolor: Palette.textsecondaryColor,
+                          textcolor: Colors.white,
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -457,7 +457,7 @@ class _ProduitpageState extends ConsumerState<Produitpage> {
                       SizedBox(
                         width: 200,
                         child: DefaultButton(
-                          color: Palette.primaryColor,
+                          color: Colors.red,
                           foreground: Colors.red,
                           text: 'SUPPRIMER',
                           textcolor: Palette.primaryBackgroundColor,
@@ -474,10 +474,10 @@ class _ProduitpageState extends ConsumerState<Produitpage> {
                       SizedBox(
                         width: 200,
                         child: DefaultButton(
-                          color: Palette.secondaryBackgroundColor,
+                          color: Palette.greenColors,
                           foreground: Colors.red,
                           text: 'MODIFIER',
-                          textcolor: Palette.textsecondaryColor,
+                          textcolor: Colors.white,
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -566,11 +566,13 @@ class _ProduitpageState extends ConsumerState<Produitpage> {
 
   Future<http.Response> deleteProduct(BuildContext context, String id) async {
     try {
+      print(
+          '*********************************************************************sup');
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userdelete = prefs.getString('IdUser').toString();
       var restaurantId = prefs.getString('idRestaurant').toString();
       var token = prefs.getString('token');
-      String urlDelete = "$url_produit/api/products/delete/$id";
+      String urlDelete = "http://13.39.81.126:4003/api/products/delete/$id";
       var json = {
         '_creator': userdelete,
         'restaurant': restaurantId,

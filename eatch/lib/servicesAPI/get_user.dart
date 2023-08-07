@@ -23,7 +23,7 @@ class GetDataUserFuture extends ChangeNotifier {
     var token = prefs.getString('token');
     var restaurantid = prefs.getString('idRestaurant');
     listAllUsers = [];
-
+//http://13.39.81.126:4001/api/users/fetch/all
     try {
       http.Response response = await http.get(
         Uri.parse('http://13.39.81.126:4001/api/users/fetch/all'),

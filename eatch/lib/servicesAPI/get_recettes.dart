@@ -20,14 +20,18 @@ class GetDataRecettesFuture extends ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.getString('token');
     String adressUrl = prefs.getString('ipport').toString();
+    var restaurantid = prefs.getString('idRestaurant');
     try {
       http.Response response = await http.get(
-        Uri.parse('http://13.39.81.126:4010/api/recettes/fetch/all'), //4002
+        Uri.parse(
+            'http://13.39.81.126:4010/api/recettes/fetch/restaurant/$restaurantid'), //4002
         headers: <String, String>{
           'Context-Type': 'application/json;charSet=UTF-8',
           'Authorization': 'Bearer $token ',
         },
       );
+      print(
+          'http://13.39.81.126:4010/api/recettes/fetch/restaurant/$restaurantid');
       print('get Recette');
       print(response.statusCode);
 

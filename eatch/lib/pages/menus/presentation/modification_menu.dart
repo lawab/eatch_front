@@ -14,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
-import '../../../servicesAPI/getMenu.dart';
+import '../../../servicesAPI/getMenu.dart' as menu;
 
 import 'package:http/http.dart' as http;
 import '../../../servicesAPI/multipart.dart';
@@ -36,7 +36,7 @@ class ModificationMenu extends ConsumerStatefulWidget {
   final String title;
   final String description;
   final double price;
-  final List products;
+  final List<menu.Products> products;
 
   @override
   ConsumerState<ModificationMenu> createState() => ModificationMenuState();
@@ -69,7 +69,7 @@ class ModificationMenuState extends ConsumerState<ModificationMenu> {
   //final List<Widget> _textFieldInput = [];
 
   List<String> listProduitsAffiche = [];
-  List<String> listProdId = [];
+  List<menu.Products> listProdId = [];
 
   bool ajout = false;
   bool test = false;
@@ -84,12 +84,13 @@ class ModificationMenuState extends ConsumerState<ModificationMenu> {
   bool _selectFile = false;
   String? menuImage;
   bool check = false;
+  List prodIDD = [];
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(getDataCategoriesFuture);
     if (check == false) {
       for (int i = 0; i < widget.products.length; i++) {
-        listProdId.add(widget.products[i].sId!);
+        listProdId.add(widget.products[i]);
         check = true;
       }
     }
@@ -120,7 +121,7 @@ class ModificationMenuState extends ConsumerState<ModificationMenu> {
                             minimumSize: const Size(150, 50)),
                         onPressed: () {
                           setState(() {
-                            ref.refresh(getDataMenuFuture);
+                            ref.refresh(menu.getDataMenuFuture);
                           });
                           Navigator.push(
                             context,
@@ -284,7 +285,7 @@ class ModificationMenuState extends ConsumerState<ModificationMenu> {
                 ///
                 Column(
                   children: [
-                    for (int j = 0; j < widget.products.length; j++)
+                    for (int j = 0; j < listProdId.length; j++)
                       Column(
                         children: [
                           Row(
@@ -294,9 +295,13 @@ class ModificationMenuState extends ConsumerState<ModificationMenu> {
                                 child: const Icon(Icons.remove_circle),
                                 onTap: () {
                                   setState(() {
-                                    widget.products.remove(
+                                    print(jsonEncode(listProdId));
+                                    print(jsonEncode(widget.products[j]));
+                                    print(listProdId[j].sId);
+                                    listProdId.remove(listProdId[j]);
+                                    /*widget.products.remove(
                                       widget.products[j],
-                                    );
+                                    );*/
                                   });
                                 },
                               ),
@@ -314,8 +319,7 @@ class ModificationMenuState extends ConsumerState<ModificationMenu> {
                                   child: Container(
                                     color: Palette.secondaryBackgroundColor,
                                     child: DropdownButtonFormField(
-                                      hint:
-                                          Text(widget.products[j].productName),
+                                      hint: Text(listProdId[j].productName!),
                                       decoration: InputDecoration(
                                         enabled: false,
                                         border: OutlineInputBorder(
@@ -326,7 +330,7 @@ class ModificationMenuState extends ConsumerState<ModificationMenu> {
                                       onChanged: null,
                                       items:
                                           viewModel.listCategories.map((val) {
-                                        for (int i = 0;
+                                        /*for (int i = 0;
                                             i <
                                                 viewModel.listCategories[j]
                                                     .products!.length;
@@ -335,7 +339,7 @@ class ModificationMenuState extends ConsumerState<ModificationMenu> {
                                               .listCategories[j]
                                               .products![i]
                                               .productName!);
-                                        }
+                                        }*/
                                         return DropdownMenuItem(
                                           value: val,
                                           child: Text(
@@ -446,13 +450,19 @@ class ModificationMenuState extends ConsumerState<ModificationMenu> {
                                           j < listProduits.length;
                                           j++) {
                                         if (produit == listProduits[j]) {
-                                          listProdId.add(viewModel
+                                          prodIDD.add(viewModel
                                               .listCategories[index]
                                               .products![j]
                                               .sId!);
                                         }
                                       }
-                                      print(listProdId);
+                                      /*for (int j = 0;
+                                          j < listProdId.length;
+                                          j++) {
+                                        prodIDD.add(listProdId[j].sId);
+                                      }*/
+
+                                      print(prodIDD);
                                       /////////////////////////////////
 
                                       inputController.text = value;
@@ -557,8 +567,14 @@ class ModificationMenuState extends ConsumerState<ModificationMenu> {
                                 print(_controllerInput[i].text);
                               }
                             }
+                            for (int j = 0; j < listProdId.length; j++) {
+                              if (prodIDD.contains(listProdId[j].sId) ==
+                                  false) {}
+                              prodIDD.add(listProdId[j].sId);
+                            }
                             print("Je suis là");
-                            modificationMenu(
+                            print(jsonEncode(prodIDD));
+                            /* modificationMenu(
                               context,
                               nomcontroller.text,
                               descriptioncontroller.text,
@@ -567,7 +583,7 @@ class ModificationMenuState extends ConsumerState<ModificationMenu> {
                               _selectedFile!,
                               result,
                               widget.sId,
-                            );
+                            );*/
                           }),
                         ),
                       ),
@@ -678,7 +694,7 @@ class ModificationMenuState extends ConsumerState<ModificationMenu> {
             message: "Le menu a été modifié",
           ),
         );
-        ref.refresh(getDataMenuFuture);
+        ref.refresh(menu.getDataMenuFuture);
         Navigator.push(
           context,
           MaterialPageRoute(

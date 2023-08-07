@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:eatch/pages/categories/presentation/categories.dart';
 import 'package:eatch/servicesAPI/get_recettes.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
@@ -503,7 +504,7 @@ class ModificationProduitState extends ConsumerState<ModificationProduit> {
   ////////////////////
   ///////////////////////
   Future<void> edditProduct(
-    context,
+    contextt,
     selectedFile,
     result,
     quantity,
@@ -568,13 +569,14 @@ class ModificationProduitState extends ConsumerState<ModificationProduit> {
           Overlay.of(context),
           const CustomSnackBar.info(
             backgroundColor: Colors.green,
-            message: "Produit ;ias ",
+            message: "Produit modifié avec succès",
           ),
         );
-
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const CategoriesPage()));
         setState(() {
           ref.refresh(getDataCategoriesFuture);
-          ref.refresh(GetDataProduitFuture as Refreshable);
+          ref.refresh(getDataProduitFuture);
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

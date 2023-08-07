@@ -1,5 +1,7 @@
 // ignore_for_file: must_be_immutable, use_build_context_synchronously
 import 'package:eatch/pages/categories/presentation/categories.dart';
+import 'package:eatch/pages/commande/commandeCuisine/commandeCuisine.dart';
+import 'package:eatch/pages/commande/commandeCuisine/menuCommande.dart';
 import 'package:eatch/pages/dashboard/dashboard_manager.dart';
 import 'package:eatch/pages/laboratoire/accuielLabo.dart';
 import 'package:eatch/pages/matiere_premiere/afficheMatiere.dart';
@@ -304,6 +306,30 @@ class _NavigationState extends State<Navigation> {
                     context,
                     MaterialPageRoute(
                       builder: (BuildContext context) => const AccuilLabo(),
+                    ),
+                  );
+                },
+              ),
+        lab == true
+            ? Container()
+            : NavigationButton(
+                axis: widget.orientation,
+                index: index,
+                text: "COMMANDES",
+                selectedIndex: 11,
+                onPress: () async {
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  setState(
+                    () {
+                      index = 11;
+                      prefs.setInt('index', index);
+                    },
+                  );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => const CommandeMenu(),
                     ),
                   );
                 },

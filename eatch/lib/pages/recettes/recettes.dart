@@ -99,7 +99,24 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
   final List<TextEditingController> _quantite = [];
   final List<TextEditingController> _uniteDeMesure = [];
   final List<SingingCharacter> choix = [];
+  var matiereOne = TextEditingController(text: 'Veuiller choisir');
+  @override
+  void initState() {
+    _addFielInit();
+    // TODO: implement initState
+    super.initState();
+  }
 
+  _addFielInit() {
+    setState(() {
+      _matierePremieres.add(matiereOne);
+      /*_quantite.add(TextEditingController());
+      _uniteDeMesure.add(TextEditingController());
+      choix.add(_character!);*/
+    });
+  }
+
+  var valeur = '';
 /*LA CLE DU FORMULAIRE*/
   final _formkey = GlobalKey<FormState>();
 
@@ -270,6 +287,8 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
     final viewModel = ref.watch(getDataMatiereFuture);
     final viewRecetteModel = ref.watch(recette.getDataRecettesFuture);
     final viewModelL = ref.watch(getDataLaboratoriesFuture);
+    print('viewRecetteModel.listRecette.length');
+    print(viewRecetteModel.listRecette.length);
     return AppLayout(
       content: SingleChildScrollView(
         child: Column(
@@ -459,6 +478,10 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                                               value) {
                                                         setState(() {
                                                           choix[index] = value!;
+                                                          _matierePremieres[
+                                                                  index]
+                                                              .text = '';
+                                                          //.clear();
                                                         });
                                                       },
                                                     ),
@@ -478,6 +501,15 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
                                                               value) {
                                                         setState(() {
                                                           choix[index] = value!;
+                                                          _matierePremieres[
+                                                                  index]
+                                                              .text = '';
+                                                          _quantite[index]
+                                                              .clear();
+                                                          _uniteDeMesure[index]
+                                                              .clear();
+
+                                                          //.clear();
                                                         });
                                                       },
                                                     ),
@@ -1647,7 +1679,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
     //var ingredient = jsonEncode(ingredientsList).toString();
     var json = {
       'title': title,
-      'description': description,
+      'description': description.trim(),
       'engredients': ingredientsList,
       '_creator': id,
       'restaurant': restaurantid!.trim(),
@@ -1671,7 +1703,7 @@ class _RecettesPageState extends ConsumerState<RecettesPage> {
     var response = await request.send();
     print("Upload Response$response");
     print(response.statusCode);
-    print(request.headers);
+    //print(request.headers);
 
     try {
       if (response.statusCode == 200 || response.statusCode == 201) {

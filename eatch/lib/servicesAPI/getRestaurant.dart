@@ -67,6 +67,9 @@ class GetDataRestaurantOneFuture extends ChangeNotifier {
   List<Restaurant> listRsetaurant = [];
 
   List<Providings> listApprovisionnement = [];
+  List<Providings> listApprovisionnementT = [];
+  List<Providings> listdemandeSS = [];
+  List<Providings> listdemandeS = [];
 
   GetDataRestaurantOneFuture() {
     getData();
@@ -89,19 +92,41 @@ class GetDataRestaurantOneFuture extends ChangeNotifier {
       );
       print('get ONE restaurant');
       print(response.statusCode);
-      print(response.body);
+      //print(response.body);
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
 
-        for (int i = 0; i < data.length; i++) {
+        for (int i = 0; i < data['providings'].length; i++) {
           if (data['deletedAt'] == null) {
             //listRsetaurant.add(Restaurant.fromJson(data[i]));
 
-            listApprovisionnement
+            listApprovisionnementT
                 .add(Providings.fromJson(data['providings'][i]));
           }
         }
+
+        for (int i = 0; i < listApprovisionnementT.length; i++) {
+          DateTime aa =
+              DateTime.parse(listApprovisionnementT[i].dateProviding!);
+          DateTime bb = DateTime.now();
+
+          aa = DateTime(aa.year, aa.month, aa.day);
+          bb = DateTime(bb.year, bb.month, bb.day);
+
+          //print((bb.difference(aa).inHours / 24).round());
+          int jour = (aa.difference(bb).inHours / 24).round();
+
+          if (jour == 0) {
+            listdemandeSS.add(listApprovisionnementT[i]);
+          } else {
+            listdemandeS.add(listApprovisionnementT[i]);
+          }
+        }
+
+        listApprovisionnement.addAll(listdemandeSS);
+        listApprovisionnement.addAll(listdemandeS);
+        //filtre = true;
       } else {
         return Future.error(" server erreur");
       }
