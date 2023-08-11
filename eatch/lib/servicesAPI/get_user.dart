@@ -44,7 +44,7 @@ class GetDataUserFuture extends ChangeNotifier {
           if (data[i]['deletedAt'] == null) {
             listAllUsers.add(User.fromJson(data[i]));
 
-            if (data[i]['role'] == 'RH') {
+            if (data[i]['role'] == 'MANAGER') {
               listManager.add(User.fromJson(data[i]));
             } else if (data[i]['role'] == 'EMPLOYEE') {
               listEmploye.add(User.fromJson(data[i]));

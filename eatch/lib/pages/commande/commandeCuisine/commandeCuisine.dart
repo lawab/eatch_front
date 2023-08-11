@@ -67,8 +67,8 @@ class CommandeCuisineState extends ConsumerState<CommandeCuisineS> {
     double width,
     context,
   ) {
-    return AppLayout(
-      content: Container(
+    return Scaffold(
+      body: Container(
         color: Palette.yellowColor,
         height: height,
         width: width,

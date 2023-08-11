@@ -75,23 +75,24 @@ class CommandeMenuState extends ConsumerState<CommandeMenu> {
             ),
             //backgroundColor: Color.fromARGB(255, 232, 228, 213),
             body: SingleChildScrollView(
-                child: Column(
-              children: [
-                Container(
-                  height: MediaQuery.of(context).size.height - 190,
-                  width: MediaQuery.of(context).size.width,
-                  child: const TabBarView(
-                    children: [
-                      CommandeWaited(),
-                      CommandeTreatment(),
-                      CommandeDone(),
-                      CommandePaid(),
-                      CommandeAnnuler(),
-                    ],
+              child: Column(
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height - 190,
+                    width: MediaQuery.of(context).size.width,
+                    child: const TabBarView(
+                      children: [
+                        CommandeWaited(),
+                        CommandeTreatment(),
+                        CommandeDone(),
+                        CommandePaid(),
+                        CommandeAnnuler(),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            )),
+                ],
+              ),
+            ),
           ),
         ),
       ),

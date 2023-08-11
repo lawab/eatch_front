@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:eatch/servicesAPI/multipart.dart';
-import 'package:eatch/utils/applayout.dart';
 import 'package:eatch/utils/palettes/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -48,9 +47,10 @@ class CommandeAnnulerState extends ConsumerState<CommandeAnnuler> {
         builder: (context, constraints) {
           if (constraints.maxWidth >= 900) {
             return horizontalView(height(context), width(context), context,
-                viewModel.listCommandeDone);
+                viewModel.listCommandeAnnuler);
           } else {
-            return verticalView(height(context), width(context), context);
+            return verticalView(height(context), width(context), context,
+                viewModel.listCommandeAnnuler);
           }
         },
       ),
@@ -59,156 +59,432 @@ class CommandeAnnulerState extends ConsumerState<CommandeAnnuler> {
 
   Widget horizontalView(double height, double width, context,
       List<CommandeCuisine> listCommande) {
-    return AppLayout(
-      content: Container(
+    return Scaffold(
+      body: Container(
         color: Palette.yellowColor,
         height: height,
         width: width,
-        child: ListView.builder(
-            itemCount: listCommande.length,
-            itemBuilder: (context, index) {
-              return Card(
-                color: Colors.white,
-                child: Container(
-                  height: 200,
-                  child: Row(
-                    children: [
-                      Container(
-                        alignment: Alignment.center,
-                        height: 200,
-                        width: 50,
-                        color: Colors.black,
-                        child: Text(
-                          'N° ${index + 1}',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 6,
-                        child: Column(
-                          children: [
-                            Text(
-                              '${listCommande[index].products!.length} produits ',
-                              style: const TextStyle(
-                                  fontFamily: 'Righteous',
-                                  fontSize: 15,
-                                  color: Palette.yellowColor,
-                                  fontWeight: FontWeight.bold),
+        child: listCommande.isEmpty
+            ? const Center(
+                child: Text(
+                  'Pas de commande annulée',
+                  style: TextStyle(fontSize: 30, color: Colors.white),
+                ),
+              )
+            : ListView.builder(
+                itemCount: listCommande.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    color: Colors.white,
+                    child: Container(
+                      height: 200,
+                      child: Row(
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            height: 200,
+                            width: 40,
+                            color: Colors.white,
+                            child: Text(
+                              '${index + 1}',
+                              style: TextStyle(color: Colors.black),
                             ),
-                            const Divider(
-                              color: Colors.black,
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            height: 200,
+                            width: 50,
+                            color: Colors.black,
+                            child: Text(
+                              'N° ${listCommande[index].numOrder}',
+                              style: TextStyle(color: Colors.white),
                             ),
-                            Container(
-                              height: 150,
-                              child: ListView.builder(
-                                  itemExtent: 70,
-                                  itemCount:
-                                      listCommande[index].products!.length,
-                                  itemBuilder: (context, indexx) {
-                                    return Container(
-                                      padding:
-                                          EdgeInsets.only(right: 10, left: 10),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            '${indexx + 1} - ${listCommande[index].products![indexx].productName!}',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          listCommande[index]
+                          ),
+                          Expanded(
+                            flex: 6,
+                            child: Column(
+                              children: [
+                                Text(
+                                  '${listCommande[index].products!.length} produits à ${listCommande[index].totaleCost} Dh',
+                                  style: const TextStyle(
+                                      fontFamily: 'Righteous',
+                                      fontSize: 15,
+                                      color: Palette.yellowColor,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const Divider(
+                                  color: Colors.black,
+                                ),
+                                Container(
+                                  height: 150,
+                                  child: ListView.builder(
+                                      itemExtent: 70,
+                                      itemCount:
+                                          listCommande[index].products!.length,
+                                      itemBuilder: (context, indexx) {
+                                        return Container(
+                                          padding: const EdgeInsets.only(
+                                              right: 10, left: 10),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '${indexx + 1} - ${listCommande[index].products![indexx].productName!} x ${listCommande[index].products![indexx].orderQte == 0 ? 1 : listCommande[index].products![indexx].orderQte}',
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              listCommande[index]
+                                                          .products![indexx]
+                                                          .recette!
+                                                          .description !=
+                                                      null
+                                                  ? Text(listCommande[index]
                                                       .products![indexx]
                                                       .recette!
-                                                      .description !=
-                                                  null
-                                              ? Text(listCommande[index]
-                                                  .products![indexx]
-                                                  .recette!
-                                                  .description!)
-                                              : Text('Rien')
+                                                      .description!)
+                                                  : Text('Rien')
+                                            ],
+                                          ),
+                                        );
+                                      }),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: Container(
+                              height: 100,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.amber),
+                                      onPressed: () {
+                                        modificationCommande(
+                                            context,
+                                            'TREATMENT',
+                                            listCommande[index].sId!);
+                                      },
+                                      child: const Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.watch),
+                                          Text(
+                                            'Traitement',
+                                            style: TextStyle(fontSize: 10),
+                                          ),
                                         ],
                                       ),
-                                    );
-                                  }),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 2,
+                                  ),
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.amber),
+                                      onPressed: () {
+                                        modificationCommande(context, 'WAITED',
+                                            listCommande[index].sId!);
+                                      },
+                                      child: const Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.watch_later),
+                                          Text(
+                                            'En attente',
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 2,
+                                  ),
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.green),
+                                      onPressed: () {
+                                        modificationCommande(context, 'DONE',
+                                            listCommande[index].sId!);
+                                      },
+                                      child: const Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.done),
+                                          Text(
+                                            'Terminer',
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 2,
+                                  ),
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          /*minimumSize: Size(90, 100),
+                                        maximumSize: Size(90, 100),*/
+                                          backgroundColor: Colors.green),
+                                      onPressed: () {
+                                        modificationCommande(context, 'PAID',
+                                            listCommande[index].sId!);
+                                      },
+                                      child: const Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.money),
+                                          Text(
+                                            'Payer',
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 2,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      Expanded(
-                        flex: 3,
-                        child: Row(
-                          children: [
-                            ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                  minimumSize: Size(0, 100),
-                                  backgroundColor: Colors.red),
-                              onPressed: () {
-                                modificationCommande(
-                                    context, 'PAID', listCommande[index].sId!);
-                              },
-                              icon: Icon(Icons.close),
-                              label: Text('Payer'),
-                            ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                  minimumSize: Size(0, 100),
-                                  backgroundColor: Colors.amber),
-                              onPressed: () {
-                                modificationCommande(context, 'WAITED',
-                                    listCommande[index].sId!);
-                              },
-                              icon: Icon(Icons.watch),
-                              label: Text('En attente'),
-                            ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                  minimumSize: Size(100, 100),
-                                  backgroundColor: Colors.green),
-                              onPressed: () {
-                                modificationCommande(context, 'TREATMENT',
-                                    listCommande[index].sId!);
-                              },
-                              icon: Icon(Icons.done),
-                              label: Text('Traitement'),
-                            ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                  minimumSize: Size(100, 100),
-                                  backgroundColor: Colors.amber),
-                              onPressed: () {
-                                modificationCommande(
-                                    context, 'DONE', listCommande[index].sId!);
-                              },
-                              icon: Icon(Icons.watch),
-                              label: Text('Terminé '),
-                            ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }),
+                    ),
+                  );
+                }),
       ),
     );
   }
 
-  Widget verticalView(double height, double width, context) {
-    return Scaffold();
+  Widget verticalView(double height, double width, context,
+      List<CommandeCuisine> listCommande) {
+    return Scaffold(
+      body: Container(
+        color: Palette.yellowColor,
+        height: height,
+        width: width,
+        child: listCommande.isEmpty
+            ? const Center(
+                child: Text(
+                  'Pas de commande annulée',
+                  style: TextStyle(fontSize: 30, color: Colors.white),
+                ),
+              )
+            : ListView.builder(
+                itemCount: listCommande.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    color: Colors.white,
+                    child: Container(
+                      height: 200,
+                      child: Row(
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            height: 200,
+                            width: 40,
+                            color: Colors.white,
+                            child: Text(
+                              '${index + 1}',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            height: 200,
+                            width: 50,
+                            color: Colors.black,
+                            child: Text(
+                              'N° ${listCommande[index].numOrder}',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 6,
+                            child: Column(
+                              children: [
+                                Text(
+                                  '${listCommande[index].products!.length} produits à ${listCommande[index].totaleCost} Dh',
+                                  style: const TextStyle(
+                                      fontFamily: 'Righteous',
+                                      fontSize: 15,
+                                      color: Palette.yellowColor,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const Divider(
+                                  color: Colors.black,
+                                ),
+                                Container(
+                                  height: 150,
+                                  child: ListView.builder(
+                                      itemExtent: 70,
+                                      itemCount:
+                                          listCommande[index].products!.length,
+                                      itemBuilder: (context, indexx) {
+                                        return Container(
+                                          padding: const EdgeInsets.only(
+                                              right: 10, left: 10),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '${indexx + 1} - ${listCommande[index].products![indexx].productName!} x ${listCommande[index].products![indexx].orderQte == 0 ? 1 : listCommande[index].products![indexx].orderQte}',
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              listCommande[index]
+                                                          .products![indexx]
+                                                          .recette!
+                                                          .description !=
+                                                      null
+                                                  ? Text(listCommande[index]
+                                                      .products![indexx]
+                                                      .recette!
+                                                      .description!)
+                                                  : Text('Rien')
+                                            ],
+                                          ),
+                                        );
+                                      }),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: Container(
+                              height: 100,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.amber),
+                                      onPressed: () {
+                                        modificationCommande(
+                                            context,
+                                            'TREATMENT',
+                                            listCommande[index].sId!);
+                                      },
+                                      child: const Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.watch),
+                                          Text(
+                                            'Traitement',
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 2,
+                                  ),
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.amber),
+                                      onPressed: () {
+                                        modificationCommande(context, 'WAITED',
+                                            listCommande[index].sId!);
+                                      },
+                                      child: const Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.watch_later),
+                                          Text(
+                                            'En attente',
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 2,
+                                  ),
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.green),
+                                      onPressed: () {
+                                        modificationCommande(context, 'DONE',
+                                            listCommande[index].sId!);
+                                      },
+                                      child: const Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.done),
+                                          Text(
+                                            'Terminer',
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 2,
+                                  ),
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          /*minimumSize: Size(90, 100),
+                                        maximumSize: Size(90, 100),*/
+                                          backgroundColor: Colors.green),
+                                      onPressed: () {
+                                        modificationCommande(context, 'PAID',
+                                            listCommande[index].sId!);
+                                      },
+                                      child: const Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.money),
+                                          Text(
+                                            'Payer',
+                                            style: TextStyle(fontSize: 10),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 2,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+      ),
+    );
   }
 
   Future<void> modificationCommande(

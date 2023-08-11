@@ -73,7 +73,13 @@ class _UsersState extends ConsumerState<Users> {
   String? _restaurant;
 
   String? _nouveauRole;
-  List<String> listOfRole = ["COMPTABLE", "RH", "EMPLOYEE", "LABORANTIN"];
+  List<String> listOfRole = [
+    "COMPTABLE",
+    "RH",
+    "EMPLOYEE",
+    "LABORANTIN",
+    "MANAGER"
+  ];
 
   final FocusNode _prenomFocusNode = FocusNode();
   final FocusNode _emailFocusNode = FocusNode();

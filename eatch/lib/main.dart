@@ -4,6 +4,7 @@ import 'package:eatch/pages/accueil.dart';
 import 'package:eatch/pages/authentification/authentification.dart';
 import 'package:eatch/pages/categories/presentation/categories.dart';
 import 'package:eatch/pages/commande/commandeCuisine/commandeCuisine.dart';
+import 'package:eatch/pages/commande/commandeCuisine/menuCommande.dart';
 import 'package:eatch/pages/dashboard/dashboard_comptable.dart';
 import 'package:eatch/pages/dashboard/dashboard_manager.dart';
 import 'package:eatch/pages/laboAccueil.dart';
@@ -111,7 +112,7 @@ class MyApp extends StatelessWidget {
       } else if (prefs!.getInt('index')!.toInt() == 9) {
         widget = const AccuilLabo();
       } else if (prefs!.getInt('index')!.toInt() == 11) {
-        widget = const CommandeCuisineS();
+        widget = const CommandeMenu();
       } else if (prefs!.getInt('index')!.toInt() == 20) {
         widget = const Accueil();
       } else if (prefs!.getInt('index')!.toInt() == 30) {
